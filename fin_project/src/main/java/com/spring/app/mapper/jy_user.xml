@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #29. mapper 기본설정 ==== -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
+<mapper namespace="jy_user">
+
+	<select id="getLoginUser" parameterType="String" resultType="com.spring.app.expedia.domain.UserVO">
+		select userid, name, email, pw, birth, mobile, gender, postcode, address, detailAddress, extraAddress, role, registerDate
+		, idle, user_lvl, point, emer_name, emer_phone, pt_num, pt_nation, pt_endDate
+		FROM 
+		( 
+		select userid, name, email, pw, birth, mobile, gender, postcode, address, detailAddress, extraAddress, role, to_char(registerDate, 'yyyy-mm-dd') AS registerDate 
+			 , trunc(months_between(sysdate, lastpwdchangedate)) AS pwdchangegap 
+			 , idle, user_lvl, point, emer_name, emer_phone, pt_num, pt_nation, pt_endDate
+		from tbl_user 
+		where userid = #{userid}
+		) M 
+		CROSS JOIN 
+		( 
+		select trunc(months_between(sysdate, max(logindate))) AS lastlogingap 
+		from tbl_loginhistory 
+		where fk_userid = #{userid}
+		) H
+	</select>
+	
+	<update id="updateUser_pw" parameterType="HashMap">
+		update tbl_user set pw=#{pw}
+		where userid=#{userid_isExist}
+	</update>
+	
+	<insert id="registerUser" parameterType="HashMap">
+		insert into tbl_user(userid, email, pw, role, registerDate, lastpwdchangedate, idle, user_lvl, point)
+		values(#{userid_noExist}, #{userid_noExist}, #{pw}, '1', default, default, 1, 0, 0)
+	</insert>
+	
+	<update id="updateUserBasicInfo" parameterType="HashMap">
+		update tbl_user set name=#{name}, birth=#{birth}, gender=#{gender}, mobile=#{mobile}
+		where userid=#{userid}
+	</update>
+	
+	<update id="updateUserContact" parameterType="com.spring.app.expedia.domain.UserVO">
+		update tbl_user set mobile=#{mobile}, emer_name=#{emer_name}, emer_phone=#{emer_phone}, address=#{address}, detailAddress=#{detailAddress}, extraAddress=#{extraAddress}, postcode=#{postcode}
+		where userid=#{userid}
+	</update>
+	
+	<update id="updateUserAccountStatus" parameterType="String">
+		update tbl_user set idle=-1
+		where userid=#{userid}
+	</update>	
+	
+	<insert id="insertDeleteReason" parameterType="HashMap">
+		insert into tbl_accDelete(accDelete_seq, fk_userid, tooManyEmail, haveOtherAccount, endTrip, badRsvExp, etc)
+		values(seq_tbl_accDelete.nextval, #{userid}, #{tooManyEmail}, #{haveOtherAccount}, #{endTrip}, #{badRsvExp}, #{etc})
+	</insert>
+	
+	<resultMap type="HashMap" id="get_user_point_list_Map">
+		<result property="fk_userid"         column="fk_userid"       javaType="String"></result>
+		<result property="rs_seq"            column="rs_seq"          javaType="String"></result>
+		<result property="pt_change_date"    column="pt_change_date"  javaType="String"></result>
+		<result property="pt_amount"         column="pt_amount"       javaType="String"></result>
+		<result property="lg_name"           column="lg_name"         javaType="String"></result>
+	</resultMap>	
+	<select id="get_user_point_list" parameterType="String" resultMap="get_user_point_list_Map">
+		select to_number(pt_seq) as pt_seq, P.fk_userid as fk_userid, R.rs_seq as rs_seq, to_char(pt_change_date, 'yyyy-mm-dd') as pt_change_date, pt_amount
+     		 , L.lg_name
+		from tbl_point P
+		join tbl_reservation R on R.rs_seq = P.fk_rs_seq
+		join tbl_room RM on RM.rm_seq = R.fk_rm_seq
+		join tbl_lodge L on L.lodge_id = RM.fk_lodge_id
+		where P.fk_userid = #{userid} and R.rs_cancel = 0
+		order by pt_seq
+	</select>	
+	
+	<select id="get_user_rs_cnt" parameterType="String" resultType="int">
+		select count(*)
+		from tbl_reservation
+		where rs_cancel = 0 and rs_checkindate-sysdate  <![CDATA[<]]> 0 and to_char(rs_checkindate,'yyyy')=to_char(sysdate, 'yyyy') and fk_userid=#{userid}
+	</select>
+	
+</mapper>
