@@ -1,0 +1,518 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #29. mapper 기본설정 ==== -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
+<mapper namespace="ws_admin">
+
+	<insert id="test_insert">
+		insert into name(name)
+		values('wonseok')
+	</insert>
+	
+	<select id="getName" resultType="String">
+		select *
+		from name
+		where name = '최원석'
+	</select>
+	
+	
+	<!-- 총 회원수를 알아오는 메소드 -->
+	<select id="getTotalCnt" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_user
+		where 1=1	
+		<if test='userLvlType != ""'>
+	      and user_lvl = #{userLvlType}
+	    </if>
+		<choose>
+			<when test='searchType == "userid" and searchWord != ""'>
+				and lower(userid) like '%'||lower(#{searchWord})||'%'
+			</when>
+			
+			<when test='searchType == "name" and searchWord != ""'>
+				and lower(name) like '%'||lower(#{searchWord})||'%'
+			</when>
+			
+			<when test='searchType == "email" and searchWord != ""'>
+				and lower(email) like '%'||lower(#{searchWord})||'%'
+			</when>
+			
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 페이징한 회원목록 가져오기 -->
+	<select id="userListSearch" parameterType="HashMap" resultType="com.spring.app.expedia.domain.UserVO">
+		select userid, name, email, mobile, point, user_lvl, role, registerDate, idle
+		from
+		(
+		select row_number() over (order by registerDate desc) as rno,
+		       userid, name, email, user_lvl, mobile, role, point, idle,
+		       to_char(registerDate,'yyyy-mm-dd') as registerDate
+		from tbl_user
+		where 1=1
+	  	<if test='userLvlType != ""'>
+      		and user_lvl = #{userLvlType}
+	    </if>
+		<choose>
+			<when test='searchType == "userid" and searchWord != ""'>
+				and lower(userid) like '%'||lower(#{searchWord})||'%'
+			</when>
+			
+			<when test='searchType == "name" and searchWord != ""'>
+				and lower(name) like '%'||lower(#{searchWord})||'%'
+			</when>
+			
+			<when test='searchType == "email" and searchWord != ""'>
+				and lower(email) like '%'||lower(#{searchWord})||'%'
+			</when>
+			
+			<otherwise>
+			</otherwise>
+		</choose>
+		)
+		WHERE rno between #{startRno} and #{endRno}
+	</select>
+		
+		
+	<!-- 회원관리 검색어 입력시 자동완성하기 -->	
+	<select id="searchUserShow" parameterType="HashMap" resultType="String">
+		<choose>
+			<when test='searchType == "userid"'>
+				select userid
+			</when>
+			<when test='searchType == "name"'>
+				select distinct name
+			</when>
+			<otherwise>
+				select email
+			</otherwise>
+		</choose>
+		from tbl_user
+		where 1=1
+		<choose>
+			<when test='searchType == "userid" and searchWord != ""'>
+				and lower(userid) like '%'||lower(#{searchWord})||'%'
+			</when>
+			
+			<when test='searchType == "name" and searchWord != ""'>
+				and lower(name) like '%'||lower(#{searchWord})||'%'
+			</when>
+			
+			<otherwise>
+				and lower(email) like '%'||lower(#{searchWord})||'%'
+			</otherwise>
+		</choose>
+		<choose>
+			<when test='searchType == "userid"'>
+				order by registerDate asc
+			</when>
+			<when test='searchType == "name"'>
+				order by name asc
+			</when>
+			<otherwise>
+				order by email asc
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	
+	<!-- 총 판매자수를 알아오는 메소드 -->
+	<select id="getHostCnt" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_host
+		where 1=1
+		<choose>
+			<when test='searchType == "h_userid" and searchWord != ""'>
+				and lower(h_userid) like '%'||lower(#{searchWord})||'%'
+			</when>
+			
+			<when test='searchType == "h_name" and searchWord != ""'>
+				and lower(h_name) like '%'||lower(#{searchWord})||'%'
+			</when>
+			
+			<when test='searchType == "h_legalName" and searchWord != ""'>
+				and lower(h_legalName) like '%'||lower(#{searchWord})||'%'
+			</when>
+			
+			<when test='searchType == "h_businessNo" and searchWord != ""'>
+				and lower(h_businessNo) like '%'||lower(#{searchWord})||'%'
+			</when>
+			
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<!-- 총 판매자수를 알아오는 메소드 -->
+	<select id="hostListSearch" parameterType="HashMap" resultType="com.spring.app.expedia.domain.HostVO">
+		select rno, h_userid, h_name, h_mobile, h_legalName, h_lodgename, h_address, h_detailAddress, h_extraAddress, h_businessNo, h_status
+		from
+		(
+		select row_number() over (order by h_registerDate desc) as rno,
+		       h_userid, h_name, h_mobile, h_legalName, h_lodgename,
+               h_address, h_detailAddress, h_extraAddress, h_businessNo, h_status
+		from tbl_host
+		where 1=1
+		<choose>
+			<when test='searchType == "h_userid" and searchWord != ""'>
+				and lower(h_userid) like '%'||lower(#{searchWord})||'%'
+			</when>
+			
+			<when test='searchType == "h_name" and searchWord != ""'>
+				and lower(h_name) like '%'||lower(#{searchWord})||'%'
+			</when>
+			
+			<when test='searchType == "h_lodgename" and searchWord != ""'>
+				and lower(h_lodgename) like '%'||lower(#{searchWord})||'%'
+			</when>
+			
+			<when test='searchType == "h_businessNo" and searchWord != ""'>
+				and lower(h_businessNo) like '%'||lower(#{searchWord})||'%'
+			</when>
+			
+			<otherwise>
+			</otherwise>
+		</choose>
+		)
+		WHERE rno between #{startRno} and #{endRno}
+	</select>
+	
+	
+	<!-- 판매자관리 검색어 입력시 자동완성하기 -->
+	<select id="searchHostShow" parameterType="HashMap" resultType="String">
+		<choose>
+			<when test='searchType == "h_userid"'>
+				select h_userid
+			</when>
+			<when test='searchType == "h_name"'>
+				select distinct h_name
+			</when>
+			<when test='searchType == "h_lodgename"'>
+				select h_lodgename
+			</when>
+			<otherwise>
+				select h_businessNo
+			</otherwise>
+		</choose>
+		from tbl_host
+		where 1=1
+		<choose>
+			<when test='searchType == "h_userid" and searchWord != ""'>
+				and lower(h_userid) like '%'||lower(#{searchWord})||'%'
+			</when>
+			
+			<when test='searchType == "h_name" and searchWord != ""'>
+				and lower(h_name) like '%'||lower(#{searchWord})||'%'
+			</when>
+			
+			<when test='searchType == "h_lodgename" and searchWord != ""'>
+				and lower(h_lodgename) like '%'||lower(#{searchWord})||'%'
+			</when>
+			
+			<otherwise>
+				and lower(h_businessNo) like '%'||lower(#{searchWord})||'%'
+			</otherwise>
+		</choose>
+		<choose>
+			<when test='searchType == "h_userid"'>
+				order by h_registerDate asc
+			</when>
+			<when test='searchType == "h_name"'>
+				order by h_name asc
+			</when>
+			<when test='searchType == "h_lodgename"'>
+				order by h_lodgename asc
+			</when>
+			<otherwise>
+				order by h_businessNo asc
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<!-- tbl_irs 테이블에서 사업자번호의 유효성을 확인하는 메소드 -->
+	<select id="searchBusinessNo" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_irs
+		where i_legalName = #{legalName} and i_name = #{hostName} and i_businessNo = #{businessNo}
+	</select>
+
+
+	
+	<!-- tbl_host 테이블에서 status를 1로 update해주는 메소드 -->
+	<update id="businessApprove" parameterType="String">
+		update tbl_host set h_status = 1
+		where h_userid = #{hostId}
+	</update>
+	
+	
+	<!-- tbl_host 테이블에서 status를 2로 update해주는 메소드 -->
+	<update id="businessReject" parameterType="String">
+		update tbl_host set h_status = 2
+		where h_userid = #{hostId}
+	</update> 
+
+
+
+
+	<!-- 총 숙소 수를 알아오는 메소드 -->
+	<select id="getLodgeCnt" resultType="int" parameterType="HashMap">
+		select count(*)
+		from tbl_lodge
+		where 1=1
+		<if test='lg_status != ""'>
+	      and lg_status = #{lg_status}
+	    </if>
+		<choose>
+			<when test='searchType == "fk_h_userid" and searchWord != ""'>
+				and lower(fk_h_userid) like '%'||lower(#{searchWord})||'%'
+			</when>
+			
+			<when test='searchType == "fk_lodge_type" and searchWord != ""'>
+				and lower(fk_lodge_type) like '%'||lower(#{searchWord})||'%'
+			</when>
+			
+			<when test='total_address == "email" and searchWord != ""'>
+				and lower(total_address) like '%'||lower(#{searchWord})||'%'
+			</when>
+			
+			<when test='fk_lodge_type == "email" and searchWord != ""'>
+				and lower(fk_lodge_type) like '%'||lower(#{searchWord})||'%'
+			</when>
+			
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<!-- 숙소id를 가져오는 메소드 -->
+	<resultMap type="HashMap" id="getLodgeIdMapList_Map">
+		<result property="lodge_id" column="lodge_id" javaType="String"/>
+	</resultMap>
+	
+	<select id="getLodgeIdMapList" parameterType="HashMap" resultMap="getLodgeIdMapList_Map" >
+		select lodge_id, total_address, lg_status, fk_h_userid, lg_name
+		from
+		(
+		select lodge_id, lg_address as total_address
+		      ,lg_status, fk_h_userid, lg_name
+		      ,row_number() over (order by lg_area asc) as rno
+		from tbl_lodge
+		)
+		where 1=1
+		<if test='lg_status != ""'>
+	      and lg_status = #{lg_status}
+	    </if>
+		<choose>
+			<when test='searchType == "fk_h_userid" and searchWord != ""'>
+				and lower(fk_h_userid) like '%'||lower(#{searchWord})||'%'
+			</when>
+			
+			<when test='searchType == "lg_name" and searchWord != ""'>
+				and lower(lg_name) like '%'||lower(#{searchWord})||'%'
+			</when>
+			
+			<when test='searchType == "total_address" and searchWord != ""'>
+				and lower(total_address) like '%'||lower(#{searchWord})||'%'
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+		and rno between #{startRno} and #{endRno}
+	</select>
+	
+	
+	
+	<!-- 페이징한 숙소목록 가져오기 -->
+ 	<resultMap type="HashMap" id="onelodgeinfoSearchtype_Map">
+		<result property="lodge_id" 		column="lodge_id" 			javaType="String"/>
+		<result property="fk_h_userid" 		column="fk_h_userid" 		javaType="String"/>
+		<result property="lg_name" 			column="lg_name" 			javaType="String"/>
+		<result property="lg_en_name" 		column="lg_en_name" 		javaType="String"/>
+		<result property="total_address" 	column="total_address" 		javaType="String"/>
+		<result property="lg_postcode" 		column="lg_postcode" 		javaType="String"/>
+		<result property="lg_hotel_star" 	column="lg_hotel_star" 		javaType="String"/>
+		<result property="fk_lodge_type" 	column="fk_lodge_type" 		javaType="String"/>
+		<result property="lg_qty" 			column="lg_qty" 			javaType="String"/>
+		<result property="rm_type" 			column="rm_type" 			javaType="String"/>
+		<result property="rm_size_meter" 	column="rm_size_meter" 		javaType="String"/>
+		<result property="rm_size_pyug" 	column="rm_size_pyug" 		javaType="String"/>
+		<result property="rm_price" 		column="rm_price" 			javaType="String"/>
+		<result property="lg_img_name" 		column="lg_img_name" 		javaType="String"/>
+		<result property="rm_guest_cnt" 	column="rm_guest_cnt" 		javaType="String"/>
+		<result property="lg_status" 		column="lg_status" 			javaType="String"/>
+	</resultMap> 
+	
+	<select id="onelodgeinfoSearchtype" parameterType="String" resultMap="onelodgeinfoSearchtype_Map">
+			select lodge_id, fk_h_userid, lg_name, lg_en_name, total_address
+			      ,lg_postcode, lg_hotel_star, fk_lodge_type, lg_qty
+			      ,rm_type, rm_size_meter, rm_size_pyug, rm_price, rm_guest_cnt
+			      ,lg_img_name, lg_status
+			from
+			(
+			select L.lodge_id, L.fk_h_userid, L.lg_name, L.lg_en_name, L.lg_address as total_address
+			      ,L.lg_postcode, L.lg_hotel_star, L.fk_lodge_type, L.lg_qty, L.lg_status
+			      ,R.rm_type, R.rm_size_meter, R.rm_size_pyug, R.rm_price, R.rm_guest_cnt
+			      ,I.lg_img_name, row_number() over (order by I.lg_img_name asc) as rno,
+			      (select count(*) from tbl_lodge L join tbl_room R on L.lodge_id = R.fk_lodge_id where 1=1 and lodge_id = #{lodge_id}) as length
+			from tbl_lodge L
+			join tbl_room R
+			on L.lodge_id = R.fk_lodge_id
+			join tbl_lg_img I
+			on L.lodge_id = I.fk_lodge_id
+			where 1=1 and L.lodge_id = #{lodge_id}
+			order by R.rm_type asc, I.lg_img_name asc
+			) V
+			where 1=1 and rno between 1 and length
+	</select>
+	
+	
+	<!-- 숙소 검색어 입력시 자동완성하기 -->
+	<select id="searchLodgeShow" parameterType="HashMap" resultType="String">
+		<choose>
+			<when test='searchType == "fk_h_userid"'>
+				select fk_h_userid
+			</when>
+			<when test='searchType == "lg_name"'>
+				select distinct lg_name
+			</when>
+			<when test='searchType == "total_address"'>
+				select total_address
+			</when>
+		</choose>
+		from
+		(
+		    select lodge_id, lg_address as total_address
+		          ,lg_hotel_star, fk_lodge_type, fk_h_userid, lg_name
+		          ,row_number() over (order by lg_area asc) as rno
+		    from tbl_lodge
+		)
+		where 1=1
+		<choose>
+			<when test='searchType == "fk_h_userid"'>
+				order by fk_h_userid asc
+			</when>
+			<when test='searchType == "lg_name"'>
+				order by lg_name asc
+			</when>
+			<when test='searchType == "total_address"'>
+				order by total_address asc
+			</when>
+		</choose>
+	</select>
+	
+	
+	<!-- tbl_lodge 테이블에서 lg_status를 1로 update해주는 메소드 -->
+	<update id="lodgeRegistrationApprove" parameterType="String">
+		update tbl_lodge set lg_status = 1
+		where lodge_id = #{lodge_id}
+	</update>
+	
+	
+	
+	<!-- tbl_lodge 테이블에서 lg_status를 0로 update해주는 메소드 -->
+	<update id="lodgeRegistrationReject" parameterType="String">
+		update tbl_lodge set lg_status = 0
+		where lodge_id = #{lodge_id}
+	</update>
+	
+	
+	
+	<!-- 차트그리기(AJAX) 년도별 성별 등록 회원수 -->
+	<resultMap type="HashMap" id="yearGenderUser_Map">
+		<result property="gender" 	column="gender" javaType="String"/>
+		<result property="Y2016" 	column="Y2016" 	javaType="String"/>
+		<result property="Y2017" 	column="Y2017" 	javaType="String"/>
+		<result property="Y2018" 	column="Y2018" 	javaType="String"/>
+		<result property="Y2019" 	column="Y2019" 	javaType="String"/>
+		<result property="Y2020" 	column="Y2020" 	javaType="String"/>
+		<result property="Y2021" 	column="Y2021" 	javaType="String"/>
+		<result property="Y2022" 	column="Y2022" 	javaType="String"/>
+		<result property="Y2023" 	column="Y2023" 	javaType="String"/>
+	</resultMap>
+	
+	<select id="yearGenderUser" resultMap = "yearGenderUser_Map">
+		select decode(gender,'F','여','M','남',null) as gender,
+		       sum(decode(extract(year from registerdate),2016,1,0) ) as "Y2016",  
+		       sum(decode(extract(year from registerdate),2017,1,0) ) as "Y2017",
+		       sum(decode(extract(year from registerdate),2018,1,0) ) as "Y2018",
+		       sum(decode(extract(year from registerdate),2019,1,0) ) as "Y2019",
+		       sum(decode(extract(year from registerdate),2020,1,0) ) as "Y2020",
+		       sum(decode(extract(year from registerdate),2021,1,0) ) as "Y2021",
+		       sum(decode(extract(year from registerdate),2022,1,0) ) as "Y2022",
+		       sum(decode(extract(year from registerdate),2023,1,0) ) as "Y2023"
+		from tbl_user
+		where gender IN('F','M')
+		group by gender
+		order by 1
+	</select>
+	
+	
+	
+	<!-- 차트그리기(AJAX) 행정구역별 숙박시설 점유율 -->
+	<resultMap type="HashMap" id="regionOccupancy_Map">
+		<result property="lg_area" 		column="lg_area" 	javaType="String"/>
+		<result property="cnt" 			column="cnt" 		javaType="String"/>
+		<result property="percentage" 	column="percentage" javaType="String"/>
+	</resultMap>
+	
+	<select id="regionOccupancy" resultMap="regionOccupancy_Map">
+		select lg_area, count(*) as cnt
+		      ,round(count(*)/(select count(*) from tbl_lodge)*100,2) as percentage
+		from tbl_lodge
+		group by lg_area
+	</select>
+	
+	
+	<!-- 특정 행정구역에 존재하는 숙박시설들 중 객실수의 퍼센티지 -->
+	<resultMap type="HashMap" id="lodgeQtyPercentage_Map">
+		<result property="lg_name" 		column="lg_name" 	javaType="String"/>
+		<result property="cnt" 			column="cnt" 		javaType="String"/>
+		<result property="percentage" 	column="percentage" javaType="String"/>
+	</resultMap>
+	
+	<select id="lodgeQtyPercentage" parameterType="String" resultMap="lodgeQtyPercentage_Map">
+		select lg_name, sum(lg_qty) as cnt ,round(sum(lg_qty)/(select sum(lg_qty) from tbl_lodge where lg_area = #{lg_area})*100,2) as percentage
+		from
+		(
+		select lg_area, lg_name, lg_qty
+		from tbl_lodge
+		)
+		where lg_area = #{lg_area}
+		group by lg_name
+		order by lg_name
+	</select>
+	
+	
+	<!-- 차트그리기(AJAX) 분기별 숙박시설 전체 예약건수 -->
+	<resultMap type="HashMap" id="quatorTotalReservation_Map">
+		<result property="quator" 	column="quator" javaType="String"/>
+		<result property="cnt" 		column="cnt" 	javaType="String"/>
+	</resultMap>
+	
+	<select id="quatorTotalReservation" resultMap="quatorTotalReservation_Map">
+		select quator,count(*) as cnt
+		from
+		(
+		select case when extract(month from rs_date) <![CDATA[ > ]]> 0  and extract(month from rs_date) <![CDATA[ < ]]> 4  then '1분기'
+		            when extract(month from rs_date) <![CDATA[ > ]]> 3  and extract(month from rs_date) <![CDATA[ < ]]> 7  then '2분기'
+		            when extract(month from rs_date) <![CDATA[ > ]]> 6  and extract(month from rs_date) <![CDATA[ < ]]> 10 then '3분기'
+		            else '4분기' end as quator
+		from tbl_reservation R
+		join tbl_lodge L
+		on R.fk_h_userid = L.fk_h_userid
+		)
+		group by quator
+	</select>
+	
+	
+	
+</mapper>
