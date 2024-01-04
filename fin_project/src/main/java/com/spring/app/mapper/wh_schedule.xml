@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== mapper 기본설정 ==== -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ==== 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
+<mapper namespace="wh_schedule">
+
+
+
+	 
+	 
+	<!-- 사내 캘린더에 캘린더 소분류 명 조회 -->
+	<!-- 현재 존재하는 객실 등급들을 조회하는 select 문으로 변경 필요 -->
+	<!--  
+	<select id="existComCalendar" parameterType="String" resultType="int">
+		select count(*)
+		from tbl_calendar_small_category
+		where fk_lgcatgono = 2 and smcatgoname = #{com_smcatgoname}  
+	</select>
+	-->
+ 
+   
+	
+
+	
+	<!-- 내 캘린더에서 내캘린더 소분류  보여주기  -->
+	<!-- 숙소 캘린더에서 객실등급 소분류 보여주기 -->
+	<select id="showMyCalendar" resultType="com.spring.app.expedia.domain.RoomVO" parameterType="String">
+		select rm_seq, fk_lodge_id, rm_type, fk_h_userid
+		from
+			(
+			select rm_seq, fk_lodge_id, rm_type, L.fk_h_userid
+			from tbl_room R Join tbl_lodge L
+			on R.fk_lodge_id = L.lodge_id
+			) V
+		where fk_h_userid = #{fk_h_userid}
+		order by rm_seq asc
+	</select>
+	
+	
+    <!-- 일정 등록시 내캘린더,사내캘린더 선택에 따른 서브캘린더 종류를 알아오기 -->
+    
+    <select id="selectSmallCategory" parameterType="String" resultType="com.spring.app.expedia.domain.RoomVO">
+		select rm_seq, fk_lodge_id, rm_type, rm_price, fk_h_userid
+		from
+			(
+			select rm_seq, fk_lodge_id, rm_type, L.fk_h_userid, rm_price 
+			from tbl_room R Join tbl_lodge L
+			on R.fk_lodge_id = L.lodge_id
+			) V
+		where fk_h_userid = #{fk_h_userid} 
+		order by rm_seq asc
+    </select>
+    
+   
+   
+    
+    
+    <!-- 일정 등록하기 -->
+    <!-- 예약 일정을 추가하는 insert문으로 변경 필요 -->
+     
+    <insert id="registerSchedule_end" parameterType="HashMap">
+    	insert into tbl_reservation(rs_seq, fk_userid, fk_h_userid, rs_date, rs_checkinDate, rs_checkoutDate, rs_price, rs_payType, rs_guest_cnt, rs_name, rs_mobile, rs_email, fk_rm_seq) 
+    	values(seq_reservation.nextval, #{fk_userid}, #{fk_h_userid}, default, to_date(#{startdate}, 'yyyymmddhh24miss'), to_date(#{enddate}, 'yyyymmddhh24miss'), (#{rm_cnt}*#{rm_price}) , #{rs_payType}, #{rs_guest_cnt}, #{rs_name}, #{rs_mobile}, #{rs_email}, #{fk_rm_seq})  
+    </insert>
+	
+	<!-- 일정 등록 시 예약자 아이디의 존재여부 확인하기 -->
+	<select id="confilctFk_userid" parameterType="String" resultType="com.spring.app.expedia.domain.UserVO">
+		select userid
+		from tbl_user
+		where userid = #{fk_userid}
+	</select>
+	
+
+    <!-- 등록된 일정에 대한 정보(달력에 표시됨)-->
+	
+	<select id="selectReservation" resultType="com.spring.app.expedia.domain.ReservationVO" parameterType="HashMap">
+		select rs_seq, fk_userid, fk_h_userid, rs_date, rs_checkinDate, rs_checkoutDate, rs_price, rs_paytype, rs_guest_cnt, rs_name, rs_mobile, rs_email, lodge_id, fk_rm_seq        
+		from
+		(        
+		SELECT R.rs_seq, R.fk_userid, R.fk_h_userid, R.rs_date, R.rs_checkinDate, R.rs_checkoutDate, R.rs_price, R.rs_paytype, R.rs_guest_cnt, R.rs_name, R.rs_mobile, R.rs_email, L.lodge_id, R.fk_rm_seq  
+		FROM tbl_reservation R 
+		JOIN tbl_lodge L ON L.fk_h_userid = R.fk_h_userid
+		JOIN tbl_room M ON L.lodge_id = M.fk_lodge_id
+		)V
+		WHERE fk_h_userid = #{h_userid}
+		group by rs_seq, fk_userid, fk_h_userid, rs_date, rs_checkinDate, rs_checkoutDate, rs_price, rs_paytype, rs_guest_cnt, rs_name, rs_mobile, rs_email, lodge_id, fk_rm_seq 
+	</select>
+	
+	
+	
+	<!-- 일정 상세 보기 -->
+	<!-- 예약일정 상세보기 -->
+	
+	<resultMap type="HashMap" id="detailSchedule_Map">
+		<result property="RS_SEQ" 		column="rs_seq" 			javaType="String" />
+		<result property="STARTDATE" 	column="rs_checkinDate" 	javaType="String" />
+		<result property="ENDDATE" 		column="rs_checkoutDate" 	javaType="String" />
+		<result property="RS_DATE" 		column="rs_date" 			javaType="String" />
+		<result property="FK_USERID" 	column="fk_userid" 			javaType="String" />
+		<result property="FK_H_USERID" 	column="fk_h_userid" 		javaType="String" />
+		<result property="RS_PRICE" 	column="rs_price" 			javaType="String" />
+		<result property="RS_PAYTYPE" 	column="rs_paytype" 		javaType="String" />
+		<result property="RS_GUEST_CNT" column="rs_guest_cnt" 		javaType="String" />
+		<result property="RS_NAME" 		column="rs_name" 			javaType="String" />
+		<result property="RS_MOBILE" 	column="rs_mobile" 			javaType="String" />
+		<result property="RS_EMAIL" 	column="rs_email" 			javaType="String" />
+		<result property="LODGE_ID" 	column="lodge_id" 			javaType="String" />
+		<result property="FK_RM_SEQ" 	column="fk_rm_seq" 			javaType="String" />
+	</resultMap>	
+	<select id="detailSchedule" parameterType="String" resultMap="detailSchedule_Map">
+		select rs_seq, fk_userid, fk_h_userid, rs_date, rs_checkinDate, rs_checkoutDate, rs_price, rs_paytype, rs_guest_cnt, rs_name, rs_mobile, rs_email, lodge_id, fk_rm_seq        
+		from
+		(        
+		SELECT R.rs_seq, R.fk_userid, R.fk_h_userid, R.rs_date, R.rs_checkinDate, R.rs_checkoutDate, R.rs_price, R.rs_paytype, R.rs_guest_cnt, R.rs_name, R.rs_mobile, R.rs_email, L.lodge_id, R.fk_rm_seq  
+		FROM tbl_reservation R 
+		JOIN tbl_lodge L ON L.fk_h_userid = R.fk_h_userid
+		JOIN tbl_room M ON L.lodge_id = M.fk_lodge_id
+		)V
+		where rs_seq = #{rs_seq}
+		group by rs_seq, fk_userid, fk_h_userid, rs_date, rs_checkinDate, rs_checkoutDate, rs_price, rs_paytype, rs_guest_cnt, rs_name, rs_mobile, rs_email, lodge_id, fk_rm_seq
+	</select>
+	
+	
+	
+	<!-- 일정삭제하기 -->
+	  
+	<delete id="deleteSchedule" parameterType="String">
+		delete from tbl_reservation
+		where rs_seq = #{rs_seq} 
+	</delete>
+	
+
+	
+	
+
+	
+	
+
+
+	
+	
+	<!-- 총 일정 검색 건수(totalCount) -->
+	  
+	<select id="getTotalCount" parameterType="HashMap" resultType="int">
+		select count(*) 
+		from tbl_reservation
+		where ( to_char(rs_checkinDate,'YYYY-MM-DD') between #{startdate} and #{enddate} )
+		and   ( to_char(rs_checkoutDate,'YYYY-MM-DD') between #{startdate} and #{enddate} ) 
+		
+		<if test='searchWord == "" and searchType == "" '>   
+		    and fk_h_userid = #{fk_h_userid}     
+		</if>
+	
+		<if test='searchWord != "" and searchType != "" '>   
+			and lower(${searchType}) like '%'||lower(#{searchWord})||'%'  
+			and fk_h_userid = #{fk_h_userid}                          
+		</if>
+	</select>
+	
+	
+	
+	<!-- 페이징 처리한 캘린더 가져오기(검색어가 없다라도 날짜범위 검색은 항시 포함된 것임) -->
+	
+	<resultMap type="HashMap" id="scheduleListSearchWithPaging_Map">
+		<result property="RS_SEQ" 			column="rs_seq" 			javaType="String" />
+		<result property="RS_CHECKINDATE" 	column="rs_checkinDate" 	javaType="String" />
+		<result property="RS_CHECKOUTDATE" 	column="rs_checkoutDate" 	javaType="String" />
+		<result property="RS_NAME" 			column="rs_name" 			javaType="String" />
+		<result property="RS_MOBILE" 		column="rs_mobile" 			javaType="String" />
+		<result property="RM_TYPE" 			column="rm_type" 			javaType="String" />
+		<result property="RS_PRICE" 		column="rs_price" 			javaType="String" />
+		<result property="FK_RM_SEQ" 		column="fk_rm_seq" 			javaType="String" />
+	</resultMap>
+	<select id="scheduleListSearchWithPaging" parameterType="HashMap" resultMap="scheduleListSearchWithPaging_Map">  
+		select rs_seq 
+		     , rs_checkinDate, rs_checkoutDate
+		     , rs_name, rs_mobile, rm_type
+		     , rs_price, fk_rm_seq 
+		from 
+		(
+			select  row_number() over(order by R.rs_seq desc) as rno 
+			      , R.rs_seq
+			      , to_char(R.rs_checkinDate, 'yyyy-mm-dd hh24:mi') as rs_checkinDate
+			      , to_char(R.rs_checkoutDate, 'yyyy-mm-dd hh24:mi') as rs_checkoutDate
+			      , R.rs_name, R.rs_mobile, M.rm_type 
+			      , R.rs_price, R.fk_rm_seq 
+			from tbl_reservation R 
+			JOIN tbl_host H 
+			ON R.fk_h_userid = H.h_userid
+			JOIN tbl_lodge L 
+			ON H.h_userid = L.fk_h_userid
+			join tbl_room M
+    		on R.fk_rm_seq = M.rm_seq
+			where ( to_char(R.rs_checkinDate,'YYYY-MM-DD') between #{startdate} and #{enddate} )
+			AND   ( to_char(R.rs_checkoutDate,'YYYY-MM-DD') between #{startdate} and #{enddate} ) 
+			
+			<if test='searchWord == "" and searchType == "" '>    
+			    and ( R.fk_h_userid = #{fk_h_userid} )
+			</if>
+			
+			
+			<if test='searchWord != "" and searchType neq "" '>    
+				and lower(${searchType}) like '%'||lower(#{searchWord})||'%'  
+				and R.fk_h_userid = #{fk_h_userid}                       
+			</if>
+		) V 
+		where V.rno between #{startRno} and #{endRno}
+	</select>
+	
+	
+	
+</mapper>
+
+
+
