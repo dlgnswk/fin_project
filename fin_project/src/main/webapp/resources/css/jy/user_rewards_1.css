@@ -1,0 +1,763 @@
+@charset "UTF-8";
+
+.tier-progress-bar {
+    position: relative;
+    font-size: 17px !important
+}
+
+.tier-progress-bar>.bar-graph {
+    height: 1.41176471em;
+    border: 1px solid #e5e5e5;
+    -webkit-border-radius: .17647059em;
+    -moz-border-radius: .17647059em;
+    -o-border-radius: .17647059em;
+    border-radius: .17647059em;
+    display: block;
+    background-color: #e5e5e5;
+    position: relative
+}
+
+.tier-progress-bar>.bar-graph .bar-graph-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: auto;
+    overflow-x: visible;
+    white-space: nowrap;
+    -webkit-border-radius: .17647059em;
+    -moz-border-radius: .17647059em;
+    -o-border-radius: .17647059em;
+    border-radius: .17647059em
+}
+
+.tier-progress-bar>.bar-graph .bar-graph-bar[data-tier$=".blue"],.tier-progress-bar>.bar-graph .bar-graph-bar[data-tier="blue"] {
+    background-color: #002480;
+    border: 1px solid #002480
+}
+
+.tier-progress-bar>.bar-graph .bar-graph-bar[data-tier$=".silver"],.tier-progress-bar>.bar-graph .bar-graph-bar[data-tier="silver"] {
+    background-color: #6b6b6b;
+    border: 1px solid #6b6b6b
+}
+
+.tier-progress-bar>.bar-graph .bar-graph-bar[data-tier$=".gold"],.tier-progress-bar>.bar-graph .bar-graph-bar[data-tier="gold"] {
+    background-color: #a48b59;
+    border: 1px solid #a48b59
+}
+
+.tier-progress-bar>.bar-graph .bar-graph-bar .bar-graph-label {
+    font-size: .5882352941176471em;
+    font-weight: bold;
+    line-height: 2;
+    vertical-align: middle;
+    position: absolute;
+    height: 100%;
+    padding-right: .29411765em
+}
+
+.tier-progress-bar>.bar-graph .bar-graph-bar .bar-graph-label[data-position-to-bar='inside'] {
+    color: #fff;
+    left: auto;
+    right: .35294118em
+}
+
+.tier-progress-bar>.bar-graph .bar-graph-bar .bar-graph-label[data-position-to-bar='outside'] {
+    color: #404040;
+    left: 100%;
+    right: auto;
+    margin-left: .35294118em
+}
+
+.tier-progress-bar>.bar-graph .tier-completion-marker {
+    width: .11764706em;
+    margin-left: -0.11764706em;
+    overflow: visible;
+    position: absolute;
+    height: 100%;
+    background-color: #000;
+    border: 1px solid #000
+}
+
+.tier-progress-bar>.bar-graph .tier-completion-marker[data-tier$=".silver"] {
+    color: #6b6b6b
+}
+
+.tier-progress-bar>.bar-graph .tier-completion-marker[data-tier$=".gold"] {
+    color: #a48b59
+}
+
+.tier-progress-bar>.bar-graph .tier-completion-marker .caption {
+    font-size: .7647058823529411em;
+    line-height: 1.45;
+    display: inline-block;
+    padding-top: .29411765em;
+    position: absolute;
+    text-align: right;
+    left: auto;
+    right: 0;
+    top: 90%;
+    white-space: nowrap
+}
+
+.additional-night {
+    margin-top: 1.76470588em
+}
+
+.user-bar {
+    position: relative;
+    min-width: 14.70588235em;
+    overflow: auto
+}
+
+.user-bar[data-tier='blue'],.user-bar[data-tier$='.blue'] {
+    border-top: .35294118em solid #002480
+}
+
+.user-bar[data-tier='blue'] .profile-info .badge,.user-bar[data-tier$='.blue'] .profile-info .badge {
+    background-color: #002480
+}
+
+.user-bar[data-tier='silver'],.user-bar[data-tier$='.silver'] {
+    border-top: .35294118em solid #6b6b6b
+}
+
+.user-bar[data-tier='silver'] .profile-info .badge,.user-bar[data-tier$='.silver'] .profile-info .badge {
+    background-color: #6b6b6b
+}
+
+.user-bar[data-tier='gold'],.user-bar[data-tier$='.gold'] {
+    border-top: .35294118em solid #a48b59
+}
+
+.user-bar[data-tier='gold'] .profile-info .badge,.user-bar[data-tier$='.gold'] .profile-info .badge {
+    background-color: #a48b59
+}
+
+.user-bar>* {
+    position: relative;
+    vertical-align: middle;
+    overflow: hidden
+}
+
+.user-bar>*.profile-info {
+    float: left
+}
+
+.user-bar .profile-info {
+    color: #1f1f1f;
+    font-weight: bold;
+    padding-left: 4.58823529em;
+    margin-right: 1.05882353em
+}
+
+@media all and (min-width: 30.75em) and (max-width:45.3125em) {
+    .user-bar .profile-info {
+        padding-bottom:1.05882353em
+    }
+}
+
+@media all and (max-width: 30.6875em) {
+    .user-bar .profile-info {
+        padding-left:0
+    }
+}
+
+.user-bar .profile-info .avatar {
+    position: absolute;
+    left: 0;
+    padding: 0;
+    overflow: hidden;
+    width: 3.52941176em;
+    height: 3.52941176em
+}
+
+@media all and (max-width: 30.6875em) {
+    .user-bar .profile-info .avatar {
+        display:none
+    }
+}
+
+.user-bar .profile-info .avatar img {
+    padding: 0
+}
+
+.user-bar .profile-info .name {
+    display: block;
+    font-size: 1.1764705882352942em;
+    line-height: 1.2
+}
+
+.user-bar .profile-info .badge-label {
+    display: none
+}
+
+@media all and (max-width: 45.3125em) {
+    .user-bar .profile-info .badge-label {
+        display:inline-block;
+        color: #616161;
+        font-size: 1em;
+        line-height: 1.45;
+        margin: 0 .70588235em 0 0
+    }
+}
+
+.user-bar .profile-info .badge {
+    -webkit-border-radius: .35294118em;
+    -moz-border-radius: .35294118em;
+    -o-border-radius: .35294118em;
+    border-radius: .35294118em;
+    padding: .23529412em .58823529em;
+    margin: .35294118em 0;
+    font-size: .7647058823529411em;
+    color: #fff;
+    display: inline-block;
+    font-weight: bold
+}
+
+.user-bar .tier-progress-summary {
+    font-size: .7647058823529411em;
+    padding-bottom: 1.05882353em
+}
+
+@media all and (max-width: 45.3125em) {
+    .user-bar .tier-progress-summary {
+        float:none;
+        display: block;
+        clear: left;
+        width: 100%;
+        position: relative;
+        top: -100%
+    }
+}
+
+.user-bar .tier-progress-summary span {
+    margin-bottom: .46153846em;
+    font-weight: bold;
+    display: inline;
+    color: #1f1f1f;
+    font-size: inherit
+}
+
+.user-bar .tier-progress-summary .tier-completion-marker .caption {
+    display: none
+}
+
+.user-bar .tier-progress-summary .bar-graph {
+    margin-top: .46153846em
+}
+
+.user-bar .tier-progress-summary+.points-and-offers {
+    display: none;
+    padding-left: 1.41176471em
+}
+
+@media all and (max-width: 59.9375em) {
+    .user-bar .tier-progress-summary+.points-and-offers {
+        display:block;
+        clear: left;
+        padding-left: 6em;
+        width: 100%
+    }
+}
+
+@media all and (max-width: 45.3125em) {
+    .user-bar .tier-progress-summary+.points-and-offers {
+        padding-left:0;
+        float: none;
+        position: relative;
+        top: 100%
+    }
+}
+
+.user-bar .points-and-offers {
+    float: right;
+    padding-left: 2.47058824em;
+    font-size: .7647058823529411em;
+    line-height: 1.45
+}
+
+@media all and (max-width: 59.9375em) {
+    .user-bar .points-and-offers {
+        display:none
+    }
+}
+
+.user-bar .points-and-offers>* {
+    position: relative;
+    display: inline-block;
+    float: left;
+    vertical-align: top;
+    font-weight: bold;
+    padding-right: 2.47058824em
+}
+
+.user-bar .points-and-offers>*:last-of-type {
+    padding: 0;
+    max-width: 8.47058824em
+}
+
+@media all and (max-width: 59.9375em) {
+    .user-bar .points-and-offers>*:last-of-type {
+        max-width:none
+    }
+}
+
+@media all and (max-width: 59.9375em) {
+    .user-bar .points-and-offers>* {
+        width:33%
+    }
+}
+
+@media all and (max-width: 30.6875em) {
+    .user-bar .points-and-offers>* {
+        width:50%;
+        margin: 0
+    }
+}
+
+.user-bar .points-and-offers .points-pending {
+    font-weight: normal
+}
+
+.user-bar .points-and-offers .points-label {
+    white-space: nowrap
+}
+
+.user-bar .points-and-offers .points {
+    color: #000;
+    font-size: 2.1176470588235294em;
+    line-height: 1.2;
+    display: block;
+    margin: 0;
+    text-align: left
+}
+
+.user-bar .points-and-offers .coupon-info a {
+    white-space: normal;
+    font-weight: normal
+}
+
+.user-bar .points-and-offers .coupon-info .no-enough-points {
+    font-weight: normal;
+    width: 9.88235294em;
+    float: left
+}
+
+.user-bar .points-and-offers .coupon-info .no-enough-points .no-break-currency {
+    white-space: nowrap
+}
+
+.user-bar .points-and-offers .pointsUnavailableLink {
+    font-weight: normal
+}
+
+@media all and (max-width: 30.6875em) {
+    .user-bar .points-and-offers .special-offers {
+        width:100%;
+        clear: left
+    }
+}
+
+.site-content a.btn-sub-action:visited {
+    color: #fff
+}
+
+.site-content-wrap {
+    padding-bottom: 1.41176471em;
+    overflow: hidden
+}
+
+.page-content {
+    width: 100%
+}
+
+.bread-crumb {
+    padding-left: 1.41176471em
+}
+
+.user-bar,.user-bar-v2 {
+    margin-bottom: 1.41176471em;
+    padding-bottom: 1.41176471em
+}
+
+.activity-feed header.search-header {
+    padding-left: 0
+}
+
+.activity-feed header.search-header .section-header-main {
+    margin: 0;
+    font-size: 1.588235294117647em
+}
+
+.activity-feed header.search-header p,.activity-feed header.search-header:first-child p.supporting.same-line {
+    color: #1f1f1f;
+    top: auto;
+    bottom: 0;
+    font-size: .7058823529411765em
+}
+
+.activity-feed .shopping-options-dropdown-wrap .menu {
+    padding: .35294118em;
+    min-width: 0;
+    right: auto
+}
+
+.activity-feed .shopping-options-dropdown-wrap .menu a {
+    display: block;
+    padding: .17647059em .35294118em .17647059em .35294118em;
+    text-decoration: none
+}
+
+.activity-feed .shopping-options-dropdown-wrap .menu a,.activity-feed .shopping-options-dropdown-wrap .menu a:active,.activity-feed .shopping-options-dropdown-wrap .menu a:visited {
+    color: #0065b8;
+    background-color: #fff
+}
+
+.activity-feed .shopping-options-dropdown-wrap .menu a:hover {
+    color: #fff;
+    background-color: #0065b8
+}
+
+.activity-feed table td,.activity-feed table th {
+    border: 0;
+    border-top: 1px solid #c7c7c7
+}
+
+.activity-feed table .format-points {
+    text-align: right;
+    padding-right: 6.47058824em
+}
+
+.activity-feed table .format-state {
+    padding-left: 5.88235294em
+}
+
+.activity-feed table .redeem {
+    color: #d60000
+}
+
+.activity-feed table .available {
+    color: #2f7000
+}
+
+.activity-feed .current-year-progress {
+    padding-top: 0;
+    margin-bottom: 0;
+    padding-bottom: .35294118em;
+    color: #536d83
+}
+
+.activity-feed .recent-activity {
+    padding-top: 1.41176471em;
+    padding-bottom: .70588235em
+}
+
+.activity-feed .your-brand-activity {
+    margin-top: .70588235em
+}
+
+.tier-progress {
+    min-width: 14.70588235em;
+    margin-top: .70588235em
+}
+
+.tier-progress .cols-row-header.section-header .section-header-main {
+    font-size: 1em;
+    line-height: 1.45;
+    color: #616161
+}
+
+.tier-progress .covid-message {
+    font-weight: normal
+}
+
+.tier-progress header {
+    font-weight: bold;
+    color: #1f1f1f
+}
+
+.tier-progress>header {
+    margin: 1.05882353em 0 .35294118em 0
+}
+
+.tier-progress>header:first-of-type {
+    margin-top: 0
+}
+
+.tier-progress>header:nth-of-type(2) {
+    margin-top: .70588235em
+}
+
+.tier-progress .tier-progress-bar {
+    padding: 0
+}
+
+.tier-progress .tier-progress-bar[tierKey$='.gold'],.tier-progress .tier-progress-bar[tierKey='gold'] {
+    padding-top: .70588235em
+}
+
+.tier-progress .tier-progress-bar .bar-graph {
+    border: 1px solid #e5e5e5
+}
+
+@media all and (min-width: 45.375em) {
+    .tier-progress .tier-progress-bar .bar-graph {
+        position:relative;
+        float: left;
+        padding-left: .70588235em;
+        width: 75%
+    }
+}
+
+html.no-mediaqueries .tier-progress .tier-progress-bar .bar-graph {
+    position: relative;
+    float: left;
+    padding-left: .70588235em;
+    width: 75%
+}
+
+@media all and (max-width: 45.3125em) {
+    .tier-progress .tier-progress-bar .bar-graph {
+        display:block
+    }
+}
+
+.tier-progress .tier-progress-bar .progress-caption {
+    margin-top: -0.35294118em
+}
+
+@media all and (min-width: 45.375em) {
+    .tier-progress .tier-progress-bar .progress-caption {
+        position:relative;
+        float: left;
+        padding-left: .70588235em;
+        width: 25%
+    }
+}
+
+html.no-mediaqueries .tier-progress .tier-progress-bar .progress-caption {
+    position: relative;
+    float: left;
+    padding-left: .70588235em;
+    width: 25%
+}
+
+@media all and (max-width: 45.3125em) {
+    .tier-progress .tier-progress-bar .progress-caption {
+        display:block;
+        margin-top: 1.41176471em;
+        text-align: right
+    }
+}
+
+@media all and (min-width: 45.375em) {
+    .tier-progress .tier-progress-bar .progress-caption>* {
+        padding-left:3%
+    }
+}
+
+@media all and (max-width: 45.3125em) {
+    .tier-progress .tier-progress-bar .progress-caption header {
+        display:inline-block
+    }
+}
+
+@media all and (max-width: 30.6875em) {
+    .tier-progress .tier-progress-bar .progress-caption header {
+        display:none
+    }
+}
+
+.tier-progress .tier-progress-bar .progress-caption .to-next-tier {
+    font-size: 90%;
+    display: block
+}
+
+.tier-progress .tier-progress-bar .progress-caption .to-next-tier a {
+    color: #616161
+}
+
+@media all and (min-width: 30.75em) and (max-width:45.3125em) {
+    .tier-progress .tier-progress-bar .progress-caption .to-next-tier {
+        display:inline-block
+    }
+
+    .tier-progress .tier-progress-bar .progress-caption .to-next-tier:before {
+        content: '- '
+    }
+}
+
+.tier-progress #complete_progress.tier-progress-bar .bar-graph:last-child {
+    width: 100%
+}
+
+.redeem-bar .redeem-modules .redeem-module {
+    position: relative;
+    float: left;
+    padding-left: .70588235em;
+    margin-top: .70588235em
+}
+
+.redeem-bar .redeem-modules .redeem-module a {
+    color: #0065b8;
+    font-weight: 700
+}
+
+@media all and (max-width: 45.3125em) {
+    .redeem-bar .redeem-modules .redeem-module {
+        width:50% !important
+    }
+}
+
+@media all and (max-width: 30.6875em) {
+    .redeem-bar .redeem-modules .redeem-module {
+        width:100% !important
+    }
+}
+
+.redeem-bar .redeem-modules.count-2 .redeem-module {
+    width: 50%
+}
+
+.redeem-bar .redeem-modules.count-3 .redeem-module {
+    width: 33.333333333333336%
+}
+
+.redeem-bar .redeem-modules.count-4 .redeem-module {
+    width: 25%
+}
+
+.redeem-bar .redeem-modules.count-5 .redeem-module,.redeem-bar .redeem-modules.count-6 .redeem-module {
+    width: 33.333333333333336%
+}
+
+@media all and (max-width: 59.9375em) {
+    .redeem-bar .redeem-modules.count-5 .redeem-module,.redeem-bar .redeem-modules.count-6 .redeem-module {
+        width:50%
+    }
+}
+
+.redeem-bar .title-main {
+    font-size: 1em;
+    line-height: 1.45;
+    color: #616161
+}
+
+.redeem-bar .box-title {
+    margin-bottom: 0
+}
+
+.redeem-bar .box-title a .icon {
+    margin-right: .35294118em
+}
+
+.redeem-bar .box-title+.cols-nested {
+    margin-top: -0.35294118em
+}
+
+.more-info ul li {
+    padding: 0 1.41176471em .23529412em 0;
+    display: inline-block
+}
+
+.more-info ul li:last-child {
+    padding-right: 0
+}
+
+#optoutToggle .alert-error {
+    display: none;
+    margin-bottom: 1.05882353em
+}
+
+#optoutToggle #optout_wrap>p:first-child {
+    margin: .70588235em 0
+}
+
+#optoutToggle button {
+    margin: 0
+}
+
+html.backgroundsize .detail-tile-text:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url(//images.trvl-media.com/media/content/expus/graphics/other/rewards/activities/figure_text_background_750.png);
+    background-position: center center;
+    background-size: 100%
+}
+
+html.no-backgroundsize .detail-tiles .detail-tile .detail-tile-text .ie-background {
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%
+}
+
+.lt-ie9 header .supporting.same-line {
+    position: absolute;
+    right: 0;
+    max-width: 30%
+}
+
+.lt-ie9 input[type='checkbox'] {
+    height: 1em
+}
+
+.lt-ie9 .tier-progress>header {
+    margin-top: 0
+}
+
+.lt-ie9 .tier-progress header ~ header {
+    margin-top: .70588235em
+}
+
+.lt-ie9 .tier-progress header ~ header ~ header {
+    margin: 1.05882353em 0 .35294118em 0
+}
+
+.desktop-hidden,.tablet-only,.phone-only {
+    display: none
+}
+
+@media all and (max-width: 59.9375em) {
+    .activity-feed table .format-points {
+        text-align:center;
+        padding-right: .94117647em
+    }
+
+    .activity-feed table .format-state {
+        padding-left: 2.94117647em
+    }
+
+    .activity-feed table td::before {
+        color: #1f1f1f
+    }
+}
+
+@media all and (max-width: 60em) {
+    .activity-feed table .format-points {
+        text-align:left
+    }
+}
+
+@media all and (max-width: 45.3125em) {
+    .shopping-options-message {
+        display:none
+    }
+}
+
+@media all and (min-width: 45.375em) {
+    .shopping-options-dropdown-wrap {
+        display:none
+    }
+}
+
+html.no-mediaqueries .shopping-options-dropdown-wrap {
+    display: none
+}

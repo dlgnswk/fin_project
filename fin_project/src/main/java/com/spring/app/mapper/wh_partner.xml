@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #29. mapper 기본설정 ==== -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
+<mapper namespace="wh_partner">
+	
+	<!-- 로그인 처리  --> 
+	<select id="getLoginHost" parameterType="HashMap" resultType="com.spring.app.expedia.domain.HostVO">
+		select h_userid, h_pw, h_name, h_lodgename, h_email, h_mobile, h_postcode, h_address, h_detailAddress,
+               h_extraAddress, to_char(h_registerDate, 'yyyy-mm-dd') AS h_registerday,
+               trunc(months_between(sysdate, h_lastpwdchangedate)) AS h_pwdchangegap,
+               h_legalName, h_businessNo, h_status
+		from tbl_host
+		where h_userid = #{h_userid} and h_pw = #{h_pw}
+	</select>
+	
+	
+	<select id="idDuplicateCheck" parameterType="String" resultType="int">
+		select count(*)
+		from tbl_host
+		where h_userid = #{userid}
+	</select>
+	
+	
+	<!-- tbl_host 에 HostVO 에 저장된 정보를 insert 해주는 메소드 --> 
+	<insert id="registerHost" parameterType="com.spring.app.expedia.domain.HostVO">
+		insert into tbl_host(h_userid, h_pw, h_name, h_lodgename, h_email, h_mobile, h_postcode, h_address, h_detailAddress, h_extraAddress, h_registerDate, h_lastpwdchangedate, h_status, h_legalName, h_businessNo)
+		values(#{h_userid}, #{h_pw}, #{h_name}, #{h_lodgename}, #{h_email}, #{h_mobile}, #{h_postcode}, #{h_address}, #{h_detailAddress}, #{h_extraAddress}, default, default, default, #{h_legalName}, #{h_businessNo})
+	</insert>
+	
+	
+	<!-- === 월별 객실등급별 예약 인원 수 가져오기 === -->
+	<resultMap type="HashMap" id="useLodgeCnt_Map">
+		<result column="rm_type" 		property="rm_type" javaType="String"/>
+		<result column="MON01" 			property="MON01" 	   javaType="String"/>
+		<result column="MON02" 			property="MON02" 	   javaType="String"/>
+		<result column="MON03" 			property="MON03" 	   javaType="String"/>
+		<result column="MON04" 			property="MON04" 	   javaType="String"/>
+		<result column="MON05" 			property="MON05" 	   javaType="String"/>
+		<result column="MON06" 			property="MON06" 	   javaType="String"/>
+		<result column="MON07" 			property="MON07" 	   javaType="String"/>
+		<result column="MON08" 			property="MON08" 	   javaType="String"/>
+		<result column="MON09" 			property="MON09" 	   javaType="String"/>
+		<result column="MON10" 			property="MON10" 	   javaType="String"/>
+		<result column="MON11" 			property="MON11" 	   javaType="String"/>
+		<result column="MON12" 			property="MON12" 	   javaType="String"/>
+	</resultMap>
+	<select id="useLodgeCnt" parameterType="HashMap"  resultMap="useLodgeCnt_Map">
+		select rm_type
+		     , SUM( decode( to_char(rs_checkindate, 'mm'), '01', 1, 0) ) AS MON01
+		     , SUM( decode( to_char(rs_checkindate, 'mm'), '02', 1, 0) ) AS MON02
+		     , SUM( decode( to_char(rs_checkindate, 'mm'), '03', 1, 0) ) AS MON03
+		     , SUM( decode( to_char(rs_checkindate, 'mm'), '04', 1, 0) ) AS MON04
+		     , SUM( decode( to_char(rs_checkindate, 'mm'), '05', 1, 0) ) AS MON05
+		     , SUM( decode( to_char(rs_checkindate, 'mm'), '06', 1, 0) ) AS MON06
+		     , SUM( decode( to_char(rs_checkindate, 'mm'), '07', 1, 0) ) AS MON07
+		     , SUM( decode( to_char(rs_checkindate, 'mm'), '08', 1, 0) ) AS MON08
+		     , SUM( decode( to_char(rs_checkindate, 'mm'), '09', 1, 0) ) AS MON09
+		     , SUM( decode( to_char(rs_checkindate, 'mm'), '10', 1, 0) ) AS MON10
+		     , SUM( decode( to_char(rs_checkindate, 'mm'), '11', 1, 0) ) AS MON11
+		     , SUM( decode( to_char(rs_checkindate, 'mm'), '12', 1, 0) ) AS MON12 
+		FROM 
+		(
+		    SELECT *     
+		    FROM tbl_room RM LEFT JOIN tbl_reservation RS  
+		    ON RM.rm_seq = RS.fk_rm_seq  
+		    LEFT JOIN tbl_lodge L
+		    ON RS.fk_h_userid = L.fk_h_userid   
+		    WHERE to_char(rs_checkindate, 'yyyy') = to_char( add_months(sysdate, -12*(to_number(to_char(sysdate,'yyyy')) - to_number(#{year}) )  ) , 'yyyy')
+		    AND RS.fk_h_userid = #{h_userid}
+		    UNION ALL 
+		    SELECT *     
+		    FROM tbl_room RM LEFT JOIN tbl_reservation RS  
+		    ON RM.rm_seq = RS.fk_rm_seq  
+		    LEFT JOIN tbl_lodge L
+		    ON RM.fk_lodge_id = L.lodge_id 
+		    WHERE RS.rs_date IS NULL
+		    AND L.fk_h_userid = #{h_userid}
+		) V
+		GROUP BY rm_type
+	</select>
+	
+	
+	<!-- tbl_host 에 저장된 판매자의 정보를 update 해주는 메소드 -->
+	<update id="editHost" parameterType="HashMap">
+		update tbl_host set h_pw = #{pw}, h_name = #{name}, h_lodgename = #{lodgename}, h_email = #{email}, h_mobile = #{mobile}
+                  , h_postcode = #{postcode}, h_address = #{address}, h_detailAddress = #{detailAddress}, h_extraAddress = #{extraAddress}
+                  , h_legalName = #{legalName}, h_businessNo = #{businessNo}
+		where h_userid = #{userid} 
+	</update>
+	
+	  
+	
+	
+</mapper>

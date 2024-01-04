@@ -1,0 +1,266 @@
+스카이베이 호텔 경포
+Skybay Hotel Gyeongpo
+해변의 4성급 호텔
+https://www.expedia.co.kr/Gangneung-Hotels-Skybay-Hotel-Gyeongpo.h21230386.Hotel-Information?chkin=2023-12-03&chkout=2023-12-07&x_pwa=1&rfrr=HSR&pwa_ts=1701353203586&referrerUrl=aHR0cHM6Ly93d3cuZXhwZWRpYS5jby5rci9Ib3RlbC1TZWFyY2g%3D&useRewards=false&rm1=a2&regionId=1751&destination=%EA%B0%95%EB%A6%89%2C+%EA%B0%95%EC%9B%90%2C+%ED%95%9C%EA%B5%AD&destType=MARKET&latLong=37.767868%2C128.935684&sort=RECOMMENDED&top_dp=131150&top_cur=KRW&userIntent=&selectedRoomType=220836611&selectedRatePlan=292149609&searchId=41fc834f-105d-4fb5-8783-35cbc573c94f
+<tbl_host>*
+insert into tbl_host(h_userid,h_pw,h_name,h_lodgename,h_email,h_mobile,h_postcode,h_address,h_detailAddress,h_extraAddress,h_registerDate,h_lastpwdchangedate,h_status,h_legalName,h_businessNo)
+values('skybay_hotel@gmail.com','qwer1234!', '심태형', '스카이베이 호텔 경포', 'skybay_hotel@gmail.com', '033-923-2000', '25460', '강원특별자치도 강릉시 해안로 476','','(강문동)',default,default,default,'(주)빌더스개발에이엠씨','604-88-00718')
+<tbl_lodge>*
+insert into tbl_lodge(lodge_id, fk_h_userid, lg_name, LG_EN_NAME, lg_postcode, lg_address,
+                      lg_detailaddress, lg_extraaddress, lg_latitude, lg_longitude, lg_area, lg_area_2,
+                      fk_lodge_type, LG_HOTEL_STAR, lg_qty, fk_cancel_opt, fd_status,fd_time,
+                      fk_self_checkin, lg_checkin_time, lg_checkout_time, lg_age_limit, lg_wifi,
+                      fk_park_type, lg_breakfast, fk_pool_type, lg_pool_time, fk_dining_place,
+                      lg_spa_service, lg_pet_status, lg_pet_fare, fk_fac_type, lg_smoke,  
+                      lg_baggage, lg_locker, lg_laundry, lg_housekeep)
+values('GWGN0001', 'skybay_hotel@gmail.com', '스카이베이 호텔 경포', 'Skybay Hotel Gyeongpo', '25460', '강원특별자치도 강릉시 해안로 476',
+       '','(강문동)', '37.8040142', '128.9080643', '강원특별자치도', '강릉시',
+       '0', '4' , '100', '1', '1', '24시간',
+       '0', '15:00 ~ 24:00','11:00', '20','1',
+       '1', '1', '1', '07:00 ~ 22:00','2',
+       '1', '0', ' ','3' ,'0',
+       '1', '0','1', '1');
+<tbl_irs>
+
+세인트존스 호텔
+St. John's Hotel
+해변의 4성급 호텔
+https://www.expedia.co.kr/Gangneung-Hotels-St-Johns-Hotel.h20447014.Hotel-Information?chkin=2023-12-03&chkout=2023-12-07&x_pwa=1&rfrr=HSR&pwa_ts=1701353203585&referrerUrl=aHR0cHM6Ly93d3cuZXhwZWRpYS5jby5rci9Ib3RlbC1TZWFyY2g%3D&useRewards=false&rm1=a2&regionId=1751&destination=%EA%B0%95%EB%A6%89%2C+%EA%B0%95%EC%9B%90%2C+%ED%95%9C%EA%B5%AD&destType=MARKET&latLong=37.767868%2C128.935684&sort=RECOMMENDED&top_dp=105750&top_cur=KRW&userIntent=&selectedRoomType=219320486&selectedRatePlan=282071368&searchId=41fc834f-105d-4fb5-8783-35cbc573c94f
+<tbl_host>*
+insert into tbl_host(h_userid,h_pw,h_name,h_lodgename,h_email,h_mobile,h_postcode,h_address,h_detailAddress,h_extraAddress,h_registerDate,h_lastpwdchangedate,h_status,h_legalName,h_businessNo)
+values('stjohns_hotel@gmail.com','qwer1234!', '김헌성', '세인트존스 호텔', 'stjohns_hotel@gmail.com', '033-660-9000', '25467', '강원특별자치도 강릉시 창해로 307','','(강문동)',default,default,default,'주식회사 엘케이매니지먼트','566-81-00381')
+
+<tbl_lodge>
+insert into tbl_lodge(lodge_id, fk_h_userid, lg_name, LG_EN_NAME, lg_postcode, lg_address,
+                      lg_detailaddress, lg_extraaddress, lg_latitude, lg_longitude, lg_area, lg_area_2,
+                      fk_lodge_type, LG_HOTEL_STAR, lg_qty, fk_cancel_opt, fd_status,fd_time,
+                      fk_self_checkin, lg_checkin_time, lg_checkout_time, lg_age_limit, lg_wifi,
+                      fk_park_type, lg_breakfast, fk_pool_type, lg_pool_time, fk_dining_place,
+                      lg_spa_service, lg_pet_status, lg_pet_fare, fk_fac_type, lg_smoke,  
+                      lg_baggage, lg_locker, lg_laundry, lg_housekeep)
+values(('GWGN0002', 'stjohns_hotel@gmail.com', '세인트존스 호텔', 'St. John's Hotel', '25467', '강원특별자치도 강릉시 창해로 307',
+       '', '(강문동)', '37.7913073', '128.9210475', '강원특별자치도', '강릉시',
+       '0', '4', '100', '1', '1', '24시간',
+       '0', '16:00 ~ 다음날  ','체크아웃-12:00', '제한나이-20','wifi제공-1',
+       '주차장-2', '아침식사-0', '수영장타입-2', '수영장운영시간-09:00 ~ 18:00','다이닝 장소-3',
+       '스파 서비스-0', '반려동물-1', '반려동물 요금-30000','편의시설타입-0' ,'흡연구역-1',
+       '짐 보관 서비스-1', '사물함 이용 가능-0','세탁 시설 유무-0', '하우스키핑 서비스 유무-0');
+<tbl_irs>
+
+
+
+호텔 탑스텐
+Hotel Tops 10
+4.0성급 숙박 시설
+해변의 4성급 호텔
+https://www.expedia.co.kr/Gangneung-Hotels-HOTEL-TOPS-10.h21174653.Hotel-Information?chkin=2023-12-03&chkout=2023-12-07&x_pwa=1&rfrr=HSR&pwa_ts=1701353203586&referrerUrl=aHR0cHM6Ly93d3cuZXhwZWRpYS5jby5rci9Ib3RlbC1TZWFyY2g%3D&useRewards=false&rm1=a2&regionId=1751&destination=%EA%B0%95%EB%A6%89%2C+%EA%B0%95%EC%9B%90%2C+%ED%95%9C%EA%B5%AD&destType=MARKET&latLong=37.767868%2C128.935684&sort=RECOMMENDED&top_dp=93450&top_cur=KRW&userIntent=&selectedRoomType=202295209&selectedRatePlan=211916502&searchId=41fc834f-105d-4fb5-8783-35cbc573c94f
+<tbl_host>*
+insert into tbl_host(h_userid,h_pw,h_name,h_lodgename,h_email,h_mobile,h_postcode,h_address,h_detailAddress,h_extraAddress,h_registerDate,h_lastpwdchangedate,h_status,h_legalName,h_businessNo)
+values('hoteltops10@naver.com','qwer1234!', '김종민', '호텔 탑스텐', 'hoteltops10@naver.com', '033-530-4711', '25633', '강원특별자치도 강릉시 옥계면 헌화로 455-34','','(옥계면 금진리)',default,default,default,'호텔탑스텐','568-85-00750');
+
+<tbl_lodge>
+insert into tbl_lodge(lodge_id, fk_h_userid, lg_name, LG_EN_NAME, lg_postcode, lg_address,
+                      lg_detailaddress, lg_extraaddress, lg_latitude, lg_longitude, lg_area, lg_area_2,
+                      fk_lodge_type, LG_HOTEL_STAR, lg_qty, fk_cancel_opt, fd_status,fd_time,
+                      fk_self_checkin, lg_checkin_time, lg_checkout_time, lg_age_limit, lg_wifi,
+                      fk_park_type, lg_breakfast, fk_pool_type, lg_pool_time, fk_dining_place,
+                      lg_spa_service, lg_pet_status, lg_pet_fare, fk_fac_type, lg_smoke,  
+                      lg_baggage, lg_locker, lg_laundry, lg_housekeep)
+values('숙박시설ID-SIRA0001', '사업자아이디-123456789123', '숙박시설 이름-신라호텔', '숙박시설 영어 이름-신라호텔', '우편번호-48266', '주소-부산광역시 수영구',
+       '상세주소-수영로 690-4', '참고항목-(광안동)', '지역위도-123.41235521251', '지역경도-55.2315234124', '지역명-부산광역시', '지역명2-수영구',
+       '숙박시설유형-0', '호텔등급-1~5', '객실수-20', '취소정책옵션번호-0', '프런트데스크-1', '프런트데스크운영시간-09:00~18:00',
+       '셀프체크인방법-2', '체크인시간-09:00 ~ 18:00','체크아웃-12:00', '제한나이-20','wifi제공-1',
+       '주차장-2', '아침식사-0', '수영장타입-2', '수영장운영시간-09:00 ~ 18:00','다이닝 장소-3',
+       '스파 서비스-0', '반려동물-1', '반려동물 요금-30000','편의시설타입-0' ,'흡연구역-1',
+       '짐 보관 서비스-1', '사물함 이용 가능-0','세탁 시설 유무-0', '하우스키핑 서비스 유무-0');
+<tbl_irs>
+
+
+
+강릉 컨피네스 오션 스위트 호텔
+Gangneung Chonpines Ocean Suites Hotel
+4.0성급 숙박 시설
+가족 여행에 좋은 호텔, 유수풀 및 24시간 운영 비즈니스 센터 이용 가능
+https://www.expedia.co.kr/Gangneung-Hotels-Chonpines-Ocean-Suites.h76822473.Hotel-Information?chkin=2023-12-03&chkout=2023-12-07&x_pwa=1&rfrr=HSR&pwa_ts=1701408709363&referrerUrl=aHR0cHM6Ly93d3cuZXhwZWRpYS5jby5rci9Ib3RlbC1TZWFyY2g%3D&useRewards=false&rm1=a2&regionId=1751&destination=%EA%B0%95%EB%A6%89%2C+%EA%B0%95%EC%9B%90%2C+%ED%95%9C%EA%B5%AD&destType=MARKET&latLong=37.767868%2C128.935684&sort=RECOMMENDED&top_dp=88311&top_cur=KRW&userIntent=&selectedRoomType=316563141&selectedRatePlan=386294335&searchId=ab2efc20-95f5-4eb0-818f-d8b873b0c17f
+<tbl_host>*
+insert into tbl_host(h_userid,h_pw,h_name,h_lodgename,h_email,h_mobile,h_postcode,h_address,h_detailAddress,h_extraAddress,h_registerDate,h_lastpwdchangedate,h_status,h_legalName,h_businessNo)
+values('chonpines_ocsuite@gmail.com','qwer1234!', '정기목', '강릉 컨피네스 오션 스위트 호텔', 'chonpines_ocsuite@gmail.com', '033-920-0296', '25435', '강원특별자치도 강릉시 사천면 진리항구2길 5','','(사천면 사천진리)',default,default,default,'컨피네스 오션 스위트','759-85-01904')
+
+<tbl_lodge>
+insert into tbl_lodge(lodge_id, fk_h_userid, lg_name, LG_EN_NAME, lg_postcode, lg_address,
+                      lg_detailaddress, lg_extraaddress, lg_latitude, lg_longitude, lg_area, lg_area_2,
+                      fk_lodge_type, LG_HOTEL_STAR, lg_qty, fk_cancel_opt, fd_status,fd_time,
+                      fk_self_checkin, lg_checkin_time, lg_checkout_time, lg_age_limit, lg_wifi,
+                      fk_park_type, lg_breakfast, fk_pool_type, lg_pool_time, fk_dining_place,
+                      lg_spa_service, lg_pet_status, lg_pet_fare, fk_fac_type, lg_smoke,  
+                      lg_baggage, lg_locker, lg_laundry, lg_housekeep)
+values('숙박시설ID-SIRA0001', '사업자아이디-123456789123', '숙박시설 이름-신라호텔', '숙박시설 영어 이름-신라호텔', '우편번호-48266', '주소-부산광역시 수영구',
+       '상세주소-수영로 690-4', '참고항목-(광안동)', '지역위도-123.41235521251', '지역경도-55.2315234124', '지역명-부산광역시', '지역명2-수영구',
+       '숙박시설유형-0', '호텔등급-1~5', '객실수-20', '취소정책옵션번호-0', '프런트데스크-1', '프런트데스크운영시간-09:00~18:00',
+       '셀프체크인방법-2', '체크인시간-09:00 ~ 18:00','체크아웃-12:00', '제한나이-20','wifi제공-1',
+       '주차장-2', '아침식사-0', '수영장타입-2', '수영장운영시간-09:00 ~ 18:00','다이닝 장소-3',
+       '스파 서비스-0', '반려동물-1', '반려동물 요금-30000','편의시설타입-0' ,'흡연구역-1',
+       '짐 보관 서비스-1', '사물함 이용 가능-0','세탁 시설 유무-0', '하우스키핑 서비스 유무-0');
+<tbl_irs>
+
+더 홍씨호텔 강릉
+The HongC Hotel Gangneung
+3.5성급 숙박 시설
+강릉의 안락한 호텔, 교동에 위치, 무료 주차 이용 가능
+https://www.expedia.co.kr/Gangneung-Hotels-The-HongC-Hotel-Gangneung.h22418177.Hotel-Information?chkin=2023-12-03&chkout=2023-12-07&x_pwa=1&rfrr=HSR&pwa_ts=1701353205365&referrerUrl=aHR0cHM6Ly93d3cuZXhwZWRpYS5jby5rci9Ib3RlbC1TZWFyY2g%3D&useRewards=false&rm1=a2&regionId=1751&destination=%EA%B0%95%EB%A6%89%2C+%EA%B0%95%EC%9B%90%2C+%ED%95%9C%EA%B5%AD&destType=MARKET&neighborhoodId=553248635976008212&latLong=37.767868%2C128.935684&sort=RECOMMENDED&top_dp=84872&top_cur=KRW&userIntent=&selectedRoomType=202447528&selectedRatePlan=212522014&searchId=41fc834f-105d-4fb5-8783-35cbc573c94f
+<tbl_host>*
+insert into tbl_host(h_userid,h_pw,h_name,h_lodgename,h_email,h_mobile,h_postcode,h_address,h_detailAddress,h_extraAddress,h_registerDate,h_lastpwdchangedate,h_status,h_legalName,h_businessNo)
+values('hongc_hotel@google.com','qwer1234!', '홍종표', '더 홍씨호텔 강릉', 'hongc_hotel@google.com', '033-641-8011', '25512', '강원특별자치도 강릉시 교동광장로100번길 8','','(교동)',default,default,default,'주식회사 동주','226-81-51342');
+
+<tbl_lodge>
+insert into tbl_lodge(lodge_id, host_userid, lg_name, lg_postcode, lg_address,
+                      lg_detailaddress, lg_extraaddress, lg_latitude, lg_longitude, lg_area, lg_area_2,
+                      fk_lodge_type, lg_qty, fk_cancel_opt, fd_status,fd_time,
+                      fk_self_checkin, lg_checkin_time, lg_checkout_time, lg_age_limit, lg_wifi,
+                      fk_park_type, lg_breakfast, fk_pool_type, lg_pool_time, fk_dining_place,
+                      lg_spa_service, lg_pet_status, lg_pet_fare, fk_fac_type, lg_smoke,  
+                      lg_baggage, lg_locker, lg_laundry, lg_housekeep)
+values('숙박시설ID-SIRA0001', '사업자아이디-123456789123', '숙박시설 이름-신라호텔', '우편번호-48266', '주소-부산광역시 수영구',
+       '상세주소-수영로 690-4', '참고항목-(광안동)', '지역위도-123.41235521251', '지역경도-55.2315234124', '지역명-부산광역시', '지역명2-수영구',
+       '숙박시설유형-0', '객실수-20', '취소정책옵션번호-0', '프런트데스크-1', '프런트데스크운영시간-09:00~18:00',
+       '셀프체크인방법-2', '체크인시간-09:00 ~ 18:00','체크아웃-12:00', '제한나이-20','wifi제공-1',
+       '주차장-2', '아침식사-0', '수영장타입-2', '수영장운영시간-09:00 ~ 18:00','다이닝 장소-3',
+       '스파 서비스-0', '반려동물-1', '반려동물 요금-30000','편의시설타입-0' ,'흡연구역-1',
+       '짐 보관 서비스-1', '사물함 이용 가능-0','세탁 시설 유무-0', '하우스키핑 서비스 유무-0');
+<tbl_irs>
+
+
+강릉관광호텔
+Gangneung Tourist Hotel
+3.5성급 숙박 시설
+강릉에 위치한 호숫가 호텔(쇼핑센터와 연결, 무료 주차 이용 가능)
+https://www.expedia.co.kr/Gangneung-Hotels-Gangneung-Tourist-Hotel.h17251429.Hotel-Information?chkin=2023-12-03&chkout=2023-12-07&x_pwa=1&rfrr=HSR&pwa_ts=1701353205364&referrerUrl=aHR0cHM6Ly93d3cuZXhwZWRpYS5jby5rci9Ib3RlbC1TZWFyY2g%3D&useRewards=false&rm1=a2&regionId=1751&destination=%EA%B0%95%EB%A6%89%2C+%EA%B0%95%EC%9B%90%2C+%ED%95%9C%EA%B5%AD&destType=MARKET&latLong=37.767868%2C128.935684&sort=RECOMMENDED&top_dp=72675&top_cur=KRW&userIntent=&selectedRoomType=201815801&selectedRatePlan=209537861&searchId=41fc834f-105d-4fb5-8783-35cbc573c94f
+<tbl_host>*
+insert into tbl_host(h_userid,h_pw,h_name,h_lodgename,h_email,h_mobile,h_postcode,h_address,h_detailAddress,h_extraAddress,h_registerDate,h_lastpwdchangedate,h_status,h_legalName,h_businessNo)
+values('hotelgangneung@gmail.com','qwer1234!', '김운성', '강릉관광호텔', 'hotelgangneung@gmail.com', ' 033-648-7750', '25539', '강원특별자치도 강릉시 금성로 62','','(성내동)',default,default,default,'강릉관광호텔','672-22-00199');
+
+<tbl_lodge>
+insert into tbl_lodge(lodge_id, host_userid, lg_name, lg_postcode, lg_address,
+                      lg_detailaddress, lg_extraaddress, lg_latitude, lg_longitude, lg_area, lg_area_2,
+                      fk_lodge_type, lg_qty, fk_cancel_opt, fd_status,fd_time,
+                      fk_self_checkin, lg_checkin_time, lg_checkout_time, lg_age_limit, lg_wifi,
+                      fk_park_type, lg_breakfast, fk_pool_type, lg_pool_time, fk_dining_place,
+                      lg_spa_service, lg_pet_status, lg_pet_fare, fk_fac_type, lg_smoke,  
+                      lg_baggage, lg_locker, lg_laundry, lg_housekeep)
+values('숙박시설ID-SIRA0001', '사업자아이디-123456789123', '숙박시설 이름-신라호텔', '우편번호-48266', '주소-부산광역시 수영구',
+       '상세주소-수영로 690-4', '참고항목-(광안동)', '지역위도-123.41235521251', '지역경도-55.2315234124', '지역명-부산광역시', '지역명2-수영구',
+       '숙박시설유형-0', '객실수-20', '취소정책옵션번호-0', '프런트데스크-1', '프런트데스크운영시간-09:00~18:00',
+       '셀프체크인방법-2', '체크인시간-09:00 ~ 18:00','체크아웃-12:00', '제한나이-20','wifi제공-1',
+       '주차장-2', '아침식사-0', '수영장타입-2', '수영장운영시간-09:00 ~ 18:00','다이닝 장소-3',
+       '스파 서비스-0', '반려동물-1', '반려동물 요금-30000','편의시설타입-0' ,'흡연구역-1',
+       '짐 보관 서비스-1', '사물함 이용 가능-0','세탁 시설 유무-0', '하우스키핑 서비스 유무-0');
+<tbl_irs>
+
+경포엔 펜션
+Gyeongpoen Pension
+3.0성급 숙박 시설
+강릉의 안락한 펜션, 무료 주차 이용 가능
+https://www.expedia.co.kr/Gangneung-Hotels-Gyeongpoen-Pension.h30220095.Hotel-Information?chkin=2023-12-03&chkout=2023-12-07&x_pwa=1&rfrr=HSR&pwa_ts=1701353205367&referrerUrl=aHR0cHM6Ly93d3cuZXhwZWRpYS5jby5rci9Ib3RlbC1TZWFyY2g%3D&useRewards=false&rm1=a2&regionId=1751&destination=%EA%B0%95%EB%A6%89%2C+%EA%B0%95%EC%9B%90%2C+%ED%95%9C%EA%B5%AD&destType=MARKET&latLong=37.767868%2C128.935684&sort=RECOMMENDED&top_dp=63636&top_cur=KRW&userIntent=&selectedRoomType=216620440&selectedRatePlan=264079817&searchId=41fc834f-105d-4fb5-8783-35cbc573c94f
+<tbl_host>*
+insert into tbl_host(h_userid,h_pw,h_name,h_lodgename,h_email,h_mobile,h_postcode,h_address,h_detailAddress,h_extraAddress,h_registerDate,h_lastpwdchangedate,h_status,h_legalName,h_businessNo)
+values('gyeongpoen@gmail.com','qwer1234!', '원경식', '경포엔 펜션', 'gyeongpoen@gmail.com', '010-7390-3811', '25461', '강원특별자치도 강릉시 저동골길 113-6','','(저동)',default,default,default,'경포엔','717-20-00649');
+
+<tbl_lodge>
+insert into tbl_lodge(lodge_id, host_userid, lg_name, lg_postcode, lg_address,
+                      lg_detailaddress, lg_extraaddress, lg_latitude, lg_longitude, lg_area, lg_area_2,
+                      fk_lodge_type, lg_qty, fk_cancel_opt, fd_status,fd_time,
+                      fk_self_checkin, lg_checkin_time, lg_checkout_time, lg_age_limit, lg_wifi,
+                      fk_park_type, lg_breakfast, fk_pool_type, lg_pool_time, fk_dining_place,
+                      lg_spa_service, lg_pet_status, lg_pet_fare, fk_fac_type, lg_smoke,  
+                      lg_baggage, lg_locker, lg_laundry, lg_housekeep)
+values('숙박시설ID-SIRA0001', '사업자아이디-123456789123', '숙박시설 이름-신라호텔', '우편번호-48266', '주소-부산광역시 수영구',
+       '상세주소-수영로 690-4', '참고항목-(광안동)', '지역위도-123.41235521251', '지역경도-55.2315234124', '지역명-부산광역시', '지역명2-수영구',
+       '숙박시설유형-0', '객실수-20', '취소정책옵션번호-0', '프런트데스크-1', '프런트데스크운영시간-09:00~18:00',
+       '셀프체크인방법-2', '체크인시간-09:00 ~ 18:00','체크아웃-12:00', '제한나이-20','wifi제공-1',
+       '주차장-2', '아침식사-0', '수영장타입-2', '수영장운영시간-09:00 ~ 18:00','다이닝 장소-3',
+       '스파 서비스-0', '반려동물-1', '반려동물 요금-30000','편의시설타입-0' ,'흡연구역-1',
+       '짐 보관 서비스-1', '사물함 이용 가능-0','세탁 시설 유무-0', '하우스키핑 서비스 유무-0');
+<tbl_irs>
+
+강릉SS펜션
+Gangnung SS Pension
+3.0성급 숙박 시설
+강릉의 안락한 아파트, 무료 주차 이용 가능
+https://www.expedia.co.kr/Gangneung-Hotels-Gangnung-SS-Pension.h49134702.Hotel-Information?chkin=2023-12-03&chkout=2023-12-07&x_pwa=1&rfrr=HSR&pwa_ts=1701353205364&referrerUrl=aHR0cHM6Ly93d3cuZXhwZWRpYS5jby5rci9Ib3RlbC1TZWFyY2g%3D&useRewards=false&rm1=a2&regionId=1751&destination=%EA%B0%95%EB%A6%89%2C+%EA%B0%95%EC%9B%90%2C+%ED%95%9C%EA%B5%AD&destType=MARKET&latLong=37.767868%2C128.935684&sort=RECOMMENDED&top_dp=67545&top_cur=KRW&userIntent=&selectedRoomType=219146283&selectedRatePlan=280216212&searchId=41fc834f-105d-4fb5-8783-35cbc573c94f
+<tbl_host>*
+insert into tbl_host(h_userid,h_pw,h_name,h_lodgename,h_email,h_mobile,h_postcode,h_address,h_detailAddress,h_extraAddress,h_registerDate,h_lastpwdchangedate,h_status,h_legalName,h_businessNo)
+values('Sunrise_7984@gmail.com','qwer1234!', '이명옥', '강릉SS펜션', 'Sunrise_7984@gmail.com', '010-4738-7988', '25435', '강원 강릉시 사천면 해안로 1073','','(사천면 사천진리)',default,default,default,'강릉펜션-SS펜션','841-57-00216');
+
+<tbl_lodge>
+insert into tbl_lodge(lodge_id, host_userid, lg_name, lg_postcode, lg_address,
+                      lg_detailaddress, lg_extraaddress, lg_latitude, lg_longitude, lg_area, lg_area_2,
+                      fk_lodge_type, lg_qty, fk_cancel_opt, fd_status,fd_time,
+                      fk_self_checkin, lg_checkin_time, lg_checkout_time, lg_age_limit, lg_wifi,
+                      fk_park_type, lg_breakfast, fk_pool_type, lg_pool_time, fk_dining_place,
+                      lg_spa_service, lg_pet_status, lg_pet_fare, fk_fac_type, lg_smoke,  
+                      lg_baggage, lg_locker, lg_laundry, lg_housekeep)
+values('숙박시설ID-SIRA0001', '사업자아이디-123456789123', '숙박시설 이름-신라호텔', '우편번호-48266', '주소-부산광역시 수영구',
+       '상세주소-수영로 690-4', '참고항목-(광안동)', '지역위도-123.41235521251', '지역경도-55.2315234124', '지역명-부산광역시', '지역명2-수영구',
+       '숙박시설유형-0', '객실수-20', '취소정책옵션번호-0', '프런트데스크-1', '프런트데스크운영시간-09:00~18:00',
+       '셀프체크인방법-2', '체크인시간-09:00 ~ 18:00','체크아웃-12:00', '제한나이-20','wifi제공-1',
+       '주차장-2', '아침식사-0', '수영장타입-2', '수영장운영시간-09:00 ~ 18:00','다이닝 장소-3',
+       '스파 서비스-0', '반려동물-1', '반려동물 요금-30000','편의시설타입-0' ,'흡연구역-1',
+       '짐 보관 서비스-1', '사물함 이용 가능-0','세탁 시설 유무-0', '하우스키핑 서비스 유무-0');
+<tbl_irs>
+
+SL 호텔 강릉
+SL Hotel Gangneung
+3.5성급 숙박 시설
+안락한 호텔, 시즌별로 운영되는 야외 수영장 및 어린이 수영장 이용 가능
+https://www.expedia.co.kr/Gangneung-Hotels-Gangneung-Sea-Sky-Hotel.h50535306.Hotel-Information?chkin=2023-12-03&chkout=2023-12-07&x_pwa=1&rfrr=HSR&pwa_ts=1701353205372&referrerUrl=aHR0cHM6Ly93d3cuZXhwZWRpYS5jby5rci9Ib3RlbC1TZWFyY2g%3D&useRewards=false&rm1=a2&regionId=1751&destination=%EA%B0%95%EB%A6%89%2C+%EA%B0%95%EC%9B%90%2C+%ED%95%9C%EA%B5%AD&destType=MARKET&latLong=37.767868%2C128.935684&sort=RECOMMENDED&top_dp=71520&top_cur=KRW&userIntent=&selectedRoomType=230143446&selectedRatePlan=274332232&searchId=41fc834f-105d-4fb5-8783-35cbc573c94f
+<tbl_host>*
+insert into tbl_host(h_userid,h_pw,h_name,h_lodgename,h_email,h_mobile,h_postcode,h_address,h_detailAddress,h_extraAddress,h_registerDate,h_lastpwdchangedate,h_status,h_legalName,h_businessNo)
+values('sl_hotel1@google.com','qwer1234!', '최태식', 'SL 호텔 강릉', 'sl_hotel1@google.com', '033-920-1816', '25460', '강원특별자치도 강릉시 주문진읍 주문로 59','','(주문진읍 교항리)',default,default,default,'에스엘강릉(주)','718-86-01856');
+
+<tbl_lodge>
+insert into tbl_lodge(lodge_id, host_userid, lg_name, lg_postcode, lg_address,
+                      lg_detailaddress, lg_extraaddress, lg_latitude, lg_longitude, lg_area, lg_area_2,
+                      fk_lodge_type, lg_qty, fk_cancel_opt, fd_status,fd_time,
+                      fk_self_checkin, lg_checkin_time, lg_checkout_time, lg_age_limit, lg_wifi,
+                      fk_park_type, lg_breakfast, fk_pool_type, lg_pool_time, fk_dining_place,
+                      lg_spa_service, lg_pet_status, lg_pet_fare, fk_fac_type, lg_smoke,  
+                      lg_baggage, lg_locker, lg_laundry, lg_housekeep)
+values('숙박시설ID-SIRA0001', '사업자아이디-123456789123', '숙박시설 이름-신라호텔', '우편번호-48266', '주소-부산광역시 수영구',
+       '상세주소-수영로 690-4', '참고항목-(광안동)', '지역위도-123.41235521251', '지역경도-55.2315234124', '지역명-부산광역시', '지역명2-수영구',
+       '숙박시설유형-0', '객실수-20', '취소정책옵션번호-0', '프런트데스크-1', '프런트데스크운영시간-09:00~18:00',
+       '셀프체크인방법-2', '체크인시간-09:00 ~ 18:00','체크아웃-12:00', '제한나이-20','wifi제공-1',
+       '주차장-2', '아침식사-0', '수영장타입-2', '수영장운영시간-09:00 ~ 18:00','다이닝 장소-3',
+       '스파 서비스-0', '반려동물-1', '반려동물 요금-30000','편의시설타입-0' ,'흡연구역-1',
+       '짐 보관 서비스-1', '사물함 이용 가능-0','세탁 시설 유무-0', '하우스키핑 서비스 유무-0');
+<tbl_irs>
+
+강릉씨티호텔
+Gangneung City Hotel
+2.5성급 숙박 시설
+강릉의 호텔, 교동에 위치, 루프탑 테라스 및 24시간 운영 프런트 데스크 있음
+https://www.expedia.co.kr/Gangneung-Hotels-Gangneung-City-Hotel.h27434198.Hotel-Information?chkin=2023-12-03&chkout=2023-12-07&x_pwa=1&rfrr=HSR&pwa_ts=1701353205368&referrerUrl=aHR0cHM6Ly93d3cuZXhwZWRpYS5jby5rci9Ib3RlbC1TZWFyY2g%3D&useRewards=false&rm1=a2&regionId=1751&destination=%EA%B0%95%EB%A6%89%2C+%EA%B0%95%EC%9B%90%2C+%ED%95%9C%EA%B5%AD&destType=MARKET&neighborhoodId=553248635976008212&latLong=37.767868%2C128.935684&sort=RECOMMENDED&top_dp=76937&top_cur=KRW&userIntent=&selectedRoomType=215425798&selectedRatePlan=256138047&searchId=41fc834f-105d-4fb5-8783-35cbc573c94f
+<tbl_host>*
+insert into tbl_host(h_userid,h_pw,h_name,h_lodgename,h_email,h_mobile,h_postcode,h_address,h_detailAddress,h_extraAddress,h_registerDate,h_lastpwdchangedate,h_status,h_legalName,h_businessNo)
+values('gangneungCity_hotel@gmail.com','qwer1234!', '최유헌', '강릉씨티호텔', 'gangneungCity_hotel@gmail.com', '033-655-8700 ', '25515', '강원특별자치도 강릉시 교동광장로 112 ','','(교동)',default,default,default,'(주)강릉씨티호텔','792-86-01121')
+
+<tbl_lodge>
+insert into tbl_lodge(lodge_id, host_userid, lg_name, lg_postcode, lg_address,
+                      lg_detailaddress, lg_extraaddress, lg_latitude, lg_longitude, lg_area, lg_area_2,
+                      fk_lodge_type, lg_qty, fk_cancel_opt, fd_status,fd_time,
+                      fk_self_checkin, lg_checkin_time, lg_checkout_time, lg_age_limit, lg_wifi,
+                      fk_park_type, lg_breakfast, fk_pool_type, lg_pool_time, fk_dining_place,
+                      lg_spa_service, lg_pet_status, lg_pet_fare, fk_fac_type, lg_smoke,  
+                      lg_baggage, lg_locker, lg_laundry, lg_housekeep)
+values('숙박시설ID-SIRA0001', '사업자아이디-123456789123', '숙박시설 이름-신라호텔', '우편번호-48266', '주소-부산광역시 수영구',
+       '상세주소-수영로 690-4', '참고항목-(광안동)', '지역위도-123.41235521251', '지역경도-55.2315234124', '지역명-부산광역시', '지역명2-수영구',
+       '숙박시설유형-0', '객실수-20', '취소정책옵션번호-0', '프런트데스크-1', '프런트데스크운영시간-09:00~18:00',
+       '셀프체크인방법-2', '체크인시간-09:00 ~ 18:00','체크아웃-12:00', '제한나이-20','wifi제공-1',
+       '주차장-2', '아침식사-0', '수영장타입-2', '수영장운영시간-09:00 ~ 18:00','다이닝 장소-3',
+       '스파 서비스-0', '반려동물-1', '반려동물 요금-30000','편의시설타입-0' ,'흡연구역-1',
+       '짐 보관 서비스-1', '사물함 이용 가능-0','세탁 시설 유무-0', '하우스키핑 서비스 유무-0');
+<tbl_irs>
+
+
+
+
+
