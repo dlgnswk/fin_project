@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #29. mapper 기본설정 ==== -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
+<mapper namespace="jh_index">
+
+	<!-- 큰 도시 검색 결과 갯수 -->
+	<select id="search_area_1" parameterType="String" resultType="int">
+		select count(*)
+		from tbl_lodge
+		where lower(lg_area) like lower(#{searchWord}) || '%' 
+	</select>
+	
+	
+	<!-- 상세도시 검색 결과 갯수 -->
+	<select id="search_area_2" parameterType="String" resultType="int">
+		select count(*)
+		from tbl_lodge
+		where lower(lg_area_2) like lower(#{searchWord}) || '%' 
+	</select>
+	
+	
+	<!-- 시설 검색 결과 갯수 -->
+	<select id="search_lg_name" parameterType="String" resultType="int">
+		select count(*)
+		from tbl_lodge
+		where lower(lg_name) like lower(#{searchWord}) || '%' 
+	</select>
+	
+	
+	<!-- 큰 도시 검색하기 -->
+	<resultMap type="HashMap" id="search_lg_area_map">
+	    <result property="lg_area" 	column="lg_area" 	javaType="String" />
+	</resultMap>
+	
+	<select id="search_lg_area_List" parameterType="HashMap" resultMap="search_lg_area_map">
+		select lg_area
+		from tbl_lodge
+		where lower(lg_area) like lower(#{searchWord}) || '%'
+		group by lg_area
+	</select>
+	
+	
+	<!-- 검색 결과가 도시만 있는 경우 나라, 도시를 검색하기 -->
+	<resultMap type="HashMap" id="search_lg_area_2_map">
+	    <result property="lg_area_2" 	column="lg_area_2" 	javaType="String" />
+	    <result property="lg_area" 		column="lg_area" 	javaType="String" />
+	</resultMap>
+	
+	<select id="search_lg_area_2_List" parameterType="HashMap" resultMap="search_lg_area_2_map">
+		select lg_area_2, lg_area
+		from tbl_lodge
+		where lower(lg_area_2) like lower(#{searchWord}) || '%'
+		group by lg_area_2, lg_area  
+	</select>
+	
+	
+	<!-- 검색 결과가 도시만 있는 경우 나라, 도시를 검색하기 -->
+	<resultMap type="HashMap" id="lg_name_map">
+	    <result property="lg_name" 		column="lg_name" 	javaType="String" />
+	    <result property="lg_area_2" 	column="lg_area_2" 	javaType="String" />
+	    <result property="lg_area" 		column="lg_area" 	javaType="String" />
+	</resultMap>
+	
+	<select id="search_lg_name_List" parameterType="HashMap" resultMap="lg_name_map">
+		select lg_name, lg_area_2, lg_area
+		from tbl_lodge
+		where lower(lg_name) like lower(#{searchWord}) || '%'
+	</select>
+	
+	
+	<!-- 검색어를 list 로 받아오기 -->
+	<resultMap type="HashMap" id="searchLogMap">
+	    <result property="search_text" 		column="search_text" 	javaType="String" />
+	</resultMap>
+	<select id="getSearchLogList" resultMap="searchLogMap">
+		select nvl(search_text, '전체') as search_text
+		from tbl_search_log
+		where (sysdate - 7) <![CDATA[ <= ]]> search_date
+		order by search_date desc
+	</select>
+	
+</mapper>

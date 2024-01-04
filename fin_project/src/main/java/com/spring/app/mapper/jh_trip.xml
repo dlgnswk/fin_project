@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="jh_trip">
+	
+	<!-- 예정된 예약 가져오기(최대 3개) -->
+	<resultMap type="HashMap" id="beforeReservationMap">
+	    <result property="lodge_id" 			column="lodge_id" 			javaType="String" />
+	    <result property="lg_name" 				column="lg_name" 			javaType="String" />
+	    <result property="rs_month" 			column="rs_month" 			javaType="String" />
+	    <result property="rs_day" 				column="rs_day" 			javaType="String" />
+	    <result property="rs_no" 				column="rs_no" 				javaType="String" />
+	    <result property="lg_img_save_name"		column="lg_img_save_name" 	javaType="String" />
+	</resultMap>
+	<select id="beforeReservation" resultMap="beforeReservationMap">
+		select rno, lodge_id, lg_name, rs_month, rs_day, rs_no, lg_img_save_name
+		from
+		(
+		    select rownum as rno, lodge_id, lg_name, rs_month, rs_day, rs_no, lg_img_save_name
+		    from
+		    (
+		        select lg_name, to_number(to_char(rs_checkindate, 'mm')) as rs_month, to_number(to_char(rs_checkindate, 'dd')) as rs_day, rs_seq as rs_no, lg_img_save_name, rs_date, lodge_id
+		        from
+		        (
+		            select *
+		            from tbl_reservation
+		            where fk_userid = #{userid}
+		            and to_date(rs_checkindate, 'yyyy-mm-dd hh24:mi:ss') <![CDATA[ > ]]> to_date(sysdate, 'yyyy-mm-dd hh24:mi:ss')
+		            and rs_cancel = 0
+		            order by rs_date desc
+		        ) R
+		        join 
+		        (
+		            select lodge_id, lg_name, fk_h_userid, lg_img_save_name
+		            from
+		            (
+		                select lodge_id, lg_name, rno, L.fk_h_userid, lg_img_save_name
+		                from
+		                (
+		                    select row_number() over(partition by fk_lodge_id order by lg_img_save_name asc) as rno, fk_lodge_id, lg_img_save_name
+		                    from tbl_lg_img I
+		                    order by lg_img_save_name
+		                ) I
+		                join tbl_lodge L
+		                on I.fk_lodge_id = L.lodge_id
+		            )
+		            where rno = 1
+		        ) L
+		        on R.fk_h_userid = L.fk_h_userid
+		        order by rs_date desc
+		    )
+		)
+		where rno <![CDATA[ <= ]]> 3
+	</select>
+	
+	
+	<!-- 완료된 예약 가져오기(최대 3개) -->
+	<resultMap type="HashMap" id="afterReservationMap">
+	    <result property="lodge_id" 			column="lodge_id" 			javaType="String" />
+	    <result property="lg_name" 				column="lg_name" 			javaType="String" />
+	    <result property="rs_month" 			column="rs_month" 			javaType="String" />
+	    <result property="rs_day" 				column="rs_day" 			javaType="String" />
+	    <result property="rs_no" 				column="rs_no" 				javaType="String" />
+	    <result property="lg_img_save_name"		column="lg_img_save_name" 	javaType="String" />
+	    <result property="rv_yn"				column="rv_yn" 				javaType="String" />
+	    <result property="rs_cancel"			column="rs_cancel" 			javaType="String" />
+	</resultMap>
+	<select id="afterReservation" resultMap="afterReservationMap">
+		select rno, lodge_id, lg_name, rs_month, rs_day, rs_no, lg_img_save_name, rv_yn, rs_cancel
+		from
+		(
+		    select rownum as rno, lodge_id, lg_name, rs_month, rs_day, rs_no, lg_img_save_name, rv_yn, rs_cancel
+		    from
+		    (
+		        select lg_name, to_number(to_char(rs_checkindate, 'mm')) as rs_month, to_number(to_char(rs_checkindate, 'dd')) as rs_day, rs_seq as rs_no, lg_img_save_name, rs_date, lodge_id, rv_yn, rs_cancel
+		        from
+		        (
+		            select fk_h_userid, S.rs_checkindate, S.rs_seq, S.rs_date, nvl(V.rv_seq, -1) as rv_yn, rs_cancel
+		            from tbl_reservation S
+		            left join tbl_review V
+		            on S.rs_seq = V.fk_rs_seq
+		            where S.fk_userid = #{userid}
+		            and (to_date(S.rs_checkindate, 'yyyy-mm-dd hh24:mi:ss') <![CDATA[ <= ]]> to_date(sysdate, 'yyyy-mm-dd hh24:mi:ss')
+		            or rs_cancel = '1')
+		            order by S.rs_date desc
+		        ) R
+		        join 
+		        (
+		            select lodge_id, lg_name, fk_h_userid, lg_img_save_name
+		            from
+		            (
+		                select lodge_id, lg_name, rno, L.fk_h_userid, lg_img_save_name
+		                from
+		                (
+		                    select row_number() over(partition by fk_lodge_id order by lg_img_save_name asc) as rno, fk_lodge_id, lg_img_save_name
+		                    from tbl_lg_img I
+		                    order by lg_img_save_name
+		                ) I
+		                join tbl_lodge L
+		                on I.fk_lodge_id = L.lodge_id
+		            )
+		            where rno = 1
+		        ) L
+		        on R.fk_h_userid = L.fk_h_userid
+		        order by rs_date desc
+		    )
+		)
+		where rno <![CDATA[ <= ]]> 3
+	</select>
+	
+	<!-- 예정된 예약 가져오기(전부) -->
+	<resultMap type="HashMap" id="beforeReservationAllMap">
+	    <result property="lodge_id" 			column="lodge_id" 			javaType="String" />
+	    <result property="lg_name" 				column="lg_name" 			javaType="String" />
+	    <result property="rs_month" 			column="rs_month" 			javaType="String" />
+	    <result property="rs_day" 				column="rs_day" 			javaType="String" />
+	    <result property="rs_no" 				column="rs_no" 				javaType="String" />
+	    <result property="lg_img_save_name"		column="lg_img_save_name" 	javaType="String" />
+	</resultMap>
+	<select id="beforeReservationAll" resultMap="beforeReservationAllMap">
+		select rownum as rno, lodge_id, lg_name, rs_month, rs_day, rs_no, lg_img_save_name
+	    from
+	    (
+	        select lg_name, to_number(to_char(rs_checkindate, 'mm')) as rs_month, to_number(to_char(rs_checkindate, 'dd')) as rs_day, rs_seq as rs_no, lg_img_save_name, rs_date, lodge_id
+	        from
+	        (
+	            select *
+	            from tbl_reservation
+	            where fk_userid = #{userid}
+	            and to_date(rs_checkindate, 'yyyy-mm-dd hh24:mi:ss') <![CDATA[ > ]]> to_date(sysdate, 'yyyy-mm-dd hh24:mi:ss')
+	            and rs_cancel = 0
+	            order by rs_date desc
+	        ) R
+	        join 
+	        (
+	            select lodge_id, lg_name, fk_h_userid, lg_img_save_name
+	            from
+	            (
+	                select lodge_id, lg_name, rno, L.fk_h_userid, lg_img_save_name
+	                from
+	                (
+	                    select row_number() over(partition by fk_lodge_id order by lg_img_save_name asc) as rno, fk_lodge_id, lg_img_save_name
+	                    from tbl_lg_img I
+	                    order by lg_img_save_name
+	                ) I
+	                join tbl_lodge L
+	                on I.fk_lodge_id = L.lodge_id
+	            )
+	            where rno = 1
+	        ) L
+	        on R.fk_h_userid = L.fk_h_userid
+	        order by rs_date desc
+	    )
+	</select>
+	
+	
+	<!-- 완료된 예약 가져오기(전부) -->
+	<resultMap type="HashMap" id="afterReservationAllMap">
+	    <result property="lodge_id" 			column="lodge_id" 			javaType="String" />
+	    <result property="lg_name" 				column="lg_name" 			javaType="String" />
+	    <result property="rs_month" 			column="rs_month" 			javaType="String" />
+	    <result property="rs_day" 				column="rs_day" 			javaType="String" />
+	    <result property="rs_no" 				column="rs_no" 				javaType="String" />
+	    <result property="lg_img_save_name"		column="lg_img_save_name" 	javaType="String" />
+	    <result property="rv_yn"				column="rv_yn" 				javaType="String" />
+	    <result property="rs_cancel"			column="rs_cancel" 			javaType="String" />
+	</resultMap>
+	<select id="afterReservationAll" resultMap="afterReservationAllMap">
+		select rownum as rno, lodge_id, lg_name, rs_month, rs_day, rs_no, lg_img_save_name, rv_yn, rs_cancel
+	    from
+	    (
+	        select lg_name, to_number(to_char(rs_checkindate, 'mm')) as rs_month, to_number(to_char(rs_checkindate, 'dd')) as rs_day, rs_seq as rs_no, lg_img_save_name, rs_date, lodge_id, rv_yn, rs_cancel
+	        from
+	        (
+	            select fk_h_userid, S.rs_checkindate, S.rs_seq, S.rs_date, nvl(V.rv_seq, -1) as rv_yn, rs_cancel
+	            from tbl_reservation S
+	            left join tbl_review V
+	            on S.rs_seq = V.fk_rs_seq
+	            where S.fk_userid = #{userid}
+	            and (to_date(S.rs_checkindate, 'yyyy-mm-dd hh24:mi:ss') <![CDATA[ <= ]]> to_date(sysdate, 'yyyy-mm-dd hh24:mi:ss')
+	            or rs_cancel = '1')
+	            order by S.rs_date desc
+	        ) R
+	        join 
+	        (
+	            select lodge_id, lg_name, fk_h_userid, lg_img_save_name
+	            from
+	            (
+	                select lodge_id, lg_name, rno, L.fk_h_userid, lg_img_save_name
+	                from
+	                (
+	                    select row_number() over(partition by fk_lodge_id order by lg_img_save_name asc) as rno, fk_lodge_id, lg_img_save_name
+	                    from tbl_lg_img I
+	                    order by lg_img_save_name
+	                ) I
+	                join tbl_lodge L
+	                on I.fk_lodge_id = L.lodge_id
+	            )
+	            where rno = 1
+	        ) L
+	        on R.fk_h_userid = L.fk_h_userid
+	        order by rs_date desc
+	    )
+	</select>
+	
+	
+	<!-- 현재시간이 체크인시간 72시간 이전을 지났는지 확인하는 메소드 -->
+	<select id="checkinTimeConfrim" parameterType="String" resultType="String">
+		select count(*)
+		from
+		(
+		    select to_char(to_date((select to_char(rs_checkindate,'yyyy-mm-dd') from tbl_reservation where rs_seq = #{rs_no}) ||' '|| checkin_time,'yyyy-mm-dd hh24:mi:ss') - 3 + 0 + 0 + 0,'yyyy-mm-dd hh24:mi:ss') As checkinBefore72hour
+		    from
+		    (
+		        select fk_h_userid
+		              ,case when substr(lg_checkin_start_time,7,8) = 'PM' then substr(lg_checkin_start_time,1,2) + 12 || ':00:00' else substr(lg_checkin_start_time,1,2) + 0 ||':00:00' end as checkin_time
+		              ,case when substr(lg_checkout_time,7,8) = 'PM' then substr(lg_checkout_time,1,2) + 12 || ':00' else substr(lg_checkout_time,1,2) + 0 ||':00' end as checkout_time
+		        from tbl_lodge
+		    )    
+		    where 1=1
+		    and fk_h_userid = (select fk_h_userid from tbl_reservation where rs_seq = #{rs_no})
+		)
+		where to_char(sysdate,'yyyy-mm-dd hh24:mi:ss') <![CDATA[ <= ]]> checkinBefore72hour
+	</select>
+	
+	
+	<!-- 현재시간이 체크인시간 72시간 이전을 지나지 않은경우 취소상태로 업데이트 해주는 메소드 -->
+	<update id="cancelReservation" parameterType="String">
+		update tbl_reservation 
+		set rs_cancel = '1'
+		where rs_seq = #{rs_no}
+	</update>
+	
+	
+	<!-- 로그인 한 회원의 위시리스트를 가져오기 -->
+	<resultMap type="HashMap" id="wishListMap">
+	    <result property="lodge_id"			column="lodge_id" 			javaType="String" />
+	    <result property="lg_name"			column="lg_name" 			javaType="String" />
+	    <result property="min_price"		column="min_price" 			javaType="String" />
+	    <result property="rating"			column="rating" 			javaType="String" />
+	    <result property="review_cnt"		column="review_cnt" 		javaType="String" />
+	    <result property="lg_img_save_name"	column="lg_img_save_name" 	javaType="String" />
+	</resultMap>
+	<select id="getWishList" resultMap="wishListMap">
+		select P.lodge_id, P.lg_name, nvl(to_char(min_price), '가격정보없음') as min_price, nvl(to_char(rating), '평점없음') as rating, nvl(to_char(review_cnt), '리뷰없음') as review_cnt, P.lg_img_save_name
+		from
+		(
+		    select lodge_id, lg_name, lg_img_save_name
+		    from
+		    (
+		        select lodge_id, lg_name, fk_h_userid, lg_img_save_name
+		        from
+		        (
+		            select lodge_id, lg_name, rno, L.fk_h_userid, lg_img_save_name
+		            from
+		            (
+		                select row_number() over(partition by fk_lodge_id order by lg_img_save_name asc) as rno, fk_lodge_id, lg_img_save_name
+		                from tbl_lg_img I
+		                order by lg_img_save_name
+		            ) I
+		            join tbl_lodge L
+		            on I.fk_lodge_id = L.lodge_id
+		        )
+		        where rno = 1
+		    ) C
+		    join tbl_wishlist W
+		    on C.lodge_id = W.fk_lodge_id
+		    where fk_userid = #{userid}
+		) P
+		left join 
+		(
+		    select lodge_id, min_price, rating, review_cnt
+		    from
+		    (
+		        select lodge_id, min(to_number(rm_price)) as min_price
+		        from tbl_room R
+		        join tbl_lodge L
+		        on R.fk_lodge_id = L.lodge_id
+		        group by lodge_id
+		    ) A 
+		    join
+		    (
+		        select fk_lodge_id, count(*) as review_cnt, avg(to_number(fk_rv_rating)) as rating
+		        from tbl_review
+		        group by fk_lodge_id
+		    ) B
+		    on A.lodge_id = B.fk_lodge_id
+		) Q
+		ON P.lodge_id = Q.lodge_id
+	</select>
+	
+	
+	<!-- 예약번호를 받아와서 테이블에서 delete 해주기 -->
+	<delete id="deleteWishlist" parameterType="HashMap">
+		delete from tbl_wishlist
+		where fk_lodge_id = #{lodge_id}
+		and fk_userid = #{userid}
+	</delete>
+	
+	
+</mapper>

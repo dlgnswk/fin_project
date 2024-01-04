@@ -1,0 +1,128 @@
+@charset "UTF-8";
+
+h1.main_text{
+	font-size: 2rem;
+	font-weight: 700;
+    line-height: 1.2;
+	display: block;
+	margin-bottom: 1rem;
+}
+
+div.desc_text_div{
+	border-radius: 1rem;
+	background-color: white;
+	font-size: 0.9rem;
+	line-height: 1.2rem;
+	padding: 1.5rem;
+	filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .05));
+}
+
+div.desc_text_div div:first-child{
+	margin-bottom: 1rem;
+}
+
+div.desc_text_div span{
+	font-weight: bold;
+}
+
+div.btn_div{
+	text-align: center;
+}
+
+button.goToMyTravel{
+	text-align: center;
+	background-color: #3662d8;
+    border: 0;
+    color: white;
+	border-radius: 8px;
+    font-weight: 400;
+    padding: 8px 16px;
+	margin-top: 1.5rem;;
+}
+
+button.goToMyTravel:hover{
+	background-color: #538ef8;
+}
+
+button.goToMyTravel > a{
+    color: white;
+	text-decoration: none;
+}
+
+div.desc_app_div{
+	border-radius: 1rem;
+	margin-top: 2rem;
+	background-color: white;
+	font-size: 0.9rem;
+	line-height: 1.2rem;
+	padding: 2rem;
+	display: flex;
+	justify-content: space-between;
+	filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .05));
+}
+
+div.desc_app_title{
+	display:flex;
+	align-items:center;
+}
+
+span.app_title{
+	color: #00355f;
+	font-weight: 700;
+	font-size: 1.5rem;
+	display: inline-block;
+	margin-left: 1em;
+	margin-bottom: 0;
+}
+
+img.expedia_app_image{
+	height: 50px;
+	filter: drop-shadow(0 4px 7px rgba(0, 0, 0, .2));
+}
+
+div.app_QR{
+	text-align: center;
+}
+
+div#qrcode-image img{
+	bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 250px;
+    opacity: 1;
+    transition: opacity 1s;
+    display: block;
+    object-fit: cover;
+    vertical-align: middle;
+}
+
+h3#qrcode-cta{
+	font-size: 1rem;
+	margin: 1rem;
+}
+
+div.desc_app_content{
+	margin-top: 2rem;
+	display: flex;
+}
+
+div.desc_app_content span{
+	font-weight: 700;
+	color: #616161;
+	list-style-type: none;
+	font-size: 1.3rem;
+}
+
+div.desc_app_content ol{
+	margin-left: 3rem;
+	list-style: disc;
+	color: #313131;
+	font-size: 1.2rem;
+	font-weight: 500;
+}
+
+div.desc_app_content li{
+	color: #313131;
+	margin-bottom: 1rem;
+}
