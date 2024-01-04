@@ -1,0 +1,568 @@
+@charset "UTF-8";
+
+
+.common_title {
+	font-size: 17px;
+	padding: 0;
+	margin-bottom: 50px;
+}
+
+span.error,
+div.error_pw_notice,
+span.duplication_error
+span.pwCheck_error
+ {
+	font-size: 11px;
+	color: red;
+	font-weight: bold;
+	margin-left:-3%;
+	margin-bottom:3%;
+}
+
+input:focus {
+	outline:none;
+	border: solid 3px blue;
+}
+
+
+input.text {
+	flex: 1;
+	font-size: 12px;
+	padding: 0 10px;
+	overflow: hidden;
+	border: none;
+}
+
+.input_label {
+	font-size: 11px;
+	width: 100%;
+	margin-bottom: 0px;
+}
+
+
+
+
+
+
+
+
+
+
+
+/* input 파란배경 없애기 */
+input:-webkit-autofill { -webkit-box-shadow: 0 0 0 30px #fff inset ; -webkit-text-fill-color: #000; }
+input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active { transition: background-color 5000s ease-in-out 0s; }
+
+
+
+
+div {
+  box-sizing : border-box;
+}
+
+
+
+
+
+select.input_select {
+	padding-top: 15px;
+	padding-left: 9px;
+}
+
+
+
+
+	
+	
+	div.container {
+		border:0px solid #d9e2e7; 
+		width: 100%;
+		height:48px;
+		margin-top: 5%;
+	}
+	
+	div#subtitle {
+		display: block;
+	    width: 100%;
+	    font-size: 16px;
+	    line-height: 1.5;
+	    color: #6b6b6b;
+	}
+	
+	
+	div.label_wrap {
+		background-color:white; 
+		width: 106%;
+		margin: 0 -3%;
+	}
+	
+	div.input_address {
+		width:85%;
+		border:0px solid #d9e2e7;
+		margin:0 1% 0 -1% ;
+	}
+	
+	input#address {
+		background-color:fff;
+	}
+	
+	
+	button#search_add {
+		width: 30%;
+		height: 50px;
+		cursor: pointer;
+		border:2px solid #d9e2e7; 
+		font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;
+	    font-size: 14px;
+	    color: #5e6f73;
+	}
+	
+	
+	div.input_detailaddress {
+		width:50%;
+		border:0px solid #d9e2e7; 
+		
+	}
+	
+	div.input_postcode {
+		width:50%;
+		border:0px solid #d9e2e7; 
+	}
+	
+	
+	
+	
+	label.input_wrap {
+	
+		    -webkit-text-size-adjust: 100%;
+    font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-size: 14px;
+    color: #000;
+    -webkit-box-direction: normal;
+    border-style: solid;
+    border-width: 0;
+    box-sizing: inherit;
+    background-repeat: no-repeat;
+    line-height: inherit;
+    margin: 0;
+    margin-left: -0.3%;
+    padding: 0;
+    touch-action: manipulation;
+    min-width: 72px;
+    display: block;
+    position: relative;
+    width: 100.7%;
+    -webkit-box-flex: 1;
+    flex-grow: 1;
+	border:1px solid #d9e2e7; 
+	}
+	
+	label.detailaddress {
+		width: 106%;
+		margin-left: -4%;
+	}
+	
+	label.postcode {
+		width: 106%;
+		margin-left: -2%;
+	}
+	
+	label.propType {
+		border: 2px solid #d9e2e7;
+	}
+	
+	input {
+	  
+	       -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -webkit-box-direction: normal;
+    box-sizing: inherit;
+    background-repeat: no-repeat;
+    margin: 0;
+    padding: 0;
+    font-family: inherit;
+    font-style: inherit;
+    font-weight: inherit;
+    touch-action: manipulation;
+    font-size: 16px;
+    color: #121617;
+    line-height: 20px;
+    background-color: #fff;
+    border-radius: 2px;
+    width: 100%;
+    cursor: text;
+    padding-left: 12px;
+    border: 1px solid #d9e2e7;
+    min-height: 48px;
+    padding-top: 15px;
+	}
+	
+	
+	
+	
+	span.subtitle {
+		    -webkit-text-size-adjust: 100%;
+    font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;
+    font-size: 14px;
+    color: #5e6f73;
+    -webkit-font-smoothing: antialiased;
+    -webkit-box-direction: normal;
+    border-style: solid;
+    border-width: 0;
+    box-sizing: inherit;
+    background-repeat: no-repeat;
+    margin: 0;
+    padding: 0;
+    display: block;
+    margin-bottom: 0;
+    
+    line-height: 20px;
+    top: 2px;
+    position: absolute;
+    left: 1px;
+    transform: translate(12px,4px) scale(.75);
+    transition: transform .2s ease-in-out,-webkit-transform .2s ease-in-out;
+    transform-origin: left top;
+    will-change: transform;
+    pointer-events: none;
+    
+	
+	
+	}
+	
+	
+	
+	input:focus {
+		outline:none;
+	}
+	
+	
+
+	label.radio_wrap {
+	  font-size: 16px;
+	  width:100%;
+	}
+
+	[type="radio"] {
+	  height: 18px;
+	  margin-right: -26px;
+	  width: 18px;
+	  border: max(4px, 0.1em) solid gray;
+	  border-radius: 50%;
+	  
+	}
+
+	[type="radio"]:checked {
+	
+		border: 0.4em solid #000099;
+	}
+
+
+
+
+p.sub-title {
+	margin-top:7%;
+	font-size: 9pt;
+}
+
+
+label.input_label {
+	font-size: 11px;
+}
+
+
+span {
+	vertical-align: middle;
+}
+
+select#gender {
+	width: 100%;
+	height:100%;
+	border: none;
+	color: grey;
+	font-size: 11px;
+	padding: 0 10px;
+}
+select.tam-select_input {
+	border: 0px solid blueviolet;
+	height:100%;
+}
+
+
+select#gender:focus,
+select.tam-select_input:focus {
+	outline: none;
+}
+
+
+
+div.input_email_container {
+	display: flex;
+}
+
+div.text_wrap {
+	margin: 0 4px; 
+}
+
+div.input_email {
+	flex: 0 0 100px;
+}
+
+div.input_email_wrap,
+div.input_tel_wrap {
+	display: flex;
+	border: 0px solid yellowgreen;
+}
+
+div.div_select_email {
+	margin: 0 0 0 4px;
+	width: 100%;
+}
+
+div.div_select_email select {
+	width: inherit;
+	font-size: 11px;
+}
+
+div.input_email_container input {
+	width: 50%;
+}
+
+div.agree_list {
+	margin: 50px 0 40px 0;
+}
+
+label.agree {
+	padding: 0 0 0 22px;
+	font-size: 10px;
+}
+
+label.agreeAll{
+	padding-bottom: 22px;
+	font-size: 13px;
+}
+
+div.checkAll {
+	margin: 0 0 20px 0;
+}
+
+#goRegister_btn {
+	background-color: black;
+	color: white;
+	text-decoration-line: none;
+}
+
+
+div.btn_item {
+	flex: 0 0 100px;
+}
+
+div.btn_item_sm {
+	flex: 0 0 80px;
+	margin: 0 0 0 4px;
+}
+
+
+button.btn_item {
+	width: 100%;
+	height: 100%;
+	cursor: pointer;
+	font-size: 11px;
+}
+
+div.tel {
+	flex-basis: 100%; 
+}
+
+button.btn_item {
+	outline: none;
+	background-color: white;
+	border: none;
+}
+
+div.btn_item {
+	margin-left: 4px;
+	cursor: pointer;
+}
+
+div.error_pwd_notice {
+	margin: 10% 0;
+	color:#707070;
+}
+
+div#detail_add {
+	margin: 4px 0 0 0;
+}
+
+div.label_add {
+	display: flex;
+}
+
+ul {
+	list-style-type: none;
+	padding: 0px;
+	font-size: 10px;
+}
+ul > li {
+	margin: 3% 0;
+}
+
+div.input-item {
+	margin: 20px 0 0 0;
+}
+
+input.checkbox-item {
+	margin: 0 5px 0 0;
+}
+a.agree {
+	font-weight:bold;
+	text-decoration : underline;
+}
+
+label.agree{
+  display: block;
+  position: relative;
+  padding-left: 25px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+label.agree input{
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+div.checkbox-item{
+	display: flex;
+}
+
+span.checkbox-shape {
+  position: absolute;
+  top: 1.5px;
+  left: 0;
+  height: 13px;
+  width: 13px;
+  background-color: transparent;
+  border: 1px solid #c3c3c3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+span.checkbox-shape:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+label.agree input:checked ~ span.checkbox-shape:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+span.checkbox-shape:after{
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 7px;
+  border: solid black;
+  border-width: 0 2px 2px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+div.agree_list span {
+	margin: 0 10px 0 0 ;	
+}
+
+button#sendEmail_btn {
+	border: solid 1px black;
+	color: black;
+}
+
+
+/* 여기부턴 회원가입 완료 페이지 */
+#goIndex_btn {
+	
+	background-color: black;
+	color: white;
+	text-decoration-line: none;
+	margin: 50px 0 0 0;
+}
+
+.welcome_msg {
+	text-align: center;
+	font-size: 17px;
+	margin: 60px 0 0 0;
+}
+
+/* 여기부턴 비밀번호 변경 페이지 */
+div.pwd_notice {
+	margin: 10% 0;
+	color:#707070;
+}
+
+ul {
+	list-style-type: none;
+	padding: 0px;
+	font-size: 10px;
+}
+ul > li {
+	margin: 3% 0;
+}
+
+.btn_wrap {
+	margin: 40px 0 0 0;
+}
+
+#pwdChgFrm {
+	padding: 10px 0 0 0;
+}
+
+.pwd_err_msg {
+	font-size: 10.5px;
+	color: #d12b2b;
+	margin: 2px 0 0 0;
+}
+
+/* 여기부턴 아이디 찾기 페이지 */
+
+h1#findId_title {
+	margin: 74px 0 0 0;
+	font-size: 17px;
+}
+
+form#findIdFrm {
+	margin: 50px 0 0 0;
+}
+
+.btn_wrap_idFind {
+	margin:50px 0 0 0;
+	padding: 0 0 40px 0;
+}
+
+a#goLogin_a:hover {
+	color: white;	
+	text-decoration: none;
+}
+a#goRegister_a:hover {
+	color: #333;
+	text-decoration: none;
+}
+
+#container > div > div > section > div > form > div.btn_wrap a:first-child:hover {
+	text-decoration: none;
+	color: white;
+}
+#container > div > div > section > div > form > div.btn_wrap a:last-child:hover {
+	text-decoration: none;
+	color: black;
+}
