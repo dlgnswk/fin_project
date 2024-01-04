@@ -1,0 +1,580 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #29. mapper 기본설정 ==== -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
+<mapper namespace="jy_lodge">
+	
+	<select id="getLodgeInfo" parameterType="String" resultType="HashMap">
+		WITH V
+		AS
+		(
+		    SELECT  *
+		    FROM TBL_LODGE L
+		    JOIN TBL_lodge_type LT ON L.fk_lodge_type = LT.LODGE_TYPE
+		    JOIN TBL_CANCEL CN ON CN.CANCEL_OPT = L.fk_cancel_opt
+		    JOIN TBL_CHECKIN CI ON ci.s_checkin_type = L.fk_s_checkin_type
+		    JOIN TBL_SPA_TYPE ST ON st.spa_type = L.fk_spa_type
+		)
+		,
+		R
+		as
+		(
+		    SELECT FK_lodge_id, avg(FK_RV_RATING) as rv_rating_avg, count(*) as rv_cnt
+		    FROM
+		    (
+		        select FK_lodge_id, FK_RV_RATING, rv_status
+		        from tbl_review R
+		        join tbl_lodge L on L.lodge_id = R.fk_lodge_id    
+		    )v2
+		    WHERE rv_status = 1
+		    group by fk_lodge_id
+		
+		)
+		,
+		RC
+		AS
+		
+		(
+		    SELECT LODGE_ID as RC_LODGE_ID, SUM(RM_CNT) AS TTL_RM_CNT
+		    FROM
+		    (
+		        SELECT  *
+		        FROM TBL_LODGE L
+		        JOIN TBL_lodge_type LT ON L.fk_lodge_type = LT.LODGE_TYPE
+		        JOIN TBL_CANCEL CN ON CN.CANCEL_OPT = L.fk_cancel_opt
+		        JOIN TBL_CHECKIN CI ON ci.s_checkin_type = L.fk_s_checkin_type
+		        JOIN TBL_SPA_TYPE ST ON st.spa_type = L.fk_spa_type
+		        join tbl_room R on L.lodge_id = R.fk_lodge_id
+		     )V1
+		     GROUP BY LODGE_ID
+		)
+		
+		SELECT  lodge_id, fk_h_userid, lg_name, lg_en_name, lg_postcode, lg_address, lg_detailaddress, lg_extraaddress
+		       , lg_latitude, lg_longitude, lg_area, fk_lodge_type, lg_hotel_star, lg_qty, fk_cancel_opt
+		       , fd_status, fd_time, fk_s_checkin_type, lg_checkin_start_time, lg_checkin_end_time
+		       , lg_checkout_time, lg_age_limit, lg_internet_yn, lg_park_yn, lg_breakfast_yn
+		       , lg_dining_place_yn, lg_pool_yn, lg_pet_yn, lg_pet_fare, lg_fac_yn, lg_service_yn
+		       , lg_rm_service_yn, lg_beach_yn, lg_business_yn, lg_fa_travel_yn, fk_spa_type
+		       , lg_smoke_yn, lg_status
+		       , lodge_content
+		       , cancel_opt_content
+		       , s_checkin_content
+		       , spa_desc
+		       , rv_rating_avg, nvl(rv_cnt, 0) as rv_cnt
+		       , TTL_RM_CNT
+		       
+		 from V 
+		 LEFT join R on V.lodge_id = R.fk_lodge_id
+		 LEFT JOIN RC ON V.LODGE_ID = RC.RC_LODGE_ID
+		 where V.lodge_id = #{lodge_id}
+	</select>
+	
+	<resultMap type="HashMap" id="getInet_opt_list_Map">
+		<result property="lodge_id"        column="lodge_id"        javaType="String"></result>
+		<result property="lg_name"         column="lg_name"         javaType="String"></result>
+		<result property="lg_internet_yn"  column="lg_internet_yn"  javaType="String"></result>
+		<result property="fk_inet_opt_no"  column="fk_inet_opt_no"  javaType="String"></result>
+		<result property="inet_opt_desc"   column="inet_opt_desc"   javaType="String"></result>
+	</resultMap>	
+	<select id="getInet_opt_list" parameterType="String" resultMap="getInet_opt_list_Map">
+		with V
+		as
+		(
+		    select *
+		    from tbl_lodge L
+		    join tbl_inet I on L.lodge_id = I.fk_lodge_id
+		    join tbl_inet_opt IO on I.fk_inet_opt_no = IO.inet_opt_no
+		)
+		select lodge_id, lg_name, lg_internet_yn, fk_inet_opt_no, inet_opt_desc
+		from V
+		where lodge_id = #{lodge_id}
+	</select>
+
+
+	<resultMap type="HashMap" id="getPark_opt_list_Map">
+		<result property="lodge_id"       column="lodge_id"        javaType="String"></result>
+		<result property="lg_name"        column="lg_name"         javaType="String"></result>
+		<result property="lg_park_yn"     column="lg_park_yn"      javaType="String"></result>
+		<result property="fk_park_opt_no" column="fk_park_opt_no"  javaType="String"></result>
+		<result property="park_opt_desc"  column="park_opt_desc"   javaType="String"></result>
+	</resultMap>		
+	<select id="getPark_opt_list" parameterType="String" resultMap="getPark_opt_list_Map">
+		with V
+		as
+		(
+		    select *
+		    from tbl_lodge L
+		    join tbl_park P on L.lodge_id = P.fk_lodge_id
+		    join tbl_park_opt PO on P.fk_park_opt_no = PO.park_opt_no
+		)
+		select lodge_id, lg_name, lg_park_yn, fk_park_opt_no, park_opt_desc
+		from V
+		where lodge_id = #{lodge_id}
+	</select>
+	
+	<resultMap type="HashMap" id="getDin_opt_list_Map">
+		<result property="lodge_id"           column="lodge_id"            javaType="String"></result>
+		<result property="lg_name"            column="lg_name"             javaType="String"></result>
+		<result property="fk_din_opt_no"      column="fk_din_opt_no"       javaType="String"></result>
+		<result property="lg_dining_place_yn" column="lg_dining_place_yn"  javaType="String"></result>
+		
+		<result property="din_opt_desc"       column="din_opt_desc"   javaType="String"></result>
+	</resultMap>		
+	<select id="getDin_opt_list" parameterType="String" resultMap="getDin_opt_list_Map">
+		with V
+		as
+		(
+		    select *
+		    from tbl_lodge L
+		    join tbl_din D on L.lodge_id = D.fk_lodge_id
+		    join tbl_din_opt DO on D.fk_din_opt_no = DO.din_opt_no
+		)
+		select lodge_id, lg_name, lg_dining_place_yn, fk_din_opt_no, din_opt_desc
+		from V
+		where lodge_id = #{lodge_id}
+	</select>
+	
+	<resultMap type="HashMap" id="getPool_opt_list_Map">
+		<result property="lodge_id"       column="lodge_id"        javaType="String"></result>
+		<result property="lg_name"        column="lg_name"         javaType="String"></result>
+		<result property="lg_pool_yn"     column="lg_pool_yn"      javaType="String"></result>
+		<result property="fk_pool_opt_no" column="fk_pool_opt_no"  javaType="String"></result>
+		<result property="pool_opt_desc"  column="pool_opt_desc"   javaType="String"></result>
+	</resultMap>		
+	<select id="getPool_opt_list" parameterType="String" resultMap="getPool_opt_list_Map">
+		with V
+		as
+		(
+		    select *
+		    from tbl_lodge L
+		    join tbl_pool P on L.lodge_id = P.fk_lodge_id
+		    join tbl_pool_opt PO on P.fk_pool_opt_no = PO.pool_opt_no
+		)
+		select lodge_id, lg_name, lg_pool_yn, fk_pool_opt_no, pool_opt_desc
+		from V
+		where lodge_id = #{lodge_id}
+	</select>
+	
+	<resultMap type="HashMap" id="getFac_opt_list_Map">
+		<result property="lodge_id"       column="lodge_id"        javaType="String"></result>
+		<result property="lg_name"        column="lg_name"         javaType="String"></result>
+		<result property="lg_fac_yn"      column="lg_fac_yn"       javaType="String"></result>
+		<result property="fk_fac_opt_no"  column="fk_fac_opt_no"   javaType="String"></result>
+		<result property="fac_opt_desc"   column="fac_opt_desc"    javaType="String"></result>
+	</resultMap>		
+	<select id="getFac_opt_list" parameterType="String" resultMap="getFac_opt_list_Map">
+		with V
+		as
+		(
+		    select *
+		    from tbl_lodge L
+		    join tbl_fac F on L.lodge_id = F.fk_lodge_id
+		    join tbl_fac_opt FO on F.fk_fac_opt_no = FO.fac_opt_no
+		)
+		select lodge_id, lg_name, lg_fac_yn, fk_fac_opt_no, fac_opt_desc
+		from V
+		where lodge_id = #{lodge_id}
+	</select>
+	
+	<resultMap type="HashMap" id="getCs_opt_list_Map">
+		<result property="lodge_id"       column="lodge_id"        javaType="String"></result>
+		<result property="lg_name"        column="lg_name"         javaType="String"></result>
+		<result property="lg_service_yn"  column="lg_service_yn"   javaType="String"></result>
+		<result property="fk_cs_opt_no"   column="fk_cs_opt_no"    javaType="String"></result>
+		<result property="cs_opt_desc"    column="cs_opt_desc"     javaType="String"></result>
+	</resultMap>		
+	<select id="getCs_opt_list" parameterType="String" resultMap="getCs_opt_list_Map">
+		with V
+		as
+		(
+		    select *
+		    from tbl_lodge L
+		    join tbl_cs C on L.lodge_id = C.fk_lodge_id
+		    join tbl_cs_opt CO on C.fk_cs_opt_no = CO.cs_opt_no
+		)
+		select lodge_id, lg_name, lg_service_yn, fk_cs_opt_no, cs_opt_desc
+		from V
+		where lodge_id = #{lodge_id}
+	</select>
+	
+	<resultMap type="HashMap" id="getRmsvc_opt_list_Map">
+		<result property="lodge_id"          column="lodge_id"          javaType="String"></result>
+		<result property="lg_name"           column="lg_name"           javaType="String"></result>
+		<result property="lg_rm_service_yn"  column="lg_rm_service_yn"  javaType="String"></result>
+		<result property="fk_rmsvc_opt_no"   column="fk_rmsvc_opt_no"   javaType="String"></result>
+		<result property="rmsvc_opt_desc"    column="rmsvc_opt_desc"    javaType="String"></result>
+	</resultMap>		
+	<select id="getRmsvc_opt_list" parameterType="String" resultMap="getRmsvc_opt_list_Map">
+		with V
+		as
+		(
+		    select *
+		    from tbl_lodge L
+		    join tbl_rmsvc R on L.lodge_id = R.fk_lodge_id
+		    join tbl_rmsvc_opt RO on R.fk_rmsvc_opt_no = RO.rmsvc_opt_no
+		)
+		select lodge_id, lg_name, lg_rm_service_yn, fk_rmsvc_opt_no, rmsvc_opt_desc
+		from V
+		where lodge_id = #{lodge_id}
+	</select>
+	
+	<resultMap type="HashMap" id="getBsns_opt_list_Map">
+		<result property="lodge_id"         column="lodge_id"         javaType="String"></result>
+		<result property="lg_name"          column="lg_name"          javaType="String"></result>
+		<result property="lg_business_yn"   column="lg_business_yn"   javaType="String"></result>
+		<result property="fk_bsns_opt_no"   column="fk_bsns_opt_no"   javaType="String"></result>
+		<result property="bsns_opt_desc"    column="bsns_opt_desc"    javaType="String"></result>
+	</resultMap>		
+	<select id="getBsns_opt_list" parameterType="String" resultMap="getBsns_opt_list_Map">
+		with V
+		as
+		(
+		    select *
+		    from tbl_lodge L
+		    join tbl_bsns B on L.lodge_id = B.fk_lodge_id
+		    join tbl_bsns_opt BO on B.fk_bsns_opt_no = BO.bsns_opt_no
+		)
+		select lodge_id, lg_name, lg_business_yn, fk_bsns_opt_no, bsns_opt_desc
+		from V
+		where lodge_id = #{lodge_id}
+	</select>
+	
+	<resultMap type="HashMap" id="getFasvc_opt_list_Map">
+		<result property="lodge_id"          column="lodge_id"         javaType="String"></result>
+		<result property="lg_name"           column="lg_name"          javaType="String"></result>
+		<result property="lg_fa_travel_yn"   column="lg_fa_travel_yn"   javaType="String"></result>
+		<result property="fk_fasvc_opt_no"   column="fk_fasvc_opt_no"   javaType="String"></result>
+		<result property="fasvc_opt_desc"    column="fasvc_opt_desc"    javaType="String"></result>
+	</resultMap>		
+	<select id="getFasvc_opt_list" parameterType="String" resultMap="getFasvc_opt_list_Map">
+		with V
+		as
+		(
+		    select *
+		    from tbl_lodge L
+		    join tbl_fasvc F on L.lodge_id = F.fk_lodge_id
+		    join tbl_fasvc_opt FO on F.fk_fasvc_opt_no = FO.fasvc_opt_no
+		)
+		select lodge_id, lg_name, lg_fa_travel_yn, fk_fasvc_opt_no, fasvc_opt_desc
+		from V
+		where lodge_id = #{lodge_id}
+	</select>
+	
+	<resultMap type="HashMap" id="getLg_img_list_Map">
+		<result property="lodge_id"          column="lodge_id"         javaType="String"></result>
+		<result property="lg_name"           column="lg_name"          javaType="String"></result>
+		<result property="fk_img_cano"       column="fk_img_cano"      javaType="String"></result>
+		<result property="img_cate_name"     column="img_cate_name"    javaType="String"></result>
+		<result property="lg_img_save_name"  column="lg_img_save_name" javaType="String"></result>
+	</resultMap>		
+	<select id="getLg_img_list" parameterType="HashMap" resultMap="getLg_img_list_Map">
+		with V
+		as 
+		
+		(
+		    select *
+		    from tbl_lodge L
+		    join tbl_lg_img LI on L.lodge_id = LI.fk_lodge_id
+		    join tbl_lg_img_cate LIC on LI.FK_IMG_CANO = LIC.img_cate_no
+		)
+		select lodge_id, lg_name, fk_img_cano, img_cate_name, lg_img_save_name
+		from V
+		where lodge_id = #{lodge_id}
+		<if test="img_cano==null and data==null">
+			and fk_img_cano = 6
+		</if>
+		<if test="img_cano!=null">
+			and fk_img_cano = #{img_cano}
+		</if>
+		
+	</select>
+	
+	
+	
+	<resultMap type="HashMap" id="getBath_opt_list_Map">
+		<result property="rm_seq"            column="rm_seq"            javaType="String"></result>
+		<result property="rm_type"           column="rm_type"           javaType="String"></result>
+		<result property="rm_bathroom_cnt"   column="rm_bathroom_cnt"   javaType="String"></result>
+		<result property="bath_opt_no"       column="bath_opt_no"       javaType="String"></result>
+		<result property="bath_opt_desc"     column="bath_opt_desc"     javaType="String"></result>
+	</resultMap>		
+	<select id="getBath_opt_list" parameterType="String" resultMap="getBath_opt_list_Map">
+		select fk_lodge_id, rm_seq, rm_type, rm_bathroom_cnt, bath_opt_no, bath_opt_desc
+	    from
+	    (
+	        select fk_lodge_id, rm_seq, rm_type, rm_bathroom_cnt, bath_opt_no, bath_opt_desc, ROW_NUMBER() over (partition by bath_opt_no
+	        																									<if test="rm_seq.substring(0,3)!='rm-'">, fk_lodge_id</if>
+	        																				 				    <if test="rm_seq.substring(0,3)=='rm-'">, rm_seq</if>
+	        																				 				    order by fk_lodge_id) as RN
+	        from tbl_room R
+	        join tbl_bath B on R.rm_seq = B.fk_rm_seq
+	        join tbl_bath_opt BO on B.fk_bath_opt_no = BO.bath_opt_no
+	    )v
+	    where rn=1
+	    <if test="rm_seq.substring(0,3)!='rm-'">
+	    	and fk_lodge_id=#{lodge_id}
+	    </if>
+	    <if test="rm_seq.substring(0,3)=='rm-'">
+	    	and rm_seq = #{rm_seq}
+	    </if>
+	</select>
+	
+	<resultMap type="HashMap" id="getSnk_opt_list_Map">
+		<result property="rm_seq"            column="rm_seq"           javaType="String"></result>
+		<result property="rm_type"           column="rm_type"          javaType="String"></result>
+		<result property="rm_snack_yn"       column="rm_snack_yn"      javaType="String"></result>
+		<result property="snk_opt_no"        column="snk_opt_no"       javaType="String"></result>
+		<result property="snk_opt_desc"      column="snk_opt_desc"     javaType="String"></result>
+	</resultMap>		
+	<select id="getSnk_opt_list" parameterType="String" resultMap="getSnk_opt_list_Map">
+		select fk_lodge_id, rm_seq, rm_type, rm_snack_yn, snk_opt_no, snk_opt_desc
+	    from
+	    (
+	        select fk_lodge_id, rm_seq, rm_type, rm_snack_yn, snk_opt_no, snk_opt_desc, ROW_NUMBER() over (partition by snk_opt_no
+        																									<if test="rm_seq.substring(0,3)!='rm-'">, fk_lodge_id</if>
+        																				 				    <if test="rm_seq.substring(0,3)=='rm-'">, rm_seq</if>
+        																				 				    order by fk_lodge_id) as RN
+	        from tbl_room R
+	        join tbl_snack S on R.rm_seq = S.fk_rm_seq
+	        join tbl_snk_opt SO on S.fk_snk_opt_no = SO.snk_opt_no
+	    )v
+	    where rn=1
+	    <if test="rm_seq.substring(0,3)!='rm-'">
+	    	and fk_lodge_id=#{lodge_id}
+	    </if>
+	    <if test="rm_seq.substring(0,3)=='rm-'">
+	    	and rm_seq = #{rm_seq}
+	    </if>
+	</select>
+	
+	<resultMap type="HashMap" id="getKt_opt_list_Map">
+		<result property="rm_seq"            column="rm_seq"          javaType="String"></result>
+		<result property="rm_type"           column="rm_type"         javaType="String"></result>
+		<result property="rm_kitchen_yn"     column="rm_kitchen_yn"   javaType="String"></result>
+		<result property="kt_opt_no"         column="kt_opt_no"       javaType="String"></result>
+		<result property="kt_opt_desc"       column="kt_opt_desc"     javaType="String"></result>
+	</resultMap>		
+	<select id="getKt_opt_list" parameterType="String" resultMap="getKt_opt_list_Map">
+		select fk_lodge_id, rm_seq, rm_type, rm_kitchen_yn, kt_opt_no, kt_opt_desc
+		from
+		(
+	        select fk_lodge_id, rm_seq, rm_type, rm_kitchen_yn, kt_opt_no, kt_opt_desc, ROW_NUMBER() over (partition by kt_opt_no
+	        																							   <if test="rm_seq.substring(0,3)!='rm-'">, fk_lodge_id</if>
+	        																				 			   <if test="rm_seq.substring(0,3)=='rm-'">, rm_seq</if>
+	        																				 				order by fk_lodge_id) as RN
+	        from tbl_room R
+	        join tbl_kitchen K on R.rm_seq = K.fk_rm_seq
+	        join tbl_kt_opt KO on K.fk_kt_opt_no = KO.kt_opt_no
+	    )v
+		where rn=1
+		<if test="rm_seq.substring(0,3)!='rm-'">
+	    	and fk_lodge_id=#{lodge_id}
+	    </if>
+	    <if test="rm_seq.substring(0,3)=='rm-'">
+	    	and rm_seq = #{rm_seq}
+	    </if>
+	</select>
+	
+	<resultMap type="HashMap" id="getEnt_opt_list_Map">
+		<result property="rm_seq"            column="rm_seq"          javaType="String"></result>
+		<result property="rm_type"           column="rm_type"         javaType="String"></result>
+		<result property="rm_ent_yn"         column="rm_ent_yn"       javaType="String"></result>
+		<result property="ent_opt_no"        column="ent_opt_no"      javaType="String"></result>
+		<result property="ent_opt_desc"      column="ent_opt_desc"    javaType="String"></result>
+	</resultMap>		
+	<select id="getEnt_opt_list" parameterType="String" resultMap="getEnt_opt_list_Map">
+		select fk_lodge_id, rm_seq, rm_type, rm_ent_yn, ent_opt_no, ent_opt_desc
+	    from
+	    (
+	        select fk_lodge_id, rm_seq, rm_type, rm_ent_yn, ent_opt_no, ent_opt_desc, ROW_NUMBER() over (partition by ent_opt_no
+	        																							 <if test="rm_seq.substring(0,3)!='rm-'">, fk_lodge_id</if>
+	        																				 			 <if test="rm_seq.substring(0,3)=='rm-'">, rm_seq</if>
+	        																				 		     order by fk_lodge_id) as RN	        
+	        from tbl_room R
+	        join tbl_ent E on R.rm_seq = E.fk_rm_seq
+	        join tbl_ent_opt EO on E.fk_ent_opt_no = EO.ent_opt_no
+	    )v
+	    where rn=1
+	    <if test="rm_seq.substring(0,3)!='rm-'">
+	    	and fk_lodge_id=#{lodge_id}
+	    </if>
+	    <if test="rm_seq.substring(0,3)=='rm-'">
+	    	and rm_seq = #{rm_seq}
+	    </if>
+	</select>
+	
+	<resultMap type="HashMap" id="getTmp_opt_list_Map">
+		<result property="rm_seq"            column="rm_seq"           javaType="String"></result>
+		<result property="rm_type"           column="rm_type"          javaType="String"></result>
+		<result property="rm_tmp_ctrl_yn"    column="rm_tmp_ctrl_yn"   javaType="String"></result>
+		<result property="tmp_opt_no"        column="tmp_opt_no"       javaType="String"></result>
+		<result property="tmp_opt_desc"      column="tmp_opt_desc"     javaType="String"></result>
+	</resultMap>		
+	<select id="getTmp_opt_list" parameterType="String" resultMap="getTmp_opt_list_Map">
+	select fk_lodge_id, rm_seq, rm_type, rm_tmp_ctrl_yn, tmp_opt_no, tmp_opt_desc
+    from
+    (
+        select fk_lodge_id, rm_seq, rm_type, rm_tmp_ctrl_yn, tmp_opt_no, tmp_opt_desc, ROW_NUMBER() over (partition by tmp_opt_no
+	        																							 <if test="rm_seq.substring(0,3)!='rm-'">, fk_lodge_id</if>
+	        																				 			 <if test="rm_seq.substring(0,3)=='rm-'">, rm_seq</if>
+	        																				 		     order by fk_lodge_id) as RN	        
+        from tbl_room R
+        join tbl_tmp T on R.rm_seq = T.fk_rm_seq
+        join tbl_tmp_opt TMO on T.fk_tmp_opt_no = TMO.tmp_opt_no
+    )v
+    where rn=1
+    <if test="rm_seq.substring(0,3)!='rm-'">
+    	and fk_lodge_id=#{lodge_id}
+    </if>
+    <if test="rm_seq.substring(0,3)=='rm-'">
+    	and rm_seq = #{rm_seq}
+    </if>
+	</select>
+	
+	<resultMap type="HashMap" id="getRm_img_list_Map">
+		<result property="rm_seq"            column="rm_seq"           javaType="String"></result>
+		<result property="rm_img_name"       column="rm_img_name"      javaType="String"></result>
+		<result property="rm_img_main"       column="rm_img_main"      javaType="String"></result>
+		<result property="rm_img_save_name"  column="rm_img_save_name" javaType="String"></result>
+	</resultMap>		
+	<select id="getRm_img_list" parameterType="String" resultMap="getRm_img_list_Map">
+		with V
+		as 
+		(
+		    select *
+		    from tbl_rm_img RI
+		    join tbl_room R on RI.fk_rm_seq = R.rm_seq
+		)
+		select rm_seq, rm_img_name, rm_img_main, rm_img_save_name
+		from V
+		<if test="rm_seq.substring(0,3)=='rm-'">
+			where rm_seq = #{rm_seq}
+		</if>
+		<if test="rm_seq.substring(0,3)!='rm-'">
+			where fk_lodge_id = #{lodge_id}
+		</if>
+		 
+	</select>
+	
+	
+	<resultMap type="HashMap" id="getAvbl_rm_list_Map">
+		<result property="rm_seq"            column="rm_seq"           javaType="String"></result>
+		<result property="fk_lodge_id"       column="fk_lodge_id"      javaType="String"></result>
+		<result property="rm_type"           column="rm_type"          javaType="String"></result>
+		<result property="rm_bedrm_cnt"      column="rm_bedrm_cnt"     javaType="String"></result>
+		<result property="rm_smoke_yn"       column="rm_smoke_yn"      javaType="String"></result>
+		<result property="rm_size_meter"     column="rm_size_meter"    javaType="String"></result>
+		<result property="rm_size_pyug"      column="rm_size_pyug"     javaType="String"></result>
+		<result property="rm_extra_bed_yn"   column="rm_extra_bed_yn"  javaType="String"></result>
+		<result property="rm_single_bed"     column="rm_single_bed"    javaType="String"></result>
+		<result property="rm_ss_bed"         column="rm_ss_bed"        javaType="String"></result>
+		<result property="rm_double_bed"     column="rm_double_bed"    javaType="String"></result>
+		<result property="rm_queen_bed"      column="rm_queen_bed"     javaType="String"></result>
+		<result property="rm_king_bed"       column="rm_king_bed"      javaType="String"></result>
+		<result property="rm_wheelchair_yn"  column="rm_wheelchair_yn" javaType="String"></result>
+		<result property="rm_bathroom_cnt"   column="rm_bathroom_cnt"  javaType="String"></result>
+		<result property="rm_p_bathroom_yn"  column="rm_p_bathroom_yn" javaType="String"></result>
+		<result property="rm_kitchen_yn"     column="rm_kitchen_yn"    javaType="String"></result>
+		<result property="fk_view_no"        column="fk_view_no"       javaType="String"></result>
+		<result property="rm_snack_yn"       column="rm_snack_yn"      javaType="String"></result>
+		<result property="rm_ent_yn"         column="rm_ent_yn"        javaType="String"></result>
+		<result property="rm_tmp_ctrl_yn"    column="rm_tmp_ctrl_yn"   javaType="String"></result>
+		<result property="rm_guest_cnt"      column="rm_guest_cnt"     javaType="String"></result>
+		<result property="rm_price"          column="rm_price"         javaType="String"></result>
+		<result property="rm_breakfast_yn"   column="rm_breakfast_yn"  javaType="String"></result>
+		<result property="view_desc"         column="view_desc"        javaType="String"></result>
+		<result property="rm_cnt"            column="rm_cnt"           javaType="String"></result>
+		<result property="rs_room_cnt"       column="rs_room_cnt"      javaType="String"></result>
+	</resultMap>
+	<select id="getAvbl_rm_list" parameterType="HashMap" resultMap="getAvbl_rm_list_Map">
+		with 
+		v1 as
+		(
+		    select *
+		    from tbl_room R
+		    JOIN tbl_view V ON R.fk_view_no = V.view_no
+		    
+		)
+		,
+		V2 as
+		(
+		    select fk_rm_seq, count(*) as rs_room_cnt
+		    from
+		        ( 
+		        select *
+		        from tbl_reservation RS
+		        join tbl_room R on R.rm_seq = RS.fk_rm_seq
+		     )
+		     <if test="startDate!=null or endDate!=null">
+			     where (rs_checkindate <![CDATA[<=]]> to_date(#{startDate})) and ((to_date(#{startDate}) <![CDATA[<]]> rs_checkoutdate) and (rs_checkoutdate <![CDATA[<=]]> to_date(#{endDate})))
+			        or ((to_date(#{startDate}) <![CDATA[<=]]> rs_checkindate) and ((rs_checkindate <![CDATA[<=]]> to_date(#{endDate})) and (to_date(#{endDate}) <![CDATA[<=]]> rs_checkoutdate)))
+			        or ((rs_checkindate <![CDATA[<=]]> to_date(#{startDate})) and (to_date(#{endDate}) <![CDATA[<=]]> rs_checkoutdate))
+			        or ((to_date(#{startDate}) <![CDATA[<=]]> rs_checkindate) and (rs_checkoutdate <![CDATA[<=]]> to_date(#{endDate})))
+			</if>		    
+		    group by fk_rm_seq
+		)
+		
+		select rm_seq, fk_lodge_id, rm_type, rm_bedrm_cnt, rm_smoke_yn
+		      , rm_size_meter, rm_size_pyug, rm_extra_bed_yn
+		      , rm_single_bed, rm_ss_bed, rm_double_bed, rm_queen_bed, rm_king_bed
+		      , rm_wheelchair_yn, rm_bathroom_cnt, rm_p_bathroom_yn, rm_kitchen_yn, fk_view_no
+		      , rm_snack_yn, rm_ent_yn, rm_tmp_ctrl_yn, rm_guest_cnt, rm_price, rm_breakfast_yn
+		      , view_desc
+		      , rm_cnt , rm_cnt-nvl(rs_room_cnt, 0) as left_room_cnt
+		from v1 
+		left join v2 on v1.rm_seq = v2.fk_rm_seq
+		<if test="lodge_id!=null">
+			where fk_lodge_id = #{lodge_id}
+		</if>
+		<if test="rm_seq!=null">
+			where rm_seq = #{rm_seq}
+		</if>
+		 and V1.rm_cnt - NVL(v2.rs_room_cnt, 0) <![CDATA[>]]> 0
+		order by to_number(rm_price)
+	</select>
+	
+	<resultMap type="HashMap" id="getLg_img_ca_list_Map">
+		<result property="img_cate_no"         column="img_cate_no"      javaType="String"></result>
+		<result property="img_cate_name"       column="img_cate_name"    javaType="String"></result>
+		<result property="ca_img_cnt"          column="ca_img_cnt"       javaType="String"></result>
+	</resultMap>	
+	<select id="getLg_img_ca_list" parameterType="String" resultMap="getLg_img_ca_list_Map">
+		with V
+		as
+		(
+		    select fk_lodge_id, lg_img_save_name, img_cate_no, img_cate_name
+		    from TBL_LG_IMG L
+		    join TBL_LG_IMG_CATE LC on L.fk_img_cano = LC.img_cate_no
+		)
+		select img_cate_no, img_cate_name, count(*) as ca_img_cnt
+		from v
+		where fk_lodge_id = #{lodge_id}
+		group by img_cate_no, img_cate_name
+		order by img_cate_no
+	</select>
+	
+	<select id="getLg_ca_name" parameterType="String" resultType="String">
+		select img_cate_name
+		from tbl_lg_img_cate
+		where img_cate_no = #{img_cano}
+	</select>
+	
+	<select id="isExist_wish" parameterType="HashMap" resultType="boolean">
+		select count(*)
+		from tbl_wishlist
+		where fk_lodge_id = #{lodge_id} and fk_userid=#{userid}
+	</select>
+	
+	<delete id="delete_wishList" parameterType="HashMap">
+		delete from tbl_wishlist
+		where fk_lodge_id = #{lodge_id} and fk_userid=#{userid}
+	</delete>
+	
+	<insert id="add_wishList" parameterType="HashMap">
+		insert into tbl_wishlist (wishlist_seq, fk_lodge_id, fk_userid) values (seq_tbl_wishlist.nextval, #{lodge_id}, #{userid})
+	</insert>
+	
+</mapper>
