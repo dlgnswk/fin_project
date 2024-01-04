@@ -1,0 +1,851 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #29. mapper 기본설정 ==== -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
+<mapper namespace="db_register_lodge">
+	
+	<!-- // == 숙박시설 유형 테이블에서 select == // -->
+	<resultMap type="HashMap" id="getLodgeType_Map">
+		<result property="lodge_type" 		column="lodge_type" 		javaType="String" />
+		<result property="lodge_content" 	column="lodge_content" 		javaType="String" />
+	</resultMap>
+	
+	<select id="getLodgeType" resultMap="getLodgeType_Map">
+		SELECT lodge_type, lodge_content
+		FROM
+		(        
+		    select row_number() over(order by to_number(lodge_type) asc) rno, lodge_type, lodge_content
+		    from tbl_lodge_type
+		)
+		ORDER BY rno asc
+	</select>
+	
+	
+	
+	<!-- // == 환불 정책 옵션 select == // -->
+	<resultMap type="HashMap" id="getCancelOption_Map">
+		<result property="cancel_opt" 			column="cancel_opt" 				javaType="String" />
+		<result property="cancel_opt_content" 	column="cancel_opt_content" 		javaType="String" />
+	</resultMap>
+	
+	<select id="getCancelOption" resultMap="getCancelOption_Map">
+		SELECT cancel_opt, cancel_opt_content
+		FROM
+		(        
+		    select row_number() over(order by to_number(cancel_opt) asc) rno, cancel_opt, cancel_opt_content
+		    from tbl_cancel
+		)
+		ORDER BY rno asc
+	</select>
+	
+	
+	
+	<!-- // == 셀프 체크인 방법 select == // -->
+	<resultMap type="HashMap" id="getSelfCheckinOption_Map">
+		<result property="s_checkin_type" 		column="s_checkin_type" 	javaType="String"/>
+		<result property="s_checkin_content" 	column="s_checkin_content" 	javaType="String"/>
+		<result property="s_checkin_info" 		column="s_checkin_info" 	javaType="String"/>
+	</resultMap>
+	
+	<select id="getSelfCheckinOption" resultMap="getSelfCheckinOption_Map">
+		SELECT s_checkin_type, s_checkin_content, s_checkin_info
+		FROM
+		(        
+		    select row_number() over(order by to_number(s_checkin_type) asc) rno, s_checkin_type, s_checkin_content, s_checkin_info
+		    from tbl_checkin
+		)
+		ORDER BY rno asc
+	</select>
+	
+	
+	
+	<!-- // == 인터넷 옵션 체크박스 == // -->
+	<resultMap type="HashMap" id="getInternetOption_Map">
+		<result property="inet_opt_no" 		column="inet_opt_no" 	javaType="String"/>
+		<result property="inet_opt_desc" 	column="inet_opt_desc" 	javaType="String"/>
+	</resultMap>
+	
+	<select id="getInternetOption" resultMap="getInternetOption_Map">
+		SELECT inet_opt_no, inet_opt_desc
+		FROM
+		(        
+		    select row_number() over(order by to_number(inet_opt_no) asc) rno, inet_opt_no, inet_opt_desc
+		    from tbl_inet_opt
+		)
+		ORDER BY rno asc
+	</select>
+	
+	
+	
+	<!-- // == 주차장 종류 select == // -->
+	<resultMap type="HashMap" id="getParkOption_Map">
+		<result property="park_opt_no"		column="park_opt_no" 		javaType="String"/>
+		<result property="park_opt_desc"	column="park_opt_desc" 		javaType="String"/>
+	</resultMap>
+	
+	<select id="getParkOption" resultMap="getParkOption_Map">
+		SELECT park_opt_no, park_opt_desc
+		FROM
+		(        
+		    select row_number() over(order by to_number(park_opt_no) asc) rno, park_opt_no, park_opt_desc
+		    from tbl_park_opt
+		)
+		ORDER BY rno asc
+	</select>
+	
+	
+	
+	<!-- // == 수영장 종류 체크박스 == // -->
+	<resultMap type="HashMap" id="getPoolType_Map">
+		<result property="pool_opt_no"		column="pool_opt_no" 		javaType="String"/>
+		<result property="pool_opt_desc"	column="pool_opt_desc" 		javaType="String"/>
+	</resultMap>
+	
+	<select id="getPoolType" resultMap="getPoolType_Map">
+		SELECT pool_opt_no, pool_opt_desc
+		FROM
+		(        
+		    select row_number() over(order by to_number(pool_opt_no) asc) rno, pool_opt_no, pool_opt_desc
+		    from tbl_pool_opt
+		)
+		ORDER BY rno asc
+	</select>
+	
+	
+	
+	<!-- // == 스파 서비스 종류 셀렉트 == // -->
+	<resultMap type="HashMap" id="getSpaType_Map">
+		<result property="spa_type"		column="spa_type" 		javaType="String"/>
+		<result property="spa_desc"		column="spa_desc" 		javaType="String"/>
+	</resultMap>
+	
+	<select id="getSpaType" resultMap="getSpaType_Map">
+		SELECT spa_type, spa_desc
+		FROM
+		(        
+		    select row_number() over(order by to_number(spa_type) asc) rno, spa_type, spa_desc
+		    from tbl_spa_type
+		)
+		ORDER BY rno asc
+	</select>
+	
+
+	<!-- // == 다이닝 장소 종류 체크박스 == // -->
+	<resultMap type="HashMap" id="getDiningPlace_Map">
+		<result property="din_opt_no"		column="din_opt_no" 		javaType="String"/>
+		<result property="din_opt_desc"		column="din_opt_desc" 		javaType="String"/>
+	</resultMap>
+	
+	<select id="getDiningPlace" resultMap="getDiningPlace_Map">
+		SELECT din_opt_no, din_opt_desc
+		FROM
+		(        
+		    select row_number() over(order by to_number(din_opt_no) asc) rno, din_opt_no, din_opt_desc
+		    from tbl_din_opt
+		)
+		ORDER BY rno asc
+	</select>
+	
+
+	<!-- // == 장애인 편의 시설 정보 체크박스 == // -->
+	<resultMap type="HashMap" id="getFacilityInfo_Map">
+		<result property="fac_opt_no"		column="fac_opt_no" 	javaType="String"/>
+		<result property="fac_opt_desc"		column="fac_opt_desc" 	javaType="String"/>
+	</resultMap>
+	
+	<select id="getFacilityInfo" resultMap="getFacilityInfo_Map">
+		SELECT fac_opt_no, fac_opt_desc
+		FROM
+		(        
+		    select row_number() over(order by to_number(fac_opt_no) asc) rno, fac_opt_no, fac_opt_desc
+		    from tbl_fac_opt
+		)
+		ORDER BY rno asc
+	</select>	
+
+
+	
+	<!-- // == 고객서비스 종류 체크박스 == // -->
+	<resultMap type="HashMap" id="getConsumerService_Map">
+		<result property="cs_opt_no"		column="cs_opt_no" 		javaType="String"/>
+		<result property="cs_opt_desc"		column="cs_opt_desc" 	javaType="String"/>
+	</resultMap>
+	
+	<select id="getConsumerService" resultMap="getConsumerService_Map">
+		SELECT cs_opt_no, cs_opt_desc
+		FROM
+		(        
+		    select row_number() over(order by to_number(cs_opt_no) asc) rno, cs_opt_no, cs_opt_desc
+		    from tbl_cs_opt
+		)
+		ORDER BY rno asc
+	</select>
+
+
+	<!-- == 룸 서비스 종류 체크박스  == -->
+	<resultMap type="HashMap" id="getRoomService_Map">
+		<result property="rmsvc_opt_no"		column="rmsvc_opt_no" 		javaType="String"/>
+		<result property="rmsvc_opt_desc"	column="rmsvc_opt_desc" 	javaType="String"/>
+	</resultMap>
+	
+	<select id="getRoomService" resultMap="getRoomService_Map">
+		SELECT rmsvc_opt_no, rmsvc_opt_desc
+		FROM
+		(        
+		    select row_number() over(order by to_number(rmsvc_opt_no) asc) rno, rmsvc_opt_no, rmsvc_opt_desc
+		    from tbl_rmsvc_opt
+		)
+		ORDER BY rno asc
+	</select>
+
+
+
+	<!-- // == 비즈니스 공간 종류 체크박스 == // -->
+	<resultMap type="HashMap" id="getBusinessType_Map">
+		<result property="bsns_opt_no"		column="bsns_opt_no" 		javaType="String"/>
+		<result property="bsns_opt_desc"	column="bsns_opt_desc" 		javaType="String"/>
+	</resultMap>
+	
+	<select id="getBusinessType" resultMap="getBusinessType_Map">
+		SELECT bsns_opt_no, bsns_opt_desc
+		FROM
+		(        
+		    select row_number() over(order by to_number(bsns_opt_no) asc) rno, bsns_opt_no, bsns_opt_desc
+		    from tbl_bsns_opt
+		)
+		ORDER BY rno asc
+	</select>
+
+
+
+	<!-- // == 가족서비스 종류 체크박스 == // -->
+	<resultMap type="HashMap" id="getFamilyServiceType_Map">
+		<result property="fasvc_opt_no"		column="fasvc_opt_no" 		javaType="String"/>
+		<result property="fasvc_opt_desc"	column="fasvc_opt_desc" 	javaType="String"/>
+	</resultMap>
+	
+	<select id="getFamilyServiceType" resultMap="getFamilyServiceType_Map">
+		SELECT fasvc_opt_no, fasvc_opt_desc
+		FROM
+		(        
+		    select row_number() over(order by to_number(fasvc_opt_no) asc) rno, fasvc_opt_no, fasvc_opt_desc
+		    from tbl_fasvc_opt
+		)
+		ORDER BY rno asc
+	</select>
+	
+	
+
+	<!-- // === 숙박시설 등록 === // -->
+	<insert id="insertLodge" parameterType="HashMap">
+		insert into tbl_lodge(lodge_id, fk_h_userid, lg_name, lg_en_name, lg_postcode
+			                , lg_address, lg_detailaddress, lg_extraaddress, lg_latitude, lg_longitude
+			                , lg_hotel_star, lg_area, lg_area_2, fk_lodge_type, lg_qty
+			                , fk_cancel_opt, fd_status, fd_time, fk_s_checkin_type, lg_checkin_start_time
+			                , lg_checkin_end_time, lg_checkout_time, lg_age_limit, lg_internet_yn, lg_park_yn
+			                , lg_breakfast_yn, lg_dining_place_yn, lg_pool_yn, lg_pet_yn, lg_pet_fare
+			                , lg_fac_yn, lg_service_yn, lg_rm_service_yn, lg_beach_yn, fk_spa_type
+			                , lg_smoke_yn, lg_business_yn, lg_fa_travel_yn, lg_status)
+		values(#{lodge_id},#{fk_h_userid},#{lg_name},#{lg_en_name},#{lg_postcode}
+			 , #{lg_address},#{lg_detailaddress},#{lg_extraaddress},#{lg_latitude},#{lg_longitude}
+			 , #{lg_hotel_star},#{lg_area},#{lg_area_2},#{fk_lodge_type},#{lg_qty}
+	     	 , #{fk_cancel_opt},#{fd_status},#{fd_time},#{fk_s_checkin_type},#{lg_checkin_start_time}
+		   	 , #{lg_checkin_end_time},#{lg_checkout_time},#{lg_age_limit},#{lg_internet_yn},#{lg_park_yn}
+		   	 , #{lg_breakfast_yn},#{lg_dining_place_yn},#{lg_pool_yn},#{lg_pet_yn},decode(#{lg_pet_fare},'없음', null, #{lg_pet_fare})
+		   	 , #{lg_fac_yn},#{lg_service_yn},#{lg_rm_service_yn},#{lg_beach_yn},#{fk_spa_type}
+		   	 , #{lg_smoke_yn},#{lg_business_yn},#{lg_fa_travel_yn},default)
+	</insert>
+	
+	<!-- 기존에 입력되어있는 lodge정보 가져오기 -->
+	<select id="getLodgeInfo" parameterType="String" resultType="com.spring.app.expedia.domain.LodgeVO">
+		select lodge_id, fk_h_userid, lg_name, lg_en_name, lg_postcode
+	     , lg_address, lg_detailaddress, lg_extraaddress, lg_latitude, lg_longitude
+	     , lg_hotel_star, lg_area, lg_area_2, fk_lodge_type, lg_qty
+	     , fk_cancel_opt, fd_status, fd_time, fk_s_checkin_type, lg_checkin_start_time
+	     , lg_checkin_end_time, lg_checkout_time, lg_age_limit, lg_internet_yn, lg_park_yn
+	     , lg_breakfast_yn, lg_dining_place_yn, lg_pool_yn, lg_pet_yn, lg_pet_fare
+	     , lg_fac_yn, lg_service_yn, lg_rm_service_yn, lg_beach_yn, fk_spa_type
+	     , lg_smoke_yn, lg_business_yn, lg_fa_travel_yn, lg_status
+		from tbl_lodge
+		where fk_h_userid = #{fk_h_userid}
+	</select>
+	
+	
+	<!-- === tbl_inet에 입력되어 있는 인터넷 옵션 가져오기 === -->
+	<resultMap type="HashMap" id="getInternetService_Map">
+		<result property="inet_seq"			column="inet_seq" 			javaType="String"/>
+		<result property="fk_lodge_id"		column="fk_lodge_id" 		javaType="String"/>
+		<result property="fk_inet_opt_no"	column="fk_inet_opt_no" 	javaType="String"/>
+	</resultMap>	
+	
+	<select id="getInternetService" parameterType="String" resultMap="getInternetService_Map">
+		select inet_seq, fk_lodge_id, fk_inet_opt_no
+		from tbl_inet
+		where fk_lodge_id = #{fk_lodge_id}
+	</select>
+
+
+	<!-- === 등록 또는 수정하려는 fk_lodge_id로 tbl_inet테이블에 입력되어 있는 데이터 삭제하기 === -->
+	<delete id="internetDataDelete" parameterType="String">
+		delete from tbl_inet
+		where fk_lodge_id = #{fk_lodge_id}
+	</delete>
+			
+	<!-- === 삭제 이후 tbl_inet테이블에 현재 체크한 체크 박스 insert해 주기 === -->			
+	<insert id="insertInterOption" parameterType="HashMap">
+		insert into tbl_inet(inet_seq, fk_lodge_id, fk_inet_opt_no)
+		values(seq_tbl_inet.nextval, #{fk_lodge_id}, #{fk_inet_opt_no})
+	</insert>
+	
+	<!-- Lodge 데이터 수정하기 -->
+	<update id="updateLodge" parameterType="HashMap">
+		update tbl_lodge set lodge_id=#{lodge_id}, lg_name=#{lg_name}, lg_en_name=#{lg_en_name}, lg_postcode=#{lg_postcode}
+		     , lg_address=#{lg_address}, lg_detailaddress=#{lg_detailaddress}, lg_extraaddress=#{lg_extraaddress}, lg_latitude=#{lg_latitude}, lg_longitude=#{lg_longitude}
+		     , lg_hotel_star=#{lg_hotel_star}, lg_area=#{lg_area}, lg_area_2=#{lg_area_2}, fk_lodge_type=#{fk_lodge_type}, lg_qty=#{lg_qty}
+		     , fk_cancel_opt=#{fk_cancel_opt}, fd_status=#{fd_status}, fd_time=#{fd_time}, fk_s_checkin_type=#{fk_s_checkin_type}, lg_checkin_start_time=#{lg_checkin_start_time}
+		     , lg_checkin_end_time=#{lg_checkin_end_time}, lg_checkout_time=#{lg_checkout_time}, lg_age_limit=#{lg_age_limit}, lg_internet_yn=#{lg_internet_yn}, lg_park_yn=#{lg_park_yn}
+		     , lg_breakfast_yn=#{lg_breakfast_yn}, lg_dining_place_yn=#{lg_dining_place_yn}, lg_pool_yn=#{lg_pool_yn}, lg_pet_yn=#{lg_pet_yn}, lg_pet_fare=decode(#{lg_pet_fare},'없음', null, #{lg_pet_fare})
+		     , lg_fac_yn=#{lg_fac_yn}, lg_service_yn=#{lg_service_yn}, lg_rm_service_yn=#{lg_rm_service_yn}, lg_beach_yn=#{lg_beach_yn}, fk_spa_type=#{fk_spa_type}
+		     , lg_smoke_yn=#{lg_smoke_yn}, lg_business_yn=#{lg_business_yn}, lg_fa_travel_yn=#{lg_fa_travel_yn}, lg_status=#{lg_status}
+		where fk_h_userid = #{fk_h_userid}
+	</update>
+		
+	
+		
+	<!-- === tbl_park테이블에 기존에 입력되어 있는 주차장 옵션 가져오기 === -->
+	<resultMap type="HashMap" id="getParkOptionData_Map">
+		<result property="park_seq"			column="park_seq" 			javaType="String"/>
+		<result property="fk_lodge_id"		column="fk_lodge_id" 		javaType="String"/>
+		<result property="fk_park_opt_no"	column="fk_park_opt_no" 	javaType="String"/>
+	</resultMap>	
+	
+	<select id="getParkOptionData" parameterType="String" resultMap="getParkOptionData_Map">
+		select park_seq, fk_lodge_id, fk_park_opt_no
+		from tbl_park
+		where fk_lodge_id = #{fk_lodge_id}
+	</select>
+	
+	
+	<!-- === 등록 또는 수정하려는 fk_lodge_id로 tbl_inet테이블에 입력되어 있는 데이터 삭제하기 === -->
+	<delete id="parkOptionDataDelete" parameterType="String">
+		delete from tbl_park
+		where fk_lodge_id = #{fk_lodge_id}
+	</delete>
+	
+	
+	<!-- tbl_park테이블 현재 주차장 옵션 insert -->
+	<insert id="insertParkOption" parameterType="HashMap">
+		insert into tbl_park(park_seq, fk_lodge_id, fk_park_opt_no)
+		values(seq_tbl_park.nextval, #{fk_lodge_id}, #{fk_park_opt_no})
+	</insert>
+		
+		
+		
+	<!-- === tbl_din 테이블에 기존에 입력되어 있는 다이닝 종류 가져오기 === -->
+	<resultMap type="HashMap" id="getDiningTypeData_Map">
+		<result property="park_seq"			column="park_seq" 			javaType="String"/>
+		<result property="fk_lodge_id"		column="fk_lodge_id" 		javaType="String"/>
+		<result property="fk_park_opt_no"	column="fk_park_opt_no" 	javaType="String"/>
+	</resultMap>	
+	
+	<select id="getDiningTypeData" parameterType="String" resultMap="getDiningTypeData_Map">
+		select din_seq, fk_lodge_id, fk_din_opt_no
+		from tbl_din
+		where fk_lodge_id = #{fk_lodge_id}
+	</select>		
+	
+	
+	<!-- 기존 tbl_din에 입력된 데이터 제거하기 -->
+	<delete id="diningTypeDataDelete" parameterType="String">
+		delete from tbl_din
+		where fk_lodge_id = #{fk_lodge_id}
+	</delete>
+	
+	
+	<!-- 체크한 현재 다이닝 장소 종류 insert -->
+	<insert id="insertDiningType" parameterType="HashMap">
+		insert into tbl_din(din_seq, fk_lodge_id, fk_din_opt_no)
+		values(seq_tbl_din.nextval, #{fk_lodge_id}, #{fk_din_opt_no})
+	</insert>
+		
+
+	<!-- === tbl_pool 테이블에 기존에 입력되어 있는 수영장 정보 가져오기 === -->
+	<resultMap type="HashMap" id="getPoolTypeData_Map">
+		<result property="pool_seq"			column="pool_seq" 			javaType="String"/>
+		<result property="fk_lodge_id"		column="fk_lodge_id" 		javaType="String"/>
+		<result property="fk_pool_opt_no"	column="fk_pool_opt_no" 	javaType="String"/>
+		<result property="pool_use_time"	column="pool_use_time" 			javaType="String"/>
+	</resultMap>	
+	
+	<select id="getPoolTypeData" parameterType="String" resultMap="getPoolTypeData_Map">
+		select pool_seq, fk_lodge_id, fk_pool_opt_no, pool_use_time
+		from tbl_pool
+		where fk_lodge_id = #{fk_lodge_id}
+	</select>		
+	
+
+	<!-- // 기존에 tbl_pool 테이블에 입력된 수영장 정보 제거하기 -->
+	<delete id="poolTypeDataDelete" parameterType="String">
+		delete from tbl_pool
+		where fk_lodge_id = #{fk_lodge_id}
+	</delete>
+	
+	
+	<!-- // 체크한 현재 수영장 종류 insert -->
+	<insert id="insertPoolType" parameterType="HashMap">
+		insert into tbl_pool(pool_seq, fk_lodge_id, fk_pool_opt_no, pool_use_time)
+		values(seq_tbl_pool.nextval, #{fk_lodge_id}, #{fk_pool_opt_no}, #{pool_use_time})
+	</insert>	
+	
+
+
+	<!-- === tbl_fac 테이블에 기존에 입력되어 있는 장애인 편의시설 종류 가져오기 === -->
+	<resultMap type="HashMap" id="getFacilityTypeData_Map">
+		<result property="fac_seq"			column="fac_seq" 			javaType="String"/>
+		<result property="fk_lodge_id"		column="fk_lodge_id" 		javaType="String"/>
+		<result property="fk_fac_opt_no"	column="fk_fac_opt_no" 		javaType="String"/>
+	</resultMap>	
+	
+	<select id="getFacilityTypeData" parameterType="String" resultMap="getFacilityTypeData_Map">
+		select fac_seq, fk_lodge_id, fk_fac_opt_no
+		from tbl_fac
+		where fk_lodge_id = #{fk_lodge_id}
+	</select>	
+		
+	
+	<!-- 기존에 tbl_fac 테이블에 입력된 편의시설 정보 제거하기 -->
+	<delete id="facilityTypeDataDelete" parameterType="String">
+		delete from tbl_fac
+		where fk_lodge_id = #{fk_lodge_id}
+	</delete>		
+	
+	
+	<!-- 현재 체크한 장애인 편의시설 종류 insert -->
+	<insert id="insertFacilityType" parameterType="HashMap">
+		insert into tbl_fac(fac_seq, fk_lodge_id, fk_fac_opt_no)
+		values(seq_tbl_fac.nextval, #{fk_lodge_id}, #{fk_fac_opt_no})
+	</insert>
+	
+	
+	
+	<!-- === tbl_cs 테이블에 기존에 입력되어 있는 고객서비스 종류 가져오기 === -->
+	<resultMap type="HashMap" id="getCustomerSurviceTypeData_Map">
+		<result property="cs_seq"			column="cs_seq" 			javaType="String"/>
+		<result property="fk_lodge_id"		column="fk_lodge_id" 		javaType="String"/>
+		<result property="fk_cs_opt_no"		column="fk_cs_opt_no" 		javaType="String"/>
+	</resultMap>	
+	
+	<select id="getCustomerSurviceTypeData" parameterType="String" resultMap="getCustomerSurviceTypeData_Map">
+		select cs_seq, fk_lodge_id, fk_cs_opt_no
+		from tbl_cs
+		where fk_lodge_id = #{fk_lodge_id}
+	</select>	
+		
+	
+	<!-- 기존에 tbl_cs 테이블에 입력된 고객서비스 정보 제거하기 -->
+	<delete id="customerSurviceTypeDataDelete" parameterType="String">
+		delete from tbl_cs
+		where fk_lodge_id = #{fk_lodge_id}
+	</delete>		
+	
+	
+	<!-- 현재 체크한 고객서비스 종류 insert -->
+	<insert id="insertCustomerServiceType" parameterType="HashMap">
+		insert into tbl_cs(cs_seq, fk_lodge_id, fk_cs_opt_no)
+		values(seq_tbl_cs.nextval, #{fk_lodge_id}, #{fk_cs_opt_no})
+	</insert>	
+	
+	
+	
+	<!-- === tbl_rmsvc 테이블에 기존에 입력되어 있는 룸서비스 종류 가져오기 === -->
+	<resultMap type="HashMap" id="getRoomSurviceTypeData_Map">
+		<result property="rmsvc_seq"			column="rmsvc_seq" 			javaType="String"/>
+		<result property="fk_lodge_id"			column="fk_lodge_id" 		javaType="String"/>
+		<result property="fk_rmsvc_opt_no"		column="fk_rmsvc_opt_no" 	javaType="String"/>
+	</resultMap>	
+	
+	<select id="getRoomSurviceTypeData" parameterType="String" resultMap="getRoomSurviceTypeData_Map">
+		select rmsvc_seq, fk_lodge_id, fk_rmsvc_opt_no
+		from tbl_rmsvc
+		where fk_lodge_id = #{fk_lodge_id}
+	</select>
+	
+	
+	<!-- 기존에 tbl_rmsvc 테이블에 입력된 룸서비스 정보 제거하기 -->
+	<delete id="roomSurviceTypeDataDelete" parameterType="String">
+		delete from tbl_rmsvc
+		where fk_lodge_id = #{fk_lodge_id}
+	</delete>		
+	
+	
+	<!-- 현재 체크한 룸서비스 종류 insert -->
+	<insert id="insertRoomServiceType" parameterType="HashMap">
+		insert into tbl_rmsvc(rmsvc_seq, fk_lodge_id, fk_rmsvc_opt_no)
+		values(seq_tbl_rmsvc.nextval, #{fk_lodge_id}, #{fk_rmsvc_opt_no})
+	</insert>	
+	
+	
+	
+	<!-- === tbl_bsns 테이블에 기존에 입력되어 있는 비즈니스 종류 가져오기 === -->
+	<resultMap type="HashMap" id="getBusinessRoomTypeData_Map">
+		<result property="bsns_seq"				column="bsns_seq" 			javaType="String"/>
+		<result property="fk_lodge_id"			column="fk_lodge_id" 		javaType="String"/>
+		<result property="fk_bsns_opt_no"		column="fk_bsns_opt_no" 	javaType="String"/>
+	</resultMap>	
+	
+	<select id="getBusinessRoomTypeData" parameterType="String" resultMap="getBusinessRoomTypeData_Map">
+		select bsns_seq, fk_lodge_id, fk_bsns_opt_no
+		from tbl_bsns
+		where fk_lodge_id = #{fk_lodge_id}
+	</select>
+	
+	
+	<!-- 기존에 tbl_bsns 테이블에 입력된 비즈니스 정보 제거하기 -->
+	<delete id="businessRoomTypeDataDelete" parameterType="String">
+		delete from tbl_bsns
+		where fk_lodge_id = #{fk_lodge_id}
+	</delete>		
+	
+	
+	<!-- 현재 체크한 비즈니스 장소 종류 insert -->
+	<insert id="insertBusinessRoomType" parameterType="HashMap">
+		insert into tbl_bsns(bsns_seq, fk_lodge_id, fk_bsns_opt_no)
+		values(seq_tbl_bsns.nextval, #{fk_lodge_id}, #{fk_bsns_opt_no})
+	</insert>
+	
+
+	
+	<!-- === tbl_fasvc 테이블에 기존에 입력되어 있는 가족여행(어린이시설) 종류 가져오기 === -->
+	<resultMap type="HashMap" id="getFamilyTypeData_Map">
+		<result property="fascvc_seq"			column="fascvc_seq" 			javaType="String"/>
+		<result property="fk_lodge_id"			column="fk_lodge_id" 		javaType="String"/>
+		<result property="fk_fasvc_opt_no"		column="fk_fasvc_opt_no" 	javaType="String"/>
+	</resultMap>	
+	
+	<select id="getFamilyTypeData" parameterType="String" resultMap="getFamilyTypeData_Map">
+		select fascvc_seq, fk_lodge_id, fk_fasvc_opt_no
+		from tbl_fasvc
+		where fk_lodge_id = #{fk_lodge_id}
+	</select>
+	
+	
+	<!-- 기존에 tbl_fasvc 테이블에 입력된 가족여행(어린이시설) 정보 제거하기 -->
+	<delete id="familyTypeDataDelete" parameterType="String">
+		delete from tbl_fasvc
+		where fk_lodge_id = #{fk_lodge_id}
+	</delete>		
+	
+	
+	<!-- 현재 체크한 가족여행(어린이서비스) 종류 insert -->
+	<insert id="insertFamilyType" parameterType="HashMap">
+		insert into tbl_fasvc(fascvc_seq, fk_lodge_id, fk_fasvc_opt_no)
+		values(seq_tbl_fasvc.nextval, #{fk_lodge_id}, #{fk_fasvc_opt_no})
+	</insert>
+	
+	
+	
+	<!-- DB에 입력되어 있는 숙박시설 ID 가져오기 -->
+	<select id="getLodgeId" parameterType="String" resultType="String">
+		select lodge_id
+		from tbl_lodge
+		where lodge_id = #{lodge_id}
+	</select>
+
+
+
+	
+	<!-- === 이미지 등록하기 === -->
+	<insert id="insertLodgeImages" parameterType="HashMap">
+		insert into tbl_lg_img(lg_img_seq, fk_lodge_id, fk_img_cano, lg_img_save_name, lg_img_name)
+		values(seq_tbl_lg_img.nextval, #{fk_lodge_id},#{fk_img_cano},#{lg_img_save_name},#{lg_img_name})
+	</insert>
+	
+	
+	<!-- === 기존에 등록된 이미지 삭제하기 === -->
+	<delete id="delLodgeImg" parameterType="String">
+		delete from tbl_lg_img
+		where fk_lodge_id = #{fk_lodge_id}
+	</delete>
+
+
+<!-- //////////////////////        객실 등록 하기            /////////////////////////////// -->
+
+
+	<!-- == 욕실 옵션 종류 == -->
+	<resultMap type="HashMap" id="getBathOpt_Map">
+		<result property="bath_opt_no"		column="bath_opt_no" 	javaType="String"/>
+		<result property="bath_opt_desc"	column="bath_opt_desc" 	javaType="String"/>
+	</resultMap>
+	
+	<select id="getBathOpt" resultMap="getBathOpt_Map">
+		SELECT bath_opt_no, bath_opt_desc
+		FROM
+		(        
+		    select row_number() over(order by to_number(bath_opt_no) asc) rno, bath_opt_no, bath_opt_desc
+		    from tbl_bath_opt
+		)
+		ORDER BY rno asc
+	</select>
+	
+	
+	
+	<!-- == 주방(조리시설) 종류 == -->
+	<resultMap type="HashMap" id="getKitchenOpt_Map">
+		<result property="kt_opt_no"		column="kt_opt_no" 		javaType="String"/>
+		<result property="kt_opt_desc"		column="kt_opt_desc" 	javaType="String"/>
+	</resultMap>
+	
+	<select id="getKitchenOpt" resultMap="getKitchenOpt_Map">
+		SELECT kt_opt_no, kt_opt_desc
+		FROM
+		(        
+		    select row_number() over(order by to_number(kt_opt_no) asc) rno, kt_opt_no, kt_opt_desc
+		    from tbl_kt_opt
+		)
+		ORDER BY rno asc
+	</select>
+	
+	
+	
+	<!-- == 객실 내 다과 옵션 종류 == -->
+	<resultMap type="HashMap" id="getSnackOpt_Map">
+		<result property="snk_opt_no"		column="snk_opt_no" 		javaType="String"/>
+		<result property="snk_opt_desc"		column="snk_opt_desc" 		javaType="String"/>
+	</resultMap>
+	
+	<select id="getSnackOpt" resultMap="getSnackOpt_Map">
+		SELECT snk_opt_no, snk_opt_desc
+		FROM
+		(        
+		    select row_number() over(order by to_number(snk_opt_no) asc) rno, snk_opt_no, snk_opt_desc
+		    from tbl_snk_opt
+		)
+		ORDER BY rno asc
+	</select>	
+	
+	
+	<!-- == 객실 내 엔터테이먼트 옵션 종류 == -->
+	<resultMap type="HashMap" id="getEntertainmentOpt_Map">
+		<result property="ent_opt_no"		column="ent_opt_no" 		javaType="String"/>
+		<result property="ent_opt_desc"		column="ent_opt_desc" 		javaType="String"/>
+	</resultMap>
+	
+	<select id="getEntertainmentOpt" resultMap="getEntertainmentOpt_Map">
+		SELECT ent_opt_no, ent_opt_desc
+		FROM
+		(        
+		    select row_number() over(order by to_number(ent_opt_no) asc) rno, ent_opt_no, ent_opt_desc
+		    from tbl_ent_opt
+		)
+		ORDER BY rno asc
+	</select>
+	
+	
+	<!-- == 온도조절기 옵션 종류 == -->
+	<resultMap type="HashMap" id="getTemperatureControllerOpt_Map">
+		<result property="tmp_opt_no"		column="tmp_opt_no" 		javaType="String"/>
+		<result property="tmp_opt_desc"		column="tmp_opt_desc" 		javaType="String"/>
+	</resultMap>
+	
+	<select id="getTemperatureControllerOpt" resultMap="getTemperatureControllerOpt_Map">
+		SELECT tmp_opt_no, tmp_opt_desc
+		FROM
+		(        
+		    select row_number() over(order by to_number(tmp_opt_no) asc) rno, tmp_opt_no, tmp_opt_desc
+		    from tbl_tmp_opt
+		)
+		ORDER BY rno asc
+	</select>
+	
+	
+	<!-- == 전망 옵션 종류 == -->
+	<resultMap type="HashMap" id="getViewOpt_Map">
+		<result property="view_no"		column="view_no" 		javaType="String"/>
+		<result property="view_desc"	column="view_desc" 		javaType="String"/>
+	</resultMap>
+	
+	<select id="getViewOpt" resultMap="getViewOpt_Map">
+		SELECT view_no, view_desc
+		FROM
+		(        
+		    select row_number() over(order by to_number(view_no) asc) rno, view_no, view_desc
+		    from tbl_view
+		)
+		ORDER BY rno asc
+	</select>
+	
+	<!-- 현재 로그인한 판매자의 ID로 숙박시설의 lodge_id를 가져온다. -->
+	<select id="getLodgeIdByUserId" resultType="String">
+		select lodge_id
+		from tbl_lodge
+		where fk_h_userid = #{fk_h_userid}
+	</select>
+	
+	
+	<!-- ** 이미 입력된 room 정보가 있다면 수정과 추가를 하기위해서 체크 해야 된다 ** -->
+	<resultMap type="HashMap" id="getRmInfo_Map">
+		<result property="rm_seq" column="rm_seq" javaType="String"/>
+		<result property="rm_type" column="rm_type" javaType="String"/>
+	</resultMap>
+	
+	<select id="getRmInfo" resultMap="getRmInfo_Map">
+		select rm_seq, rm_type
+		from tbl_room
+		where fk_lodge_id = #{fk_lodge_id}
+	</select>
+	
+	
+	
+	<!-- ==== 객실 정보 등록 ==== -->
+	<insert id="register_rm" parameterType="HashMap">
+		insert into tbl_room (rm_seq, fk_lodge_id, rm_type, rm_cnt
+							, rm_size_meter, rm_size_pyug, rm_bedrm_cnt, rm_extra_bed_yn, rm_single_bed
+							, rm_ss_bed, rm_double_bed, rm_queen_bed, rm_king_bed, rm_bathroom_cnt
+							, rm_p_bathroom_yn, rm_kitchen_yn, rm_snack_yn, rm_ent_yn, rm_tmp_ctrl_yn
+							, rm_smoke_yn, fk_view_no, rm_wheelchair_yn, rm_guest_cnt, rm_price
+							, rm_breakfast_yn)
+		values(#{rm_seq},#{fk_lodge_id},#{rm_type},#{rm_cnt}
+			 , #{rm_size_meter},#{rm_size_pyug},#{rm_bedrm_cnt},#{rm_extra_bed_yn},#{rm_single_bed}
+			 , #{rm_ss_bed},#{rm_double_bed},#{rm_queen_bed},#{rm_king_bed},#{rm_bathroom_cnt}
+			 , #{rm_p_bathroom_yn},#{rm_kitchen_yn},#{rm_snack_yn},#{rm_ent_yn},#{rm_tmp_ctrl_yn}
+			 , #{rm_smoke_yn},#{fk_view_no},#{rm_wheelchair_yn},#{rm_guest_cnt},#{rm_price}
+			 , #{rm_breakfast_yn} )
+	</insert>
+
+	<!-- ==== 객실 정보 수정 ==== -->
+	<update id="update_rm" parameterType="HashMap">
+		update tbl_room set rm_type=#{rm_type}, rm_cnt=#{rm_cnt}, rm_size_meter=#{rm_size_meter}
+		     , rm_size_pyug=#{rm_size_pyug}, rm_bedrm_cnt=#{rm_bedrm_cnt}, rm_extra_bed_yn=#{rm_extra_bed_yn}
+		     , rm_single_bed=#{rm_single_bed}, rm_ss_bed=#{rm_ss_bed}, rm_double_bed=#{rm_double_bed}
+		     , rm_queen_bed=#{rm_queen_bed}, rm_king_bed=#{rm_king_bed}, rm_bathroom_cnt=#{rm_bathroom_cnt}
+		     , rm_p_bathroom_yn=#{rm_p_bathroom_yn}, rm_kitchen_yn=#{rm_kitchen_yn}, rm_snack_yn=#{rm_snack_yn}
+		     , rm_ent_yn=#{rm_ent_yn}, rm_tmp_ctrl_yn=#{rm_tmp_ctrl_yn}, rm_smoke_yn=#{rm_smoke_yn}
+		     , fk_view_no=#{fk_view_no}, rm_wheelchair_yn=#{rm_wheelchair_yn}, rm_guest_cnt=#{rm_guest_cnt}
+		     , rm_price=#{rm_price}, rm_breakfast_yn=#{rm_breakfast_yn}
+		where rm_seq = #{rm_seq}
+	</update>
+		
+	
+	
+	
+	
+	<!-- 기존에 입력되어 있는 정보 삭제 -->
+	<delete id="bathRoomDataDelete" parameterType="String">
+		delete from tbl_bath
+		where fk_rm_seq = #{fk_rm_seq}
+	</delete>
+	
+	<!-- 전용 욕실 옵션 insert 하기 -->		
+	<insert id="bathRoomDataInsert" parameterType="HashMap">
+		insert into tbl_bath (bath_seq ,fk_rm_seq, fk_bath_opt_no)
+		values(seq_tbl_bath.nextval,#{fk_rm_seq},#{fk_bath_opt_no})
+	</insert>
+	
+	<!-- insert에 사용할 rm_seq값 채번하기  -->
+	<select id="selectSeqTblRoomNextVal" resultType="String">
+		select seq_tbl_room.nextval AS rm_seq
+		from dual
+	</select>
+
+ 	<!-- tbl_kitchen테이블에 입력되어 있는 정보 삭제 -->
+ 	<delete id="kitchenDataDelete" parameterType="String">
+ 		delete from tbl_kitchen
+		where fk_rm_seq = #{fk_rm_seq}
+ 	</delete>
+	
+			
+	<!-- 전용 욕실 옵션 insert 하기 -->
+	<insert id="kitchenDataInsert" parameterType="HashMap">
+		insert into tbl_kitchen (kt_seq ,fk_rm_seq, fk_kt_opt_no)
+		values(seq_tbl_kitchen.nextval,#{fk_rm_seq},#{fk_kt_opt_no})
+	</insert>
+	
+			
+	<!-- tbl_snack테이블에 입력되어 있는 정보 삭제 -->
+	<delete id="snackDataDelete" parameterType="String">
+ 		delete from tbl_snack
+		where fk_rm_seq = #{fk_rm_seq}
+ 	</delete>
+ 	
+ 	
+	<!-- 객실내 다과 옵션 insert 하기 -->
+	<insert id="snackDataInsert" parameterType="HashMap">
+		insert into tbl_snack (snack_seq ,fk_rm_seq, fk_snk_opt_no)
+		values(seq_tbl_snack.nextval,#{fk_rm_seq},#{fk_snk_opt_no})
+	</insert>
+	
+	
+	<!-- tbl_ent테이블에 입력되어 있는 정보 삭제 -->
+	<delete id="entDataDelete" parameterType="String">
+ 		delete from tbl_ent
+		where fk_rm_seq = #{fk_rm_seq}
+ 	</delete>
+ 	
+ 	
+	<!-- 객실내 엔터테인먼트 옵션 insert 하기 -->
+	<insert id="entDataInsert" parameterType="HashMap">
+		insert into tbl_ent (ent_seq ,fk_rm_seq, fk_ent_opt_no)
+		values(seq_tbl_ent.nextval,#{fk_rm_seq},#{fk_ent_opt_no})
+	</insert>
+	
+	
+	
+	<!-- tbl_tmp테이블에 입력되어 있는 정보 삭제 -->
+	<delete id="tmpDataDelete" parameterType="String">
+ 		delete from tbl_tmp
+		where fk_rm_seq = #{fk_rm_seq}
+ 	</delete>	
+ 	
+ 	
+	<!-- 온도조절기능 옵션 insert 하기 -->
+	<insert id="tmpDataInsert" parameterType="HashMap">
+		insert into tbl_tmp (tmp_seq ,fk_rm_seq, fk_tmp_opt_no)
+		values(seq_tbl_tmp.nextval,#{fk_rm_seq},#{fk_tmp_opt_no})
+	</insert>
+	
+	
+	<!-- 기존에 입력되어 있는 rm_type List 가져오기 -->
+	<select id="getRm_typeData" parameterType="String" resultType="String">
+		select rm_type
+		from tbl_room
+		where fk_lodge_id = #{fk_lodge_id}
+	</select>
+	
+	
+	<!-- == 삭제 해야할 이미지 파일 이름 가져오기 == -->
+	<select id="getDeleteImgFileName" parameterType="String" resultType="String">
+		select rm_img_save_name
+		from tbl_rm_img
+		where fk_rm_seq = #{fk_rm_seq}
+	</select>
+	
+	<!-- == tbl_rm_img 테이블 정보 제거 == -->
+	<delete id="delRoomImg" parameterType="String">
+		delete from tbl_rm_img
+		where fk_rm_seq = #{fk_rm_seq} 
+	</delete>
+	
+	<!-- === 객실 이미지 등록하기 === -->
+	<insert id="insertRoomImages" parameterType="HashMap">
+		insert into tbl_rm_img(rm_img_seq, fk_rm_seq, rm_img_main, rm_img_name, rm_img_save_name)
+		values(seq_tbl_rm_img.nextval, #{fk_rm_seq}, #{rm_img_main}, #{rm_img_name}, #{rm_img_save_name})
+	</insert>
+	
+	
+	<!-- 변경된 객실의 기존에 입력된 사진 정보를 가져온다. -->
+	<resultMap type="HashMap" id="getRmImgData_Map">
+		<result property="rm_img_name" 		column="rm_img_name" 		javaType="String"/>
+		<result property="rm_img_save_name" column="rm_img_save_name" 	javaType="String"/>
+	</resultMap>
+	
+	<select id="getRmImgData" parameterType="String" resultMap="getRmImgData_Map">
+		select rm_img_name, rm_img_save_name
+		from tbl_rm_img
+		where fk_rm_seq = #{fk_rm_seq}
+		order by rm_img_main desc, rm_img_seq asc 
+	</select>
+	
+</mapper>
