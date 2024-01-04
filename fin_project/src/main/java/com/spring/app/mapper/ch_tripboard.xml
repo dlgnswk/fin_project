@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #29. mapper 기본설정 ==== -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
+<mapper namespace="ch_tripboard">
+	
+	<!-- === 글쓰기(파일첨부가 없는 글쓰기) === -->
+   	<insert id="add" parameterType="com.spring.app.expedia.domain.TripboardVO">
+ 		insert into tbl_tripboard(tb_seq, fk_userid, tb_name, tb_subject, tb_city, tb_content, tb_pw, tb_readCount, tb_regDate, tb_status)
+   	 	values(tb_seq.nextval, #{fk_userid}, #{tb_name}, #{tb_subject}, #{tb_city}, #{tb_content}, #{tb_pw}, default, default, default)
+    </insert> 
+
+	
+	
+	<!-- === 글쓰기(파일첨부가 있는 글쓰기) === -->
+	   <insert id="add_withFile" parameterType="com.spring.app.expedia.domain.TripboardVO">
+      	 insert into tbl_tripboard(tb_seq, fk_userid, tb_name, tb_subject, tb_city, tb_content, tb_pw, tb_readCount, tb_regDate, tb_status, tb_fileName, tb_orgFilename, tb_fileSize)
+         values(tb_seq.nextval, #{fk_userid}, #{tb_name}, #{tb_subject}, #{tb_city}, #{tb_content}, #{tb_pw}, default, default, default, #{tb_fileName}, #{tb_orgFilename}, #{tb_fileSize})
+  	   </insert>
+	
+	<!-- === 총 게시물 건수(totalCount) 구하기 - 검색이 있을 때와 검색이 없을때 로 나뉜다. === --> 
+	<select id="getTotalCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_tripboard
+		where tb_status = 1 
+		<choose>
+		   <when test='searchType == "tb_subject" and searchWord != ""'>
+		     and lower(tb_subject) like '%'||lower(#{searchWord})||'%'
+		   </when>
+		   
+		   <when test='searchType == "tb_content" and searchWord != ""'>
+		     and lower(tb_content) like '%'||lower(#{searchWord})||'%'
+		   </when>
+		   
+		   <when test='searchType == "tb_subject_content" and searchWord != ""'>
+		     and (lower(tb_subject) like '%'||lower(#{searchWord})||'%' OR lower(tb_content) like '%'||lower(#{searchWord})||'%') 
+		   </when>
+		   
+		   <when test='searchType == "tb_name" and searchWord != ""'>
+		     and lower(tb_name) like '%'||lower(#{searchWord})||'%'
+		   </when>
+		   
+		   <when test='searchType == "tb_city" and searchWord != ""'>
+		     and lower(tb_city) like '%'||lower(#{searchWord})||'%'
+		   </when>
+		   
+		   <otherwise></otherwise>
+		</choose>
+	</select>
+	
+	<!--  === 파일처리가 있는 게시판의 페이징 처리한 글목록 가져오기(검색이 있든지, 검색이 없든지 모두 다 포함 한 것) === -->
+	<select id="tripboardListSearch_withPaging" parameterType="HashMap" resultType="com.spring.app.expedia.domain.TripboardVO"> 
+		SELECT tb_seq, fk_userid, tb_name, tb_subject, tb_readCount, tb_regDate, tb_city, tb_fileName
+		FROM 
+		(
+		    SELECT rownum AS RNO
+		         , tb_seq, fk_userid, tb_name, tb_subject, tb_readCount, tb_regDate, tb_city, tb_fileName
+		    FROM 
+		    (
+		     select tb_seq, fk_userid
+		          , substr(tb_name, 1,1) || '*' || substr(tb_name, 4) AS tb_name
+		          , tb_subject, tb_readCount, to_char(tb_regDate, 'yyyy.mm.dd') AS tb_regDate, tb_city
+		          , tb_fileName
+		     from tbl_tripboard
+		     where tb_status = 1
+		     <choose>
+			    <when test='searchType == "tb_city" and searchWord != ""'>
+			       and lower(tb_city) like '%'||lower(#{searchWord})||'%' 
+			    </when>
+			    <when test='searchType == "tb_subject" and searchWord != ""'>
+			       and lower(tb_subject) like '%'||lower(#{searchWord})||'%' 
+			    </when>
+			    <when test='searchType == "tb_content" and searchWord != ""'>
+			       and lower(tb_content) like '%'||lower(#{searchWord})||'%' 
+			    </when>
+			    <when test='searchType == "tb_subject_content" and searchWord != ""'>
+			       and (lower(tb_subject) like '%'||lower(#{searchWord})||'%' or lower(tb_content) like '%'||lower(#{searchWord})||'%')  
+			    </when>
+			    <when test='searchType == "tb_name" and searchWord != ""'>
+			       and lower(tb_name) like '%'||lower(#{searchWord})||'%' 
+			    </when>			    
+			    <otherwise>
+			    </otherwise>
+			 </choose>
+			 	order by tb_seq desc
+		    ) V 
+		) T
+		WHERE RNO between #{startRno} and #{endRno}
+	</select>
+	
+	<!-- === 글 1개 보여주기 === -->
+   <select id="getView" parameterType="HashMap" resultType="com.spring.app.expedia.domain.TripboardVO">
+      SELECT tb_previousseq, tb_previoussubject
+	     , tb_seq , fk_userid, tb_city
+	     , substr(tb_name, 1,1) || '*' || substr(tb_name, 4) AS tb_name
+	     , tb_subject, tb_content, tb_readCount, tb_regDate, tb_pw
+	     , tb_nextseq, tb_nextsubject
+	     , tb_fileName, tb_orgFilename, tb_fileSize
+	FROM 
+	(
+	select lag(tb_seq, 1) over(order by tb_seq desc) AS tb_previousseq
+	     , lag(tb_subject, 1) over(order by tb_seq desc) AS tb_previoussubject 
+	     , tb_seq , fk_userid, tb_city, tb_name, tb_subject, tb_content, tb_readCount
+	     , to_char(tb_regDate, 'yyyy.mm.dd') AS tb_regDate, tb_pw
+	     , lead(tb_seq, 1) over(order by tb_seq desc) AS tb_nextseq
+	     , lead(tb_subject, 1) over(order by tb_seq desc) AS tb_nextsubject
+	     , tb_fileName, tb_orgFilename, tb_fileSize
+	from tbl_tripboard
+	where tb_status = 1
+      <choose>
+          <when test='searchType == "tb_city" and searchWord != ""'>
+            and lower(tb_city) like '%'||lower(#{searchWord})||'%'   
+         </when>
+         <when test='searchType == "tb_subject" and searchWord != ""'>
+            and lower(tb_subject) like '%'||lower(#{searchWord})||'%'   
+         </when>
+         <when test='searchType == "tb_content" and searchWord != ""'>
+            and lower(tb_content) like '%'||lower(#{searchWord})||'%'
+         </when>
+         <when test='searchType == "tb_subject_content" and searchWord != ""'>
+            and ( lower(tb_subject) like '%'||lower(#{searchWord})||'%' or lower(tb_content) like '%'||lower(#{searchWord})||'%' )
+         </when>
+         <when test='searchType == "tb_name" and searchWord != ""'>
+            and lower(tb_name) like '%'||lower(#{searchWord})||'%'
+         </when>
+         <otherwise>
+         </otherwise>
+      </choose>
+      
+      ) V
+      where V.tb_seq = ${tb_seq}
+   </select>
+   
+	<!-- // === 글 조회수 1 증가하기 === // -->
+   <select id="increase_readCount" parameterType="String">
+      update tbl_tripboard set tb_readCount = tb_readCount + 1
+      where tb_seq = ${tb_seq}
+   </select>
+	
+	<!-- // === 1개 글 수정하기 === // -->
+	<update id="edit" parameterType="com.spring.app.expedia.domain.TripboardVO">
+		update tbl_tripboard set  tb_city = #{tb_city}, tb_subject = #{tb_subject}
+                      , tb_content = #{tb_content} 
+      	where tb_seq = #{tb_seq}
+	</update>
+	
+	 <!-- // === 1개글 삭제하기 === // -->
+   <delete id="del" parameterType="HashMap">
+      delete from tbl_tripboard
+      where tb_seq = #{tb_seq}
+   </delete>
+   
+   <!-- 좋아요 버튼을 눌렀을 때 insert 해주는 것  -->
+   <insert id="getLike" parameterType="HashMap">
+   		insert into tbl_tripbd_like(FK_USERID, FK_TB_SEQ) values(#{userid}, #{tb_seq})
+   </insert>
+   
+   <!-- 좋아요 두번 누르면 취소하기 버튼 -->
+   <delete id="deleteLike" parameterType="HashMap">
+     delete from tbl_tripbd_like 
+	 where fk_userid = #{userid} and FK_TB_SEQ = #{tb_seq}
+   </delete>
+   
+   
+   <!-- 좋아요 개수 -->
+   <select id="getCnt" parameterType="String" resultType="map">
+   	select count(*) as likecnt
+	from tbl_tripbd_like
+	where fk_tb_seq = #{tb_seq}
+   </select>
+</mapper>
