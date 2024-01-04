@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #29. mapper 기본설정 ==== -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
+<mapper namespace="ws_payment">
+
+	<!-- 원석 개발전용 회원의 정보를 가져온다. -->
+	<select id="ws_getMyUserInfo" parameterType="String" resultType="com.spring.app.expedia.domain.UserVO">
+		select name, email, user_lvl, point, mobile
+		from tbl_user
+		where userid = #{myUser}
+	</select>
+
+
+	<!-- 원석 개발전용  객실요금, 객실정보(인원,침대,개수,흡연유무), 객실이름 불러오기 -->
+	<select id="ws_getRoomInfo" parameterType="String" resultType="com.spring.app.expedia.domain.RoomVO">
+		select rm_type, to_number(rm_price) as rm_price, rm_guest_cnt, rm_single_bed, rm_ss_bed, rm_double_bed, rm_queen_bed, rm_king_bed, rm_smoke_yn
+		from tbl_room
+		where rm_seq = #{rm_seq}
+	</select>
+	
+	
+	<!-- 원석 개발전용 취소정책 불러오기 -->
+	<select id="ws_getLodgeInfo" parameterType="String" resultType="com.spring.app.expedia.domain.LodgeVO">
+		select fk_cancel_opt, lg_park_yn, lg_internet_yn, lg_name, lg_checkin_start_time
+		from tbl_lodge
+		where fk_h_userid = #{h_userid}
+	</select>
+	
+	
+	<!-- 원석 개발전용 취소정책 날짜 계산 정보 가져오기 -->
+	
+	<resultMap type="HashMap" id="ws_getCancelDateInfo_Map"><!-- 한 컬럼씩 써야한다. (property는 컬럼에 대한 키값)-->
+		<result property="currentTime" 		column="currentTime" 	javaType="String" />
+		<result property="B_1" 				column="B_1" 			javaType="String" />
+		<result property="B_24" 			column="B_24" 			javaType="String" />
+		<result property="B_48" 			column="B_48" 			javaType="String" />
+		<result property="B_72" 			column="B_72" 			javaType="String" />
+		<result property="checkout_time" 	column="checkout_time" 	javaType="String" />
+	</resultMap>
+	
+	<select id="ws_getCancelDateInfo" parameterType="HashMap" resultMap="ws_getCancelDateInfo_Map">  
+	    select to_char(sysdate,'yyyy-mm-dd hh24:mi:ss') As currentTime
+		      ,to_char(to_date('${startDate}' ||' '|| checkin_time,'yyyy-mm-dd hh24:mi:ss') - 1 + 0 + 0 + 0,'yyyy-mm-dd hh24:mi:ss') As B_24
+		      ,to_char(to_date('${startDate}' ||' '|| checkin_time,'yyyy-mm-dd hh24:mi:ss') - 2 + 0 + 0 + 0,'yyyy-mm-dd hh24:mi:ss') As B_48
+		      ,to_char(to_date('${startDate}' ||' '|| checkin_time,'yyyy-mm-dd hh24:mi:ss') - 3 + 0 + 0 + 0,'yyyy-mm-dd hh24:mi:ss') As B_72
+		      ,to_char(to_date('${startDate}' ||' '|| checkin_time,'yyyy-mm-dd hh24:mi:ss') + 0 - 1/24 + 0 + 0,'yyyy-mm-dd hh24:mi:ss') As B_1
+		      ,checkout_time
+		 from
+		 (
+		    select fk_h_userid
+		          ,case when substr(lg_checkin_start_time,7,8) = 'PM' then substr(lg_checkin_start_time,1,2) + 12 || ':00:00' else substr(lg_checkin_start_time,1,2) + 0 ||':00:00' end as checkin_time
+		          ,case when substr(lg_checkout_time,7,8) = 'PM' then substr(lg_checkout_time,1,2) + 12 || ':00' else substr(lg_checkout_time,1,2) + 0 ||':00' end as checkout_time
+		    from tbl_lodge
+		 )    
+		    where 1=1
+		    and fk_h_userid = #{h_userid}  
+	</select>
+	
+	
+	<insert id="ws_goReservation" parameterType="HashMap">
+		insert into tbl_reservation(rs_seq, fk_userid, fK_h_userid, rs_date, rs_startDate, rs_endDate, rs_price, rs_payType, rs_name, rs_mobile, rs_email, rs_guest_cnt, fk_rm_seq)
+		values(SEQ_RESERVATION.nextval, #{userid}, #{h_userid}, sysdate, #{startDate}, #{endDate}, #{total__price}, #{paytype}, #{name}, #{mobile}, #{email}, #{guest_cnt}, #{rm_seq})
+	</insert>
+
+
+
+	<!-- 선할인을 받은 상태로 보유포인트만 update하기 -->
+	<update id="ws_updateSaleMyPoint" parameterType="HashMap">
+		update tbl_user set point = point - #{used_point}
+		where userid = #{userid}
+	</update>
+	
+	
+	<!-- 적립을 한 상태로 보유포인트 update하기 -->
+	<update id="ws_updateMyPoint" parameterType="HashMap">
+		update tbl_user set point = point - #{used_point} + #{to_insert_point}
+		where userid = #{userid}
+	</update>
+	
+	
+	<!-- 포인트만 update하기 -->
+	<update id="ws_updateUsedPoint" parameterType="HashMap">
+		update tbl_user set point = point + #{to_insert_point}
+		where userid = #{userid}
+	</update>
+	
+</mapper>
