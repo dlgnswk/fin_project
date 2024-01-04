@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #29. mapper 기본설정 ==== -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
+<mapper namespace="mj_comment">
+
+	<!-- 더보기 총갯수  -->
+	<select id="getTotalCount" resultType="int">
+		select count(*)
+		from tbl_review
+	</select>
+
+	<!-- 더보기  
+	<select id="selectComment" parameterType="HashMap" resultType="com.spring.app.expedia.domain.CommentVO">
+		SELECT h_name, c_regDate, c_content
+		FROM (
+		SELECT
+		ROW_NUMBER() OVER (ORDER BY C.c_seq DESC) AS RNO,
+		H.h_name,
+		TO_CHAR(C.c_regDate, 'yyyy"년" mm"월" dd"일"') AS c_regDate,
+		C.c_content
+		FROM
+		tbl_comment C
+		JOIN
+		tbl_host H ON H.h_userid = C.fk_h_userid
+		)
+		WHERE RNO BETWEEN #{start} AND #{end}
+	</select>-->
+	
+	
+	<!-- 글목록 -->
+	<resultMap type="HashMap" id="getList_Map">
+	   <result property="H_LODGENAME" 		column="H_LODGENAME" 			javaType="String" />
+	   <result property="RV_CONTENT" 		column="RV_CONTENT" 			    javaType="String" />
+	   <result property="RV_REGDATE" 		column="RV_REGDATE" 		        javaType="String" />
+	   <result property="RV_ORG_SEQ" 		column="RV_ORG_SEQ" 		        javaType="Integer" />
+	   <result property="RV_DEPTHNO" 		column="RV_DEPTHNO" 		        javaType="Integer" />
+	   <result property="FK_RV_RATING" 		column="FK_RV_RATING" 		        javaType="Integer" />
+	   <result property="RV_RATING_DESC" 	column="RV_RATING_DESC" 	        javaType="String" />
+	   <result property="livedate" 		    column="livedate" 		            javaType="String" />
+	   <result property="FK_LODGE_ID" 		column="FK_LODGE_ID" 		            javaType="String" />
+	   <result property="LG_NAME" 		column="LG_NAME" 		            javaType="String" />
+	   <result property="RV_GROUPNO" 		column="RV_GROUPNO" 		            javaType="Integer" />
+	   <result property="FK_RS_SEQ" 		column="FK_RS_SEQ" 		            javaType="String" />
+	   <result property="RV_SEQ" 		column="RV_SEQ" 		            javaType="String" />
+	   <result property="H_USERID" 		column="H_USERID" 		            javaType="String" />
+	</resultMap>
+<select id="selectReview" parameterType="HashMap" resultMap="getList_Map">
+
+
+		 SELECT V.RV_SEQ, V.FK_LODGE_ID, LG_NAME, V.FK_RS_SEQ, V.FK_USERID, R.RS_NAME, V.RV_SUBJECT, V.RV_CONTENT
+		     , TO_CHAR(V.rv_regdate, 'yyyy"년" mm"월" dd"일"') AS RV_REGDATE, V.RV_STATUS, V.RV_GROUPNO, V.RV_ORG_SEQ, V.RV_DEPTHNO
+		     , V.FK_RV_RATING, T.RV_RATING_DESC, H.H_USERID
+		     , (TO_DATE(R.rs_checkoutdate, 'YYYY-MM-DD') - TO_DATE(R.rs_checkindate, 'YYYY-MM-DD'))||'박' AS livedate, H.H_LODGENAME
+		FROM
+		(
+		select RV_SEQ,FK_LODGE_ID, LG_NAME, FK_RS_SEQ, FK_USERID, RV_SUBJECT, RV_CONTENT, RV_REGDATE, RV_STATUS,  RV_GROUPNO, RV_ORG_SEQ, RV_DEPTHNO, FK_RV_RATING
+		from tbl_review V join tbl_lodge L on V.fk_lodge_id = L.lodge_id
+		union all 
+		select C_SEQ, FK_LODGE_ID, LG_NAME, FK_RS_SEQ, C.FK_H_USERID, C_SUBJECT, C_CONTENT, C_REGDATE, C_STATUS, C_GROUPNO, C_ORG_SEQ, C_DEPTHNO, FK_C_RATING
+		from tbl_comment C join tbl_lodge E on C.fk_lodge_id = E.lodge_id
+		) V
+		left join tbl_reservation R ON R.RS_SEQ = V.FK_RS_SEQ
+		left join tbl_host H ON H.h_userid = V.fk_userid
+		left join tbl_rating T ON T.RV_RATING = V.FK_RV_RATING     
+		where RV_STATUS = 1
+		start with RV_ORG_SEQ = 0 
+		connect by prior RV_SEQ = RV_ORG_SEQ 
+		order siblings by RV_GROUPNO desc, RV_SEQ asc
+    
+</select>
+	
+	<!-- insert 한 주소에 글목록 뿌려주기  -->	
+	<resultMap type="HashMap" id="getList_Map2">
+	   <result property="h_lodgename" 		column="h_lodgename" 			javaType="String" />
+	   <result property="RV_CONTENT" 		column="RV_CONTENT" 			    javaType="String" />
+	   <result property="RV_REGDATE" 		column="RV_REGDATE" 		        javaType="String" />
+	   <result property="RV_ORG_SEQ" 		column="RV_ORG_SEQ" 		        javaType="Integer" />
+	   <result property="RV_DEPTHNO" 		column="RV_DEPTHNO" 		        javaType="Integer" />
+	   <result property="FK_RV_RATING" 		column="FK_RV_RATING" 		        javaType="Integer" />
+	   <result property="RV_RATING_DESC" 	column="RV_RATING_DESC" 	        javaType="String" />
+	   <result property="livedate" 		    column="livedate" 		            javaType="String" />
+	   <result property="FK_USERID" 		column="FK_USERID" 		            javaType="String" />
+	   <result property="FK_LODGE_ID" 		column="FK_LODGE_ID" 		            javaType="String" />
+	</resultMap>
+	<select id="selectView" resultMap="getList_Map2">
+
+		
+		 SELECT V.RV_SEQ, V.FK_LODGE_ID, LG_NAME, V.FK_RS_SEQ, V.FK_USERID, R.RS_NAME, V.RV_SUBJECT, V.RV_CONTENT
+		     , TO_CHAR(V.rv_regdate, 'yyyy"년" mm"월" dd"일"') AS RV_REGDATE, V.RV_STATUS, V.RV_GROUPNO, V.RV_ORG_SEQ, V.RV_DEPTHNO
+		     , V.FK_RV_RATING, T.RV_RATING_DESC
+		     , (TO_DATE(R.rs_checkoutdate, 'YYYY-MM-DD') - TO_DATE(R.rs_checkindate, 'YYYY-MM-DD'))||'박' AS livedate, h.H_LODGENAME
+		FROM
+		(
+		select RV_SEQ,FK_LODGE_ID, LG_NAME, FK_RS_SEQ, FK_USERID, RV_SUBJECT, RV_CONTENT, RV_REGDATE, RV_STATUS,  RV_GROUPNO, RV_ORG_SEQ, RV_DEPTHNO, FK_RV_RATING
+		from tbl_review V join tbl_lodge L on V.fk_lodge_id = L.lodge_id
+		union all 
+		select C_SEQ, FK_LODGE_ID, LG_NAME, FK_RS_SEQ, C.FK_H_USERID, C_SUBJECT, C_CONTENT, C_REGDATE, C_STATUS, C_GROUPNO, C_ORG_SEQ, C_DEPTHNO, FK_C_RATING
+		from tbl_comment C join tbl_lodge E on C.fk_lodge_id = E.lodge_id
+		) V
+		left join tbl_reservation R ON R.RS_SEQ = V.FK_RS_SEQ
+		left join tbl_host H ON H.h_userid = V.fk_userid
+		left join tbl_rating T ON T.RV_RATING = V.FK_RV_RATING     
+		where RV_STATUS = 1
+		start with RV_ORG_SEQ = 0 
+		connect by prior RV_SEQ = RV_ORG_SEQ 
+		order siblings by RV_GROUPNO desc, RV_SEQ asc
+				
+	</select>	
+	
+	
+	
+ 	<insert id="commentInsert" parameterType="HashMap">
+		insert into tbl_comment(C_SEQ, FK_LODGE_ID, FK_RS_SEQ, FK_H_USERID, C_CONTENT, C_REGDATE, C_STATUS,C_GROUPNO,C_ORG_SEQ,C_DEPTHNO,FK_C_RATING ) values('12',#{fk_lodge_id},#{fk_rs_seq}, #{fk_h_userid},'답변제공: '||#{c_content},  default,default,#{c_groupno} ,#{c_org_seq}, #{c_depthno}+1, default) 
+	</insert> 
+	
+
+
+
+</mapper>

@@ -1,0 +1,104 @@
+@charset "UTF-8";
+
+#container {
+	background-color: #dfe0e4;
+
+}
+
+#container > div:nth-child(1) > div:nth-child(1) > div {
+	text-align: center;
+	font-size: 24pt;
+	margin-bottom: 5%;
+}
+
+#container > div > div:nth-child(1) > div:nth-child(2) > div {
+	margin-bottom: 1%;
+	font-size: 13pt;
+}
+
+/* 검색창 */
+#searchBar {
+	justify-content: center; /* 수평 가운데 정렬 */
+	align-items: center; /* 수직 가운데 정렬 */
+	
+}
+
+/* 검색버튼 */
+#searchIcon {
+	border: 1px solid #fff;
+	border-radius: 2500rem;
+	inline-size: 3rem;
+	font-size: 1rem;
+	line-height: 1.25rem;
+	min-block-size: 3rem;
+	padding: 0.25rem 1rem
+}
+
+#searchIcon>svg {
+	block-size: 1.3rem;
+	inline-size: 1.5rem;
+	transform: translate(-4px, 6px);
+	padding: 0
+}
+
+
+/* 댓글목록 시작  */
+
+
+
+#review {
+	background-color: #fff;
+	width: 60%;
+	margin:auto;
+}
+
+
+
+
+/* 훌륭해요 글짜크기  */
+
+
+
+/* 아이디 글짜크기 */
+#review > div > div > div:nth-child(2) > div:nth-child(1) > div:nth-child(4) > div,
+#review > div > div > div:nth-child(2) > div:nth-child(1) > div:nth-child(5) > div,
+#review > div > div > div:nth-child(2) > div:nth-child(1) > div:nth-child(8) > div{
+	font-size:.875rem;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 채혁이 css  */
+
+
+progress {
+        -webkit-appearance: none;
+      }
+      
+      ::-webkit-progress-bar {
+         width: 295px;  /* --> bar 전체 길이 */
+         height: 8px;   /* --> bar 두께 */
+           border: 0px solid gray;
+           border-radius: 12px;    
+         background-color: rgba(0, 0, 0, 0.13); /* --> 진행률  배경 색상 */
+      }
+      
+      ::-webkit-progress-value {
+        background-color: rgba(0, 0, 88, 0.96); /* --> 진행률  값 색상 */
+        border: 0px solid gray;
+          border-radius: 12px;
+      }
+   
