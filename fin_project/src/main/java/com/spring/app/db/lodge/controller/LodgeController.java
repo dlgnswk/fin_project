@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
@@ -25,6 +26,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.spring.app.common.FileManager;
 import com.spring.app.db.lodge.service.LodgeService;
+import com.spring.app.expedia.domain.HostVO;
 
 @Controller
 public class LodgeController {
@@ -39,27 +41,26 @@ public class LodgeController {
 	
 	// *** 숙박 시설 등록 페이지 *** //
 	@RequestMapping(value="/register_lodge.exp")
-	public String register_lodge(HttpServletRequest request) {
+	public String requiredHostLogin_register_lodge(HttpServletRequest request,
+												   HttpServletResponse response) {
 		
 		// !!!! 로그인 한 사용자(판매자)에게 사용자등록번호를 받아와 넣어줘야 한다.
 		// 관리자 승인 유무 체크
-	//	HttpSession session = request.getSession();
-		//	HostVO loginuser = (HostVO) session.getAttribute("loginuser");
-		//	String fk_h_userid = loginuser.getFk_h_userid();
-	//	String fk_h_userid = "grandjusun@gmail.com";
+		HttpSession session = request.getSession();
+		HostVO loginhost = (HostVO) session.getAttribute("loginhost");
+		
+		String fk_h_userid = loginhost.getH_userid();
+		
+	//	System.out.println("fk_h_userid => "+ fk_h_userid); // 현재 로그인 호스트의 아이디 이다.
 		
 		// 현재 로그인한 판매자의 ID로 숙박시설의 lodge_id를 가져온다.
-	//	String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
+		String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
 		
-		String fk_lodge_id = "JSUN0231";
+	//	System.out.println("fk_lodge_id => "+ fk_lodge_id); // 현재 로그인 호스트의 호텔아이디 이다.
 		
 		String front_id = fk_lodge_id.substring(0,4);
 		String back_id = fk_lodge_id.substring(4);
-
 		
-		request.setAttribute("fk_lodge_id", fk_lodge_id);
-		request.setAttribute("front_id", front_id);
-		request.setAttribute("back_id", back_id);
 		
 		// == 숙박시설 유형 테이블에서 select == //
 		List<Map<String,String>> lodgeTypeMapList = service.getLodgeType();
@@ -162,6 +163,10 @@ public class LodgeController {
 		request.setAttribute("businessTypeMapList", businessTypeMapList);		// 비즈니스 공간 종류 체크박스(중복가능)
 		request.setAttribute("familyServiceTypeMapList", familyServiceTypeMapList);		// 가족서비스 종류 체크박스(중복가능)
 		
+		// 이미 호텔이 등록되어 있는 경우 보여준다.
+		request.setAttribute("fk_lodge_id", fk_lodge_id);
+		request.setAttribute("front_id", front_id);
+		request.setAttribute("back_id", back_id);
 		
 		return "db/register/register_lodge.tiles2";
 		// /WEB-INF/views/tiles2/db/register/register_lodge.jsp
@@ -171,7 +176,8 @@ public class LodgeController {
 	
 	// === *** 숙박시설 등록 *** === //
 	@PostMapping(value="/lodge_register.exp", produces = "text/plain;charset=UTF-8")
-	public String lodgeRegister(@RequestParam(required = false) HashMap<String,String> paraMap, HttpServletRequest request) {
+	public String requiredHostLogin_lodgeRegister(HttpServletRequest request, HttpServletResponse response,
+												  @RequestParam(required = false) HashMap<String,String> paraMap) {
 		
 		
 		// 숙박시설 등록 데이터 -시작- //
@@ -301,16 +307,17 @@ public class LodgeController {
 		}
 		
 		// 등록 이후
-		if( /*n == 1*/ false ) {
+		if( n == 1 ) {
 		// 숙박시설 등록 성공
 		// 페이지 이동
 			request.setAttribute("message", "숙박시설이 등록되었습니다.");
-			request.setAttribute("loc", "/expedia/register_lodge.exp");
+			request.setAttribute("loc", request.getContextPath()+"/lodgeControl.exp");
 		}
 		else {
 		// 숙박시설등록 실패
+			request.setAttribute("message", "시설 등록중 문제가 발생했습니다.");
+			request.setAttribute("loc", request.getContextPath()+"/lodgeControl.exp");
 		}
-		
 		
 		/*
 			Controller 에서  return "product/prodview"; 로 하면
@@ -318,8 +325,7 @@ public class LodgeController {
 	               
        		위치는 숙박 시설 관리 페이지로 이동 /webapp/WEB-INF/views/msg.jsp
 		 */
-	//	return "msg";
-		return "db/register/register_lodge.tiles2";
+		return "msg";
 	}
 	
 	
@@ -444,18 +450,21 @@ public class LodgeController {
 	
 	/////////////////////////// 시설 사진 등록 /////////////////////////////////////
 	
-	
+	// 시설 사진 등록 페이지
 	@GetMapping(value="/image_lodge.exp")
-	public String image_lodge(HttpServletRequest request) {
+	public String requiredHostLogin_image_lodge(HttpServletRequest request, HttpServletResponse response) {
 		
 		return "db/register/image_lodge.tiles2";
 		// /WEB-INF/views/tiles2/db/register/register_lodge.jsp
 		// /WEB-INF/views/tiles2/{1}/{2}/{3}.jsp
 	}
 	
+	
+	// 시설 사진 등록 버튼 클릭시
 	@ResponseBody
 	@PostMapping(value="/image_lodge.exp")
-	public String image_register(MultipartHttpServletRequest mtp_request) {
+	public String requiredHostLogin_image_register(HttpServletRequest request, HttpServletResponse response,
+												   MultipartHttpServletRequest mtp_request) {
 		
 		List<MultipartFile> mainImage_List  = mtp_request.getFiles("mainImage_arr");
 		List<MultipartFile> outImage_List  = mtp_request.getFiles("outImage_arr");
@@ -465,7 +474,16 @@ public class LodgeController {
 		List<MultipartFile> serviceImage_List  = mtp_request.getFiles("serviceImage_arr");
 		List<MultipartFile> viewImage_List  = mtp_request.getFiles("viewImage_arr");
 		
-		String fk_lodge_id = "JSUN0231";
+		
+		HttpSession session = request.getSession();
+		HostVO loginhost = (HostVO) session.getAttribute("loginhost");
+		
+		String fk_h_userid = loginhost.getH_userid();
+		// 현재 로그인한 판매자의 ID로 숙박시설의 lodge_id를 가져온다.
+		String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
+		System.out.println("fk_lodge_id => "+ fk_lodge_id);
+		
+	//	String fk_lodge_id = "JSUN0231";
 		
 		// 시설 이미지를 저장할 경로
 //		HttpSession session = mtp_request.getSession();
@@ -689,7 +707,7 @@ public class LodgeController {
 	
 	// ==== 객실 등록 ==== //
 	@GetMapping(value="/rm_register.exp")
-	public String rm_register(HttpServletRequest request) {
+	public String requiredHostLogin_rm_register(HttpServletRequest request, HttpServletResponse response) {
 		
 		// == 욕실 옵션 종류 checkbox == //
 		List<Map<String,String>> bathOptMapList = service.getBathOpt();
@@ -709,14 +727,14 @@ public class LodgeController {
 		// == 전망 옵션 종류 select == // 
 		List<Map<String,String>> viewOptMapList = service.getViewOpt();
 		
+		// === 로그인한 사용자의 정보 -시작- === //
+		HttpSession session = request.getSession();
+		HostVO loginhost = (HostVO) session.getAttribute("loginhost");
 		
-	//	HttpSession session = request.getSession();
-	//	HostVO loginuser = (HostVO) session.getAttribute("loginuser");
-	//	String fk_h_userid = loginuser.getFk_h_userid();
-		String fk_h_userid = "grandjusun@gmail.com";
-		
+		String fk_h_userid = loginhost.getH_userid();
 		// 현재 로그인한 판매자의 ID로 숙박시설의 lodge_id를 가져온다.
 		String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
+		// === 로그인한 사용자의 정보 -끝- === //
 		
 		// == ** 이미 입력된 room 정보가 있다면 수정과 추가를 하기위해서 체크 해야 된다 ** == //
 		List<Map<String,String>> updateRmInfoMapList = service.getRmInfo(fk_lodge_id); // rm_seq, rm_type
@@ -740,8 +758,8 @@ public class LodgeController {
 
 	// ==== 객실 등록 ==== //
 	@PostMapping(value="/rm_register.exp")
-	public String register_rm(@RequestParam(required = false) HashMap<String,String> paraMap,
-							  HttpServletRequest request) {
+	public String requiredHostLogin_register_rm(HttpServletRequest request, HttpServletResponse response,
+												@RequestParam(required = false) HashMap<String,String> paraMap) {
 		// 로그인한 사용자의 숙박시설 아이디 가져오기
 		
 		String update_room_seq = paraMap.get("update_room_seq");
@@ -855,22 +873,30 @@ public class LodgeController {
 		}
 		
 		// 등록 이후
-		if( /*n == 1*/ false ) {
-		// 객실등록
+		if( n == 1 ) {
+		// 객실 등록 성공
 		// 페이지 이동
 			request.setAttribute("message", "객실이 등록되었습니다.");
-			request.setAttribute("loc", "/expedia/register_lodge.exp");
+			request.setAttribute("loc", request.getContextPath()+"/lodgeControl.exp");
 		}
 		else {
-		// 숙박시설등록 실패
+		// 객실 등록 실패
+			request.setAttribute("message", "등록중 문제가 발생하였습니다.");
+			request.setAttribute("loc", request.getContextPath()+"/lodgeControl.exp");
 		}
 		
-		return "db/register/rm_register.tiles2";
+		/*
+			Controller 에서  return "product/prodview"; 로 하면
+	               자동적으로 view단 페이지는   "/WEB-INF/views/product/prodview.jsp"; 가 되어진다.
+	               
+       		위치는 숙박 시설 관리 페이지로 이동 /webapp/WEB-INF/views/msg.jsp
+		 */
+		return "msg";
 		// /WEB-INF/views/tiles2/db/register/register_lodge.jsp
 		// /WEB-INF/views/tiles2/{1}/{2}/{3}.jsp
 	}
 	
-	
+	// 객실을 등록할 때 "추가" "수정"할지를 선택할 수 있는 select를 위한 정보이다.
 	@ResponseBody
 	@GetMapping(value = "/checkRm_type.exp", produces = "text/plain;charset=UTF-8") // GET 방식만 허락한 것이다.
 	public String checkRm_type(@RequestParam String fk_lodge_id) {
@@ -904,15 +930,16 @@ public class LodgeController {
 	
 	// 객실 사진 등록 페이지
 	@GetMapping(value="/rm_image.exp")
-	public String rm_image(HttpServletRequest request) {
+	public String requiredHostLogin_rm_image(HttpServletRequest request, HttpServletResponse response) {
 		
-		//	HttpSession session = request.getSession();
-		//	HostVO loginuser = (HostVO) session.getAttribute("loginuser");
-		//	String fk_h_userid = loginuser.getFk_h_userid();
-		String fk_h_userid = "grandjusun@gmail.com";
-		
+		// === 로그인한 사용자의 정보 -시작- === //
+		HttpSession session = request.getSession();
+		HostVO loginhost = (HostVO) session.getAttribute("loginhost");
+		String fk_h_userid = loginhost.getH_userid();
 		// 현재 로그인한 판매자의 ID로 숙박시설의 lodge_id를 가져온다.
 		String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
+		// === 로그인한 사용자의 정보 -끝- === //
+		
 		
 		// == ** 이미 입력된 room 정보가 있다면 수정과 추가를 하기위해서 체크 해야 된다 ** == //
 		List<Map<String,String>> updateRmInfoMapList = service.getRmInfo(fk_lodge_id); // rm_seq, rm_type
@@ -929,23 +956,22 @@ public class LodgeController {
 	// 객실 사진 등록 버튼 클릭
 	@ResponseBody
 	@PostMapping(value="/rm_image.exp")
-	public String rm_image_register(MultipartHttpServletRequest mtp_request) {
+	public String requiredHostLogin_rm_image_register(HttpServletRequest request, HttpServletResponse response,
+													  MultipartHttpServletRequest mtp_request) {
 		
 		List<MultipartFile> roomImage_List  = mtp_request.getFiles("roomImage_arr");
 		String fk_rm_seq = mtp_request.getParameter("fk_rm_seq");
 		
 	//	System.out.println(fk_rm_seq);
 		
-//		HttpSession session = request.getSession();
-		//	HostVO loginuser = (HostVO) session.getAttribute("loginuser");
-		//	String fk_h_userid = loginuser.getFk_h_userid();
-	//	String fk_h_userid = "grandjusun@gmail.com";
+		// === 로그인한 사용자의 정보 -시작- === //
+		HttpSession session = request.getSession();
+		HostVO loginhost = (HostVO) session.getAttribute("loginhost");
 		
+		String fk_h_userid = loginhost.getH_userid();
 		// 현재 로그인한 판매자의 ID로 숙박시설의 lodge_id를 가져온다.
-	//	String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
-		
-		String fk_lodge_id = "JSUN0231";
-		
+		String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
+		// === 로그인한 사용자의 정보 -끝- === //
 		
 		// 시설 이미지를 저장할 경로
 	//	HttpSession session = mtp_request.getSession();
