@@ -302,22 +302,6 @@
 			}
 		})
 		
-		if ( $("span.rm_view_desc").html() == '해변 전망' || $("span.rm_view_desc").html() == '강 전망' || $("span.rm_view_desc").html() == '호수 전망' ) {
-		$("div.rm_view_svg").html('<svg class="c_icon_18" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M21.98 14H22h-.02ZM5.35 13c1.19 0 1.42 1 3.33 1 1.95 0 2.09-1 3.33-1 1.19 0 1.42 1 3.33 1 1.95 0 2.09-1 3.33-1 1.19 0 1.4.98 3.31 1v-2c-1.19 0-1.42-1-3.33-1-1.95 0-2.09 1-3.33 1-1.19 0-1.42-1-3.33-1-1.95 0-2.09 1-3.33 1-1.19 0-1.42-1-3.33-1-1.95 0-2.09 1-3.33 1v2c1.9 0 2.17-1 3.35-1Zm13.32 2c-1.95 0-2.09 1-3.33 1-1.19 0-1.42-1-3.33-1-1.95 0-2.1 1-3.34 1-1.24 0-1.38-1-3.33-1-1.95 0-2.1 1-3.34 1v2c1.95 0 2.11-1 3.34-1 1.24 0 1.38 1 3.33 1 1.95 0 2.1-1 3.34-1 1.19 0 1.42 1 3.33 1 1.94 0 2.09-1 3.33-1 1.19 0 1.42 1 3.33 1v-2c-1.24 0-1.38-1-3.33-1ZM5.35 9c1.19 0 1.42 1 3.33 1 1.95 0 2.09-1 3.33-1 1.19 0 1.42 1 3.33 1 1.95 0 2.09-1 3.33-1 1.19 0 1.4.98 3.31 1V8c-1.19 0-1.42-1-3.33-1-1.95 0-2.09 1-3.33 1-1.19 0-1.42-1-3.33-1-1.95 0-2.09 1-3.33 1-1.19 0-1.42-1-3.33-1C3.38 7 3.24 8 2 8v2c1.9 0 2.17-1 3.35-1Z"></path></svg>');
-		}
-		// 객실 뷰가 산 일때 svg 및 설명 글자
-		if ( $("span.rm_view_desc").html() == '산 전망' ) {
-			$("div.rm_view_svg").html('<svg class="c_icon_18" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="m14 6-3.75 5 2.85 3.8-1.6 1.2L7 10l-6 8h22L14 6z"></path></svg>');
-		}
-		// 객실 뷰가 시내 일때 svg 및 설명 글자
-		if ( $("span.rm_view_desc").html() == '시내 전망' ) {
-			$("div.rm_view_svg").html('<svg class="c_icon_18" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill-rule="evenodd" d="M15 5v6h6v10H3V7h6V5l3-3 3 3zM5 19h2v-2H5v2zm2-4H5v-2h2v2zm-2-4h2V9H5v2zm6 8v-2h2v2h-2zm0-6v2h2v-2h-2zm0-2V9h2v2h-2zm0-6v2h2V5h-2zm8 14h-2v-2h2v2zm-2-4h2v-2h-2v2z" clip-rule="evenodd"></path></svg>');
-		}
-		// 객실 뷰가 공원 일때 svg 및 설명 글자
-		if ( $("span.rm_view_desc").html() == '공원 전망' ) {
-			$("div.rm_view_svg").html('<svg class="c_icon_18" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M13 15.93a7 7 0 1 0-2 0V20H5v2h14v-2h-6v-4.07z"></path></svg>');
-		}
-		
 	});	
 	
 	function onScrollForNav() {
@@ -362,18 +346,24 @@
 		
 		m_close_btn_pm.onclick = function() {
 			view_pay_method_modal.style.display = 'none';
-		  	if(view_rm_detail_info_modal.display == 'none'){
+			if(view_rm_detail_info_modal == null){
 		  		document.body.style.overflow = 'auto';
 		  	}
+			else if(view_rm_detail_info_modal.style.display == 'none'){
+				document.body.style.overflow = 'auto';
+			}
 			
 		}
 
 		window.addEventListener('click', function (e) {
 		    if (e.target === view_pay_method_modal) {
 		    	view_pay_method_modal.style.display = 'none';
-		    	if(view_rm_detail_info_modal.display == 'none'){
+		    	if(view_rm_detail_info_modal == null){
 			  		document.body.style.overflow = 'auto';
 			  	}
+				else if(view_rm_detail_info_modal.style.display == 'none'){
+					document.body.style.overflow = 'auto';
+				}
 		    }
 		});
 	
@@ -1269,8 +1259,18 @@
 										</c:if>
 										<c:if test="${rm_list.fk_view_no ne 0}">			
 											<li class="c_flex">
-												<%-- 이 부분은 js 에서 줌! --%>
-												<div class="c_flex rm_view_svg" style="margin: auto 0; padding-right: 0.5rem;"></div>
+												<c:if test="${rm_list.fk_view_no eq 1 or rm_list.fk_view_no eq 3 or rm_list.fk_view_no eq 6}">
+													<div class="c_flex rm_view_svg" style="margin: auto 0; padding-right: 0.5rem;"><svg class="c_icon_18" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M21.98 14H22h-.02ZM5.35 13c1.19 0 1.42 1 3.33 1 1.95 0 2.09-1 3.33-1 1.19 0 1.42 1 3.33 1 1.95 0 2.09-1 3.33-1 1.19 0 1.4.98 3.31 1v-2c-1.19 0-1.42-1-3.33-1-1.95 0-2.09 1-3.33 1-1.19 0-1.42-1-3.33-1-1.95 0-2.09 1-3.33 1-1.19 0-1.42-1-3.33-1-1.95 0-2.09 1-3.33 1v2c1.9 0 2.17-1 3.35-1Zm13.32 2c-1.95 0-2.09 1-3.33 1-1.19 0-1.42-1-3.33-1-1.95 0-2.1 1-3.34 1-1.24 0-1.38-1-3.33-1-1.95 0-2.1 1-3.34 1v2c1.95 0 2.11-1 3.34-1 1.24 0 1.38 1 3.33 1 1.95 0 2.1-1 3.34-1 1.19 0 1.42 1 3.33 1 1.94 0 2.09-1 3.33-1 1.19 0 1.42 1 3.33 1v-2c-1.24 0-1.38-1-3.33-1ZM5.35 9c1.19 0 1.42 1 3.33 1 1.95 0 2.09-1 3.33-1 1.19 0 1.42 1 3.33 1 1.95 0 2.09-1 3.33-1 1.19 0 1.4.98 3.31 1V8c-1.19 0-1.42-1-3.33-1-1.95 0-2.09 1-3.33 1-1.19 0-1.42-1-3.33-1-1.95 0-2.09 1-3.33 1-1.19 0-1.42-1-3.33-1C3.38 7 3.24 8 2 8v2c1.9 0 2.17-1 3.35-1Z"></path></svg></div>
+												</c:if>
+												<c:if test="${rm_list.fk_view_no eq 2}">
+													<div class="c_flex rm_view_svg" style="margin: auto 0; padding-right: 0.5rem;"><svg class="c_icon_18" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="m14 6-3.75 5 2.85 3.8-1.6 1.2L7 10l-6 8h22L14 6z"></path></svg></div>
+												</c:if>
+												<c:if test="${rm_list.fk_view_no eq 4}">
+													<div class="c_flex rm_view_svg" style="margin: auto 0; padding-right: 0.5rem;"><svg class="c_icon_18" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill-rule="evenodd" d="M15 5v6h6v10H3V7h6V5l3-3 3 3zM5 19h2v-2H5v2zm2-4H5v-2h2v2zm-2-4h2V9H5v2zm6 8v-2h2v2h-2zm0-6v2h2v-2h-2zm0-2V9h2v2h-2zm0-6v2h2V5h-2zm8 14h-2v-2h2v2zm-2-4h2v-2h-2v2z" clip-rule="evenodd"></path></svg></div>
+												</c:if>
+												<c:if test="${rm_list.fk_view_no eq 5}">
+													<div class="c_flex rm_view_svg" style="margin: auto 0; padding-right: 0.5rem;"><svg class="c_icon_18" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M13 15.93a7 7 0 1 0-2 0V20H5v2h14v-2h-6v-4.07z"></path></svg></div>
+												</c:if>
 												<span class="c_content_txt rm_view_desc">${rm_list.view_desc}</span>
 											</li>
 										</c:if>				
@@ -1610,6 +1610,7 @@
 							</ul>
 						</div>
 						<div class="c_content_txt">객실 특징</div>
+						<c:if test="${not empty requestScope.com_tmp_opt_list and not empty requestScope.com_ent_opt_list}">
 						<div class="c_content_txt">모든 <fmt:formatNumber pattern="###,###" >${requestScope.lodgeinfo.TTL_RM_CNT}</fmt:formatNumber>개 객실에는 
 							<c:if test="${not empty requestScope.com_tmp_opt_list and not empty requestScope.com_ent_opt_list}">
 								쾌적한 실내를 위한  
@@ -1656,8 +1657,8 @@
 								</c:forEach>
 								 등이 제공됩니다.
 							</c:if>
-						
 						</div>
+						</c:if>
 						<c:if test="${empty requestScope.com_tmp_opt_list and empty requestScope.com_ent_opt_list}">					
 							<div class="c_content_txt">모든 <fmt:formatNumber pattern="###,###" >${requestScope.lodgeinfo.TTL_RM_CNT}</fmt:formatNumber>개 객실에는 다양한 편의 시설 등을 이용할 수 있습니다.</div>
 						</c:if>
@@ -2198,21 +2199,7 @@
 <script>
 
 $(document).ready(function(){
-	if ( $("span.rm_view_desc").html() == '해변 전망' || $("span.rm_view_desc").html() == '강 전망' || $("span.rm_view_desc").html() == '호수 전망' ) {
-		$("div.rm_view_svg").html('<svg class="c_icon_18" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M21.98 14H22h-.02ZM5.35 13c1.19 0 1.42 1 3.33 1 1.95 0 2.09-1 3.33-1 1.19 0 1.42 1 3.33 1 1.95 0 2.09-1 3.33-1 1.19 0 1.4.98 3.31 1v-2c-1.19 0-1.42-1-3.33-1-1.95 0-2.09 1-3.33 1-1.19 0-1.42-1-3.33-1-1.95 0-2.09 1-3.33 1-1.19 0-1.42-1-3.33-1-1.95 0-2.09 1-3.33 1v2c1.9 0 2.17-1 3.35-1Zm13.32 2c-1.95 0-2.09 1-3.33 1-1.19 0-1.42-1-3.33-1-1.95 0-2.1 1-3.34 1-1.24 0-1.38-1-3.33-1-1.95 0-2.1 1-3.34 1v2c1.95 0 2.11-1 3.34-1 1.24 0 1.38 1 3.33 1 1.95 0 2.1-1 3.34-1 1.19 0 1.42 1 3.33 1 1.94 0 2.09-1 3.33-1 1.19 0 1.42 1 3.33 1v-2c-1.24 0-1.38-1-3.33-1ZM5.35 9c1.19 0 1.42 1 3.33 1 1.95 0 2.09-1 3.33-1 1.19 0 1.42 1 3.33 1 1.95 0 2.09-1 3.33-1 1.19 0 1.4.98 3.31 1V8c-1.19 0-1.42-1-3.33-1-1.95 0-2.09 1-3.33 1-1.19 0-1.42-1-3.33-1-1.95 0-2.09 1-3.33 1-1.19 0-1.42-1-3.33-1C3.38 7 3.24 8 2 8v2c1.9 0 2.17-1 3.35-1Z"></path></svg>');
-	}
-	// 객실 뷰가 산 일때 svg 및 설명 글자
-	if ( $("span.rm_view_desc").html() == '산 전망' ) {
-		$("div.rm_view_svg").html('<svg class="c_icon_18" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="m14 6-3.75 5 2.85 3.8-1.6 1.2L7 10l-6 8h22L14 6z"></path></svg>');
-	}
-	// 객실 뷰가 시내 일때 svg 및 설명 글자
-	if ( $("span.rm_view_desc").html() == '시내 전망' ) {
-		$("div.rm_view_svg").html('<svg class="c_icon_18" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill-rule="evenodd" d="M15 5v6h6v10H3V7h6V5l3-3 3 3zM5 19h2v-2H5v2zm2-4H5v-2h2v2zm-2-4h2V9H5v2zm6 8v-2h2v2h-2zm0-6v2h2v-2h-2zm0-2V9h2v2h-2zm0-6v2h2V5h-2zm8 14h-2v-2h2v2zm-2-4h2v-2h-2v2z" clip-rule="evenodd"></path></svg>');
-	}
-	// 객실 뷰가 공원 일때 svg 및 설명 글자
-	if ( $("span.rm_view_desc").html() == '공원 전망' ) {
-		$("div.rm_view_svg").html('<svg class="c_icon_18" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M13 15.93a7 7 0 1 0-2 0V20H5v2h14v-2h-6v-4.07z"></path></svg>');
-	}	
+	
 	
 	
 });
@@ -2704,24 +2691,33 @@ function goPriceDetail(st_price, rm_seq) {
 	view_price_detail.style.display="flex";
 	document.body.style.overflow = 'hidden';
 	
+	// 객실 상세 모달창 없을때 요금상세 페이지 닫을 시(요금상세 모달 밖의 body 클릭) overflow auto 로 변경해준다.
 	window.onclick = function(e) {
 	  if (e.target == view_price_detail) {
 		  view_price_detail.style.display = "none";
-		  if(view_rm_detail_info_modal.display == 'none'){
+		  if(view_rm_detail_info_modal == null){
 		  		document.body.style.overflow = 'auto';
 		  	}
+		  else if(view_rm_detail_info_modal.style.display == 'none'){
+				document.body.style.overflow = 'auto';
+			}
 	  }
 	}
 	
+	// 객실 상세 모달창 없을때 요금상세 페이지 닫을 시(x 클릭) overflow auto 로 변경해준다. 
 	m_close_btn_pd.onclick = function() {
 		view_price_detail.style.display = 'none';
-		if(view_rm_detail_info_modal.display == 'none'){
+		if(view_rm_detail_info_modal == null){
 	  		document.body.style.overflow = 'auto';
 	  	}
+		else if(view_rm_detail_info_modal.style.display == 'none'){
+			document.body.style.overflow = 'auto';
+		}
 
 	}
 	
 }
+
 
 
 

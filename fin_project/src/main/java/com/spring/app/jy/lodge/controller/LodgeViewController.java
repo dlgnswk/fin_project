@@ -123,7 +123,7 @@ public class LodgeViewController {
 			paraMap.put("userid", loginuser.getUserid());
 		}
 		
-		String guest_cnt = "1";
+		String guest_cnt = "1"; // 총인원/객실수 나눈 값
 		if(request.getParameter("guest") != null) {
 			guest_cnt = request.getParameter("guest");
 		}
@@ -145,6 +145,7 @@ public class LodgeViewController {
 		mav.addObject("guest_cnt", guest_cnt);
 		mav.addObject("adult_cnt", adult_cnt);
 		mav.addObject("child_cnt", child_cnt);
+		mav.addObject("lodge_id", lodge_id);
 		
 		// 숙박 시설에 대한 정보 및 옵션 가져오기
 		Map<String, String> lodgeinfo_map = service.getLodgeInfo(lodge_id); // 숙박시설 기본 정보 (w/ 리뷰 평점, 갯수)
@@ -196,17 +197,27 @@ public class LodgeViewController {
 		
 		// 남은 rm의 총 갯수 < 입력된 객실 갯수 && 결과의 게스트의 평균 < 입력된 guest의 평균 일때만 객실 결과 보여주기
 		if(avbl_rm_list != null) {
-			int ttl_left_room_cnt = 0;
-			int ttl_rm_guest_cnt = 0;
+			float ttl_left_room_cnt = 0;
+			float ttl_rm_guest_cnt = 0;
 			for (Map<String, String> rm : avbl_rm_list) {
-				ttl_left_room_cnt += Integer.parseInt(String.valueOf(rm.get("LEFT_ROOM_CNT")));
-				ttl_rm_guest_cnt += Integer.parseInt(String.valueOf(rm.get("rm_guest_cnt")));
+				ttl_left_room_cnt += Float.parseFloat(String.valueOf(rm.get("left_room_cnt")));
+				ttl_rm_guest_cnt += Float.parseFloat(String.valueOf(rm.get("rm_guest_cnt")));
 			}
-			float avg_rm_guest_cnt = ttl_rm_guest_cnt/Integer.parseInt(guest_cnt);
+			float avg_rm_guest_cnt = ttl_rm_guest_cnt/ttl_left_room_cnt;
 			
 			// 남은 rm의 총 갯수 > 입력된 객실 갯수 && 결과의 게스트의 평균 > 입력된 guest의 평균 일때만 객실 결과 보여주기
-			if(ttl_left_room_cnt>Integer.parseInt(room_cnt) && avg_rm_guest_cnt>Integer.parseInt(guest_cnt)) {
+			if(ttl_left_room_cnt>Float.parseFloat(room_cnt)&& avg_rm_guest_cnt>Float.parseFloat(guest_cnt)) {
 				mav.addObject("avbl_rm_list",avbl_rm_list);
+			}			
+			else {
+				for (Map<String, String> rm : avbl_rm_list) {
+					if (Float.parseFloat(rm.get("rm_guest_cnt")) > Float.parseFloat(guest_cnt)) {
+						if(Float.parseFloat(rm.get("left_room_cnt"))>Float.parseFloat(room_cnt)){
+							mav.addObject("avbl_rm_list",avbl_rm_list);
+							break;
+						}						
+					}
+				}
 			}
 		}
 		
@@ -231,7 +242,7 @@ public class LodgeViewController {
 
 	@ResponseBody
 	@GetMapping(value="/rmDetail_info_json.exp", produces="text/plain;charset=UTF-8")
-	public String lodgeDetail_info_json(HttpServletRequest request) {
+	public String rmDetail_info_json(HttpServletRequest request) {
 		
 		String rm_seq = request.getParameter("rm_seq");
 		// System.out.println(rm_seq);
@@ -345,6 +356,7 @@ public class LodgeViewController {
 				jsonObj2.addProperty("rm_breakfast_yn", map.get("rm_breakfast_yn"));
 				jsonObj2.addProperty("rm_smoke_yn", map.get("rm_smoke_yn"));
 				jsonObj2.addProperty("rm_wheelchair_yn", map.get("rm_wheelchair_yn"));
+				jsonObj2.addProperty("rm_price", map.get("rm_price"));
 	            
 				jsonObj.add("rm_list", jsonObj2);
 			}

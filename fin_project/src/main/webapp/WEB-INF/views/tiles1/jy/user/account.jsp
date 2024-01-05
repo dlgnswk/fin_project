@@ -139,7 +139,7 @@
      </svg>
     </div>
     <div class="uitk-card-content-section uitk-card-content-section-padded uitk-layout-flex-item uitk-layout-flex-item-flex-grow-1">
-     <a target="_self" href="account/user_writeReviews.exp" rel="noreferrer" class="uitk-card-link"><span class="is-visually-hidden">이용후기</span></a>
+     <a target="_self" href="<%= ctxPath%>/myrvlist.exp" rel="noreferrer" class="uitk-card-link"><span class="is-visually-hidden">이용후기</span></a>
      <div class="uitk-text uitk-type-400 uitk-text-default-theme uitk-spacing uitk-spacing-margin-block-half">이용후기</div>
     </div>
     <div class="uitk-card-content-section uitk-card-content-section-padded-block-start uitk-card-content-section-padded-block-end uitk-card-content-section-padded-inline-end uitk-layout-flex-item-align-self-center uitk-layout-flex-item uitk-layout-flex-item-flex-grow-0">
