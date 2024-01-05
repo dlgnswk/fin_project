@@ -25,7 +25,7 @@ import com.spring.app.jh.search.service.SearchService;
 public class SearchController { 
 
 
-	@Autowired  // Type에 따라 알아서 Bean 을 주입해준다.
+	@Autowired  // Type에 따라 알아서 Bean 을 주입해준다!~!
 	private SearchService service;
 	
 	
@@ -340,6 +340,17 @@ public class SearchController {
 		// 검색된 내용을 통해 호텔 검색
 		List<Map<String, String>> lodgeList = service.getLodgeList(paraMap);
 		
+		// System.out.println(lodgeList);
+		/*
+			[{lg_area_2=중구, lodge_id=lote0001, lg_name=롯데호텔 서울, lg_area=서울특별시}
+			, {lg_area_2=해운대구, lodge_id=JSUN0231, lg_name=그랜드 조선 부산, lg_area=부산}
+			, {lg_area_2=강릉시, lodge_id=GWGN0002, lg_name=세인트존스 호텔, lg_area=강원특별자치도}
+			, {lg_area_2=강릉시, lodge_id=GWGN0001, lg_name=스카이베이 호텔 경포, lg_area=강원특별자치도}
+			, {lg_area_2=서귀포시, lodge_id=JEHI0002, lg_name=히든 클리프 호텔&네이쳐, lg_area=제주특별자치도}
+			, {lg_area_2=중구, lodge_id=PARA0001, lg_name=파라다이스시티, lg_area=인천광역시}
+			, {lg_area_2=서귀포시, lodge_id=JESH0001, lg_name=제주신라호텔, lg_area=제주특별자치도}]
+		*/
+		
 		JSONArray jsonArr = new JSONArray(); // []
 		
 		if(lodgeList != null) {
@@ -362,11 +373,7 @@ public class SearchController {
 				jsonObj.put("sort", lodgeMap.get("sort"));
 				
 				jsonArr.put(jsonObj); 
-				/*
-	 				[{"lodge_id":"JELC0003","lg_name":"롯데시티호텔 제주"}
-	 				,{"lodge_id":"JESH0001","lg_name":"제주신라호텔"}
-	 				,{"lodge_id":"JEHI0002","lg_name":"히든 클리프 호텔&네이쳐"}]
- 				*/
+				
 			}// end of for---------
 		}
 		
@@ -388,6 +395,17 @@ public class SearchController {
 			// map에 저장한 하나의 숙소에 지정일에 예약가능한 객실이 있는 경우 해당숙소의 lodge_id를 jsonObj_2에 저장하기
 			List<Map<String, String>> availableLodgeList = service.getAvailableLodgeList(map);
 			
+			// System.out.println(availableLodgeList);
+			/*
+				[{rest_room_cnt=50, fk_lodge_id=lote0001}]
+				[{rest_room_cnt=27, fk_lodge_id=JSUN0231}]
+				[{rest_room_cnt=40, fk_lodge_id=GWGN0002}]
+				[{rest_room_cnt=40, fk_lodge_id=GWGN0001}]
+				[{rest_room_cnt=5, fk_lodge_id=JEHI0002}]
+				[{rest_room_cnt=40, fk_lodge_id=PARA0001}]
+				[{rest_room_cnt=9, fk_lodge_id=JESH0001}]
+			*/
+			
 			if(availableLodgeList != null) {
 				for(Map<String, String> availableLodgeMap : availableLodgeList) {
 					JSONObject jsonObj_2 = new JSONObject(); // {}
@@ -404,13 +422,13 @@ public class SearchController {
 		for(int i=0; i<jsonArr_2.length(); i++) {
 			
 			JSONObject jsonObj = (JSONObject)jsonArr_2.get(i);
-
+			
 			// lodge_id와 예약가능한 객실수를 받아와서 map에 넣어줌
 			int rest_room_cnt = Integer.parseInt((String)jsonObj.get("rest_room_cnt"));
 			
 			// 예약가능한 객실수가 1개 이상인 숙소인 경우
 			if(rest_room_cnt > 0) {
-
+				
 				Map<String, Object> lodge_map = new HashMap<>();
 				lodge_map.put("lodge_id", (String)jsonObj.get("fk_lodge_id"));
 				lodge_map.put("check_in", paraMap.get("check_in"));
@@ -438,8 +456,22 @@ public class SearchController {
 				// 예약가능한 숙소의 정보를 가져오기
 				List<Map<String, String>> lodgeInfoList = service.getLodgeInfoList(lodge_map);
 				
+				// System.out.println(lodgeInfoList);
+				/*
+					[{fk_cancel_opt= , review_cnt=0, lg_area_2=중구, rating=0, lodge_id=lote0001, rm_price=363000, lg_name=롯데호텔 서울, lg_area=서울특별시}]
+					[{fk_cancel_opt= , review_cnt=0, lg_area_2=해운대구, rating=0, lodge_id=JSUN0231, rm_price=240000, lg_name=그랜드 조선 부산, lg_area=부산}]
+					[{fk_cancel_opt= , review_cnt=0, lg_area_2=강릉시, rating=0, lodge_id=GWGN0002, rm_price=130000, lg_name=세인트존스 호텔, lg_area=강원특별자치도}, {fk_cancel_opt= , review_cnt=0, lg_area_2=강릉시, rating=0, lodge_id=GWGN0002, rm_price=130000, lg_name=세인트존스 호텔, lg_area=강원특별자치도}]
+					[{fk_cancel_opt= , review_cnt=0, lg_area_2=강릉시, rating=0, lodge_id=GWGN0001, rm_price=145000, lg_name=스카이베이 호텔 경포, lg_area=강원특별자치도}]
+					[{fk_cancel_opt= , review_cnt=1, lg_area_2=서귀포시, rating=10, lodge_id=JEHI0002, rm_price=410227, lg_name=히든 클리프 호텔&네이쳐, lg_area=제주특별자치도}]
+					[{fk_cancel_opt= , review_cnt=2, lg_area_2=중구, rating=9, lodge_id=PARA0001, rm_price=490000, lg_name=파라다이스시티, lg_area=인천광역시}]
+					[{fk_cancel_opt= , review_cnt=4, lg_area_2=서귀포시, rating=8, lodge_id=JESH0001, rm_price=550000, lg_name=제주신라호텔, lg_area=제주특별자치도}]
+
+				*/
+				
+				
 				if(lodgeInfoList != null) {
 					for(Map<String, String> lodgeInfoMap : lodgeInfoList) {
+						
 						JSONObject jsonObj_3 = new JSONObject(); // {}
 						jsonObj_3.put("lodge_id", 		lodgeInfoMap.get("lodge_id"));
 						jsonObj_3.put("lg_name", 		lodgeInfoMap.get("lg_name"));
