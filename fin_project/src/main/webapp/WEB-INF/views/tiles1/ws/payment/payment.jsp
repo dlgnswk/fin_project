@@ -1344,6 +1344,9 @@
 	<input type="text" name="sum_price" />
 	<input type="text" class="total_priceEnd" value="${roomInfo.rm_price * requestScope.daysGap * 0.9 * 1.1}"/>
 	
+	<form name="frm_paymentConfirm_exp">
+		<input type="text" name="email" />
+	</form>
 	
 	
 	</c:forEach>
