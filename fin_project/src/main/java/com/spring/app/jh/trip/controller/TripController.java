@@ -50,6 +50,7 @@ public class TripController {
 		
 		for(Map<String, String> map : beforeReservationList) {
 			JSONObject jsonObj = new JSONObject(); // {}
+			jsonObj.put("fk_h_userid", map.get("fk_h_userid"));
 			jsonObj.put("lodge_id", map.get("lodge_id"));
 			jsonObj.put("lg_name", map.get("lg_name"));
 			jsonObj.put("rs_month", map.get("rs_month"));
@@ -84,6 +85,7 @@ public class TripController {
 		for(Map<String, String> map : afterReservationList) {
 			JSONObject jsonObj = new JSONObject(); // {}
 			jsonObj.put("lodge_id", map.get("lodge_id"));
+			jsonObj.put("fk_h_userid", map.get("fk_h_userid"));
 			jsonObj.put("lg_name", map.get("lg_name"));
 			jsonObj.put("rs_month", map.get("rs_month"));
 			jsonObj.put("rs_day", map.get("rs_day"));
@@ -118,6 +120,7 @@ public class TripController {
 		
 		for(Map<String, String> map : beforeReservationAllList) {
 			JSONObject jsonObj = new JSONObject(); // {}
+			jsonObj.put("fk_h_userid", map.get("fk_h_userid"));
 			jsonObj.put("lodge_id", map.get("lodge_id"));
 			jsonObj.put("lg_name", map.get("lg_name"));
 			jsonObj.put("rs_month", map.get("rs_month"));

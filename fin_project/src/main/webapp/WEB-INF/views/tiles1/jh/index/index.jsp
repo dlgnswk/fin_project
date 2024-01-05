@@ -563,6 +563,12 @@
 			location.href="<%= ctxPath%>/lodgeSearch.action?lg_name=&lg_area_2=&lg_area=&check_in=" + check_in + "&check_out=" + check_out + "&travlers=" + travlers + "&adult=" + adult + "&kid=" + kid + "&" + filter + "=on";
 		})
 		
+		// 재훈 : 검색창에 x 클릭할경우 검색내용 지워주기
+		$("button#search_clear").click(function(){
+			$("input#input_destination").val("");
+			$("input#input_destination_search").val("");
+			
+		});
 			
 	}); // end of $(document).ready(function(){});
 	
@@ -939,7 +945,7 @@
 				<div class="login_discount_content">수천 개 호텔에서 평균 15% 할인되는 회원가 등의 특전을 누리실 수 있어요. 이용약관이 적용될 수 있습니다.</div>
 				<div>
 					<c:if test="${sessionScope.loginuser == null}">
-						<button class="login_discount_button" onclick="<%= ctxPath%>/login.exp>">로그인하고 할인받기</button>
+						<a class="login_discount_button" href="<%= ctxPath%>/login.exp">로그인하고 할인받기</a>
 					</c:if>
 					<c:if test="${sessionScope.loginuser != null}">
 						<a class="login_discount_button" href="#headerOfheader" onclick="click_destination()">숙소 검색하기</a>

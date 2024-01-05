@@ -481,7 +481,7 @@ function goRegister() {
                    <div class="label_wrap userid">
                     <label class="input_wrap userid" style="">
                        <span class="subtitle" >아이디</span>
-                       <input id="userid" name="userid" class="required" type="text" value="" style="" maxlength=15 />
+                       <input id="userid" name="userid" class="required" type="text" value="" style="" maxlength=30 />
                     </label>
                    </div>
                    <span class="error">공백으로 둘 수 없습니다.</span>

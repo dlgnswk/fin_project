@@ -92,7 +92,13 @@
 		where h_userid = #{userid} 
 	</update>
 	
-	  
+	
+	<!-- 채팅방 불러오기 -->
+	<select id="selectChat">
+		select chat_no, fk_userid, fk_lodge_id ,chat_date
+		from tbl_chat
+		where fk_lodge_id = #{lodge_id}
+	</select>  
 	
 	
 </mapper>

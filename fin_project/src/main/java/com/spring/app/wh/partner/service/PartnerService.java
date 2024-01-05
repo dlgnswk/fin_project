@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.app.expedia.domain.ChatVO;
 import com.spring.app.expedia.domain.HostVO;
 
 public interface PartnerService {
@@ -31,6 +32,9 @@ public interface PartnerService {
 
 	// tbl_host 에 저장된 판매자의 정보를 update 해주는 메소드
 	int editHost(Map<String, String> paraMap);
+
+	// 채팅방 불러오기
+	ChatVO selectChat(String lodge_id);
 
 	
 
