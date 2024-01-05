@@ -306,18 +306,18 @@
 	    from
 	    (
 	        select fk_lodge_id, rm_seq, rm_type, rm_bathroom_cnt, bath_opt_no, bath_opt_desc, ROW_NUMBER() over (partition by bath_opt_no
-	        																									<if test="rm_seq.substring(0,3)!='rm-'">, fk_lodge_id</if>
-	        																				 				    <if test="rm_seq.substring(0,3)=='rm-'">, rm_seq</if>
+	        																									<if test="lodge_id != ''">, fk_lodge_id</if>
+	        																				 				    <if test="rm_seq !=''">, rm_seq</if>
 	        																				 				    order by fk_lodge_id) as RN
 	        from tbl_room R
 	        join tbl_bath B on R.rm_seq = B.fk_rm_seq
 	        join tbl_bath_opt BO on B.fk_bath_opt_no = BO.bath_opt_no
 	    )v
 	    where rn=1
-	    <if test="rm_seq.substring(0,3)!='rm-'">
+	    <if test="lodge_id != ''">
 	    	and fk_lodge_id=#{lodge_id}
 	    </if>
-	    <if test="rm_seq.substring(0,3)=='rm-'">
+	    <if test="rm_seq !=''">
 	    	and rm_seq = #{rm_seq}
 	    </if>
 	</select>
@@ -334,18 +334,18 @@
 	    from
 	    (
 	        select fk_lodge_id, rm_seq, rm_type, rm_snack_yn, snk_opt_no, snk_opt_desc, ROW_NUMBER() over (partition by snk_opt_no
-        																									<if test="rm_seq.substring(0,3)!='rm-'">, fk_lodge_id</if>
-        																				 				    <if test="rm_seq.substring(0,3)=='rm-'">, rm_seq</if>
+        																									<if test="lodge_id != ''">, fk_lodge_id</if>
+        																				 				    <if test="rm_seq !=''">, rm_seq</if>
         																				 				    order by fk_lodge_id) as RN
 	        from tbl_room R
 	        join tbl_snack S on R.rm_seq = S.fk_rm_seq
 	        join tbl_snk_opt SO on S.fk_snk_opt_no = SO.snk_opt_no
 	    )v
 	    where rn=1
-	    <if test="rm_seq.substring(0,3)!='rm-'">
+	    <if test="lodge_id != ''">
 	    	and fk_lodge_id=#{lodge_id}
 	    </if>
-	    <if test="rm_seq.substring(0,3)=='rm-'">
+	    <if test="rm_seq !=''">
 	    	and rm_seq = #{rm_seq}
 	    </if>
 	</select>
@@ -362,18 +362,18 @@
 		from
 		(
 	        select fk_lodge_id, rm_seq, rm_type, rm_kitchen_yn, kt_opt_no, kt_opt_desc, ROW_NUMBER() over (partition by kt_opt_no
-	        																							   <if test="rm_seq.substring(0,3)!='rm-'">, fk_lodge_id</if>
-	        																				 			   <if test="rm_seq.substring(0,3)=='rm-'">, rm_seq</if>
+	        																							   <if test="lodge_id != ''">, fk_lodge_id</if>
+        																				 				    <if test="rm_seq !=''">, rm_seq</if>
 	        																				 				order by fk_lodge_id) as RN
 	        from tbl_room R
 	        join tbl_kitchen K on R.rm_seq = K.fk_rm_seq
 	        join tbl_kt_opt KO on K.fk_kt_opt_no = KO.kt_opt_no
 	    )v
 		where rn=1
-		<if test="rm_seq.substring(0,3)!='rm-'">
+		<if test="lodge_id != ''">
 	    	and fk_lodge_id=#{lodge_id}
 	    </if>
-	    <if test="rm_seq.substring(0,3)=='rm-'">
+	    <if test="rm_seq !=''">
 	    	and rm_seq = #{rm_seq}
 	    </if>
 	</select>
@@ -390,18 +390,18 @@
 	    from
 	    (
 	        select fk_lodge_id, rm_seq, rm_type, rm_ent_yn, ent_opt_no, ent_opt_desc, ROW_NUMBER() over (partition by ent_opt_no
-	        																							 <if test="rm_seq.substring(0,3)!='rm-'">, fk_lodge_id</if>
-	        																				 			 <if test="rm_seq.substring(0,3)=='rm-'">, rm_seq</if>
+	        																							 <if test="lodge_id != ''">, fk_lodge_id</if>
+	        																				 				    <if test="rm_seq !=''">, rm_seq</if>
 	        																				 		     order by fk_lodge_id) as RN	        
 	        from tbl_room R
 	        join tbl_ent E on R.rm_seq = E.fk_rm_seq
 	        join tbl_ent_opt EO on E.fk_ent_opt_no = EO.ent_opt_no
 	    )v
 	    where rn=1
-	    <if test="rm_seq.substring(0,3)!='rm-'">
+	    <if test="lodge_id != ''">
 	    	and fk_lodge_id=#{lodge_id}
 	    </if>
-	    <if test="rm_seq.substring(0,3)=='rm-'">
+	    <if test="rm_seq !=''">
 	    	and rm_seq = #{rm_seq}
 	    </if>
 	</select>
@@ -418,18 +418,18 @@
     from
     (
         select fk_lodge_id, rm_seq, rm_type, rm_tmp_ctrl_yn, tmp_opt_no, tmp_opt_desc, ROW_NUMBER() over (partition by tmp_opt_no
-	        																							 <if test="rm_seq.substring(0,3)!='rm-'">, fk_lodge_id</if>
-	        																				 			 <if test="rm_seq.substring(0,3)=='rm-'">, rm_seq</if>
+	        																							 <if test="lodge_id != ''">, fk_lodge_id</if>
+	        																				 				    <if test="rm_seq !=''">, rm_seq</if>
 	        																				 		     order by fk_lodge_id) as RN	        
         from tbl_room R
         join tbl_tmp T on R.rm_seq = T.fk_rm_seq
         join tbl_tmp_opt TMO on T.fk_tmp_opt_no = TMO.tmp_opt_no
     )v
     where rn=1
-    <if test="rm_seq.substring(0,3)!='rm-'">
+    <if test="lodge_id != ''">
     	and fk_lodge_id=#{lodge_id}
     </if>
-    <if test="rm_seq.substring(0,3)=='rm-'">
+    <if test="rm_seq !=''">
     	and rm_seq = #{rm_seq}
     </if>
 	</select>
@@ -450,12 +450,14 @@
 		)
 		select rm_seq, rm_img_name, rm_img_main, rm_img_save_name
 		from V
-		<if test="rm_seq.substring(0,3)=='rm-'">
-			where rm_seq = #{rm_seq}
-		</if>
-		<if test="rm_seq.substring(0,3)!='rm-'">
-			where fk_lodge_id = #{lodge_id}
-		</if>
+		<choose>
+			<when test="lodge_id != null">
+				where fk_lodge_id=#{lodge_id}
+			</when>
+			<otherwise>
+				where rm_seq = #{rm_seq}
+			</otherwise>
+		</choose>
 		 
 	</select>
 	
@@ -486,7 +488,7 @@
 		<result property="rm_price"          column="rm_price"         javaType="String"></result>
 		<result property="rm_breakfast_yn"   column="rm_breakfast_yn"  javaType="String"></result>
 		<result property="view_desc"         column="view_desc"        javaType="String"></result>
-		<result property="rm_cnt"            column="rm_cnt"           javaType="String"></result>
+		<result property="left_room_cnt"     column="left_room_cnt"    javaType="String"></result>
 		<result property="rs_room_cnt"       column="rs_room_cnt"      javaType="String"></result>
 	</resultMap>
 	<select id="getAvbl_rm_list" parameterType="HashMap" resultMap="getAvbl_rm_list_Map">
