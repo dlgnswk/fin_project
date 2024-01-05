@@ -187,7 +187,7 @@
 			    	        $(".reviewWriteModal").fadeOut();
 			    	        $("body").removeClass("modal-open"); // body에서 modal-open 클래스 제거
 			    	    });
-			         
+			         	
 			    	    const labels = document.querySelectorAll('.rateCircle label');
 
 			    	    function updateStars(index) {
@@ -277,8 +277,7 @@
 		<div style="text-align:center;">			
 				<div class="reviewWrite">
 					<a class="rvadd" onclick="reviewWrite()">리뷰 작성하기</a>
-					<span style="font-weight:bold;">
-					</span>
+					
 				</div>
 		</div>
 		
