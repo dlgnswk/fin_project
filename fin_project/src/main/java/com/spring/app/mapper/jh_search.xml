@@ -19,12 +19,12 @@
 		from
 		(
 	    <if test='sort == "Recommended"'>
-			select L.lodge_id, L.lg_name, L.lg_area_2, L.lg_area, L.lg_hotel_star, L.fk_lodge_type
+			select L.lodge_id, L.lg_name, L.lg_area_2, L.lg_area, L.lg_hotel_star, L.fk_lodge_type, L.lg_status
 			from
 			(
 			    select lodge_id, min_price, nvl(resv_cnt, 0) as resv_cnt
 			    from
-			        (select lodge_id, MIN(rm_price) AS min_price from tbl_lodge L join tbl_room R on L.lodge_id = R.fk_lodge_id group by lodge_id)
+			        (select lodge_id, MIN(to_number(rm_price)) AS min_price from tbl_lodge L join tbl_room R on L.lodge_id = R.fk_lodge_id group by lodge_id)
 			    C
 			    left join (select fk_lodge_id, count(*) AS resv_cnt from tbl_review group by fk_lodge_id) V
 			    on C.lodge_id = V.fk_lodge_id
@@ -34,10 +34,10 @@
 			order by resv_cnt desc, lg_hotel_star desc, min_price asc
 	    </if>
 	    <if test='sort == "LowToHigh"'>
-			select L.lodge_id, L.lg_name, L.lg_area_2, L.lg_area, L.lg_hotel_star, L.fk_lodge_type
+			select L.lodge_id, L.lg_name, L.lg_area_2, L.lg_area, L.lg_hotel_star, L.fk_lodge_type, L.lg_status
 			from
 			(
-			    select lodge_id, MIN(rm_price) AS min_price, AVG(fk_rv_rating) AS avg_rating
+			    select lodge_id, MIN(to_number(rm_price)) AS min_price, AVG(fk_rv_rating) AS avg_rating
 			    from
 			        (select * from tbl_lodge L join tbl_room R on L.lodge_id = R.fk_lodge_id)
 			    C
@@ -50,10 +50,10 @@
 			order by min_price asc
 	    </if>
 	    <if test='sort == "HighToLow"'>
-			select L.lodge_id, L.lg_name, L.lg_area_2, L.lg_area, L.lg_hotel_star, L.fk_lodge_type
+			select L.lodge_id, L.lg_name, L.lg_area_2, L.lg_area, L.lg_hotel_star, L.fk_lodge_type, L.lg_status
 			from
 			(
-			    select lodge_id, MAX(rm_price) AS max_price, AVG(fk_rv_rating) AS avg_rating
+			    select lodge_id, MIN(to_number(rm_price)) AS min_price, AVG(fk_rv_rating) AS avg_rating
 			    from
 			        (select * from tbl_lodge L join tbl_room R on L.lodge_id = R.fk_lodge_id)
 			    C
@@ -63,13 +63,13 @@
 			) P
 			join tbl_lodge L
 			on P.lodge_id = L.lodge_id
-			order by max_price desc
+			order by min_price desc
 	    </if>
 	    <if test='sort == "ReviewRating"'>
-			select L.lodge_id, L.lg_name, L.lg_area_2, L.lg_area, L.lg_hotel_star, L.fk_lodge_type
+			select L.lodge_id, L.lg_name, L.lg_area_2, L.lg_area, L.lg_hotel_star, L.fk_lodge_type, L.lg_status
 			from
 			(
-			    select lodge_id, MIN(rm_price) AS min_price, AVG(fk_rv_rating) AS avg_rating
+			    select lodge_id, MIN(to_number(rm_price)) AS min_price, AVG(to_number(fk_rv_rating)) AS avg_rating
 			    from
 			        (select * from tbl_lodge L join tbl_room R on L.lodge_id = R.fk_lodge_id)
 			    C
@@ -82,7 +82,7 @@
 			order by avg_rating desc
 	    </if>
 		)
-		where 1 = 1
+		where lg_status = 1
 		<choose>
 		   <when test='lg_name != ""'>
 		      and lg_name = #{lg_name}
@@ -178,154 +178,160 @@
 	    <result property="review_cnt" 		column="review_cnt" 		javaType="String" />
 	</resultMap>
 	<select id="getLodgeInfoList" parameterType="HashMap" resultMap="getLodgeInfoMap">
-		select lodge_id, lg_name, lg_area_2, lg_area, fk_cancel_opt, rm_price, rating, review_cnt
+		select rownum, lodge_id, lg_name, lg_area_2, lg_area, fk_cancel_opt, rm_price, rating, review_cnt
 		from
 		(
-		    select fk_lodge_id, rm_seq, rm_type, rm_cnt, nvl(rs_room_cnt, 0) AS rs_room_cnt
-		         , to_number(rm_cnt) - to_number(nvl(rs_room_cnt, 0)) AS rest_room_cnt
-         		 , rating, review_cnt
-		    from
-		    (
-		        select R.fk_lodge_id, rm_seq, rm_type, rm_cnt, V.rating, V.review_cnt
-		        from
-		        (
-		            select *
-		            from tbl_room
-		            where fk_lodge_id = #{lodge_id}
-		        ) R
-		        join
-		        (
-		            select fk_lodge_id, round(avg(fk_rv_rating), 1) as rating, count(*) AS review_cnt
-		            from tbl_review 
-		            group by fk_lodge_ID
-		        ) V
-		        on R.fk_lodge_id = V.fk_lodge_id
-		    ) A
-		    left join 
-		    (
-		        select fk_rm_seq, count(*) as rs_room_cnt
-		        from
-		        (   
-		            select L.lodge_id, L.fk_h_userid, R.rs_name, R.rs_checkindate, R.rs_checkoutdate, R.fk_rm_seq
-		            from tbl_reservation R join tbl_lodge L
-		            on R.fk_h_userid = L.fk_h_userid
-		            where L.lodge_id = #{lodge_id}
-		            order by R.rs_checkindate, R.rs_checkoutdate
-		        )
-		        where (rs_checkindate <![CDATA[ <= ]]> to_date(#{check_in})) and ((to_date(#{check_in}) <![CDATA[ < ]]> rs_checkoutdate) and (rs_checkoutdate <![CDATA[ <= ]]> to_date(#{check_out})))
-		            or ((to_date(#{check_in}) <![CDATA[ <= ]]> rs_checkindate) and ((rs_checkindate <![CDATA[ <= ]]> to_date(#{check_out})) and (to_date(#{check_out}) <![CDATA[ <= ]]> rs_checkoutdate)))
-		            or ((rs_checkindate <![CDATA[ <= ]]> to_date(#{check_in})) and (to_date(#{check_out}) <![CDATA[ <= ]]> rs_checkoutdate))
-		            or ((to_date(#{check_in}) <![CDATA[ <= ]]> rs_checkindate) and (rs_checkoutdate <![CDATA[ <= ]]> to_date(#{check_out})))
-		        group by fk_rm_seq
-		    ) B
-		    on A.rm_seq = B.fk_rm_seq
-		) V
-		LEFT JOIN
-		(
-		    select L.lodge_id, L.lg_name, L.lg_area, L.lg_area_2, rm_price, rm_seq
-           		 , decode(fk_cancel_opt, '0', decode(SIGN(ceil(to_date(#{check_in}) - sysdate) - 3), 1, '전액 환불 가능', ' ')
-                               		   , '1', decode(SIGN(ceil(to_date(#{check_in}) - sysdate) - 2), 1, '전액 환불 가능', ' ')
-                               		   , '2', decode(SIGN(ceil(to_date(#{check_in}) - sysdate) - 1), 1, '전액 환불 가능', ' ')
-                               		   , '3', decode(SIGN(ceil(to_date(#{check_in}) - sysdate) - 0), 1, '전액 환불 가능', ' ')) AS fk_cancel_opt
-		    from tbl_lodge L
-		    join tbl_room R
-		    on L.lodge_id = R.fk_lodge_id
-		    where L.lodge_id = #{lodge_id}
-		    <if test='breakfast == "on"'>
-		    	and lg_breakfast_yn = '1'
-		    </if>
-		    <if test='pool == "on"'>
-		    	and lg_pool_yn = '1'
-		    </if>
-		    <if test='wifi == "on"'>
-		    	and lg_internet_yn = '1'
-		    </if>
-		    <if test='seaView == "on"'>
-		    	and lg_beach_yn = '1'
-		    </if>
-		    <if test='pet == "on"'>
-		    	and lg_pet_yn = '1'
-		    </if>
-		    <if test='spa == "on"'>
-		    	and fk_spa_type = '1'
-		    </if>
-		    <if test='parking == "on"'>
-		    	and lg_park_yn = '1'
-		    </if>
-		    <if test='restaurant == "on"'>
-		    	and (lg_dining_place_yn = '1'
-		    		 and '1' = (select count(*) from tbl_din where fk_lodge_id = #{lodge_id} and fk_din_opt_no = '0'))
-		    </if>
-		    <if test='babyBed == "on"'>
-		    	and (lg_fa_travel_yn = '1'
-		    		 and '1' = (select count(*) from tbl_fasvc where fk_lodge_id = #{lodge_id} and fk_fasvc_opt_no = '5'))
-		    </if>
-		    <if test='washerDryer == "on"'>
-		    	and (lg_service_yn = '1'
-		    		 and '1' = (select count(*) from tbl_cs where fk_lodge_id = #{lodge_id} and fk_cs_opt_no = '3'))
-		    </if>
-		    <if test='kitchen == "on"'>
-		    	and rm_kitchen_yn = '1'
-		    </if>
-		    <if test='aircon == "on"'>
-		    	and (rm_tmp_ctrl_yn = '1'
-		    		 and 1 <![CDATA[ <= ]]> (select count(*) from (select * from tbl_tmp T join tbl_room R on T.fk_rm_seq = R.rm_seq) where fk_lodge_id = #{lodge_id} and fk_tmp_opt_no = '0' group by fk_lodge_id))
-		    </if>
-		    <if test='rating != ""'>
-		    	and #{rating} <![CDATA[ <= ]]> (select avg(fk_rv_rating) from tbl_review where fk_lodge_id =#{lodge_id} group by fk_lodge_id)
-		    </if>
-		) D
-		ON V.rm_seq = D.rm_seq
-		WHERE rest_room_cnt > 0
-		AND rm_price = 
-		( 
-		    select MIN(to_number(rm_price)) AS rm_price
-		    from
-		    (
-		        select fk_lodge_id, rm_seq, rm_type, rm_cnt, nvl(rs_room_cnt, 0) AS rs_room_cnt
-		             , to_number(rm_cnt) - to_number(nvl(rs_room_cnt, 0)) AS rest_room_cnt
-		        from
-		        (
-		            select fk_lodge_id, rm_seq, rm_type, rm_cnt
-		            from tbl_room
-		            where fk_lodge_id = #{lodge_id}
-		        ) A
-		        left join 
-		        (
-		            select fk_rm_seq, count(*) as rs_room_cnt
-		            from
-		            (   
-		                select L.lodge_id, L.fk_h_userid, R.rs_name, R.rs_checkindate, R.rs_checkoutdate, R.fk_rm_seq
-		                from tbl_reservation R join tbl_lodge L
-		                on R.fk_h_userid = L.fk_h_userid
-		                where L.lodge_id = #{lodge_id}
-		                order by R.rs_checkindate, R.rs_checkoutdate
-		            )
-		            where (rs_checkindate <![CDATA[ <= ]]> to_date(#{check_in})) and ((to_date(#{check_in}) <![CDATA[ < ]]> rs_checkoutdate) and (rs_checkoutdate <![CDATA[ <= ]]> to_date(#{check_out})))
-		                or ((to_date(#{check_in}) <![CDATA[ <= ]]> rs_checkindate) and ((rs_checkindate <![CDATA[ <= ]]> to_date(#{check_out})) and (to_date(#{check_out}) <![CDATA[ <= ]]> rs_checkoutdate)))
-		                or ((rs_checkindate <![CDATA[ <= ]]> to_date(#{check_in})) and (to_date(#{check_out}) <![CDATA[ <= ]]> rs_checkoutdate))
-		                or ((to_date(#{check_in}) <![CDATA[ <= ]]> rs_checkindate) and (rs_checkoutdate <![CDATA[ <= ]]> to_date(#{check_out})))
-		            group by fk_rm_seq
-		        ) B
-		        on A.rm_seq = B.fk_rm_seq
-		    ) V
-		    LEFT JOIN
-		    (
-		        select L.lodge_id, L.lg_name, L.lg_area, L.lg_area_2, rm_price, rm_seq
-		        from tbl_lodge L
-		        join tbl_room R
-		        on L.lodge_id = R.fk_lodge_id
-		        where L.lodge_id = #{lodge_id}
-		    ) D
-		    ON V.rm_seq = D.rm_seq
-		    WHERE rest_room_cnt > 0
-		    <if test='price_min != ""'>
-		    AND to_number(#{price_min}) <![CDATA[ <= ]]> to_number(rm_price)
-		    </if>
-		    <if test='price_max != ""'>
-		    AND to_number(rm_price) <![CDATA[ <= ]]> to_number(#{price_max})
-		    </if>
+   			select lodge_id, lg_name, lg_area_2, lg_area, fk_cancel_opt, rm_price, rating, review_cnt
+			from
+			(
+			    select fk_lodge_id, rm_seq, rm_type, rm_cnt, nvl(rs_room_cnt, 0) AS rs_room_cnt
+			         , to_number(rm_cnt) - to_number(nvl(rs_room_cnt, 0)) AS rest_room_cnt
+	         		 , nvl(rating, 0) as rating, nvl(review_cnt, 0) as review_cnt
+			    from
+			    (
+			        select R.fk_lodge_id, rm_seq, rm_type, rm_cnt, V.rating, V.review_cnt
+			        from
+			        (
+			            select *
+			            from tbl_room
+			            where fk_lodge_id = #{lodge_id}
+			        ) R
+			        left join
+			        (
+			            select fk_lodge_id, round(avg(fk_rv_rating), 1) as rating, count(*) AS review_cnt
+			            from tbl_review 
+			            group by fk_lodge_ID
+			        ) V
+			        on R.fk_lodge_id = V.fk_lodge_id
+			    ) A
+			    left join 
+			    (
+			        select fk_rm_seq, count(*) as rs_room_cnt
+			        from
+			        (   
+			            select L.lodge_id, L.fk_h_userid, R.rs_name, R.rs_checkindate, R.rs_checkoutdate, R.fk_rm_seq
+			            from tbl_reservation R join tbl_lodge L
+			            on R.fk_h_userid = L.fk_h_userid
+			            where L.lodge_id = #{lodge_id}
+			            order by R.rs_checkindate, R.rs_checkoutdate
+			        )
+			        where (rs_checkindate <![CDATA[ <= ]]> to_date(#{check_in})) and ((to_date(#{check_in}) <![CDATA[ < ]]> rs_checkoutdate) and (rs_checkoutdate <![CDATA[ <= ]]> to_date(#{check_out})))
+			            or ((to_date(#{check_in}) <![CDATA[ <= ]]> rs_checkindate) and ((rs_checkindate <![CDATA[ <= ]]> to_date(#{check_out})) and (to_date(#{check_out}) <![CDATA[ <= ]]> rs_checkoutdate)))
+			            or ((rs_checkindate <![CDATA[ <= ]]> to_date(#{check_in})) and (to_date(#{check_out}) <![CDATA[ <= ]]> rs_checkoutdate))
+			            or ((to_date(#{check_in}) <![CDATA[ <= ]]> rs_checkindate) and (rs_checkoutdate <![CDATA[ <= ]]> to_date(#{check_out})))
+			        group by fk_rm_seq
+			    ) B
+			    on A.rm_seq = B.fk_rm_seq
+			) V
+			LEFT JOIN
+			(
+			    select L.lodge_id, L.lg_name, L.lg_area, L.lg_area_2, rm_price, rm_seq
+	           		 , decode(fk_cancel_opt, '0', decode(SIGN(ceil(to_date(#{check_in}) - sysdate) - 3), 1, '전액 환불 가능', ' ')
+	                               		   , '1', decode(SIGN(ceil(to_date(#{check_in}) - sysdate) - 2), 1, '전액 환불 가능', ' ')
+	                               		   , '2', decode(SIGN(ceil(to_date(#{check_in}) - sysdate) - 1), 1, '전액 환불 가능', ' ')
+	                               		   , '3', decode(SIGN(ceil(to_date(#{check_in}) - sysdate) - 0), 1, '전액 환불 가능', ' ')) AS fk_cancel_opt
+			    from tbl_lodge L
+			    join tbl_room R
+			    on L.lodge_id = R.fk_lodge_id
+			    where L.lodge_id = #{lodge_id}
+			    <if test='breakfast == "on"'>
+			    	and lg_breakfast_yn = '1'
+			    </if>
+			    <if test='pool == "on"'>
+			    	and lg_pool_yn = '1'
+			    </if>
+			    <if test='wifi == "on"'>
+			    	and lg_internet_yn = '1'
+			    </if>
+			    <if test='seaView == "on"'>
+			    	and lg_beach_yn = '1'
+			    </if>
+			    <if test='pet == "on"'>
+			    	and lg_pet_yn = '1'
+			    </if>
+			    <if test='spa == "on"'>
+			    	and fk_spa_type = '1'
+			    </if>
+			    <if test='parking == "on"'>
+			    	and lg_park_yn = '1'
+			    </if>
+			    <if test='restaurant == "on"'>
+			    	and (lg_dining_place_yn = '1'
+			    		 and '1' = (select count(*) from tbl_din where fk_lodge_id = #{lodge_id} and fk_din_opt_no = '0'))
+			    </if>
+			    <if test='babyBed == "on"'>
+			    	and (lg_fa_travel_yn = '1'
+			    		 and '1' = (select count(*) from tbl_fasvc where fk_lodge_id = #{lodge_id} and fk_fasvc_opt_no = '5'))
+			    </if>
+			    <if test='washerDryer == "on"'>
+			    	and (lg_service_yn = '1'
+			    		 and '1' = (select count(*) from tbl_cs where fk_lodge_id = #{lodge_id} and fk_cs_opt_no = '3'))
+			    </if>
+			    <if test='kitchen == "on"'>
+			    	and rm_kitchen_yn = '1'
+			    </if>
+			    <if test='aircon == "on"'>
+			    	and (rm_tmp_ctrl_yn = '1'
+			    		 and 1 <![CDATA[ <= ]]> (select count(*) from (select * from tbl_tmp T join tbl_room R on T.fk_rm_seq = R.rm_seq) where fk_lodge_id = #{lodge_id} and fk_tmp_opt_no = '0' group by fk_lodge_id))
+			    </if>
+			    <if test='rating != ""'>
+			    	and #{rating} <![CDATA[ <= ]]> (select avg(fk_rv_rating) from tbl_review where fk_lodge_id =#{lodge_id} group by fk_lodge_id)
+			    </if>
+			) D
+			ON V.rm_seq = D.rm_seq
+			WHERE rest_room_cnt > 0
+			AND rm_price = 
+			( 
+			    select MIN(to_number(rm_price)) AS rm_price
+			    from
+			    (
+			        select fk_lodge_id, rm_seq, rm_type, rm_cnt, nvl(rs_room_cnt, 0) AS rs_room_cnt
+			             , to_number(rm_cnt) - to_number(nvl(rs_room_cnt, 0)) AS rest_room_cnt
+			        from
+			        (
+			            select fk_lodge_id, rm_seq, rm_type, rm_cnt
+			            from tbl_room
+			            where fk_lodge_id = #{lodge_id}
+			        ) A
+			        left join 
+			        (
+			            select fk_rm_seq, count(*) as rs_room_cnt
+			            from
+			            (   
+			                select L.lodge_id, L.fk_h_userid, R.rs_name, R.rs_checkindate, R.rs_checkoutdate, R.fk_rm_seq
+			                from tbl_reservation R join tbl_lodge L
+			                on R.fk_h_userid = L.fk_h_userid
+			                where L.lodge_id = #{lodge_id}
+			                order by R.rs_checkindate, R.rs_checkoutdate
+			            )
+			            where (rs_checkindate <![CDATA[ <= ]]> to_date(#{check_in})) and ((to_date(#{check_in}) <![CDATA[ < ]]> rs_checkoutdate) and (rs_checkoutdate <![CDATA[ <= ]]> to_date(#{check_out})))
+			                or ((to_date(#{check_in}) <![CDATA[ <= ]]> rs_checkindate) and ((rs_checkindate <![CDATA[ <= ]]> to_date(#{check_out})) and (to_date(#{check_out}) <![CDATA[ <= ]]> rs_checkoutdate)))
+			                or ((rs_checkindate <![CDATA[ <= ]]> to_date(#{check_in})) and (to_date(#{check_out}) <![CDATA[ <= ]]> rs_checkoutdate))
+			                or ((to_date(#{check_in}) <![CDATA[ <= ]]> rs_checkindate) and (rs_checkoutdate <![CDATA[ <= ]]> to_date(#{check_out})))
+			            group by fk_rm_seq
+			        ) B
+			        on A.rm_seq = B.fk_rm_seq
+			    ) V
+			    LEFT JOIN
+			    (
+			        select L.lodge_id, L.lg_name, L.lg_area, L.lg_area_2, rm_price, rm_seq
+			        from tbl_lodge L
+			        join tbl_room R
+			        on L.lodge_id = R.fk_lodge_id
+			        where L.lodge_id = #{lodge_id}
+			    ) D
+			    ON V.rm_seq = D.rm_seq
+			    WHERE rest_room_cnt > 0
+			    <if test='price_min != ""'>
+			    AND to_number(#{price_min}) <![CDATA[ <= ]]> to_number(rm_price)
+			    </if>
+			    <if test='price_max != ""'>
+			    AND to_number(rm_price) <![CDATA[ <= ]]> to_number(#{price_max})
+			    </if>
+			)
+	    	order by rating
 		)
+		where rownum = 1
 	</select>
 	
 	

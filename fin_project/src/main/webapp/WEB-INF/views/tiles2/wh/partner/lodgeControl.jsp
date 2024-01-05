@@ -18,32 +18,33 @@
 		
 		
 	});// end of $(document).ready(function(){}--------------------------------------
-
+ 
+	// 숙소 등록 페이지로 이동 시켜주는 함수		
 	function controlLodge() {
 		
-		
-		
+		location.href="<%= ctxPath%>/register_lodge.exp";
 		
 	}
 		
-	
+	// 숙소 사진등록 페이지로 이동 시켜주는 함수
 	function controlLodgeImg() {
 		 
-		
+		location.href="<%= ctxPath%>/image_lodge.exp";
 		
 	}
 	
+	// 객실 등록 페이지로 이동 시켜주는 함수
 	function controlRoom() {
 		
-	
+		location.href="<%= ctxPath%>/rm_register.exp";
 		
 		
 	}
 	
+	// 객실 사진등록 페이지로 이동 시켜주는 함수
 	function controlRoomImg() {
 		
-		
-		
+		location.href="<%= ctxPath%>/rm_image.exp";
 		
 	}
 
