@@ -32,6 +32,10 @@
 		border-radius: 0.3rem;
 	}
 	
+	input{
+		border-width: 1px;
+	}
+	
 	.common_box_size{
 		height:37px;
 	}
@@ -531,13 +535,9 @@
 	
 	// 결제 성공하면 각각의 method로 보내주기
 	function successPayment(){
-		alert("가자");
 		
 		// DB tbl_reservation에 예약내역 isnert 하기 
-		//goReservation_DB_Update();
-		
-		// 구매자에게 메일 보내기
-		// goSendMailReservationInfo();
+		goReservation_DB_Update();
 		
 		// 결제 완료페이지로 이동
 		gopaymentConfirm();
@@ -577,11 +577,8 @@
 
 	// 결제 완료페이지로 이동
 	function gopaymentConfirm(){
-		
-		const frm = document.frm_payment_exp;
-		frm.action = "<%= ctxPath%>/payment/mailTest.exp";
-		frm.method = "get";
-		frm.submit();
+		document.getElementById('btn_aaa').click();
+		location.href="<%= ctxPath%>/payment/paymentConfirm.exp";
 		
 	} // end of function gopaymentConfirm()
 	
@@ -617,6 +614,7 @@
 
 	<fmt:parseDate value="${requestScope.paraMap.startDate}" pattern="yyyy-MM-dd" var="startDate" /> 
 	<fmt:parseDate value="${requestScope.paraMap.endDate}" pattern="yyyy-MM-dd" var='endDate' />
+	
 	<fmt:formatDate value="${startDate}" pattern="yyyy-MM-dd(E)" var="startDate_D" />
 	<fmt:formatDate value="${endDate}" pattern="yyyy-MM-dd(E)" var="endDate_D" />
 	
@@ -632,13 +630,14 @@
 					<fmt:parseDate value="${cancelInfo.B_48}" var='cancelB_48' pattern="yyyy-MM-dd HH:mm:ss" scope="page"/>
 					<fmt:parseDate value="${cancelInfo.B_72}" var='cancelB_72' pattern="yyyy-MM-dd HH:mm:ss" scope="page"/>
 					
-					<fmt:formatDate value="${cancelCurrentTime}" pattern="yyyy-MM-dd HH:mm:ss" var="currentTime" /> 
+					<fmt:formatDate value="${cancelCurrentTime}" pattern="yyyy-MM-dd HH:mm:ss" var="currentTime" />
 					<fmt:formatDate value="${cancelB_1}" pattern="yyyy-MM-dd HH:mm:ss" var="B_1" />
 					<fmt:formatDate value="${cancelB_24}" pattern="yyyy-MM-dd HH:mm:ss" var="B_24" />
 					<fmt:formatDate value="${cancelB_48}" pattern="yyyy-MM-dd HH:mm:ss" var="B_48" />
 					<fmt:formatDate value="${cancelB_72}" pattern="yyyy-MM-dd HH:mm:ss" var="B_72" />
 					
 					<fmt:formatDate value="${cancelCurrentTime}" pattern="yyyy-MM-dd HH:mm:ss" var="currentTime_D" /> 
+					<fmt:formatDate value="${cancelCurrentTime}" pattern="yyyy-MM-dd(E)" var="CurrentTime_D" /> 
 					<fmt:formatDate value="${cancelB_1}" pattern="yyyy-MM-dd HH:mm:ss" var="B_1_D" />
 					<fmt:formatDate value="${cancelB_24}" pattern="yyyy-MM-dd HH:mm:ss" var="B_24_D" />
 					<fmt:formatDate value="${cancelB_48}" pattern="yyyy-MM-dd HH:mm:ss" var="B_48_D" />
@@ -1334,12 +1333,18 @@
 				<input type="text" name="h_userid" value="${requestScope.paraMap.h_userid}" />
 				<input type="text" name="paytype" value="${requestScope.paraMap.payType}" />
 				<input type="text" name="guest_cnt" value="${requestScope.paraMap.guest_cnt}" />
+				
+				<input type="text" name="currentTimeD" value="${CurrentTime_D}" />
+				<input type="text" name="checkinTime" value="${cancelInfo.checkin_time}" />
+				<input type="text" name="checkoutTime" value="${cancelInfo.checkout_time}" />
 			</form>
 		</div>		
 	</div>
 	
 	<input type="text" name="sum_price" />
 	<input type="text" class="total_priceEnd" value="${roomInfo.rm_price * requestScope.daysGap * 0.9 * 1.1}"/>
+	
+	
 	
 	</c:forEach>
 	</c:forEach>
