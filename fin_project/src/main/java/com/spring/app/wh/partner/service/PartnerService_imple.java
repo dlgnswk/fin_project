@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.app.common.AES256;
+import com.spring.app.expedia.domain.ChatVO;
 import com.spring.app.expedia.domain.HostVO;
 import com.spring.app.wh.partner.model.PartnerDAO;
 
@@ -30,16 +31,6 @@ public class PartnerService_imple implements PartnerService {
 	@Override
 	public HostVO getLoginHost(Map<String, String> paraMap) {
 		HostVO loginhost = dao.getLoginHost(paraMap);
-		// System.out.println("확인용 : service loginhost : "+loginhost);
-		// === #48. aes 의존객체를 사용하여 로그인 되어진 사용자(loginuser)의 이메일 값을 복호화 하도록 한다. === 
-	    //          또한 암호변경 메시지와 휴면처리 유무 메시지를 띄우도록 업무처리를 하도록 한다.
-		
-		
-		if(loginhost != null && loginhost.getH_pwdchangegap() >= 3 ) {
-			// 마지막으로 암호를 변경한 날짜가 현재시각으로부터 3개월이 지났으면
-			loginhost.setRequirePwdChange(true); // 로그인 시 암호를 변경하라는 alert 를 띄우도록 한다.
-		}
-		
 		
 		return loginhost;
 	}
@@ -75,6 +66,14 @@ public class PartnerService_imple implements PartnerService {
 	public int editHost(Map<String, String> paraMap) {
 		int n = dao.editHost(paraMap);
 		return n;
+	}
+
+	
+	// 채팅방 불러오기
+	@Override
+	public ChatVO selectChat(String lodge_id) {
+		ChatVO chatvo = dao.selectChat(lodge_id);
+		return chatvo;
 	}
 
 	

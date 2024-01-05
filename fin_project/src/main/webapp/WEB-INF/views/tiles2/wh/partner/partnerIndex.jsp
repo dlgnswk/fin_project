@@ -23,7 +23,7 @@
 		
 		const frm = document.useridSendFrm;
 		frm.action  = "<%= ctxPath%>/lodgeControl.exp";
-		frm.method = "post";
+		frm.method = "get";
 		frm.submit();
 		
 		
