@@ -575,7 +575,7 @@ function goLikeCount() {
 			<div class="content_block" id="content">
 				
 				<div class="dropdown_main">
-					<div >																				
+					<div>																				
 						<h3 class="tit_con_title" style="margin-bottom: 1.875rem;">
 						여행 후기
 						<c:if test="${not empty sessionScope.loginuser && sessionScope.loginuser.userid == requestScope.tripboardvo.fk_userid}">
