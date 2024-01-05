@@ -123,6 +123,7 @@ replay_pid*
 /fin_project/src/main/webapp/WEB-INF/views/paymentGateway.jsp
 /fin_project/src/main/webapp/WEB-INF/web.xml
 
+/fin_project/common/
 /fin_project/NCS/
 /fin_project/target/
 

@@ -721,11 +721,35 @@
 		// =========== 숙소 상세 페이지로 보내기 시작 =========== //
 		// 숙소 설명란 클릭시
 		$(document).on("click", "div.search_item_desc", function(){
-			show_room();
+			
+			$("form[name='go_detail_frm']").find("input[name=lodge_id]").val($(this).find(".lodge_id").val());
+			$("form[name='go_detail_frm']").find("input[name=startDate]").val($(this).find(".check_in").val());
+			$("form[name='go_detail_frm']").find("input[name=endDate]").val($(this).find(".check_out").val());
+			
+			$("form[name='go_detail_frm']").find("input[name=guest]").val(${requestScope.map.travlers});
+			$("form[name='go_detail_frm']").find("input[name=adults]").val(${requestScope.map.adult});
+			$("form[name='go_detail_frm']").find("input[name=childs]").val(${requestScope.map.kid});
+			
+			const frm = document.go_detail_frm;
+			frm.action = "<%= ctxPath%>/lodgeDetail_info.exp";
+			frm.submit();
+			
 		});
 		// 숙소 이미지 클릭시
 		$(document).on("click", "div.carousel-inner", function(){
-			show_room();
+			
+			$("form[name='go_detail_frm']").find("input[name=lodge_id]").val($(this).find(".lodge_id").val());
+			$("form[name='go_detail_frm']").find("input[name=startDate]").val($(this).find(".check_in").val());
+			$("form[name='go_detail_frm']").find("input[name=endDate]").val($(this).find(".check_out").val());
+			
+			$("form[name='go_detail_frm']").find("input[name=guest]").val(${requestScope.map.travlers});
+			$("form[name='go_detail_frm']").find("input[name=adults]").val(${requestScope.map.adult});
+			$("form[name='go_detail_frm']").find("input[name=childs]").val(${requestScope.map.kid});
+			
+			const frm = document.go_detail_frm;
+			frm.action = "<%= ctxPath%>/lodgeDetail_info.exp";
+			frm.submit();
+			
 		});
 		// =========== 숙소 상세 페이지로 보내기 시작 =========== //
 		
@@ -1022,13 +1046,13 @@
 											<%-- 상단 정보(숙소이름, 지역명) --%>
 						v_html +=			"<div class='lodge_desc_top'>";
 						v_html +=				"<form name='RoomListFrm'>";
-						v_html +=					"<input type='hidden' name='lodge_id' class='lodge_id' value='" + item.lodge_id + "' />";
-						v_html +=					"<input type='hidden' name='startDate' class='check_in' value='" + item.check_in + "' />";
-						v_html +=					"<input type='hidden' name='endDate' class='check_out' value='" + item.check_out + "' />";
-						v_html +=					"<input type='hidden' name='guest' class='guest' value='${requestScope.map.travlers}' />";
-						v_html +=					"<input type='hidden' name='adults' class='adults' value='${requestScope.map.adult}' />";
-						v_html +=					"<input type='hidden' name='childs' class='childs' value='${requestScope.map.kid}' />";
-						v_html +=					"<input type='hidden' name='room' class='room' value='1' />";
+						v_html +=					"<input type='hidden' class='lodge_id' value='" + item.lodge_id + "' />";
+						v_html +=					"<input type='hidden' class='check_in' value='" + item.check_in + "' />";
+						v_html +=					"<input type='hidden' class='check_out' value='" + item.check_out + "' />";
+						v_html +=					"<input type='hidden' class='guest' value='${requestScope.map.travlers}' />";
+						v_html +=					"<input type='hidden' class='adults' value='${requestScope.map.adult}' />";
+						v_html +=					"<input type='hidden' class='childs' value='${requestScope.map.kid}' />";
+						v_html +=					"<input type='hidden' class='room' value='1' />";
 						v_html +=				"</form>";
 						v_html +=				"<div class='lg_name'>" + item.lg_name + "</div>";
 						v_html +=				"<div class='lg_area'>";
@@ -1158,6 +1182,20 @@
 							v_html +=						"훌륭해요";
 							v_html +=					"</div>";
 						}
+						else if(Number(item.rating).toFixed(1) < 8 && Number(item.rating).toFixed(1) > 0){
+							<%-- 평점 --%>
+							v_html +=				"<div class='rv_rating'>";
+							v_html +=					"<span class='uitk-badge uitk-badge-base-large uitk-badge-base-has-text uitk-badge-positive'>";
+							v_html +=						"<span class='uitk-badge-base-text'>" + Number(item.rating).toFixed(1) + "</span>";
+							v_html +=					"</span>";
+							v_html +=				"</div>";
+														
+													<%-- 후기 --%>
+							v_html +=				"<div class='rv_rating_desc'>";
+							v_html +=					"<div>";
+							v_html +=						"훌륭해요";
+							v_html +=					"</div>";
+						}
 						else {
 							<%-- 평점 --%>
 							v_html +=				"<div class='rv_rating'>";
@@ -1169,7 +1207,7 @@
 													<%-- 후기 --%>
 							v_html +=				"<div class='rv_rating_desc'>";
 							v_html +=					"<div>";
-							v_html +=						"좋아요";
+							v_html +=						"후기없음";
 							v_html +=					"</div>";
 						}
 						
@@ -1319,13 +1357,6 @@
 	// 재훈 : 필터를 선택할 경우 새로운 조건을 추가한 ajax 호출
 	function filter_search(){
 		const frm = document.searchFrm;
-		frm.submit();
-	};
-
-	// 재훈 : 특정 숙소를 선택할 경우 lodge_id, startDate, endDate, guest, adults, childs, room를 객실 리스트 페이지로 넘겨줌(지연)
-	function show_room(){
-		const frm = document.RoomListFrm;
-		frm.action = "<%= ctxPath%>/lodgeDetail_info.exp";
 		frm.submit();
 	};
 	
@@ -1740,4 +1771,14 @@
 		</form>
 		<!-- 재훈 : 검색내용 본문   끝 -->
 	</div>
+	
+	<form name="go_detail_frm">
+		<input type="hidden" name="lodge_id" />
+		<input type="hidden" name="startDate" />
+		<input type="hidden" name="endDate" />
+		<input type="hidden" name="guest" />
+		<input type="hidden" name="adults" />
+		<input type="hidden" name="childs" />
+		<input type="hidden" name="room" value="1" />
+	</form>
 </body>
