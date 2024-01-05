@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.spring.app.expedia.domain.ChatVO;
 import com.spring.app.expedia.domain.HostVO;
 
 @Repository
@@ -57,6 +58,14 @@ public class PartnerDAO_imple implements PartnerDAO {
 	public int editHost(Map<String, String> paraMap) {
 		int n = sqlsession.update("wh_partner.editHost", paraMap);
 		return n;
+	}
+
+	
+	// 채팅방 불러오기
+	@Override
+	public ChatVO selectChat(String lodge_id) {
+		ChatVO chatvo = sqlsession.selectOne("wh_partner.selectChat", lodge_id);
+		return chatvo;
 	}
 
 	

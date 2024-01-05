@@ -199,7 +199,7 @@ function goView(chat_no) {
 		       </tr>       		
 			   
 			   <tr>
-		           <th>예약자명</th>
+		           <th>숙소명</th>
 		           <td>${requestScope.chatvo.name}</td>
 		       </tr>       		
 			  

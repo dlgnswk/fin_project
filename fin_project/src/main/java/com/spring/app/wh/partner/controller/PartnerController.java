@@ -41,6 +41,7 @@ import com.google.gson.JsonObject;
 import com.spring.app.common.Sha256;
 import com.spring.app.expedia.domain.ChatVO;
 import com.spring.app.expedia.domain.HostVO;
+import com.spring.app.expedia.domain.UserVO;
 import com.spring.app.wh.partner.service.PartnerService;
 
 @Controller
@@ -90,64 +91,65 @@ public class PartnerController {
 		
 		HostVO loginhost = service.getLoginHost(paraMap);
 		
-		if(loginhost == null) { // 로그인 실패시
+		if(loginhost == null) { // 로그인 실패 시
 			String message = "아이디 또는 암호가 틀립니다.";
 			// String loc = "javascript:history.back()";
 			
-			String referer = request.getHeader("referer"); 
-			// request.getHeader("referer"); 은 이전 페이지의 URL을 가져오는 것이다.
 			String loc = request.getHeader("referer");
 			
 			mav.addObject("message", message);
 			mav.addObject("loc", loc);
 			
 			mav.setViewName("msg");
-			// /WEB-INF/views/msg.jsp 파일을 생성한다.
 		}
-		else { // 아이디와 암호가 존재하는 경우
+		
+		else { // 계정이 존재하는 경우
 			
 				
 				HttpSession session = request.getSession();
-				// 메모리에 생성되어져있는 session 을 불러온다.
 				
 				session.setAttribute("loginhost", loginhost);
-				// session(세션)에 로그인 되어진 사용자 정보인 loginhost 의 키이름을 "loginhost" 으로 저장시켜두는 것이다.
 				
-				if(loginhost.isRequirePwdChange() == true){
-					// 암호를 마지막으로 변경한 시점이 3개월 경과한 경우
-					String message = "비밀번호를 변경하신지 3개월이 지났습니다.\\n암호를 변경하시는 것을 추천합니다.";
+				// 관리자 승인을 받기 전인 계정으로 로그인 했을 시
+				if(loginhost.getH_status() == 0){
+					String message = "관리자 승인 후 접속 할 수 있습니다.";
 					String loc = request.getContextPath() + "/partner.exp";
-					// 원래는 위와 같이 partner.exp 이 아니라 사용자의 비밀번호를 변경하는 페이지로 잡아주어야 한다.
 					
 					mav.addObject("message", message);
 					mav.addObject("loc", loc);
 					
+					session.removeAttribute("loginhost");
+					
 					mav.setViewName("msg");
 				}
 				
-				mav.setViewName("wh/partner/partnerIndex.tiles2"); // 시작페이지로 이동
+				// 관리자 승인을 받은 계정으로 로그인
+				else {
+					mav.setViewName("wh/partner/partnerIndex.tiles2");
+				}
+				 
 		}
 		
 		return mav;
 	}
 		
+	// ==== 로그아웃 처리하기 ==== //	
+	@GetMapping("/hostLogout.exp")
+	public ModelAndView logout(ModelAndView mav, HttpServletRequest request) {
 		
-		@GetMapping("/hostLogout.exp")
-		public ModelAndView logout(ModelAndView mav, HttpServletRequest request) {
-			
-			HttpSession session = request.getSession();
-			session.invalidate();
-			
-			String message = "로그아웃 되었습니다.";
-			String loc = request.getContextPath() + "/partner.exp";
-			
-			mav.addObject("message", message);
-			mav.addObject("loc", loc);
-			
-			mav.setViewName("msg");
-			
-			return mav;
-		} // end of @GetMapping("/logout.action")
+		HttpSession session = request.getSession();
+		session.invalidate();
+		
+		String message = "로그아웃 되었습니다.";
+		String loc = request.getContextPath() + "/partner.exp";
+		
+		mav.addObject("message", message);
+		mav.addObject("loc", loc);
+		
+		mav.setViewName("msg");
+		
+		return mav;
+	} // end of @GetMapping("/logout.exp")
 		
 	
 	
@@ -155,8 +157,6 @@ public class PartnerController {
 	
 	// === 회원가입 시작 === //
 
-	
-	
 	
 	@GetMapping("/hostRegister1.exp")
 	public ModelAndView register1(ModelAndView mav, HttpServletRequest request) {
@@ -192,7 +192,7 @@ public class PartnerController {
 	
 	
 	
-	
+	// 아이디 중복검사 수정 필요
 	@ResponseBody
 	@PostMapping(value="useridDuplicateCheck.exp", produces="text/plain;charset=UTF-8") 
 	public String idDuplicateCheck(HttpServletRequest request) {
@@ -206,16 +206,11 @@ public class PartnerController {
 		JsonObject jsonObj = new JsonObject(); // {}
 		jsonObj.addProperty("isExists",isExists);
 			
-		
-		
 		return new Gson().toJson(jsonObj); 
 		
 	
 	}	
 		
-		
-	
-	
 	@PostMapping("/registerEnd.exp")
 	public ModelAndView registerEnd(ModelAndView mav, HttpServletRequest request) {
 		
@@ -263,8 +258,6 @@ public class PartnerController {
 		host.setH_businessNo(businessNo);
 
 		
-		
-		
 		// tbl_host 에 HostVO 에 저장된 정보를 insert 해주는 메소드
 		int n = service.registerHost(host);
 		
@@ -293,10 +286,9 @@ public class PartnerController {
 	// === 회원가입 끝 === //	
 	
 	
-	
-	// 시설 관리 페이지로 이동
-	@PostMapping("/lodgeControl.exp")
-	public String lodgeControl(HttpServletRequest request) {
+	// === 시설 관리 페이지 이동 시작 == //
+	@GetMapping("/lodgeControl.exp")
+	public String requiredHostLogin_lodgeControl(HttpServletRequest request, HttpServletResponse response) {
 		
 		String h_userid = request.getParameter("userid");
 		
@@ -305,7 +297,7 @@ public class PartnerController {
 		
 		return "wh/partner/lodgeControl.tiles2";
 	}
-	
+	// === 시설 관리 페이지 이동 끝  == //
 	
 	
 	
@@ -346,7 +338,7 @@ public class PartnerController {
 	
 	
 	
-	// ==== 차트그리기(Ajax) 월별 객실등급별 예약 인원 수 가져오기 ==== //
+	// ==== 차트그리기(Ajax) 올해 월별 객실등급별 예약 인원 수 가져오기 ==== //
 	@ResponseBody
 	@GetMapping(value="useLodgeCnt.exp", produces="text/plain;charset=UTF-8") 
 	public String useLodgeCnt(HttpServletRequest request) {
@@ -395,7 +387,7 @@ public class PartnerController {
 	
 	
 	
-	// ==== 차트그리기(Ajax) 월별 객실등급별 예약 인원 수 가져오기 ==== //
+	// ==== 차트그리기(Ajax) 2023년 월별 객실등급별 예약 인원 수 가져오기 ==== //
 	@ResponseBody
 	@GetMapping(value="beforeOneYearuseLodgeCnt.exp", produces="text/plain;charset=UTF-8") 
 	public String beforeOneYearuseLodgeCnt(HttpServletRequest request) {
@@ -602,12 +594,56 @@ public class PartnerController {
 		
 		String h_userid = request.getParameter("userid");
 		
-		
 		request.setAttribute("h_userid", h_userid);
 		
 		return "wh/partner/csIndex.tiles2";
 	}
 		  	
+	
+	// (구매자입장에서) 판매자와 채팅하기  
+	@GetMapping("chat.exp")
+	public String requiredLogin_chat(HttpServletRequest request, HttpServletResponse response) {
+		
+		HttpSession session = request.getSession();
+		
+		UserVO loginuser = (UserVO)session.getAttribute("loginuser");
+		
+		String userid = loginuser.getUserid();
+		
+		
+		String lodge_id = request.getParameter("lodge_id");
+		
+		// 채팅방 불러오기
+		ChatVO chatvo = service.selectChat(lodge_id);
+		
+		// 기존 채팅방이 없는 경우 새로운 채팅방을 만들기
+		if(chatvo == null) {
+			
+			
+			
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		return "wh/partner/chat/view.tiles2";
+	}
+	
+	
+	
+	
+	
+	
 	
 	// ==== #58. 글목록보기 페이지 요청 ==== //
 	
@@ -632,8 +668,7 @@ public class PartnerController {
 		//////////////////////////////////////////////////////////////////////
 		
 		
-		// == 페이징 처리를 안한 검색어가 없는 전체 글목록 보여주기 == //
-	 //	boardList = service.boardListNoSearch();
+
 		
 		// === #102. 페이징 처리를 안한 검색어가 있는 전체 글목록 보여주기 == //
      /*
