@@ -490,7 +490,7 @@ public class LodgeController {
 //		String root = session.getServletContext().getRealPath("/");
 //		String path = root + "resources"+File.separator+"images"+File.separator+fk_lodge_id+File.separator+"lodge_image";
 		
-		String root = "C:\\git\\final_exp\\final_project\\src\\main\\webapp\\resources";
+		String root = "C:\\git\\fin_project\\fin_project\\src\\main\\webapp\\resources";
 		String path = root +File.separator+"images"+File.separator+fk_lodge_id+File.separator+"lodge_image";
 		
 		System.out.println(path);
@@ -727,14 +727,13 @@ public class LodgeController {
 		// == 전망 옵션 종류 select == // 
 		List<Map<String,String>> viewOptMapList = service.getViewOpt();
 		
-		// === 로그인한 사용자의 정보 -시작- === //
+		// ================= AOP 로그인한 사용자의 정보 -시작- ==================== //
 		HttpSession session = request.getSession();
 		HostVO loginhost = (HostVO) session.getAttribute("loginhost");
-		
 		String fk_h_userid = loginhost.getH_userid();
 		// 현재 로그인한 판매자의 ID로 숙박시설의 lodge_id를 가져온다.
 		String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
-		// === 로그인한 사용자의 정보 -끝- === //
+		// ================= AOP 로그인한 사용자의 정보 -끝- ==================== //
 		
 		// == ** 이미 입력된 room 정보가 있다면 수정과 추가를 하기위해서 체크 해야 된다 ** == //
 		List<Map<String,String>> updateRmInfoMapList = service.getRmInfo(fk_lodge_id); // rm_seq, rm_type
@@ -936,8 +935,10 @@ public class LodgeController {
 		HttpSession session = request.getSession();
 		HostVO loginhost = (HostVO) session.getAttribute("loginhost");
 		String fk_h_userid = loginhost.getH_userid();
+		System.out.println("fk_h_userid => " + fk_h_userid);
 		// 현재 로그인한 판매자의 ID로 숙박시설의 lodge_id를 가져온다.
 		String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
+		System.out.println("fk_lodge_id => " + fk_lodge_id);
 		// === 로그인한 사용자의 정보 -끝- === //
 		
 		
@@ -977,12 +978,12 @@ public class LodgeController {
 	//	HttpSession session = mtp_request.getSession();
 	//	String root = session.getServletContext().getRealPath("/");
 	//	String path = root + "resources"+File.separator+"images"+File.separator+fk_lodge_id+File.separator+"room_image";
-		String root = "C:\\git\\final_exp\\final_project\\src\\main\\webapp\\resources";
+		String root = "C:\\git\\fin_project\\fin_project\\src\\main\\webapp\\resources";
 		String path = root +File.separator+"images"+File.separator+fk_lodge_id+File.separator+"room_image";
 		System.out.println(path);
 		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\final_project\resources\images\JSUN0231\room_image
 		
-		// C:/final_project/src/main/webapp/resources/images
+		// C:\git\fin_project\fin_project\src\main\webapp\resources
 		File dir = new File(path);
 		
 		
@@ -1090,6 +1091,7 @@ public class LodgeController {
 				
 				jsonObj.addProperty("rm_img_name", map.get("rm_img_name"));
 				jsonObj.addProperty("rm_img_save_name", map.get("rm_img_save_name"));
+				jsonObj.addProperty("rm_img_main", map.get("rm_img_main"));
 				
 				jsonArr.add(jsonObj);
 				
@@ -1103,48 +1105,43 @@ public class LodgeController {
 	}
 	
 	
-	// "X"버튼을 눌러서 이미지를 삭제했다.
+	// "X"버튼을 눌러서 이미지를 삭제했다.  --> DB와 저장 경로에서 이미지파일을 삭제한다.
 	@ResponseBody
 	@PostMapping(value="/delIdxImg.exp")
-	public String delIdxImg(@RequestParam(required = false) Map<String,String> paraMap,
-							HttpServletRequest request) {
+	public String requiredHostLogin_delIdxImg(HttpServletRequest request, HttpServletResponse response,
+											  @RequestParam(required = false) Map<String,String> paraMap) {
 		
-	//	String fk_rm_seq = paraMap.get("fk_rm_seq");
-		String rm_img_save_name = paraMap.get("rm_img_save_name");
-		String fk_lodge_id = paraMap.get("fk_lodge_id");
-	//	String rm_img_name = paraMap.get("rm_img_name");
-	//	System.out.println(fk_rm_seq + rm_img_save_name + rm_img_name);
-		// rm-47프리미어2.png2024010222343548229689336800.png
+		String fk_rm_seq = paraMap.get("fk_rm_seq");
+		String rm_img_save_name = paraMap.get("rm_img_save_name");	// 저장 이름
+		String fk_lodge_id = paraMap.get("fk_lodge_id");	// 시설 이름
+	//	String rm_img_name = paraMap.get("rm_img_name");	// 이미지 이름
+		String rm_img_main = paraMap.get("rm_img_main");	// 메인 이미지 여부
+	//	System.out.println(fk_rm_seq +"    "+ rm_img_save_name +"    "+ rm_img_name+"    "+rm_img_main);
+		// rm-47    프리미어2.png    2024010222343548229689336800.png    0
+		// rm-45    슈페리어1.png    2024010222331848151868402000.png    1
 
 		
-		// === DB에서 이미지를 삭제한다. === //
-	//	int result = service.delIdxImg(paraMap);
-		
-		
-		
 		// === 개발 경로에서 이미지 삭제하기 === ///
-		String root = "C:\\git\\final_exp\\final_project\\src\\main\\webapp\\resources";
+		String root = "C:\\git\\fin_project\\fin_project\\src\\main\\webapp\\resources";
 		String path = root +File.separator+"images"+File.separator+fk_lodge_id+File.separator+"room_image";
-		System.out.println(path);
+	//	System.out.println(path);
 		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\final_project\resources\images\JSUN0231\room_image
 		
-		// C:/final_project/src/main/webapp/resources/images
+		// C:\git\fin_project\fin_project\src\main\webapp\resources
+	
 		File dir = new File(path);
-		
 		if(dir.exists()) {
 			// 경로 폴더가 존재한다면
 			File[] folderList = dir.listFiles(); // 폴더의 내용물이 있는지 확인하다.
-			
 			if( folderList.length > 0) {
 			// 경로 폴더안 이미지 파일들이 존재한다면 확인해야 한다.
 				
 				// DB에서 가져온 파일 이름을 저장폴더안에 이미지 파일들과 이름을 비교하여 같은 파일을 삭제한다.
 				for(int i=0; i<folderList.length; i++) {
-					
 					if(folderList[i].getName().equals(rm_img_save_name)) {
 					// 삭제해야할 파일과 이름이 같은 파일은 삭제한다.
 						folderList[i].delete();
-						break;
+						break; // 한개의 "X"를 눌렀기 때문에 한개의 이미지 파일만 삭제하면 반복문을 빠져나온다.
 					}
 					
 				}// end of for -----------------------------------
@@ -1153,29 +1150,131 @@ public class LodgeController {
 			
 		} // end of if(dir.exists()) -----------
 		
+		// === DB에서 이미지를 삭제한다. === //
+		int result = service.delIdxImg(paraMap);
 		
 		
-		JsonArray jsonArr = new JsonArray();
-		/*
-		if(roomImgDataMapList.size() > 0 ) {
+		if( "1".equals(rm_img_main) ) {
+		// 메인이미지가 삭제된 경우에
+			// 바로 다음 이미지를 메인이미지로 업데이트  -> 다음 이미지 존재여부 확인
 			
-			for(Map<String,String> map :roomImgDataMapList) {
-				JsonObject jsonObj = new JsonObject();
-				
-				jsonObj.addProperty("rm_img_name", map.get("rm_img_name"));
-				jsonObj.addProperty("rm_img_save_name", map.get("rm_img_save_name"));
-				
-				jsonArr.add(jsonObj);
-				
-			} // end of for ---------
+			// 다음 메인이미지 rm_img_seq 가져오기
+			List<String> nextMainImg_rm_img_seq = service.nextMainImgUpdate(fk_rm_seq);
+			// nextMainImg_rm_img_seq => 메인이미지 여부가 "1"로 변경될  이미지의 seq
 			
-		}// end of if(roomImgDataMapList.size() > 0 ) {
-		*/
-		return new Gson().toJson(jsonArr);
+			if( nextMainImg_rm_img_seq.size() > 0 ) {
+			// 다음 이미지가 있는경우 ==> 업데이트 가능
+				// rm_img_seq값에 해당하는 이미지 정보의 rm_img_main를 "1"로 업데이트 하기
+				String next_rm_img_seq = nextMainImg_rm_img_seq.get(0);
+				service.updateNextMainImg(next_rm_img_seq);
+			}
+			
+		} // end of if( "1".equals(rm_img_main) )
+		// 메인 이미지가 아닌 이미지가 삭제된 경우에는 업데이트가 발생하지 않는다. 
+		
+		
+		JsonObject jsonObj = new JsonObject();
+		
+		if( result > 0 ) {
+		// DB에서 이미지파일에 대한 정보가 삭제된 경우
+			jsonObj.addProperty("result", result);
+		}
+		else {
+		// 삭제가 정상적으로 진행되지 않은 경우
+			jsonObj.addProperty("result", result);
+		}
+		
+		return new Gson().toJson(jsonObj);
 		// /WEB-INF/views/tiles2/db/register/register_lodge.jsp
 		// /WEB-INF/views/tiles2/{1}/{2}/{3}.jsp
 	}
 	
+	
+	// "X"버튼을 눌러서 이미지를 삭제했다.  --> DB와 저장 경로에서 이미지파일을 삭제한다.
+	@ResponseBody
+	@PostMapping(value="/delRoomImgFk_rm_seq.exp")
+	public String requiredHostLogin_delRoomImgFk_rm_seq(HttpServletRequest request, HttpServletResponse response,
+											  			@RequestParam(required = false) String fk_rm_seq) {
+		
+		// ================= AOP 로그인한 사용자의 정보 -시작- ==================== //
+		HttpSession session = request.getSession();
+		HostVO loginhost = (HostVO) session.getAttribute("loginhost");
+		String fk_h_userid = loginhost.getH_userid();
+		// 현재 로그인한 판매자의 ID로 숙박시설의 lodge_id를 가져온다.
+		String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
+		// ================= AOP 로그인한 사용자의 정보 -끝- ====================== //
+		
+		
+		// fk_rm_seq를 사용해서 제거할 이미지파일 정보를 가져온다.
+		List<Map<String,String>> roomImgDataMapList = service.getRmImgData(fk_rm_seq);
+		// rm_img_save_name를 사용하여 제거
+		
+		// === 개발 경로에서 이미지 삭제하기 === ///
+		String root = "C:\\git\\fin_project\\fin_project\\src\\main\\webapp\\resources";
+		String path = root +File.separator+"images"+File.separator+fk_lodge_id+File.separator+"room_image";
+	//	System.out.println(path);
+		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\final_project\resources\images\JSUN0231\room_image
+		
+		// C:\git\fin_project\fin_project\src\main\webapp\resources
+	
+		int roopCnt = 0;
+		
+		File dir = new File(path);
+		if(dir.exists()) {
+			// 경로 폴더가 존재한다면
+			File[] folderList = dir.listFiles(); // 폴더의 내용물이 있는지 확인하다.
+			if( folderList.length > 0) {
+			// 경로 폴더안 이미지 파일들이 존재한다면 확인해야 한다.
+				
+				if(roomImgDataMapList.size() > 0) {
+					// DB에서 가져온 파일 이름을 저장폴더안에 이미지 파일들과 이름을 비교하여 같은 파일을 삭제한다.
+					for(int i=0; i<folderList.length; i++) {
+						
+						for(Map<String,String> roomImgData : roomImgDataMapList) {
+							
+							if( folderList[i].getName().equals(roomImgData.get("rm_img_save_name")) ) {
+								// 삭제해야할 파일과 이름이 같은 파일은 삭제한다.
+								folderList[i].delete();
+								roopCnt++;
+								break; // 한개의 "X"를 눌렀기 때문에 한개의 이미지 파일만 삭제하면 반복문을 빠져나온다.
+							}
+							
+						} // end of for ---------------
+						
+						if( roopCnt == roomImgDataMapList.size() ) {
+							break;
+						}
+						
+					}// end of for -----------------------------------
+					
+				}// end of if(roomImgDataMapList.size() > 0)
+				
+			} // end of if( folderList.length > 0) ------------
+			
+		} // end of if(dir.exists()) -----------
+		
+		// === DB에서 이미지를 삭제한다. === //
+		int result=0;
+		if(roomImgDataMapList.size() > 0) {
+			// 객실 사진등록 "사진 전체 제거" 버튼 클릭
+			result = service.delRoomImgFk_rm_seq(fk_rm_seq);
+		}
+		
+		JsonObject jsonObj = new JsonObject();
+		
+		if( result > 0 ) {
+		// DB에서 이미지파일에 대한 정보가 삭제된 경우
+			jsonObj.addProperty("result", result);
+		}
+		else {
+		// 삭제가 정상적으로 진행되지 않은 경우
+			jsonObj.addProperty("result", result);
+		}
+		
+		return new Gson().toJson(jsonObj);
+		// /WEB-INF/views/tiles2/db/register/register_lodge.jsp
+		// /WEB-INF/views/tiles2/{1}/{2}/{3}.jsp
+	}
 	
 	
 }

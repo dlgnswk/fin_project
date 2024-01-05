@@ -1660,11 +1660,11 @@
 						<div id="lg_hotel_star_div" class="lg_hotel_star">
 							<select name="lg_hotel_star">
 									<option value="">--선택--</option>
-									<option>1성급</option>
-									<option>2성급</option>
-									<option>3성급</option>
-									<option>4성급</option>
-									<option>5성급</option>
+									<option value="1">1성급</option>
+									<option value="2">2성급</option>
+									<option value="3">3성급</option>
+									<option value="4">4성급</option>
+									<option value="5">5성급</option>
 							</select>
 						</div>
 					</div>

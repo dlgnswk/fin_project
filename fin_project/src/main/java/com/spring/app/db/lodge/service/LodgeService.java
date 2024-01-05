@@ -100,4 +100,17 @@ public interface LodgeService {
 
 	// 기존에 등록된 객실의 이미지 정보를 가져온다. 
 	List<Map<String, String>> getRmImgData(String fk_rm_seq);
+
+	// === DB에서 이미지를 삭제한다. === //
+	int delIdxImg(Map<String, String> paraMap);
+
+	// 다음 메인이미지 rm_img_seq 가져오기
+	List<String> nextMainImgUpdate(String fk_rm_seq);
+
+	// rm_img_seq값에 해당하는 이미지 정보의 rm_img_main를 "1"로 업데이트 하기
+	void updateNextMainImg(String next_rm_img_seq);
+
+	// 객실 사진등록 "사진 전체 제거" 버튼 클릭
+	int delRoomImgFk_rm_seq(String fk_rm_seq);
+
 }
