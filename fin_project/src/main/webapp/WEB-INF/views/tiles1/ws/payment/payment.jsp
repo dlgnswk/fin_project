@@ -1222,14 +1222,26 @@
 							
 							<span style="font-weight:bold;">합계</span>
 							<span style="float:right; font-weight:bold;">₩ <span class="sum_priceEnd"></span></span>
-	
+							
+							<c:if test="${requestScope.paraMap.payType eq '1'}">
+								<div>
+									<span style="font-weight:bold; color:#2f7000;">지금 결제</span>
+									<span style="float:right; font-weight:bold; color:#2f7000;">₩ 0</span>
+								</div>
+								
+								<div>
+									<span class="text-gray">현장 결제</span>
+									<span style="float:right;" class="text-gray">₩ 0</span>
+								</div>								
+							</c:if>
+							
 						</c:if>
 
 						
 						<c:if test="${myUser.user_lvl == '실버'}">
 							<div>
 								<span style="font-size:12pt; font-weight:600;">객실 1개 x <span>${requestScope.paraMap.daysGap}</span> 박</span>
-								<span style="float:right; font-size:12pt;">₩<span> ${roomInfo.rm_price * requestScope.daysGap * 0.85}</span></span>
+								<span style="float:right; font-size:12pt;">₩<span> <fmt:formatNumber pattern="#,###">${roomInfo.rm_price * requestScope.daysGap * 0.85}</fmt:formatNumber></span></span>
 							</div>
 						
 							<div style="border-radius: 0.3rem; margin:2% 0;font-weight:bold; background-color:#fddb32;width:40%; font-size:9pt;width:125px;">
@@ -1244,32 +1256,59 @@
 							
 							<div>
 								<span style="font-size:12pt; font-weight:600;">포인트 선할인</span>
-								<span style="float:right; font-size:11pt;"><input type="checkbox"/><fmt:formatNumber pattern="#,###">1716</fmt:formatNumber> 원 적립<span id="change_span">/할인</span></span>
+								<span style="float:right; font-size:11pt;"><input name="inp_myPoint" type="checkbox"/>
+									<c:if test="${myUser.user_lvl == '블루'}">
+										<input type="hidden" class="myPoint" value="${roomInfo.rm_price * 0.01}" />
+										<fmt:formatNumber pattern="#,###">${roomInfo.rm_price * 0.01}</fmt:formatNumber>
+									</c:if>
+									
+									<c:if test="${myUser.user_lvl == '실버'}">
+										<input type="hidden" class="myPoint" value="${roomInfo.rm_price * 0.02}" />
+										<fmt:formatNumber pattern="#,###">${roomInfo.rm_price * 0.02}</fmt:formatNumber>
+									</c:if>
+									
+									<c:if test="${myUser.user_lvl == '골드'}">
+										<input type="hidden" class="myPoint" value="${roomInfo.rm_price * 0.03}" />
+										<fmt:formatNumber pattern="#,###">${roomInfo.rm_price * 0.03}</fmt:formatNumber>
+									</c:if> 원 <span id="change_span">적립</span>
+								</span>
 							</div>
 			
 							<div>
 								<span style="font-size:12pt; font-weight:600;">포인트 사용</span>
-								<span style="float:right; font-size:11pt;"><input type="text" class="point_input" style="text-align:right; padding-right:20px; width:80px;"/> <span style="color:#999999; font-size:11pt;position:relative; right:10%;top:1%;">원</span>(보유 포인트 <span class="cursor_target point_hover" style=""><fmt:formatNumber pattern="#,###">${myUser.point}</fmt:formatNumber></span> 원)</span>	
-							</div>
+								<span style="float:right; font-size:11pt;"><input type="text" max="${myUser.point}" class="point_input" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" style="text-align:right; padding-right:20px; width:80px;"/> <span style="color:#999999; font-size:11pt;position:relative; right:10%;top:1%;">원</span>(보유 포인트 <span id="point_to_use" class="cursor_target point_hover" style=""><fmt:formatNumber pattern="#,###">${myUser.point}</fmt:formatNumber></span> 원)</span>	
+							</div>																				
 												
 							<br>
 		
 							<div>
 								<span style="font-size:12pt; font-weight:600;">세금</span>
-								<span style="float:right; font-size:12pt;">₩66,000</span>
+								<span style="float:right; font-size:12pt;">₩ <fmt:formatNumber pattern="#,###">${roomInfo.rm_price * requestScope.daysGap * 0.9 * 0.1}</fmt:formatNumber></span>
 							</div>
 							
 							<hr>
 							
 							<span style="font-weight:bold;">합계</span>
-							<span style="float:right; font-weight:bold;">₩726,000</span>
-	
+							<span style="float:right; font-weight:bold;">₩ <span class="sum_priceEnd"></span></span>
+							
+							<c:if test="${requestScope.paraMap.payType eq '1'}">
+								<div>
+									<span style="font-weight:bold; color:#2f7000;">지금 결제</span>
+									<span style="float:right; font-weight:bold; color:#2f7000;">₩ 0</span>
+								</div>
+								
+								<div>
+									<span class="text-gray">현장 결제</span>
+									<span class="text-gray">₩ 0</span>
+								</div>								
+							</c:if>
+							
 						</c:if>
 						
 						<c:if test="${myUser.user_lvl == '골드'}">
 							<div>
 								<span style="font-size:12pt; font-weight:600;">객실 1개 x <span>${requestScope.paraMap.daysGap}</span> 박</span>
-								<span style="float:right; font-size:12pt;">₩<span> ${roomInfo.rm_price * requestScope.daysGap * 0.8}</span></span>
+								<span style="float:right; font-size:12pt;">₩<span> <fmt:formatNumber pattern="#,###">${roomInfo.rm_price * requestScope.daysGap * 0.8}</fmt:formatNumber></span></span>
 							</div>
 						
 							<div style="border-radius: 0.3rem; margin:2% 0;font-weight:bold; background-color:#fddb32;width:40%; font-size:9pt;width:125px;">
@@ -1284,25 +1323,52 @@
 							
 							<div>
 								<span style="font-size:12pt; font-weight:600;">포인트 선할인</span>
-								<span style="float:right; font-size:11pt;"><input type="checkbox"/><fmt:formatNumber pattern="#,###">1716</fmt:formatNumber> 원 적립<span id="change_span">/할인</span></span>
+								<span style="float:right; font-size:11pt;"><input name="inp_myPoint" type="checkbox"/>
+									<c:if test="${myUser.user_lvl == '블루'}">
+										<input type="hidden" class="myPoint" value="${roomInfo.rm_price * 0.01}" />
+										<fmt:formatNumber pattern="#,###">${roomInfo.rm_price * 0.01}</fmt:formatNumber>
+									</c:if>
+									
+									<c:if test="${myUser.user_lvl == '실버'}">
+										<input type="hidden" class="myPoint" value="${roomInfo.rm_price * 0.02}" />
+										<fmt:formatNumber pattern="#,###">${roomInfo.rm_price * 0.02}</fmt:formatNumber>
+									</c:if>
+									
+									<c:if test="${myUser.user_lvl == '골드'}">
+										<input type="hidden" class="myPoint" value="${roomInfo.rm_price * 0.03}" />
+										<fmt:formatNumber pattern="#,###">${roomInfo.rm_price * 0.03}</fmt:formatNumber>
+									</c:if> 원 <span id="change_span">적립</span>
+								</span>
 							</div>
 			
 							<div>
 								<span style="font-size:12pt; font-weight:600;">포인트 사용</span>
-								<span style="float:right; font-size:11pt;"><input type="text" class="point_input" style="text-align:right; padding-right:20px; width:80px;"/> <span style="color:#999999; font-size:11pt;position:relative; right:10%;top:1%;">원</span>(보유 포인트 <span class="cursor_target point_hover" style=""><fmt:formatNumber pattern="#,###">${myUser.point}</fmt:formatNumber></span> 원)</span>	
-							</div>
+								<span style="float:right; font-size:11pt;"><input type="text" max="${myUser.point}" class="point_input" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" style="text-align:right; padding-right:20px; width:80px;"/> <span style="color:#999999; font-size:11pt;position:relative; right:10%;top:1%;">원</span>(보유 포인트 <span id="point_to_use" class="cursor_target point_hover" style=""><fmt:formatNumber pattern="#,###">${myUser.point}</fmt:formatNumber></span> 원)</span>	
+							</div>																				
 												
 							<br>
 		
 							<div>
 								<span style="font-size:12pt; font-weight:600;">세금</span>
-								<span style="float:right; font-size:12pt;">₩66,000</span>
+								<span style="float:right; font-size:12pt;">₩ <fmt:formatNumber pattern="#,###">${roomInfo.rm_price * requestScope.daysGap * 0.9 * 0.1}</fmt:formatNumber></span>
 							</div>
 							
 							<hr>
 							
 							<span style="font-weight:bold;">합계</span>
-							<span style="float:right; font-weight:bold;">₩726,000</span>
+							<span style="float:right; font-weight:bold;">₩ <span class="sum_priceEnd"></span></span>
+							
+							<c:if test="${requestScope.paraMap.payType eq '1'}">
+								<div>
+									<span style="font-weight:bold; color:#2f7000;">지금 결제</span>
+									<span style="float:right; font-weight:bold; color:#2f7000;">₩ 0</span>
+								</div>
+								
+								<div>
+									<span class="text-gray">현장 결제</span>
+									<span class="text-gray">₩ 0</span>
+								</div>								
+							</c:if>
 	
 						</c:if>
 
