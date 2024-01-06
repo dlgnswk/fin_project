@@ -877,6 +877,33 @@ public class LodgeService_imple implements LodgeService {
 		return roomImgDataMapList;
 	}
 
+	// === DB에서 이미지를 삭제한다. === //
+	@Override
+	public int delIdxImg(Map<String, String> paraMap) {
+		int result = dao.delIdxImg(paraMap);
+		return result;
+	}
+
+	// 다음 메인이미지 rm_img_seq 가져오기
+	@Override
+	public List<String> nextMainImgUpdate(String fk_rm_seq) {
+		List<String> nextMainImg_rm_img_seq = dao.nextMainImgUpdate(fk_rm_seq);
+		return nextMainImg_rm_img_seq;
+	}
+
+	// rm_img_seq값에 해당하는 이미지 정보의 rm_img_main를 "1"로 업데이트 하기
+	@Override
+	public void updateNextMainImg(String next_rm_img_seq) {
+		dao.updateNextMainImg(next_rm_img_seq);
+	}
+
+	// 객실 사진등록 "사진 전체 제거" 버튼 클릭
+	@Override
+	public int delRoomImgFk_rm_seq(String fk_rm_seq) {
+		int result = dao.delRoomImgFk_rm_seq(fk_rm_seq);
+		return result;
+	}
+
 	
 	
 }
