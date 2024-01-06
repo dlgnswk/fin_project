@@ -839,13 +839,44 @@
 	<resultMap type="HashMap" id="getRmImgData_Map">
 		<result property="rm_img_name" 		column="rm_img_name" 		javaType="String"/>
 		<result property="rm_img_save_name" column="rm_img_save_name" 	javaType="String"/>
+		<result property="rm_img_main" 		column="rm_img_main"		javaType="String"/>
 	</resultMap>
 	
 	<select id="getRmImgData" parameterType="String" resultMap="getRmImgData_Map">
-		select rm_img_name, rm_img_save_name
+		select rm_img_name, rm_img_save_name, rm_img_main
 		from tbl_rm_img
 		where fk_rm_seq = #{fk_rm_seq}
 		order by rm_img_main desc, rm_img_seq asc 
 	</select>
 	
+	
+	<!-- === DB에서 이미지파일 정보를 삭제한다. === -->
+	<delete id="delIdxImg" parameterType="HashMap">
+		delete from tbl_rm_img
+		where fk_rm_seq=#{fk_rm_seq} and rm_img_save_name=#{rm_img_save_name} and rm_img_name=#{rm_img_name}
+	</delete>
+	
+	
+	<!-- 다음 메인이미지 rm_img_seq 가져오기 -->
+	<select id="nextMainImgUpdate" parameterType="String" resultType="String">
+		select rm_img_seq
+		from tbl_rm_img
+		where fk_rm_seq = #{fk_rm_seq}
+		order by rm_img_seq asc
+	</select>
+	
+	<!-- rm_img_seq값에 해당하는 이미지 정보의 rm_img_main를 "1"로 업데이트 하기 -->
+	<update id="updateNextMainImg" parameterType="String">
+		update tbl_rm_img set rm_img_main = 1
+		where rm_img_seq = #{next_rm_img_seq}
+	</update>
+	
+	
+	<!-- 기존에 입력되어 있는 정보 삭제 -->
+	<delete id="delRoomImgFk_rm_seq" parameterType="String">
+		delete from tbl_rm_img
+		where fk_rm_seq = #{fk_rm_seq}
+	</delete>
+	
+		
 </mapper>
