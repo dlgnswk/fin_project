@@ -87,29 +87,6 @@
 		});// end of $("input[name='mainImage']").change(function()
 		
 		
-				
-		// 이미지 전체 삭제 버튼
-		$("button.btnDelete").click(function(){
-			
-			const delId = $(this).parent().parent().parent().find("div.image_drop").attr("id");
-			const removeImgs = $(this).parent().parent().parent().find("div.image_drop");
-			
-			// "x"버튼의 부모의 id를  찾아서 대응 시킨다.
-			if ( delId == "roomImage") {
-			// let roomImage_arr = []; 	// 6 	메인이미지
-				roomImage_arr = [];
-			}
-			
-			removeImgs.find(".imageItem").remove(); // 이미지들 전부 지우기
-			removeImgs.find(".infoDiv").show();		// "사진 업로드" 다시 보이기
-			
-		});// end of $("button.btnDelete").click(function()
-				
-				
-	});// end of $(document).ready(function(){
-
-	
-	
 	// 들어온 파일의 타입을 체크한다.
 	function fileCheck(file) {
 	
@@ -292,13 +269,14 @@
             success:function(json){
           	  	
             	alert("이미지가 성공적으로 등록되었습니다.");
-          	  	
             },
             error: function(request, status, error){
 				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-		      }
+	      	}
         });
-	
+		
+		history.go(0);
+		
 	}); // end of $("button#image_register").click(function()
 	
 	
@@ -309,6 +287,7 @@
 		let elmt = $("input[name='roomImage']"); 
 		// 새로운 객실을 보여주기 위해 -> 현재 보여주는 객실이미지들 제거
 		elmt.parent().parent().parent().find(".imageItem").remove();
+		elmt.parent().parent().parent().find(".infoDiv").show();
 		
 		$.ajax({
             url : "<%= ctxPath%>/getRmImgData.exp",
@@ -329,6 +308,7 @@
 		          			        "<span class='fileName'>"+item.rm_img_name+"</span>" +
 		          			        "<input type='text' class='rm_img_name' value='"+item.rm_img_name+"' />"+
 		          			      	"<input type='text' class='rm_img_save_name' value='"+item.rm_img_save_name+"' />"+
+		          			      	"<input type='text' class='rm_img_main' value='"+item.rm_img_main+"' />" +
 		          			      "</div>"+
 	               			   "</div>";					// &times;는 X로 보여주는 것이다.
 	               		
@@ -337,7 +317,7 @@
 	               	elmt.parent().parent().parent().find(".infoDiv").hide();
 	               	
             	}); // end of $.each(json, function(index, item)
-				
+            			
             },
             error: function(request, status, error){
 				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -346,6 +326,105 @@
 		
 	}); // end of $(document).on("change","select[name='fk_rm_seq']",function(){
 	
+	// 페이지가 로드 되면 첫번째 객실의 사진을 가져오는 이벤트 발생
+	$("select[name='fk_rm_seq']").trigger("change");	
+	
+	// "x"를 눌렀을때 저장 경로와 DB에서 삭제한다.
+	$(document).on("click","span.delete",function(){
+		
+		if( confirm("선택한 이미지를 정말로 삭제하시겠습니까?") ) {
+		
+			if($(this).parent().parent().hasClass("exitData")) {
+			// 이미지 파일 배열에 값이 추가된 이미지를 제거했다.			
+				const deleteIdx = $(this).parent().parent().index(".exitData");
+				roomImage_arr.splice(deleteIdx,1); // 삭제가 발생한 index와 같은 index를 가지는 파일을 배열에서 삭제한다.
+			}
+			else{
+			// DB에서 가져온 이미지라 roomImage_arr에 값이 없는 경우이다.
+				const rm_img_name = $(this).parent().find("input.rm_img_name").val();
+				const rm_img_save_name = $(this).parent().find("input.rm_img_save_name").val();
+				const rm_img_main = $(this).parent().find("input.rm_img_main").val();
+				
+				console.log(rm_img_name, rm_img_save_name);
+				// 해당하는 이미지와 같은 경로의 값을 DB에서 삭제한다.
+				$.ajax({
+		            url : "<%= ctxPath%>/delIdxImg.exp",
+		            type : "post",
+		            data : { "fk_lodge_id":"${requestScope.fk_lodge_id}",
+		            		 "fk_rm_seq":$("select[name='fk_rm_seq']").val(),
+		            		 "rm_img_save_name":rm_img_save_name,
+		            		 "rm_img_name":rm_img_name,
+		            		 "rm_img_main":rm_img_main
+		            		},
+		            async: false,
+		            dataType:"json",
+		            success:function(json){
+		            	
+		            	if(json.reault == 1){
+		            		// 현재 페이지로 이동(==새로고침) 서버에 가서 다시 읽어옴.
+			            	location.href="javascript:location.reload(true)";
+		            	}
+		            	
+		            },
+		            error: function(request, status, error){
+						alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			      	}	
+		        }); // end of $.ajax
+				
+			}
+		//	console.log(roomImage_arr);
+			$(this).parent().parent().remove(); // 사진 지우기
+		}
+		
+		// "사진 업로드"설명 보여줄지 결정한다.
+		imageItem();
+		
+	}); // end of $(document).on("click","span.delete",function(){
+	
+	// 이미지 전체 삭제 버튼
+	$("button.btnDelete").click(function(){
+		
+		if( confirm("등록된 사진을 정말로 삭제하시겠습니까?") ) {
+		// 등록된 사진을 전부 삭제한다.
+			let cnt = $("div.imageItem").length;
+			
+			if( cnt > 0 ) {
+			// 이미지가 들어와 있는 경우이다.
+				// 이미지 파일 배열 초기화
+				roomImage_arr = [];
+				
+				// == 해당 객실이름의 이미지 정보를 DB와 저장경로에서 삭제하기 == //
+				const removeImgs = $(this).parent().parent().parent().find("div.image_drop");
+				
+				// fk_rm_seq값을 가진 행 삭제
+				$.ajax({
+		            url : "<%= ctxPath%>/delRoomImgFk_rm_seq.exp",
+		            type : "post",
+		            data : { "fk_rm_seq":$("select[name='fk_rm_seq']").val() },
+		            async: false,
+		            dataType:"json",
+		            success:function(json){
+		            	
+		            	location.href="javascript:location.reload(true)";
+		            	
+		            },
+		            error: function(request, status, error){
+						alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			      	}	
+		        }); // end of $.ajax
+			
+				// 페이지에서 보이는 이미지들 제거 
+				removeImgs.find(".imageItem").remove();
+				imageItem(); // "사진 업로드"설명 보여줄지 결정한다
+			
+			}
+			
+		} // end of if( confirm("등록된 사진을 정말로 삭제하시겠습니까?") ) ---------
+		
+	});// end of $("button.btnDelete").click(function()
+			
+			
+			
 	
 	// "사진 업로드"설명 보여줄지 결정한다
 	function imageItem() {
@@ -360,54 +439,8 @@
 		}
 	
 	} // end of function imageItem() {
-
-	
-	// "x"를 눌렀을때 경로와 DB에서 삭제한다.
-	$(document).on("click","span.delete",function(){
+});// end of $(document).ready(function(){	
 		
-		if( confirm("선택한 이미지를 정말로 삭제하시겠습니까?") ) {
-		
-			if($(this).parent().parent().hasClass("exitData")) {
-			// 이미지 파일 배열에 값이 추가된 이미지를 제거했다.			
-				const deleteIdx = $(this).parent().parent().index(".exitData");
-				roomImage_arr.splice(deleteIdx,1); // 삭제가 발생한 index와 같은 index를 가지는 파일을 배열에서 삭제한다.
-			}
-			else{
-			// DB에서 가져온 이미지라 배열에 추가되어 있지 않다.
-				const rm_img_name = $(this).parent().find("input.rm_img_name").val();
-				const rm_img_save_name = $(this).parent().find("input.rm_img_save_name").val();
-				console.log(rm_img_name, rm_img_save_name);
-				// 해당하는 이미지와 같은 경로의 값을 DB에서 삭제한다.
-				$.ajax({
-		            url : "<%= ctxPath%>/delIdxImg.exp",
-		            type : "post",
-		            data : { "fk_lodge_id":"${requestScope.fk_lodge_id}",
-		            		 "fk_rm_seq":$("select[name='fk_rm_seq']").val(),
-		            		 "rm_img_save_name":rm_img_name,
-		            		 "rm_img_name":rm_img_save_name,
-		            		},
-		            async: false,
-		            dataType:"json",
-		            success:function(json){
-						
-		            },
-		            error: function(request, status, error){
-						alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-			      	}	
-		        }); // end of $.ajax
-				
-			}
-			console.log(roomImage_arr);
-			
-			$(this).parent().parent().remove(); // 사진 지우기
-			
-		}
-		
-		// "사진 업로드"설명 보여줄지 결정한다.
-		imageItem();
-		
-	}); // end of $(document).on("click","span.delete",function(){
-	
 		
 </script>
 
