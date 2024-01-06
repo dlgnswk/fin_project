@@ -500,7 +500,7 @@
 								v_html += 		"<div><a class='go_lodge reviewWrite' onclick='reviewWrite(" + item.rs_no + ")'>리뷰 작성하기</a></div>";
 							}
 							else{
-								v_html += 		"<div><a class='go_lodge reviewWrite' ohref='<%= ctxPath%>/myrvlist.exp'>작성한 리뷰보기</a></div>";
+								v_html += 		"<div><a class='go_lodge reviewWrite' href='<%= ctxPath%>/myrvlist.exp'>작성한 리뷰보기</a></div>";
 							}
 						}
 						v_html += 			"</div>";
