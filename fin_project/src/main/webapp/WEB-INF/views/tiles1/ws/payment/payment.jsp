@@ -91,6 +91,9 @@
 				$("span.sum_priceEnd").text(go_sum_priceEnd.toLocaleString("en"));
 				
 				$("input[name='used_point']").val($("input.point_input").val());
+				
+				// 현장결제
+				$("span.site_payment").text($("span.sum_priceEnd").text());
 			}
 		});
 		
@@ -353,6 +356,9 @@
 				
 				var go_sum_priceEnd = Number($("input[name='total__price']").val());
 				$("span.sum_priceEnd").text(go_sum_priceEnd.toLocaleString("en"));
+				
+				// 현장결제
+				$("span.site_payment").text($("span.sum_priceEnd").text());
 			}
 			else{
 				$("input[name='point']").val(Number($("input.myPoint").val()));
@@ -364,6 +370,9 @@
 				
 				var go_sum_priceEnd = Number($("input[name='total__price']").val());
 				$("span.sum_priceEnd").text(go_sum_priceEnd.toLocaleString("en"));
+				
+				// 현장결제
+				$("span.site_payment").text($("span.sum_priceEnd").text());
 			}
 		});
 		
@@ -390,6 +399,9 @@
 			var go_sum_priceEnd = sum_price-minus_number;
 			$("span.sum_priceEnd").text(go_sum_priceEnd.toLocaleString("en"));
 			
+			//현장결제
+			$("span.site_payment").text($("span.sum_priceEnd").text());
+			
 			$("input[name='used_point']").val(minus_number);
 		});
 
@@ -406,6 +418,9 @@
 			var go_sum_priceEnd = total-minus_number;
 			$("span.sum_priceEnd").text(go_sum_priceEnd.toLocaleString("en"));
 			
+			//현장결제
+			$("span.site_payment").text($("span.sum_priceEnd").text());
+			
 			$("input[name='used_point']").val(minus_number);
 		});
 		
@@ -419,6 +434,9 @@
 		
 		var go_sum_priceEnd = Number($("input.total_priceEnd").val());
 		$("span.sum_priceEnd").text(go_sum_priceEnd.toLocaleString("en"));
+		
+		//현장결제
+		$("span.site_payment").text($("span.sum_priceEnd").text());
 		
 		//====================form에 값을 넣기===========================끝
 		
@@ -531,7 +549,10 @@
   		frm.submit();  
 	}
 	
-	
+	// 현장결제
+	function goSitePayment(ctx_Path){
+		successPayment();
+	}
 	
 	// 결제 성공하면 각각의 method로 보내주기
 	function successPayment(){
@@ -584,7 +605,6 @@
 		frm.submit();
 		
 	} // end of function gopaymentConfirm()
-	
 	
 </script>
 
@@ -1087,9 +1107,17 @@
 									</div>
 								</div>
 								
-								<button type="button" id="submit_payment" onclick="goPayment('<%= ctxPath%>')" style="border-radius: 0.5rem; height:48px;width:200px;border:0;background-color:#1668e3;">
-									<span style="font-size:13pt; color:white; font-weight:bold;">동의 및 결제 완료</span><svg style="width:25px;padding-bottom:3.5px;" fill="white" aria-describedby="chevron_right-description" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><desc id="chevron_right-description">chevron</desc><path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6-6-6z"></path></svg>
-								</button>
+								<c:if test="${requestScope.paraMap.payType eq '0'}">
+									<button type="button" id="submit_payment" onclick="goPayment('<%= ctxPath%>')" style="border-radius: 0.5rem; height:48px;width:200px;border:0;background-color:#1668e3;">
+										<span style="font-size:13pt; color:white; font-weight:bold;">동의 및 결제 완료</span><svg style="width:25px;padding-bottom:3.5px;" fill="white" aria-describedby="chevron_right-description" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><desc id="chevron_right-description">chevron</desc><path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6-6-6z"></path></svg>
+									</button>
+								</c:if>
+								
+								<c:if test="${requestScope.paraMap.payType eq '1'}">
+									<button type="button" id="submit_payment" onclick="goSitePayment()" style="border-radius: 0.5rem; height:48px;width:200px;border:0;background-color:#1668e3;">
+										<span style="font-size:13pt; color:white; font-weight:bold;">동의 및 결제 완료</span><svg style="width:25px;padding-bottom:3.5px;" fill="white" aria-describedby="chevron_right-description" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><desc id="chevron_right-description">chevron</desc><path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6-6-6z"></path></svg>
+									</button>
+								</c:if>
 							
 							<div style="display:flex;">
 								<svg xmlns="http://www.w3.org/2000/svg" height="48"; width="17" viewBox="0 0 448 512"><path fill="#616161" d="M144 144v48H304V144c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192V144C80 64.5 144.5 0 224 0s144 64.5 144 144v48h16c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V256c0-35.3 28.7-64 64-64H80z"/></svg>		
@@ -1231,7 +1259,7 @@
 								
 								<div>
 									<span class="text-gray">현장 결제</span>
-									<span style="float:right;" class="text-gray">₩ 0</span>
+									<span style="float:right;" class="text-gray">₩ <span class="site_payment"></span></span>
 								</div>								
 							</c:if>
 							
@@ -1299,7 +1327,7 @@
 								
 								<div>
 									<span class="text-gray">현장 결제</span>
-									<span class="text-gray">₩ 0</span>
+									<span style="float:right;" class="text-gray">₩ <span class="site_payment"></span></span>
 								</div>								
 							</c:if>
 							
@@ -1366,7 +1394,7 @@
 								
 								<div>
 									<span class="text-gray">현장 결제</span>
-									<span class="text-gray">₩ 0</span>
+									<span style="float:right;" class="text-gray">₩ <span class="site_payment"></span></span>
 								</div>								
 							</c:if>
 	
