@@ -25,7 +25,7 @@
 	
 	<!-- 원석 개발전용 취소정책 불러오기 -->
 	<select id="ws_getLodgeInfo" parameterType="String" resultType="com.spring.app.expedia.domain.LodgeVO">
-		select fk_cancel_opt, lg_park_yn, lg_internet_yn, lg_name, lg_checkin_start_time, lg_address
+		select fk_cancel_opt, lg_park_yn, lg_internet_yn, lg_name, lg_checkin_start_time, lg_address, lodge_id
 		from tbl_lodge
 		where fk_h_userid = #{h_userid}
 	</select>

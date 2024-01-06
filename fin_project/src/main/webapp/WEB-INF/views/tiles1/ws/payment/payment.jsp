@@ -642,7 +642,13 @@
 	<fmt:formatDate value="${endDate}" pattern="yyyy-MM-dd(E)" var="endDate_D" />
 	
 	<div class="right_section" style="background-color:#f3f3f5; height: 2000px;  width:100%;">
-		<h4 style="font-weight:bold;padding: 13px 0 0 190px;">확인하고 예약하기</h4>
+		<c:if test="${requestScope.paraMap.payType eq '0'}">
+			<h4 style="font-weight:bold;padding: 13px 0 0 190px;">확인하고 예약하기</h4>
+		</c:if>
+		
+		<c:if test="${requestScope.paraMap.payType eq '1'}">
+			<h4 style="font-weight:bold;padding: 13px 0 0 190px;">확인하고 예약하기<span style="color:#2f7000;">(현장 결제)</span></h4>
+		</c:if>
 		
 		<div style="display:flex;">
 			<div style="margin: 10px auto;width:76.1%;background-color:#ffffff; height:72px; display:flex;">
@@ -1140,7 +1146,7 @@
 				<div style=" background-color:#ffffff; height:412px; padding-bottom:17px;" >
 					<div style="position:relative;">
 						<div>
-							<image src="<%=ctxPath%>/resources/images/ws/payment/ImageTest.png" style="width:100%; height:160px;  filter: brightness(70%)"></image>
+							<image src="<%=ctxPath%>/resources/images/${lodgeInfo.lodge_id}/lodge_img/lodge01.png" style="width:100%; height:160px;  filter: brightness(70%)"></image>
 						</div>
 						<div style="position:absolute;left:2.2%;bottom:6%;">
 							<span style="color:white; font-size:12pt; font-weight:bold;">${lodgeInfo.lg_name}</span>

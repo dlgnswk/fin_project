@@ -407,8 +407,8 @@ function goReject(lodge_id){
 					
 					<select name="lg_status" style="height:30px;"> 
 						<option value="">승인여부</option>
-						<option value="0">승인완료</option>
-						<option value="1">승인대기</option>
+						<option value="0">승인대기</option>
+						<option value="1">승인완료</option>
 					</select>
 					
 					<button type="button" class="btn_search" onclick="goSearch()" style="position:absolute; right:5.6%; border:solid 1px black; height:30px; width:100px; background-color:#fddb32; border-radius: 0.5rem; font-weight:bold; font-size:12pt;">검색</button>
@@ -465,8 +465,8 @@ function goReject(lodge_id){
 											<td colspan="8">${lodgeRoom.lg_name}(${lodgeRoom.lg_en_name})</th>
 										</tr>
 									
-										<tr><%-- "<%= ctxPath%>/resources/images/${requestScope.img}" --%>
-											<td colspan="3" rowspan="5" style="padding:0;"><image src="<%= ctxPath%>/resources/images/1.png" style="width:250px;"> </image></td>
+										<tr>
+											<td colspan="3" rowspan="5" style="padding:0;"><image src="<%=ctxPath%>/resources/images/${lodgeRoom.lodge_id}/lodge_img/lodge01.png" style="width:250px;"> </image></td>
 											<td class="col_style">주소</td>
 											<td colspan="4">${lodgeRoom.total_address}</td>
 										</tr>
