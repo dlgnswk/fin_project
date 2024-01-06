@@ -577,8 +577,11 @@
 
 	// 결제 완료페이지로 이동
 	function gopaymentConfirm(){
-		document.getElementById('btn_aaa').click();
-		location.href="<%= ctxPath%>/payment/paymentConfirm.exp";
+		
+		const frm = document.frm_goPaymentConfirm_exp;
+		frm.method = "GET";
+		frm.action = "<%= ctxPath%>/payment/paymentConfirm.exp";
+		frm.submit();
 		
 	} // end of function gopaymentConfirm()
 	
@@ -1344,6 +1347,10 @@
 	<input type="text" name="sum_price" />
 	<input type="text" class="total_priceEnd" value="${roomInfo.rm_price * requestScope.daysGap * 0.9 * 1.1}"/>
 	
+	
+	<form name="frm_goPaymentConfirm_exp">
+		<input type="text" name="email" />
+	</form>
 	
 	
 	</c:forEach>
