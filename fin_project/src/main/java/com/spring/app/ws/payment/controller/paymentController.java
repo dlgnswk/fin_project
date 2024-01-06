@@ -1,5 +1,6 @@
 package com.spring.app.ws.payment.controller;
 
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.HashMap;
@@ -203,6 +204,9 @@ public class paymentController {
 		return mav;
 	}
 
+	
+	
+	// tbl_user에서 포인트 변경 + tbl_reservation에 insert + 결제후 이메일 보내기
 	@ResponseBody
 	@GetMapping(value = "/payment/reservation.exp", produces = "text/plain;charset=UTF-8")
 	public String goReservation(HttpServletRequest request, ModelAndView mav) {
@@ -271,7 +275,7 @@ public class paymentController {
 		int n = service.goReservation(paraMap);
 		
 		
-		System.out.println("메일보내기 시작");
+		// 메일 보내기 시작=====================================================
 		
 		
 		// 숙박업소명 읽어오기
@@ -284,7 +288,11 @@ public class paymentController {
 			lodgeName = lvo.getLg_name();
 			lg_address = lvo.getLg_address();
 		}
-		System.out.println(lodgeName);
+		
+		DecimalFormat decFormat = new DecimalFormat("###,###");
+
+		String totalPrice = decFormat.format(total__price);
+		System.out.println(totalPrice);
 		
 		
 		GoogleMail mail = new GoogleMail();
@@ -304,7 +312,7 @@ public class paymentController {
 					      "				<hr style=\"border:1px solid #c7c7c7\">" + 
 					      "				<div style=\"padding:3px 0 3px 0;\">예약자명<span style=\"float:right;\">" + name + "</span></div>" + 
 					      "				<div style=\"padding:3px 0 3px 0;\">예약일시<span style=\"float:right;\">" + currentTimeD + "</span></div>" + 
-					      "				<div style=\"padding:3px 0 3px 0;\">결제금액<span style=\"float:right;\">" + total__price + "</span></div>" + 
+					      "				<div style=\"padding:3px 0 3px 0;\">결제금액<span style=\"float:right;\">" + totalPrice + "</span></div>" + 
 				          "			</div>" + 
 				          "			<br>" + 
 				          "			<div style='font-weight:400;font-size:14px;line-height:18px;padding:16px 20px 16px;color:#343b53;border:2px solid #a2576a;'>" + 
@@ -346,114 +354,16 @@ public class paymentController {
 
 		return jsonObj.toString();
 	}
-
-	
-	  // 메일 jsp 수정하기 위한 메소드
-	  
-	  @GetMapping(value="/payment/mailTest.exp") public ModelAndView
-	  mailTest(HttpServletRequest request, HttpServletResponse response,
-	  ModelAndView mav) {
-	  
-	  
-	  String userid = "arcnet5@naver.com"; 
-	  String name = "최원석"; 
-	  String mobile = "010-5125-1825"; 
-	  String email = "arcnet5@naver.com"; 
-	  String point = "10465";
-	  String to_insert_point = "5000"; 
-	  String used_point = "6100"; 
-	  String rm_seq = "rm-33"; 
-	  String total__price = "total__price"; 
-	 String startDate ="2024-01-31"; // startDate
-	 String endDate = "2024-02-02"; // endDate
-	 String h_userid = "p-city@paradian.com"; 
-	 String paytype = "0"; 
-	 String guest_cnt ="3";
-	  
-	 Map<String, String> paraMap = new HashMap<>(); paraMap.put("userid", userid);
-	  paraMap.put("h_userid", h_userid); paraMap.put("startDate", startDate);
-	  paraMap.put("endDate", endDate); paraMap.put("total__price", total__price);
-	  paraMap.put("paytype", paytype); paraMap.put("name", name);
-	  paraMap.put("mobile", mobile); paraMap.put("email", email);
-	  paraMap.put("guest_cnt", guest_cnt); paraMap.put("rm_seq", rm_seq);
-	  
-	  
-	  
-	  System.out.println("메일보내기 시작");
-		
-		
-		// 취소정책 불러오기
-		List<LodgeVO> lodgeInfo = service.getLodgeInfo(h_userid);
-		
-		String lodgeName = "";
-		for(LodgeVO lvo : lodgeInfo) {
-			lodgeName = lvo.getLg_name();
-		}
-		System.out.println(lodgeName);
-		
-		
-		GoogleMail mail = new GoogleMail();
-		
-		String contents = "	<div style='background-color:#f5f5f5;margin:0 auto;width:375px;padding:13px;height:100vh'>" + 
-						  "		<div style='font-family:'roboto' , 'arial' , sans-serif;color:#000000;background-color:#ffffff'>" + 
-				          "			<div style='padding:32px;border-bottom:1px solid #c7c7c7'><img src='https://www.expedia.com/_dms/header/logo.png?locale=en_GB&amp;siteid=27&amp;2' height='30' loading='lazy'>" + 
-				          "			</div>" + 
-				          "			<div style='font-weight:400;font-size:16px;line-height:20px;color:#343b53;padding:24px 0'><h3>고객님께서 결제하신 내역입니다.</h3></div>" + 
-				          "			<div style='font-weight:400;line-height:20px;color:#343b53;'><h4 style=\"font-weight:bold;\">호텔이름</h4></div>" + 
-				          "			<div style='font-weight:500;font-size:13px;line-height:28px;color:#141d38'>" + 
-				          "				<span style=\"color:#9b969c;\">서울시 영등포구 -----------</span>" + 
-				          "			</div>" + 
-				          "			<hr style=\"border-bottom:1px solid #c9c9c9\">" + 
-				          "			<div style='font-weight:400;font-size:14px;line-height:18px;padding:16px 20px 16px;color:#343b53;border:2px solid #a2576a;'>" + 
-				          "				<div style=\"font-weight:bold;\">결제정보</div>" + 
-					      "				<hr style=\"border:1px solid #c7c7c7\">" + 
-					      "				<div style=\"padding:3px 0 3px 0;\">예약자명<span style=\"float:right;\">sdsd</span></div>" + 
-					      "				<div style=\"padding:3px 0 3px 0;\">예약일시<span style=\"float:right;\">sdsd</span></div>" + 
-					      "				<div style=\"padding:3px 0 3px 0;\">결제금액<span style=\"float:right;\">sdsd</span></div>" + 
-				          "			</div>" + 
-				          "			<br>" + 
-				          "			<div style='font-weight:400;font-size:14px;line-height:18px;padding:16px 20px 16px;color:#343b53;border:2px solid #a2576a;'>" + 
-				          "				<div style=\"font-weight:bold;\">객실정보</div>" + 
-				          "				<hr style=\"border:1px solid #c7c7c7\">" + 
-				          "				<div style=\"padding:3px 0 3px 0;\">객실타입<span style=\"float:right;\">~~룸</span></div>" + 
-				          "				<div style=\"padding:3px 0 3px 0;\">입실시간<span style=\"float:right;\">sdsd</span></div>" + 
-				          "				<div style=\"padding:3px 0 3px 0;\">퇴실시간<span style=\"float:right;\">sdsd</span></div>" + 
-				          "				<div style=\"padding:3px 0 3px 0;\">투숙일수<span style=\"float:right;\">sdsd</span></div>" + 
-				          "			</div>" + 
-				          "		</div>" + 
-				          "	</div>";
-		
-		String subject = " [Expedia] " + userid + " 님이 결제하신 예약내역을 보내드립니다. ";
-
-		paraMap.put("contents", contents);
-		paraMap.put("subject", subject);
-	  
-		try {
-			mail.send_certification_code(paraMap);
-			
-		} catch (Exception e) {
-			// 메일 전송이 실패한 경우
-			e.printStackTrace();
-			
-			String message = "서버 오류로 인해 메일 전송이 실패했습니다. 1분 후 재시도 해주세요.";
-			String loc ="javascript:history.back()";
-			
-			mav.addObject("message",message);
-			mav.addObject("loc",loc);
-			
-			mav.setViewName("msg");
-		}
-		
-	  mav.setViewName("ws/payment/mailTest.tiles1");
-	  
-	  return mav; }
 	 
 	 
-	 
-	 
+	// 결제 완료창으로 email 보내기
 	@RequestMapping(value = "payment/paymentConfirm.exp")
 	public ModelAndView paymentConfirm(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
-
+		
+		String email = request.getParameter("email");
+		System.out.println(email);
+		
+		mav.addObject("email",email);
 		mav.setViewName("jh/payment/paymentConfirm.tiles1");
 
 		return mav;
