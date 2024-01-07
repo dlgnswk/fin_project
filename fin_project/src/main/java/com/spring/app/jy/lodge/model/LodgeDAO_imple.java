@@ -149,8 +149,8 @@ public class LodgeDAO_imple implements LodgeDAO {
 	}
 
 	@Override
-	public List<Map<String, String>> getRm_img_list(String rm_seq) {
-		List<Map<String, String>> Rm_img_list = sqlsession.selectList("jy_lodge.getRm_img_list",rm_seq);
+	public List<Map<String, String>> getRm_img_list(Map<String, String> paraMap) {
+		List<Map<String, String>> Rm_img_list = sqlsession.selectList("jy_lodge.getRm_img_list",paraMap);
 		return Rm_img_list;
 	}
 

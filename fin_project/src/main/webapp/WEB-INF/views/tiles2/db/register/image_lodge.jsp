@@ -22,6 +22,20 @@
 
 	$(document).ready(function(){
 		
+		let images_div = $("div.images_div");
+		
+		$.each(images_div, function(index, item){
+			
+			let imageCnt = $(item).find("div.imageItem").length
+			
+			if(imageCnt == 0) {
+				console.log("")
+			}
+			
+		}); // end of $.each(images_div, function(index, item){
+		
+		
+		
 		// == mainImage메인이미지 Drag & Drop 만들기 == //
 		$("div#mainImage").on("dragenter", function(e){ /* "dragenter" 이벤트는 드롭대상인 박스 안에 Drag 한 파일이 최초로 들어왔을 때 */ 
        		e.preventDefault();
@@ -674,7 +688,7 @@
 			          	*/
 			          	
 			          	html += 
-			          		"<div class='imageItem'>" +
+			          		"<div class='imageItem exitData'>" +
     		                   	"<img class='__image' src='"+fileReader.result+"' />" + // &times;는 X로 보여주는 것이다.
     		                   	"<div class='imageName'><span class='delete'>&times;</span><span class='fileName'>"+viewFileName+"</span></div>"
 		               		"</div>";
@@ -746,7 +760,7 @@
 		          	*/
 		          	
 		          	html += 
-		          		"<div class='imageItem'>" +
+		          		"<div class='imageItem exitData'>" +
 		                   	"<img class='__image' src='"+fileReader.result+"' />" + // &times;는 X로 보여주는 것이다.
 		                   	"<div class='imageName'><span class='delete'>&times;</span><span class='fileName'>"+viewFileName+"</span></div>"
 	               		"</div>";
@@ -893,7 +907,7 @@
 				<c:forEach var="LodgeImg" items="${requestScope.LodgeImgMapList}" >
 					<c:if test="${LodgeImg.fk_img_cano eq 6}">
 						<div class='imageItem'> 
-							<img class='__image' src='<%=ctxPath%>/resources/images/"${LodgeImg.fk_lodge_id}"/lodge_img/"${LodgeImg.lg_img_save_name}"' /> 
+							<img class='__image' src='<%=ctxPath%>/resources/images/${LodgeImg.fk_lodge_id}/lodge_img/${LodgeImg.lg_img_save_name}' /> 
 				      			<div class='imageName'>
 							  	<span class='delete'>&times;</span>
 							  	<span class='fileName'>${LodgeImg.lg_img_name}</span>
