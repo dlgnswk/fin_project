@@ -57,9 +57,13 @@ public class LodgeController {
 		String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
 		
 	//	System.out.println("fk_lodge_id => "+ fk_lodge_id); // 현재 로그인 호스트의 호텔아이디 이다.
+		String front_id = "";
+		String back_id = "";
 		
-		String front_id = fk_lodge_id.substring(0,4);
-		String back_id = fk_lodge_id.substring(4);
+		if(fk_lodge_id != null) {
+			front_id = fk_lodge_id.substring(0,4);
+			back_id = fk_lodge_id.substring(4);
+		}
 		
 		
 		// == 숙박시설 유형 테이블에서 select == //
@@ -488,18 +492,18 @@ public class LodgeController {
 		// 시설 이미지를 저장할 경로
 //		HttpSession session = mtp_request.getSession();
 //		String root = session.getServletContext().getRealPath("/");
-//		String path = root + "resources"+File.separator+"images"+File.separator+fk_lodge_id+File.separator+"lodge_image";
+//		String path = root + "resources"+File.separator+"images"+File.separator+fk_lodge_id+File.separator+"lodge_img";
 		
 		String root = "C:\\git\\fin_project\\fin_project\\src\\main\\webapp\\resources";
-		String path = root +File.separator+"images"+File.separator+fk_lodge_id+File.separator+"lodge_image";
+		String path = root +File.separator+"images"+File.separator+fk_lodge_id+File.separator+"lodge_img";
 		
 		System.out.println(path);
-		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\final_project\resources\images\ "JSUN0231" \lodge_image
+		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\final_project\resources\images\ "JSUN0231" \lodge_img
 		File dir = new File(path);
 		
 		// ==== 등록전 사전에 등록된 이미지 제거 ==== // 
 		if(dir.exists()) {
-		// images\ "JSUN0231" \lodge_image 파일이 존재하면 제거한다.
+		// images\ "JSUN0231" \lodge_img 파일이 존재하면 제거한다.
 		// 삭제하려는 파일이 폴더이고 폴더 안에 내용물이 있다면 삭제가 되지 않는다.
 			File[] folderList = dir.listFiles(); // 폴더의 내용물이 있는지 확인하다.
 			if( folderList.length > 0) {
@@ -935,10 +939,10 @@ public class LodgeController {
 		HttpSession session = request.getSession();
 		HostVO loginhost = (HostVO) session.getAttribute("loginhost");
 		String fk_h_userid = loginhost.getH_userid();
-		System.out.println("fk_h_userid => " + fk_h_userid);
+	//	System.out.println("fk_h_userid => " + fk_h_userid);
 		// 현재 로그인한 판매자의 ID로 숙박시설의 lodge_id를 가져온다.
 		String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
-		System.out.println("fk_lodge_id => " + fk_lodge_id);
+	//	System.out.println("fk_lodge_id => " + fk_lodge_id);
 		// === 로그인한 사용자의 정보 -끝- === //
 		
 		
@@ -962,13 +966,13 @@ public class LodgeController {
 		
 		List<MultipartFile> roomImage_List  = mtp_request.getFiles("roomImage_arr");
 		String fk_rm_seq = mtp_request.getParameter("fk_rm_seq");
+	//	System.out.println("fk_rm_seq => "+ fk_rm_seq);
 		
 	//	System.out.println(fk_rm_seq);
 		
 		// === 로그인한 사용자의 정보 -시작- === //
 		HttpSession session = request.getSession();
 		HostVO loginhost = (HostVO) session.getAttribute("loginhost");
-		
 		String fk_h_userid = loginhost.getH_userid();
 		// 현재 로그인한 판매자의 ID로 숙박시설의 lodge_id를 가져온다.
 		String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
@@ -977,91 +981,94 @@ public class LodgeController {
 		// 시설 이미지를 저장할 경로
 	//	HttpSession session = mtp_request.getSession();
 	//	String root = session.getServletContext().getRealPath("/");
-	//	String path = root + "resources"+File.separator+"images"+File.separator+fk_lodge_id+File.separator+"room_image";
+	//	String path = root + "resources"+File.separator+"images"+File.separator+fk_lodge_id+File.separator+"room_img";
 		String root = "C:\\git\\fin_project\\fin_project\\src\\main\\webapp\\resources";
-		String path = root +File.separator+"images"+File.separator+fk_lodge_id+File.separator+"room_image";
-		System.out.println(path);
-		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\final_project\resources\images\JSUN0231\room_image
+		String path = root +File.separator+"images"+File.separator+fk_lodge_id+File.separator+"room_img";
+	//	System.out.println(path);
+		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\final_project\resources\images\JSUN0231\room_img
 		
 		// C:\git\fin_project\fin_project\src\main\webapp\resources
 		File dir = new File(path);
 		
-		
-		// ==== 등록전 사전에 등록된 이미지 제거 ==== // 
-		
-			// == 삭제 해야할 이미지 파일 이름 가져오기 == //
-		List<String> delFileNameList = service.getDeleteImgFileName(fk_rm_seq);
-		
-		
-		if(dir.exists()) {
-		// 경로 폴더가 존재한다면
-			File[] folderList = dir.listFiles(); // 폴더의 내용물이 있는지 확인하다.
+		/*
+		 	roomImage_List-이미지 배열, fk_rm_seq-객실 번호
+			1. 이미지 등록 버튼 클릭 => 이미지 배열이 넘어온 경우(roomImage_List), 이미지 배열이 넘어오지 않은 경우
+			<이미지 배열이 넘어옴>
+				2. 기존 DB에 메인 이미지가 존재하는지 존재하지 않는지 체크해야됨
+					배열의 첫번째로 넘어온 이미지 파일을 메인이미지로 설정해야되는지 하지말아야 되는지
+					
+					DB에서 메인이미지 여부 체크 -> 있을경우 새로 들어온 파일들을 메인이미지 여부 0으로 insert
+										-> 없을을경우 배열의 첫번째 이미지파일은 메인여부 1로 insert
 			
-			if( folderList.length > 0) {
-			// 경로 폴더안 이미지 파일들이 존재한다면 확인해야 한다.
+			<이미지 배열이 넘어오지 않은 경우>
+				아무일도 일어나지 않음
+		*/
+		if(roomImage_List != null && roomImage_List.size() > 0) {
+		// 이미지 파일이 넘어온 경우
+			// DB에 fk_rm_seq객실에 메인이미지가 등록되어 있는지 체크한다.
+			String check = service.getMainImgCheck(fk_rm_seq);
+			
+			Map<String,String> paraMap = new HashMap<>(); // insert 및 업데트이를 위한 맵
+			paraMap.put("fk_rm_seq", fk_rm_seq); // 저장할 시설 ID
+			
+			if(check == null) {
+			// 메인이미지가 없는경우
+				// 배열의 첫번째 이미지파일은 메인여부 1로 insert
 				
-				for(String fileName : delFileNameList) {
-				// DB에서 가져온 파일 이름을 저장폴더안에 이미지 파일들과 이름을 비교하여 같은 파일을 삭제한다.
-					for(int i=0; i<folderList.length; i++) {
-						
-						if(folderList[i].getName().equals(fileName)) {
-						// 삭제해야할 파일과 이름이 같은 파일은 삭제한다.
-							folderList[i].delete();
-							break;
+				if(!dir.exists()) {
+				//	dir.mkdir(); // 상위 디렉토리 없으면 생성 불가
+					dir.mkdirs(); // 상위 디렉토리 없으면 상위디렉토리도 같이 생성
+				}
+				
+				for(int i = 0; i<roomImage_List.size(); i++) {
+					MultipartFile imageFile = roomImage_List.get(i);
+					
+					try {
+						Map<String, String> resultmap = fileManager.imageUpload(imageFile, path);
+						// 운영경로에 파일생성 & 저장 파일명 & 파일명 가져오기
+						if(i == 0) {
+							paraMap.put("rm_img_main", "1"); // 첫번째로 들어온 이미지가 메인이미지 여부를 결정한다.
+						}
+						else {
+							paraMap.put("rm_img_main", "0");
 						}
 						
-					} // end of for --------------
-					
-				}// end of for -----------------------------------
-				
-			} // end of if( folderList.length > 0) ------------
-			
-		} // end of if(dir.exists()) -----------
-		
-		// == tbl_rm_img 테이블 정보 제거 == //
-		service.delRoomImg(fk_rm_seq); // 테이블 값 제거하기
-		
-		
-		if(!dir.exists()) {
-		//	dir.mkdir(); // 상위 디렉토리 없으면 생성 불가
-			dir.mkdirs(); // 상위 디렉토리 없으면 상위디렉토리도 같이 생성
-		}
-
-		
-		
-		Map<String,String> paraMap = new HashMap<>(); // insert 및 업데트이를 위한 맵
-		paraMap.put("fk_rm_seq", fk_rm_seq); // 저장할 시설 ID
-			
-		// ==== 첨부파일을 위의 path 경로에 올리기 ==== //
-			// 객실 이미지 등록하기
-		if( roomImage_List != null && roomImage_List.size() > 0 ) {
-		// 객실 이미지가 등록되었다면
-			
-			for(int i = 0; i<roomImage_List.size(); i++) {
-				MultipartFile imageFile = roomImage_List.get(i);
-				
-				try {
-					Map<String, String> resultmap = fileManager.imageUpload(imageFile, path);
-					// 운영경로에 파일생성 & 저장 파일명 & 파일명 가져오기
-					if(i == 0) {
-						paraMap.put("rm_img_main", "1"); // 첫번째로 들어온 이미지가 메인이미지 여부를 결정한다.
+						paraMap.put("rm_img_name", resultmap.get("img_name"));
+						paraMap.put("rm_img_save_name", resultmap.get("img_save_name"));
+						
+						// === 객실 이미지 등록하기 === //
+						service.insertRoomImages(paraMap);
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-					else {
+				}// end of for ---------------------------
+				
+			}
+			else {
+			// 메인이미지가 있는 경우
+				// 새로 들어온 파일들을 메인이미지 여부 0으로 insert
+			
+				for(int i = 0; i<roomImage_List.size(); i++) {
+					MultipartFile imageFile = roomImage_List.get(i);
+					
+					try {
+						Map<String, String> resultmap = fileManager.imageUpload(imageFile, path);
+						// 운영경로에 파일생성 & 저장 파일명 & 파일명 가져오기
+
 						paraMap.put("rm_img_main", "0");
+						paraMap.put("rm_img_name", resultmap.get("img_name"));
+						paraMap.put("rm_img_save_name", resultmap.get("img_save_name"));
+						
+						// === 객실 이미지 등록하기 === //
+						service.insertRoomImages(paraMap);
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-					
-					paraMap.put("rm_img_name", resultmap.get("img_name"));
-					paraMap.put("rm_img_save_name", resultmap.get("img_save_name"));
-					
-					// === 객실 이미지 등록하기 === //
-					service.insertRoomImages(paraMap);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}// end of for ---------------------------
+				}// end of for ---------------------------
+				
+			}// end of if(check == null) 
 			
-		}// end of if( roomImage_List != null && roomImage_List.size() > 0 )
-
+		} // 이미지 파일이 넘어온 경우
 		
 		JSONObject jsonObj = new JSONObject(); 
 		
@@ -1123,9 +1130,9 @@ public class LodgeController {
 		
 		// === 개발 경로에서 이미지 삭제하기 === ///
 		String root = "C:\\git\\fin_project\\fin_project\\src\\main\\webapp\\resources";
-		String path = root +File.separator+"images"+File.separator+fk_lodge_id+File.separator+"room_image";
+		String path = root +File.separator+"images"+File.separator+fk_lodge_id+File.separator+"room_img";
 	//	System.out.println(path);
-		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\final_project\resources\images\JSUN0231\room_image
+		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\final_project\resources\images\JSUN0231\room_img
 		
 		// C:\git\fin_project\fin_project\src\main\webapp\resources
 	
@@ -1211,9 +1218,18 @@ public class LodgeController {
 		
 		// === 개발 경로에서 이미지 삭제하기 === ///
 		String root = "C:\\git\\fin_project\\fin_project\\src\\main\\webapp\\resources";
-		String path = root +File.separator+"images"+File.separator+fk_lodge_id+File.separator+"room_image";
+		String path = root +File.separator+"images"+File.separator+fk_lodge_id+File.separator+"room_img";
 	//	System.out.println(path);
-		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\final_project\resources\images\JSUN0231\room_image
+		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\final_project\resources\images\JSUN0231\room_img
+		
+		// === 운영 경로에서 이미지 삭제 === //
+//		String root_2 = session.getServletContext().getRealPath("/");
+//		String path_2 = root_2 + "resources"+File.separator+"images"+File.separator+fk_lodge_id+File.separator+"room_img";
+//		File dir_2 = new File(path_2); // 운영 경로
+		// 개발 경로에서 삭제되면 운영경로에서도 삭제된다
+		// 개발 경로에서 추가되면 운영경로에서도 삭제된다.
+			// 자바에서 삭제하면 삭제가 바로 적용되는데
+			// 탐색기에서 삭제시 바로 적용되지 않는다. refresh 필요
 		
 		// C:\git\fin_project\fin_project\src\main\webapp\resources
 	
@@ -1223,6 +1239,7 @@ public class LodgeController {
 		if(dir.exists()) {
 			// 경로 폴더가 존재한다면
 			File[] folderList = dir.listFiles(); // 폴더의 내용물이 있는지 확인하다.
+//			File[] folderList_2 = dir_2.listFiles(); // 폴더의 내용물이 있는지 확인하다.
 			if( folderList.length > 0) {
 			// 경로 폴더안 이미지 파일들이 존재한다면 확인해야 한다.
 				
