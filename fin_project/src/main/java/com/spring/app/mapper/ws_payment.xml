@@ -91,4 +91,18 @@
 		where userid = #{userid}
 	</update>
 	
+	
+	<!-- 숙박업소 별 후기 가져오기 -->
+	<resultMap type="HashMap" id="ws_getLodgeReview_Map"><!-- 한 컬럼씩 써야한다. (property는 컬럼에 대한 키값)-->
+		<result property="rating" 	column="rating" 	javaType="String" />
+		<result property="rv_cnt" 	column="rv_cnt" 	javaType="String" />
+	</resultMap>
+	
+	<select id="ws_getLodgeReview" parameterType="String" resultMap="ws_getLodgeReview_Map">
+		select to_char(round(sum(fk_rv_rating)/count(*),1),'FM9990.0') as rating
+		       ,count(*) as rv_cnt
+		from tbl_review
+		where fk_lodge_id = #{lodge_id}
+	</select>
+	
 </mapper>

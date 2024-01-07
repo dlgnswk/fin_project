@@ -1157,18 +1157,36 @@
 					
 					
 					<div class="container" style="padding:0 17px;">
-						<div style="display:flex;padding-top:15px;">
-						
-							<div style="width:35px; height:27px; background-color: #2e6d00; border-radius: 0.25rem; display:flex;">
-								<div style="color:white;margin:auto;font-weight:bold;">9.4</div>
-							</div>
-							<div style="position:relative; bottom:10px;left:10px;">
-								<span style="font-weight:bold;">훌륭해요!</span><br>
-								<span style="font-size:13px;position:relative; bottom:4px;">(이용 후기 1,002개)</span>
-							</div>
-						
-						</div>
-						
+						<c:if test="${not empty requestScope.lodgeReviewList}">
+							<c:forEach var="review" items="${requestScope.lodgeReviewList}">
+								<div style="display:flex;padding-top:15px;">
+								
+									<div style="width:35px; height:27px; background-color: #2e6d00; border-radius: 0.25rem; display:flex;">
+										<div style="color:white;margin:auto;font-weight:bold;">${review.rating}</div>
+									</div>
+									<div style="position:relative; bottom:10px;left:10px;">
+										<c:if test="${review.rating lt 6.0}">
+											<span style="font-weight:bold;">괜찮을까요?</span><br>
+										</c:if>
+										<c:if test="${review.rating ge 7.0 && review.rating lt 8.0}">
+											<span style="font-weight:bold;">나쁘지않아요!</span><br>
+										</c:if>
+										<c:if test="${review.rating ge 8.0 && review.rating lt 9.0}">
+											<span style="font-weight:bold;">좋아요!</span><br>
+										</c:if>
+										<c:if test="${review.rating ge 9.0 && review.rating lt 10.0}">
+											<span style="font-weight:bold;">훌륭해요!</span><br>
+										</c:if>
+										<c:if test="${review.rating == 10.0}">
+											<span style="font-weight:bold;">완벽해요!</span><br>
+										</c:if>
+										
+										<span style="font-size:13px;position:relative; bottom:4px;">(이용 후기 <span><fmt:formatNumber pattern="#,###">${review.rv_cnt}</fmt:formatNumber></span> 개)</span>
+									</div>
+								
+								</div>
+							</c:forEach>
+						</c:if>
 						<span class="text-gray" style="font-size:10pt"><span class="check_span">객실 1개: </span> ${roomInfo.rm_type}</span>
 						<br><br>
 						<div style="display:flex;">
