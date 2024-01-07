@@ -37,7 +37,7 @@ public interface LodgeDAO {
 
 	List<Map<String, String>> getTmp_opt_list(String rm_seq); // 객실 옵션 - 온도조절
 
-	List<Map<String, String>> getRm_img_list(String rm_seq); // 객실 사진 가져오기
+	List<Map<String, String>> getRm_img_list(Map<String, String> paraMap); // 객실 사진 가져오기
 	
 	List<Map<String, String>> getCom_bath_opt_list(String lodge_id); // 숙박 시설의 전체 객실이 가진 옵션 가져오기  - 욕실
 
