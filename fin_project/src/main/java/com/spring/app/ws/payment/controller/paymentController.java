@@ -42,18 +42,30 @@ public class paymentController {
 	 */
 
 	// 결제페이지
-	@GetMapping(value = "/payment/payment.exp")
+	@RequestMapping(value = "/payment/payment.exp")
 	public ModelAndView requiredLogin_searchUser(HttpServletRequest request, HttpServletResponse response,
 			ModelAndView mav) {
 
 		// 받을 값들
 		String startDate = "2024-01-31"; // startDate
 		String endDate = "2024-02-02"; // endDate
-		//String payType = "0";
-		String payType = "1";
+		String payType = "0";
+		//String payType = "1";
 		String rm_seq = "rm-33";
 		String h_userid = "p-city@paradian.com";
 		String guest_cnt = "2"; // ttl_guest_cnt
+		
+		//String startDate = request.getParameter("startDate");
+		//String endDate = request.getParameter("endDate");
+		//String payType = request.getParameter("payType");
+		//String rm_seq = request.getParameter("rm_seq");
+		//String h_userid = request.getParameter("h_userid");
+		//String guest_cnt = request.getParameter("ttl_guest_cnt");
+		
+		
+		
+		
+		
 
 		String str_inYear = startDate.substring(0, 4);
 		String str_inMonth = startDate.substring(5, 7);

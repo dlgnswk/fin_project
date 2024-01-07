@@ -60,6 +60,7 @@ $(document).ready(function(){
 	if(${not empty requestScope.paraMap}){
 		$("select[name='searchType']").val("${requestScope.paraMap.searchType}");
 		$("input[name='searchWord']").val("${requestScope.paraMap.searchWord}");
+		$("select[name='lg_status']").val("${requestScope.paraMap.lg_status}");
 	}
 	
 	// 검색어 입력시 자동글 완성하기
