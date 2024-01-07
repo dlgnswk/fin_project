@@ -171,6 +171,7 @@ public class LodgeController {
 		request.setAttribute("fk_lodge_id", fk_lodge_id);
 		request.setAttribute("front_id", front_id);
 		request.setAttribute("back_id", back_id);
+		request.setAttribute("fk_h_userid", fk_h_userid);
 		
 		return "db/register/register_lodge.tiles2";
 		// /WEB-INF/views/tiles2/db/register/register_lodge.jsp
@@ -212,6 +213,11 @@ public class LodgeController {
 		String fk_cancel_opt = paraMap.get("fk_cancel_opt");
 		String fd_status = paraMap.get("fd_status");
 		String fd_time = paraMap.get("fd_time");
+		if(fd_time == null) {
+			fd_time = "";
+			paraMap.put("fd_time", fd_time);
+		}
+		
 		String fk_s_checkin_type = paraMap.get("fk_s_checkin_type");
 		String lg_checkin_start_time = paraMap.get("lg_checkin_start_time"); // 20
 		
