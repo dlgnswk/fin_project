@@ -200,7 +200,13 @@ public class LodgeController {
 		String lg_area = paraMap.get("lg_area");
 		String lg_area_2 = paraMap.get("lg_area_2");
 		String fk_lodge_type = paraMap.get("fk_lodge_type");
+		
 		String lg_hotel_star = paraMap.get("lg_hotel_star");
+		if(lg_hotel_star == null) {
+			lg_hotel_star ="";
+			paraMap.put("lg_hotel_star", lg_hotel_star);
+		}
+		
 		String lg_qty = paraMap.get("lg_qty");
 		
 		String fk_cancel_opt = paraMap.get("fk_cancel_opt");
@@ -457,6 +463,20 @@ public class LodgeController {
 	// 시설 사진 등록 페이지
 	@GetMapping(value="/image_lodge.exp")
 	public String requiredHostLogin_image_lodge(HttpServletRequest request, HttpServletResponse response) {
+		
+		// ================= AOP 로그인한 사용자의 정보 -시작- ==================== //
+		HttpSession session = request.getSession();
+		HostVO loginhost = (HostVO) session.getAttribute("loginhost");
+		String fk_h_userid = loginhost.getH_userid();
+		// 현재 로그인한 판매자의 ID로 숙박시설의 lodge_id를 가져온다.
+		String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
+		// ================= AOP 로그인한 사용자의 정보 -끝- ====================== //
+		
+		// DB에 등록된 이미지 파일명을 가지고 온다.
+		List<Map<String,String>> LodgeImgMapList = service.getLodgeImgData(fk_lodge_id);
+		
+		
+		request.setAttribute("LodgeImgMapList", LodgeImgMapList);
 		
 		return "db/register/image_lodge.tiles2";
 		// /WEB-INF/views/tiles2/db/register/register_lodge.jsp
