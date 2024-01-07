@@ -610,7 +610,7 @@
 							
 						<%-- 세번째 줄 정보 --%>
 						v_html += 			"<div class='third_content'>";
-						v_html += 				"<div class='lodge_price'>";
+						v_html += 				"<div class='lodge_price'>";console.log(item.min_price);
 						v_html += 					"&#8361; <span>" + Number(item.min_price).toLocaleString('en') +"</span>";
 						v_html += 				"</div>";
 						v_html += 			"</div>";

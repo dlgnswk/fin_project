@@ -281,7 +281,7 @@
 		        on R.fk_lodge_id = L.lodge_id
 		        group by lodge_id
 		    ) A 
-		    join
+		    left join
 		    (
 		        select fk_lodge_id, count(*) as review_cnt, avg(to_number(fk_rv_rating)) as rating
 		        from tbl_review
