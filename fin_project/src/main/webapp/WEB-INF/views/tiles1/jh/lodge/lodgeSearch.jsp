@@ -738,9 +738,9 @@
 		// 숙소 이미지 클릭시
 		$(document).on("click", "div.carousel-inner", function(){
 			
-			$("form[name='go_detail_frm']").find("input[name=lodge_id]").val($(this).find(".lodge_id").val());
-			$("form[name='go_detail_frm']").find("input[name=startDate]").val($(this).find(".check_in").val());
-			$("form[name='go_detail_frm']").find("input[name=endDate]").val($(this).find(".check_out").val());
+			$("form[name='go_detail_frm']").find("input[name=lodge_id]").val($(this).parent().parent().parent().find(".lodge_id").val());
+			$("form[name='go_detail_frm']").find("input[name=startDate]").val($(this).parent().parent().parent().find(".check_in").val());
+			$("form[name='go_detail_frm']").find("input[name=endDate]").val($(this).parent().parent().parent().find(".check_out").val());
 			
 			$("form[name='go_detail_frm']").find("input[name=guest]").val(${requestScope.map.travlers});
 			$("form[name='go_detail_frm']").find("input[name=adults]").val(${requestScope.map.adult});
