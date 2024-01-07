@@ -760,7 +760,7 @@
 							<div>
 								<div style="display: inline-block;">
 									<div id="div_date" >
-										<div id="div_date_desc" style="font-size: 12px; margin:0;">날짜</div>
+										<div id="div_date_desc" style="font-size: 12px; margin:0;" >날짜</div>
 										<div id="div_date_select">
 											<input id="input_date" class="dateSelector" />
 										</div>

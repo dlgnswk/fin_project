@@ -1548,8 +1548,8 @@
 						<div class="div_sub">
 							<span class="sub">등록자ID</span>
 						</div>
-						<div class="fk_h_userid"> <%-- 회원가입시 사용한 값 가져오면됨 --%> 
-							<input type="text" name="fk_h_userid" value="sinho3004@naver.com" readonly />
+						<div class="fk_h_userid"> <%-- 회원가입시 사용한 값 가져오면됨 --%>
+							<input type="text" name="fk_h_userid" value="${requestScope.fk_h_userid}" readonly />
 						</div>
 					</div>
 					
