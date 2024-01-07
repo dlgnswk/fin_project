@@ -71,9 +71,16 @@ public class PartnerService_imple implements PartnerService {
 	
 	// 채팅방 불러오기
 	@Override
-	public ChatVO selectChat(String lodge_id) {
-		ChatVO chatvo = dao.selectChat(lodge_id);
+	public ChatVO selectChat(Map<String,String> paraMap) {
+		ChatVO chatvo = dao.selectChat(paraMap);
 		return chatvo;
+	}
+
+	// 기존 채팅방이 없는 경우 새로운 채팅방을 만들기
+	@Override
+	public int createChat(Map<String, String> paraMap) {
+		int n = dao.createChat(paraMap);
+		return n;
 	}
 
 	

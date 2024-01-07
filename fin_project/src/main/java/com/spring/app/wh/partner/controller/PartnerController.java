@@ -610,31 +610,33 @@ public class PartnerController {
 		
 		String userid = loginuser.getUserid();
 		
-		
 		String lodge_id = request.getParameter("lodge_id");
 		
+		Map<String,String> paraMap = new HashMap<>();
+		
+		paraMap.put("userid",userid);
+		paraMap.put("lodge_id",lodge_id);
+		
+		
 		// 채팅방 불러오기
-		ChatVO chatvo = service.selectChat(lodge_id);
+		ChatVO chatvo = service.selectChat(paraMap);
 		
 		// 기존 채팅방이 없는 경우 새로운 채팅방을 만들기
 		if(chatvo == null) {
 			
+			int n = service.createChat(paraMap);
 			
+			if(n == 1) {
+				
+				chatvo = service.selectChat(paraMap);
+				
+				request.setAttribute("chatvo", chatvo);
+			}
 			
 		}
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		request.setAttribute("chatvo", chatvo);
 		
 		return "wh/partner/chat/view.tiles2";
 	}

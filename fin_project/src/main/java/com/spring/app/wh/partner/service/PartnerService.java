@@ -34,7 +34,10 @@ public interface PartnerService {
 	int editHost(Map<String, String> paraMap);
 
 	// 채팅방 불러오기
-	ChatVO selectChat(String lodge_id);
+	ChatVO selectChat(Map<String,String> paraMap);
+
+	// 기존 채팅방이 없는 경우 새로운 채팅방을 만들기
+	int createChat(Map<String, String> paraMap);
 
 	
 
