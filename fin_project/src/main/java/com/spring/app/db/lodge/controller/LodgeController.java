@@ -57,9 +57,13 @@ public class LodgeController {
 		String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
 		
 	//	System.out.println("fk_lodge_id => "+ fk_lodge_id); // 현재 로그인 호스트의 호텔아이디 이다.
+		String front_id = "";
+		String back_id = "";
 		
-		String front_id = fk_lodge_id.substring(0,4);
-		String back_id = fk_lodge_id.substring(4);
+		if(fk_lodge_id != null) {
+			front_id = fk_lodge_id.substring(0,4);
+			back_id = fk_lodge_id.substring(4);
+		}
 		
 		
 		// == 숙박시설 유형 테이블에서 select == //
@@ -488,18 +492,18 @@ public class LodgeController {
 		// 시설 이미지를 저장할 경로
 //		HttpSession session = mtp_request.getSession();
 //		String root = session.getServletContext().getRealPath("/");
-//		String path = root + "resources"+File.separator+"images"+File.separator+fk_lodge_id+File.separator+"lodge_image";
+//		String path = root + "resources"+File.separator+"images"+File.separator+fk_lodge_id+File.separator+"lodge_img";
 		
 		String root = "C:\\git\\fin_project\\fin_project\\src\\main\\webapp\\resources";
-		String path = root +File.separator+"images"+File.separator+fk_lodge_id+File.separator+"lodge_image";
+		String path = root +File.separator+"images"+File.separator+fk_lodge_id+File.separator+"lodge_img";
 		
 		System.out.println(path);
-		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\final_project\resources\images\ "JSUN0231" \lodge_image
+		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\final_project\resources\images\ "JSUN0231" \lodge_img
 		File dir = new File(path);
 		
 		// ==== 등록전 사전에 등록된 이미지 제거 ==== // 
 		if(dir.exists()) {
-		// images\ "JSUN0231" \lodge_image 파일이 존재하면 제거한다.
+		// images\ "JSUN0231" \lodge_img 파일이 존재하면 제거한다.
 		// 삭제하려는 파일이 폴더이고 폴더 안에 내용물이 있다면 삭제가 되지 않는다.
 			File[] folderList = dir.listFiles(); // 폴더의 내용물이 있는지 확인하다.
 			if( folderList.length > 0) {
@@ -977,11 +981,11 @@ public class LodgeController {
 		// 시설 이미지를 저장할 경로
 	//	HttpSession session = mtp_request.getSession();
 	//	String root = session.getServletContext().getRealPath("/");
-	//	String path = root + "resources"+File.separator+"images"+File.separator+fk_lodge_id+File.separator+"room_image";
+	//	String path = root + "resources"+File.separator+"images"+File.separator+fk_lodge_id+File.separator+"room_img";
 		String root = "C:\\git\\fin_project\\fin_project\\src\\main\\webapp\\resources";
-		String path = root +File.separator+"images"+File.separator+fk_lodge_id+File.separator+"room_image";
+		String path = root +File.separator+"images"+File.separator+fk_lodge_id+File.separator+"room_img";
 	//	System.out.println(path);
-		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\final_project\resources\images\JSUN0231\room_image
+		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\final_project\resources\images\JSUN0231\room_img
 		
 		// C:\git\fin_project\fin_project\src\main\webapp\resources
 		File dir = new File(path);
@@ -1126,9 +1130,9 @@ public class LodgeController {
 		
 		// === 개발 경로에서 이미지 삭제하기 === ///
 		String root = "C:\\git\\fin_project\\fin_project\\src\\main\\webapp\\resources";
-		String path = root +File.separator+"images"+File.separator+fk_lodge_id+File.separator+"room_image";
+		String path = root +File.separator+"images"+File.separator+fk_lodge_id+File.separator+"room_img";
 	//	System.out.println(path);
-		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\final_project\resources\images\JSUN0231\room_image
+		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\final_project\resources\images\JSUN0231\room_img
 		
 		// C:\git\fin_project\fin_project\src\main\webapp\resources
 	
@@ -1214,13 +1218,13 @@ public class LodgeController {
 		
 		// === 개발 경로에서 이미지 삭제하기 === ///
 		String root = "C:\\git\\fin_project\\fin_project\\src\\main\\webapp\\resources";
-		String path = root +File.separator+"images"+File.separator+fk_lodge_id+File.separator+"room_image";
+		String path = root +File.separator+"images"+File.separator+fk_lodge_id+File.separator+"room_img";
 	//	System.out.println(path);
-		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\final_project\resources\images\JSUN0231\room_image
+		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\final_project\resources\images\JSUN0231\room_img
 		
 		// === 운영 경로에서 이미지 삭제 === //
 //		String root_2 = session.getServletContext().getRealPath("/");
-//		String path_2 = root_2 + "resources"+File.separator+"images"+File.separator+fk_lodge_id+File.separator+"room_image";
+//		String path_2 = root_2 + "resources"+File.separator+"images"+File.separator+fk_lodge_id+File.separator+"room_img";
 //		File dir_2 = new File(path_2); // 운영 경로
 		// 개발 경로에서 삭제되면 운영경로에서도 삭제된다
 		// 개발 경로에서 추가되면 운영경로에서도 삭제된다.
