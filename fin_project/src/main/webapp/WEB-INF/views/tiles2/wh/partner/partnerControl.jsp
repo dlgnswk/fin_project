@@ -84,7 +84,7 @@
 			<div style="display:flex">
 				<div onclick="goHostEdit()" style="margin:5% auto; border: 2px solid #5252ff;  height: 200px; border-radius: 1rem; width:40%; margin-bottom: 25px; cursor:pointer; ">
 					<div style="width:50%; margin:10% auto;">
-						<img src="https://apps.expediapartnercentral.com/list/static/images/Lodging.svg" style="width:80px; height:80px;"/>
+						<img src="<%=ctxPath%>/resources/images/wh/goHostEdit.png" style="width:80px; height:80px;"/>
 					</div>
 					
 					<div style="font-family: Century Gothic,CenturyGothic,AppleGothic,sans-serif; font-weight: 600; font-size: 18px; line-height: 26px; text-align: center; color: #121617;">
@@ -95,7 +95,7 @@
 			
 				<div onclick="goReservation()" style="margin:5% auto; border: 2px solid #5252ff;  height: 200px; border-radius: 1rem; width:40%; margin-bottom: 25px; cursor:pointer;">
 					<div style="width:50%; margin:10% auto;">
-						<img src="https://headless.expediagroup.com/content/dam/marketing/headless/site-assets/icons/icon-ideal-guests.png" style="width:80px; height:80px;"/>
+						<img src="<%=ctxPath%>/resources/images/wh/goReservation.png" style="width:80px; height:80px;"/>
 					</div>
 					
 					<div style="font-family: Century Gothic,CenturyGothic,AppleGothic,sans-serif; font-weight: 600; font-size: 18px; line-height: 26px; text-align: center; color: #121617;">
@@ -108,7 +108,7 @@
 			<div style="display:flex">
 				<div onclick="goUseRate()" style="margin:5% auto; border: 2px solid #5252ff;  height: 200px; border-radius: 1rem; width:40%; margin-bottom: 25px; cursor:pointer; ">
 					<div style="width:50%; margin:10% auto;">
-						<img src="https://apps.expediapartnercentral.com/list/static/images/Lodging.svg" style="width:80px; height:80px;"/>
+						<img src="<%=ctxPath%>/resources/images/wh/goUseRate.png" style="width:80px; height:80px;"/>
 					</div>
 					
 					<div style="font-family: Century Gothic,CenturyGothic,AppleGothic,sans-serif; font-weight: 600; font-size: 18px; line-height: 26px; text-align: center; color: #121617;">
@@ -119,7 +119,7 @@
 			
 				<div onclick="goCs()" style="margin:5% auto; border: 2px solid #5252ff;  height: 200px; border-radius: 1rem; width:40%; margin-bottom: 25px; cursor:pointer;">
 					<div style="width:50%; margin:10% auto;">
-						<img src="https://headless.expediagroup.com/content/dam/marketing/headless/site-assets/icons/icon-ideal-guests.png" style="width:80px; height:80px;"/>
+						<img src="<%=ctxPath%>/resources/images/wh/goCs.png" style="width:80px; height:80px;"/>
 					</div>
 					
 					<div style="font-family: Century Gothic,CenturyGothic,AppleGothic,sans-serif; font-weight: 600; font-size: 18px; line-height: 26px; text-align: center; color: #121617;">
