@@ -788,7 +788,7 @@
 						<div class="div_sub">
 						</div>
 						<div class="fk_lodge_id">			
-							<input type="text" name="fk_lodge_id" value="${requestScope.fk_lodge_id}" size="15" placeholder="JSUN0231"/>
+							<input type="hidden" name="fk_lodge_id" value="${requestScope.fk_lodge_id}" size="15" />
 						</div>
 					</div>
 					

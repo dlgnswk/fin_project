@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.spring.app.expedia.domain.HostVO;
 import com.spring.app.expedia.domain.LodgeVO;
 import com.spring.app.db.lodge.model.LodgeDAO;
 
@@ -132,11 +133,11 @@ public class LodgeService_imple implements LodgeService {
 		
 		int n1=0, n2=0, n3=0, n4=0, n5=0, n6=0, n7=0, n8=0, n9=0, n10=0, result=0;
 		
-	//	HttpSession session = request.getSession();
-	//	HostVO loginuser = session.getAttribute("loginuser");
-	//	String fk_h_userid = loginuser.getH_userid();
-		String fk_h_userid = "grandjusun@gmail.com"; // 실제 판매자 아이디로 체크해야됨.
-		paraMap.put("fk_h_userid", fk_h_userid);
+		// ================= AOP 로그인한 사용자의 정보 -시작- ==================== //
+		HttpSession session = request.getSession();
+		HostVO loginhost = (HostVO) session.getAttribute("loginhost");
+		String fk_h_userid = loginhost.getH_userid();
+		// ================= AOP 로그인한 사용자의 정보 -끝- ====================== //
 		
 		// 기존에 입력되어있는 lodge정보 가져오기
 		LodgeVO LodgeInfo = dao.getLodgeInfo(fk_h_userid);
