@@ -37,7 +37,7 @@ public interface LodgeService {
 
 	List<Map<String, String>> getTmp_opt_list(String rm_seq); // 객실 옵션 - 온도조절
 
-	List<Map<String, String>> getRm_img_list(String rm_seq); // 객실 사진 가져오기
+	List<Map<String, String>> getRm_img_list(Map<String, String> paraMap); // 객실 사진 가져오기
 
 	List<Map<String, String>> getCom_bath_opt_list(String lodge_id); // 숙박 시설의 전체 객실이 가진 옵션 가져오기  - 욕실
 
@@ -53,8 +53,6 @@ public interface LodgeService {
 
 	List<Map<String, String>> getLg_img_ca_list(String lodge_id); // 숙박 시설 카테고리 및 카테고리별 사진 갯수 가져오기
 
-	List<Map<String, String>> getAll_rm_img_list(String lodge_id); // 객실 사진 가져오기 (전부)
-
 	String getLg_ca_name(String img_cano); // 카테고리 이름
 
 	boolean isExist_wish(Map<String, String> paraMap); // 위시리스트 추가 됐는지 안됐는지 확인 
@@ -62,5 +60,4 @@ public interface LodgeService {
 	int delete_wishList(Map<String, String> paraMap); // 위시리스트에서 삭제
 
 	int add_wishList(Map<String, String> paraMap); // 위시리스트에 추가
-
 }
