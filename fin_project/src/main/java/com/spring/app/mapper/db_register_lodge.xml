@@ -569,7 +569,25 @@
 		delete from tbl_lg_img
 		where fk_lodge_id = #{fk_lodge_id}
 	</delete>
-
+	
+	
+	<!-- DB에 fk_rm_seq객실에 메인이미지가 등록되어 있는지 체크한다. -->
+	<resultMap type="HashMap" id="getLodgeImgData_Map">
+		<result property="lg_img_seq"		column="lg_img_seq"			javaType="String"/>
+		<result property="fk_lodge_id"		column="fk_lodge_id"		javaType="String"/>
+		<result property="lg_img_save_name"	column="lg_img_save_name"	javaType="String"/>
+		<result property="lg_img_name"		column="lg_img_name"		javaType="String"/>
+		<result property="fk_img_cano"		column="fk_img_cano"		javaType="String"/>
+	</resultMap>
+	
+	
+	<select id="getLodgeImgData" parameterType="String" resultMap="getLodgeImgData_Map">
+		select lg_img_seq, fk_lodge_id, lg_img_save_name, lg_img_name, fk_img_cano
+		from tbl_lg_img
+		where fk_lodge_id = #{fk_lodge_id}
+	</select>
+	
+	
 
 <!-- //////////////////////        객실 등록 하기            /////////////////////////////// -->
 
@@ -813,20 +831,7 @@
 		from tbl_room
 		where fk_lodge_id = #{fk_lodge_id}
 	</select>
-	
-	
-	<!-- == 삭제 해야할 이미지 파일 이름 가져오기 == -->
-	<select id="getDeleteImgFileName" parameterType="String" resultType="String">
-		select rm_img_save_name
-		from tbl_rm_img
-		where fk_rm_seq = #{fk_rm_seq}
-	</select>
-	
-	<!-- == tbl_rm_img 테이블 정보 제거 == -->
-	<delete id="delRoomImg" parameterType="String">
-		delete from tbl_rm_img
-		where fk_rm_seq = #{fk_rm_seq} 
-	</delete>
+
 	
 	<!-- === 객실 이미지 등록하기 === -->
 	<insert id="insertRoomImages" parameterType="HashMap">
@@ -878,5 +883,13 @@
 		where fk_rm_seq = #{fk_rm_seq}
 	</delete>
 	
+	
+	<!-- DB에 fk_rm_seq객실에 메인이미지가 등록되어 있는지 체크한다. -->
+	<select id="getMainImgCheck" parameterType="String" resultType="String">
+		select rm_img_seq
+		from tbl_rm_img
+		where fk_rm_seq = #{fk_rm_seq} and rm_img_main = 1
+	</select>
+
 		
 </mapper>

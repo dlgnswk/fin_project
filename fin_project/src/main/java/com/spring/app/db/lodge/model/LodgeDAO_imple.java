@@ -493,19 +493,6 @@ public class LodgeDAO_imple implements LodgeDAO {
 		return rm_typeList;
 	}
 
-	// == 삭제 해야할 이미지 파일 이름 가져오기 == //
-	@Override
-	public List<String> getDeleteImgFileName(String fk_rm_seq) {
-		List<String> delFileNameList = sqlsession.selectList("db_register_lodge.getDeleteImgFileName", fk_rm_seq);
-		return delFileNameList;
-	}
-
-	// == tbl_rm_img 테이블 정보 제거 == //
-	@Override
-	public void delRoomImg(String fk_rm_seq) {
-		sqlsession.delete("db_register_lodge.delRoomImg", fk_rm_seq);
-	}
-
 	// === 객실 이미지 등록하기 === //
 	@Override
 	public void insertRoomImages(Map<String, String> paraMap) {
@@ -544,6 +531,20 @@ public class LodgeDAO_imple implements LodgeDAO {
 	public int delRoomImgFk_rm_seq(String fk_rm_seq) {
 		int result = sqlsession.delete("db_register_lodge.delRoomImgFk_rm_seq", fk_rm_seq);
 		return result;
+	}
+
+	// DB에 fk_rm_seq객실에 메인이미지가 등록되어 있는지 체크한다.
+	@Override
+	public String getMainImgCheck(String fk_rm_seq) {
+		String check = sqlsession.selectOne("db_register_lodge.getMainImgCheck", fk_rm_seq);
+		return check;
+	}
+
+	// DB에 등록된 이미지 파일명을 가지고 온다.
+	@Override
+	public List<Map<String, String>> getLodgeImgData(String fk_lodge_id) {
+		List<Map<String,String>> LodgeImgMapList = sqlsession.selectList("db_register_lodge.getLodgeImgData", fk_lodge_id);
+		return LodgeImgMapList;
 	}
 
 	
