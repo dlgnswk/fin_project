@@ -121,8 +121,6 @@ public class AdminDAO_imple implements AdminDAO {
 			lodgeListListMap.add(lodgeList);
 		}
 		
-		
-		
 		/*
 		for(Map<String, String> map: lodgeIdMapList) {
 
@@ -137,8 +135,6 @@ public class AdminDAO_imple implements AdminDAO {
 			for(String aa:lodgeList) {
 				//System.out.println(aa);
 			}
-			
-			
 		}
 		*/
 		return lodgeListListMap;

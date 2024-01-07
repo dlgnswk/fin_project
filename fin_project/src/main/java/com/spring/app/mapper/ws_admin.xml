@@ -343,6 +343,7 @@
 		<result property="fk_lodge_type" 	column="fk_lodge_type" 		javaType="String"/>
 		<result property="lg_qty" 			column="lg_qty" 			javaType="String"/>
 		<result property="rm_type" 			column="rm_type" 			javaType="String"/>
+		<result property="rm_cnt" 			column="rm_cnt" 			javaType="String"/>
 		<result property="rm_size_meter" 	column="rm_size_meter" 		javaType="String"/>
 		<result property="rm_size_pyug" 	column="rm_size_pyug" 		javaType="String"/>
 		<result property="rm_price" 		column="rm_price" 			javaType="String"/>
@@ -354,14 +355,14 @@
 	<select id="onelodgeinfoSearchtype" parameterType="String" resultMap="onelodgeinfoSearchtype_Map">
 			select lodge_id, fk_h_userid, lg_name, lg_en_name, total_address
 			      ,lg_postcode, lg_hotel_star, fk_lodge_type, lg_qty
-			      ,rm_type, rm_size_meter, rm_size_pyug, rm_price, rm_guest_cnt
+			      ,rm_type, rm_size_meter, rm_size_pyug, rm_price, rm_guest_cnt, rm_cnt
 			      ,lg_img_name, lg_status
 			from
 			(
 			select L.lodge_id, L.fk_h_userid, L.lg_name, L.lg_en_name, L.lg_address as total_address
 			      ,L.lg_postcode, L.lg_hotel_star, L.fk_lodge_type, L.lg_qty, L.lg_status
 			      ,R.rm_type, R.rm_size_meter, R.rm_size_pyug, R.rm_price, R.rm_guest_cnt
-			      ,I.lg_img_name, row_number() over (order by I.lg_img_name asc) as rno,
+			      ,R.rm_cnt ,I.lg_img_name, row_number() over (order by I.lg_img_name asc) as rno,
 			      (select count(*) from tbl_lodge L join tbl_room R on L.lodge_id = R.fk_lodge_id where 1=1 and lodge_id = #{lodge_id}) as length
 			from tbl_lodge L
 			join tbl_room R
@@ -369,6 +370,8 @@
 			join tbl_lg_img I
 			on L.lodge_id = I.fk_lodge_id
 			where 1=1 and L.lodge_id = #{lodge_id}
+    		and fk_img_cano = '0'
+    		and lg_img_seq = (select min(lg_img_seq) from tbl_lg_img where fk_LODGE_ID = #{lodge_id} and fk_img_cano = '0')
 			order by R.rm_type asc, I.lg_img_name asc
 			) V
 			where 1=1 and rno between 1 and length
@@ -429,7 +432,6 @@
 	<!-- 차트그리기(AJAX) 년도별 성별 등록 회원수 -->
 	<resultMap type="HashMap" id="yearGenderUser_Map">
 		<result property="gender" 	column="gender" javaType="String"/>
-		<result property="Y2016" 	column="Y2016" 	javaType="String"/>
 		<result property="Y2017" 	column="Y2017" 	javaType="String"/>
 		<result property="Y2018" 	column="Y2018" 	javaType="String"/>
 		<result property="Y2019" 	column="Y2019" 	javaType="String"/>
@@ -437,18 +439,19 @@
 		<result property="Y2021" 	column="Y2021" 	javaType="String"/>
 		<result property="Y2022" 	column="Y2022" 	javaType="String"/>
 		<result property="Y2023" 	column="Y2023" 	javaType="String"/>
+		<result property="Y2024" 	column="Y2024" 	javaType="String"/>
 	</resultMap>
 	
 	<select id="yearGenderUser" resultMap = "yearGenderUser_Map">
-		select decode(gender,'F','여','M','남',null) as gender,
-		       sum(decode(extract(year from registerdate),2016,1,0) ) as "Y2016",  
+		select decode(gender,'F','여','M','남',null) as gender, 
 		       sum(decode(extract(year from registerdate),2017,1,0) ) as "Y2017",
 		       sum(decode(extract(year from registerdate),2018,1,0) ) as "Y2018",
 		       sum(decode(extract(year from registerdate),2019,1,0) ) as "Y2019",
 		       sum(decode(extract(year from registerdate),2020,1,0) ) as "Y2020",
 		       sum(decode(extract(year from registerdate),2021,1,0) ) as "Y2021",
 		       sum(decode(extract(year from registerdate),2022,1,0) ) as "Y2022",
-		       sum(decode(extract(year from registerdate),2023,1,0) ) as "Y2023"
+		       sum(decode(extract(year from registerdate),2023,1,0) ) as "Y2023",
+		       sum(decode(extract(year from registerdate),2024,1,0) ) as "Y2024"
 		from tbl_user
 		where gender IN('F','M')
 		group by gender

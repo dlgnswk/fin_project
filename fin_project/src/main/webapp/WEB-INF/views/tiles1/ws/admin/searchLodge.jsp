@@ -466,7 +466,7 @@ function goReject(lodge_id){
 										</tr>
 									
 										<tr>
-											<td colspan="3" rowspan="5" style="padding:0;"><image src="<%=ctxPath%>/resources/images/${lodgeRoom.lodge_id}/lodge_img/lodge01.png" style="width:250px;"> </image></td>
+											<td colspan="3" rowspan="5" style="padding:0;"><image src="<%=ctxPath%>/resources/images/${lodgeRoom.lodge_id}/lodge_img/${lodgeRoom.lg_img_name}" style="width:250px;"> </image></td>
 											<td class="col_style">주소</td>
 											<td colspan="4">${lodgeRoom.total_address}</td>
 										</tr>
