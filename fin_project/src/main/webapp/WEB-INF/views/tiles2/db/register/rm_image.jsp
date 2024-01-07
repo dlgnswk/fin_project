@@ -313,9 +313,9 @@
 		                   	      "<div class='imageName'>" +
 		          			        "<span class='delete'>&times;</span>" +
 		          			        "<span class='fileName'>"+item.rm_img_name+"</span>" +
-		          			        "<input type='text' class='rm_img_name' value='"+item.rm_img_name+"' />"+
-		          			      	"<input type='text' class='rm_img_save_name' value='"+item.rm_img_save_name+"' />"+
-		          			      	"<input type='text' class='rm_img_main' value='"+item.rm_img_main+"' />" +
+		          			        "<input type='hidden' class='rm_img_name' value='"+item.rm_img_name+"' />"+
+		          			      	"<input type='hidden' class='rm_img_save_name' value='"+item.rm_img_save_name+"' />"+
+		          			      	"<input type='hidden' class='rm_img_main' value='"+item.rm_img_main+"' />" +
 		          			      "</div>"+
 	               			   "</div>";					// &times;는 X로 보여주는 것이다.
 	               		
