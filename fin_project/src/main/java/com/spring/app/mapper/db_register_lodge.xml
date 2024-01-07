@@ -569,7 +569,25 @@
 		delete from tbl_lg_img
 		where fk_lodge_id = #{fk_lodge_id}
 	</delete>
-
+	
+	
+	<!-- DB에 fk_rm_seq객실에 메인이미지가 등록되어 있는지 체크한다. -->
+	<resultMap type="HashMap" id="getLodgeImgData_Map">
+		<result property="lg_img_seq"		column="lg_img_seq"			javaType="String"/>
+		<result property="fk_lodge_id"		column="fk_lodge_id"		javaType="String"/>
+		<result property="lg_img_save_name"	column="lg_img_save_name"	javaType="String"/>
+		<result property="lg_img_name"		column="lg_img_name"		javaType="String"/>
+		<result property="fk_img_cano"		column="fk_img_cano"		javaType="String"/>
+	</resultMap>
+	
+	
+	<select id="getLodgeImgData" parameterType="String" resultMap="getLodgeImgData_Map">
+		select lg_img_seq, fk_lodge_id, lg_img_save_name, lg_img_name, fk_img_cano
+		from tbl_lg_img
+		where fk_lodge_id = #{fk_lodge_id}
+	</select>
+	
+	
 
 <!-- //////////////////////        객실 등록 하기            /////////////////////////////// -->
 
