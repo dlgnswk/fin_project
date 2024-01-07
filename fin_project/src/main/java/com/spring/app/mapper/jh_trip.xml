@@ -36,14 +36,14 @@
 		            select lodge_id, lg_name, fk_h_userid, lg_img_save_name
 		            from
 		            (
-		                select lodge_id, lg_name, rno, L.fk_h_userid, lg_img_save_name
+		            	select row_number() over(partition by L.lodge_id order by lg_img_save_name asc) as rno, L.lodge_id, lg_name, L.fk_h_userid, lg_img_save_name
 		                from
 		                (
-		                    select row_number() over(partition by fk_lodge_id order by lg_img_save_name asc) as rno, fk_lodge_id, lg_img_save_name
+		                    select fk_lodge_id, lg_img_save_name
 		                    from tbl_lg_img I
 		                    order by lg_img_save_name
 		                ) I
-		                join tbl_lodge L
+		                right join tbl_lodge L
 		                on I.fk_lodge_id = L.lodge_id
 		            )
 		            where rno = 1
@@ -139,14 +139,14 @@
 	            select lodge_id, lg_name, fk_h_userid, lg_img_save_name
 	            from
 	            (
-	                select lodge_id, lg_name, rno, L.fk_h_userid, lg_img_save_name
+	            	select row_number() over(partition by L.lodge_id order by lg_img_save_name asc) as rno, L.lodge_id, lg_name, L.fk_h_userid, lg_img_save_name
 	                from
 	                (
-	                    select row_number() over(partition by fk_lodge_id order by lg_img_save_name asc) as rno, fk_lodge_id, lg_img_save_name
+	                    select fk_lodge_id, lg_img_save_name
 	                    from tbl_lg_img I
 	                    order by lg_img_save_name
 	                ) I
-	                join tbl_lodge L
+	                right join tbl_lodge L
 	                on I.fk_lodge_id = L.lodge_id
 	            )
 	            where rno = 1
