@@ -788,9 +788,9 @@
 									<div style="font-size: 12px; margin:0;">인원수</div>
 									<div id="defaultTravler">객실&nbsp;<span>1</span>개&nbsp;&nbsp;<span id="total_travler">2</span>명</div>
 									
-									<input name="travlers" type="text" />
-									<input name="adult" type="text" />
-									<input name="kid" type="text" />
+									<input name="travlers" type="hidden" />
+									<input name="adult" type="hidden" />
+									<input name="kid" type="hidden" />
 								</div>
 							</div>
 						</div>
