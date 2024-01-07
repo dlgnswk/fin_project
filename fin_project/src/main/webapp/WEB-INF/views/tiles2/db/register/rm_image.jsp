@@ -240,42 +240,49 @@
 	
 	// === 사진 등록 하기  === //
 	$(document).on("click", "button#image_register", function(){
-		
-		var formData = new FormData($("form[name='addFrm']").get(0));
-		
-		console.log(roomImage_arr);
-		// 메인 이미지 
-		if(roomImage_arr.length > 0) {
-			
-			roomImage_arr.forEach(function(item){
-				// 첨부파일 추가하기 "file_arr" 이 키값이고  item 이 밸류값인데 file_arr 배열속에 저장되어진 배열요소인 파일첨부되어진 파일이 되어진다.
-				// 같은 key를 가진 값을 여러 개 넣을 수 있다.(덮어씌워지지 않고 추가가 된다.)
-	        	formData.append("roomImage_arr", item);  
-	        });
-			
-		}// end of if(mainImage_arr.length > 0)
-			
 		const fk_rm_seq = $("select[name='fk_rm_seq']").val();
-		formData.append("fk_rm_seq", fk_rm_seq);
-	
-		$.ajax({
-            url : "<%= ctxPath%>/rm_image.exp",
-            type : "post",
-            data : formData,
-            async: false,
-            processData:false,  // 파일 전송시 설정 -> query string(쿼리 스트링) 하지마라
-            contentType:false,  // 파일 전송시 설정 
-            dataType:"json",
-            success:function(json){
-          	  	
-            	alert("이미지가 성공적으로 등록되었습니다.");
-            },
-            error: function(request, status, error){
-				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-	      	}
-        });
 		
-		history.go(0);
+		if (fk_rm_seq != "") {
+		// 사진등록 객실을 선택한 경우		
+			var formData = new FormData($("form[name='addFrm']").get(0));
+			
+			console.log(roomImage_arr);
+			// 메인 이미지 
+			if(roomImage_arr.length > 0) {
+				
+				roomImage_arr.forEach(function(item){
+					// 첨부파일 추가하기 "file_arr" 이 키값이고  item 이 밸류값인데 file_arr 배열속에 저장되어진 배열요소인 파일첨부되어진 파일이 되어진다.
+					// 같은 key를 가진 값을 여러 개 넣을 수 있다.(덮어씌워지지 않고 추가가 된다.)
+		        	formData.append("roomImage_arr", item);  
+		        });
+				
+			}// end of if(mainImage_arr.length > 0)
+				
+			
+			formData.append("fk_rm_seq", fk_rm_seq);
+		
+			$.ajax({
+	            url : "<%= ctxPath%>/rm_image.exp",
+	            type : "post",
+	            data : formData,
+	            async: false,
+	            processData:false,  // 파일 전송시 설정 -> query string(쿼리 스트링) 하지마라
+	            contentType:false,  // 파일 전송시 설정 
+	            dataType:"json",
+	            success:function(json){
+	          	  	
+	            	alert("이미지가 성공적으로 등록되었습니다.");
+	            },
+	            error: function(request, status, error){
+					alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		      	}
+	        });
+		}
+		else{
+			alert("사진을 등록하시려는 객실을 선택해 주세요.");
+		}
+		
+		location.href="javascript:location.reload(true)";
 		
 	}); // end of $("button#image_register").click(function()
 	
@@ -455,6 +462,7 @@
 		<div class="images_div">
 			<span class="div_span">
 				<select name="fk_rm_seq">
+					<option value="">--선택--</option>
 					<c:forEach var="updateRmInfo" items="${updateRmInfoMapList}" >
 						<option value="${updateRmInfo.rm_seq}">${updateRmInfo.rm_type}</option>
 					</c:forEach>
