@@ -890,6 +890,20 @@
 						</div>
 					</div>
 				</div>
+				<c:forEach var="LodgeImg" items="${requestScope.LodgeImgMapList}" >
+					<c:if test="${LodgeImg.fk_img_cano eq 6}">
+						<div class='imageItem'> 
+							<img class='__image' src='<%=ctxPath%>/resources/images/"${LodgeImg.fk_lodge_id}"/lodge_img/"${LodgeImg.lg_img_save_name}"' /> 
+				      			<div class='imageName'>
+							  	<span class='delete'>&times;</span>
+							  	<span class='fileName'>${LodgeImg.lg_img_name}</span>
+							  	<input type='text' class='lg_img_name' value='${LodgeImg.lg_img_name}' />
+								<input type='text' class='lg_img_save_name' value='${LodgeImg.lg_img_save_name}' />
+								<input type='text' class='fk_img_cano' value='${LodgeImg.fk_img_cano}' />
+							</div>
+					 	</div>
+				 	</c:if>		
+				</c:forEach>				
 			</div>
 			<div class="btnContDiv__ __flex">
 				<div class="flexChild">

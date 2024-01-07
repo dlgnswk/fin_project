@@ -540,5 +540,12 @@ public class LodgeDAO_imple implements LodgeDAO {
 		return check;
 	}
 
+	// DB에 등록된 이미지 파일명을 가지고 온다.
+	@Override
+	public List<Map<String, String>> getLodgeImgData(String fk_lodge_id) {
+		List<Map<String,String>> LodgeImgMapList = sqlsession.selectList("db_register_lodge.getLodgeImgData", fk_lodge_id);
+		return LodgeImgMapList;
+	}
+
 	
 }

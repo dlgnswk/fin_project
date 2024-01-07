@@ -234,6 +234,9 @@ public interface LodgeDAO {
 
 	// DB에 fk_rm_seq객실에 메인이미지가 등록되어 있는지 체크한다.
 	String getMainImgCheck(String fk_rm_seq);
+
+	// DB에 등록된 이미지 파일명을 가지고 온다.
+	List<Map<String, String>> getLodgeImgData(String fk_lodge_id);
 	
 
 }
