@@ -307,9 +307,9 @@
             	$.each(json, function(index, item){
 				//	console.log(item.rm_img_name +"\n" + item.rm_img_save_name);
             		
-					// 'C:/git/final_exp/final_project/src/main/webapp/resources/images/'+'${requestScope.fk_lodge_id}'+"/room_image/"+item.rm_img_save_name
+					// 'C:/git/final_exp/final_project/src/main/webapp/resources/images/'+'${requestScope.fk_lodge_id}'+"/room_img/"+item.rm_img_save_name
 					let html = "<div class='imageItem'>" +
-		          			      "<img class='__image' src='<%=ctxPath%>/resources/images/"+"${requestScope.fk_lodge_id}"+"/room_image/"+item.rm_img_save_name+"' />" + 
+		          			      "<img class='__image' src='<%=ctxPath%>/resources/images/"+"${requestScope.fk_lodge_id}"+"/room_img/"+item.rm_img_save_name+"' />" + 
 		                   	      "<div class='imageName'>" +
 		          			        "<span class='delete'>&times;</span>" +
 		          			        "<span class='fileName'>"+item.rm_img_name+"</span>" +
