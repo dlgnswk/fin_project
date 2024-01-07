@@ -49,8 +49,8 @@ public class paymentController {
 		// 받을 값들
 		String startDate = "2024-01-31"; // startDate
 		String endDate = "2024-02-02"; // endDate
-		String payType = "0";
-		// String payType = "1";
+		//String payType = "0";
+		String payType = "1";
 		String rm_seq = "rm-33";
 		String h_userid = "p-city@paradian.com";
 		String guest_cnt = "2"; // ttl_guest_cnt
