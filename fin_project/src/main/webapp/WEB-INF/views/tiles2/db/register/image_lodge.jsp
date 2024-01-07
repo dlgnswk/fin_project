@@ -22,14 +22,18 @@
 
 	$(document).ready(function(){
 		
+		// -- 이미지가 보여지는 곳은 "사진 업로드" 글이 없어여 한다. -- //
 		let images_div = $("div.images_div");
 		
 		$.each(images_div, function(index, item){
-			
-			let imageCnt = $(item).find("div.imageItem").length
+		// 이미지가 보여지는 곳은 "사진 업로드" 글이 없어여 한다.			
+			let imageCnt = $(item).find("div.imageItem").length;
 			
 			if(imageCnt == 0) {
-				console.log("")
+				$(item).find("div.infoDiv").show();
+			}
+			else {
+				$(item).find("div.infoDiv").hide();
 			}
 			
 		}); // end of $.each(images_div, function(index, item){
@@ -501,71 +505,6 @@
 		});// end of $("input[name='viewImage']").change(function()
 				
 				
-				
-		// 이미지 삭제 버튼	
-		$(document).on("click", "span.delete", function(){
-			
-			const delIdx = $(this).parent().parent().parent().find("span.delete").index($(this));
-			const removeImg = $(this).parent().parent();
-		//	console.log(delIdx);   0 1 2 3 4 5 ...
-			
-			const infoDiv = $(this).parent().parent().parent().find(".infoDiv");
-			
-		
-			let arrName = $(this).parent().parent().parent();
-		//	console.log("arrName => " + arrName.attr("id"));
-			// arrName => diningImage
-			// arrName => outImage
-			
-			let arrLength;
-			
-			// "x"버튼의 부모의 id를  찾아서 대응 시킨다.
-			if ( arrName.attr("id") == "mainImage") {
-			// let mainImage_arr = []; 	// 6 	메인이미지
-				mainImage_arr.splice(delIdx,1);
-				arrLength = mainImage_arr.length;
-			}
-			else if(arrName.attr("id") == "outImage" ) {
-			// let outImage_arr = []; 		// 0	시설외부
-				outImage_arr.splice(delIdx,1);
-				arrLength = outImage_arr.length;
-			}
-			else if(arrName.attr("id") == "publicImage" ) {
-			// let publicImage_arr = []; 	// 1	공용구역
-				publicImage_arr.splice(delIdx,1);
-				arrLength = publicImage_arr.length;
-			}
-			else if(arrName.attr("id") == "poolImage" ) {
-			// let poolImage_arr = []; 	// 2	수영장
-				poolImage_arr.splice(delIdx,1);
-				arrLength = poolImage_arr.length;
-			}
-			else if(arrName.attr("id") == "diningImage" ) {
-			// let diningImage_arr = []; 	// 3	다이닝
-				diningImage_arr.splice(delIdx,1);
-				arrLength = diningImage_arr.length;
-			}
-			else if(arrName.attr("id") == "serviceImage" ) {
-			// let serviceImage_arr = []; 	// 4	편의시설/서비스
-				serviceImage_arr.splice(delIdx,1);
-				arrLength = serviceImage_arr.length;
-			}
-			else if(arrName.attr("id") == "viewImage" ) {
-			// let viewImage_arr = []; 	// 5	전망
-				viewImage_arr.splice(delIdx,1);
-				arrLength = viewImage_arr.length;
-			}
-			
-			if ( arrLength == 0 ) {
-				infoDiv.show();
-			}
-			
-			removeImg.remove(); // 이미지 제거하기
-			
-		}); // end of $(document).on("click", "span.delete", function()
-		
-				
-				
 		// 이미지 전체 삭제 버튼
 		$("button.btnDelete").click(function(){
 			
@@ -879,6 +818,74 @@
         });
 		
 	}); // end of $("button#image_register").click(function()
+			
+			
+	// asdf
+	// 이미지 삭제 버튼	
+	$(document).on("click", "span.delete", function(){
+		alert("이미지삭제");
+		
+		// 가장 가까운 조상 태그를 찾는다.
+		console.log($(this).closest('.images_div'));
+		
+		const delIdx = $(this).parent().parent().parent().find("span.delete").index($(this));
+		const removeImg = $(this).parent().parent();
+	//	console.log(delIdx);   0 1 2 3 4 5 ...
+		
+		const infoDiv = $(this).parent().parent().parent().find(".infoDiv");
+		
+	
+		let arrName = $(this).parent().parent().parent();
+	//	console.log("arrName => " + arrName.attr("id"));
+		// arrName => diningImage
+		// arrName => outImage
+		
+		let arrLength;
+		
+		// "x"버튼의 부모의 id를  찾아서 대응 시킨다.
+		if ( arrName.attr("id") == "mainImage") {
+		// let mainImage_arr = []; 	// 6 	메인이미지
+			mainImage_arr.splice(delIdx,1);
+			arrLength = mainImage_arr.length;
+		}
+		else if(arrName.attr("id") == "outImage" ) {
+		// let outImage_arr = []; 		// 0	시설외부
+			outImage_arr.splice(delIdx,1);
+			arrLength = outImage_arr.length;
+		}
+		else if(arrName.attr("id") == "publicImage" ) {
+		// let publicImage_arr = []; 	// 1	공용구역
+			publicImage_arr.splice(delIdx,1);
+			arrLength = publicImage_arr.length;
+		}
+		else if(arrName.attr("id") == "poolImage" ) {
+		// let poolImage_arr = []; 	// 2	수영장
+			poolImage_arr.splice(delIdx,1);
+			arrLength = poolImage_arr.length;
+		}
+		else if(arrName.attr("id") == "diningImage" ) {
+		// let diningImage_arr = []; 	// 3	다이닝
+			diningImage_arr.splice(delIdx,1);
+			arrLength = diningImage_arr.length;
+		}
+		else if(arrName.attr("id") == "serviceImage" ) {
+		// let serviceImage_arr = []; 	// 4	편의시설/서비스
+			serviceImage_arr.splice(delIdx,1);
+			arrLength = serviceImage_arr.length;
+		}
+		else if(arrName.attr("id") == "viewImage" ) {
+		// let viewImage_arr = []; 	// 5	전망
+			viewImage_arr.splice(delIdx,1);
+			arrLength = viewImage_arr.length;
+		}
+		
+		if ( arrLength == 0 ) {
+			infoDiv.show();
+		}
+		
+		removeImg.remove(); // 이미지 제거하기
+		
+	}); // end of $(document).on("click", "span.delete", function()
 	
 </script>
 
