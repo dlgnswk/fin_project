@@ -283,7 +283,7 @@
 			break;
 			
 		case "yearGenderUser" : // 년도별 성별 등록 회원수 를 선택한 경우
-			
+
 		$.ajax({
 			url:"<%= ctxPath%>/admin/yearGenderUser.exp",
 			dataType:"json",
