@@ -45,10 +45,9 @@ function goChatWrite() {
 		return;
 	}
 	
-	if($("input:file[name='attach']").val() == "") {
-		// 첨부파일이 없는 댓글쓰기인 경우
-		goChatWrite_noAttach();
-	}
+
+	goChatWrite_noAttach();
+
 	
 	
 	
@@ -59,7 +58,7 @@ function goChatWrite() {
 }// end of function goAddWrite(){}--------------------------------------------
 
 
-// 첨부파일이 없는 댓글쓰기인 경우
+// 첨부파일이 없는 채팅쓰기인 경우
 function goChatWrite_noAttach() {
 	
 	<%--
@@ -92,7 +91,7 @@ function goChatWrite_noAttach() {
 			
 			}
 			
-			$("input:text[name='content']").val("");
+			$("input:text[name='msg']").val("");
 		
 		},
 		error: function(request, status, error){
@@ -380,7 +379,10 @@ function goView(chat_no) {
 	   </c:if> 
 	   
 	
-	   	  
+	   	<%-- #136. 댓글 페이지바 === --%>
+	 		<div style="display: flex; margin-bottom: 50px;">
+	 		<div id="pageBar" style="margin:auto; text-align: center;"></div>
+		    </div>  
 	   	  
 	   	   	   	   
 	  	 

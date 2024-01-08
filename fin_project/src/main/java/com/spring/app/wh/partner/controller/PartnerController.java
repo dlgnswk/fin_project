@@ -659,7 +659,7 @@ public class PartnerController {
 	// === 채팅쓰기 === //
  	@ResponseBody
  	@PostMapping(value="/addChat.exp", produces="text/plain;charset=UTF-8" )
-  	public String addComment(HttpServletRequest request) {
+  	public String addChat(HttpServletRequest request) {
  		
  		String chat_no = request.getParameter("chat_no");
  		String msg = request.getParameter("msg");
