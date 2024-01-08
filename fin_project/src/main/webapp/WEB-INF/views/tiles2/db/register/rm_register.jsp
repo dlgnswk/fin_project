@@ -657,14 +657,14 @@
 		const rm_breakfast_yn = $("input[name='rm_breakfast_yn']");
 		let n17 = 0;
 		
-		if( rm_breakfast_yn.val() > 0 ) {
-		// 침실 개수를 입력
+		if( rm_breakfast_yn.val().length > 0 ) {
+		// 조식 유무 체크
 			rm_breakfast_yn.parent().parent().find(".submit_check").hide();
 			rm_breakfast_yn.parent().parent().find(".error").hide().text("");
 			n17 = 1;
 		}
 		else {
-		// 침실 개수를 입력하지 않음
+		// 조식 유무 체크 안함
 			rm_breakfast_yn.parent().parent().find(".submit_check").show();
 			rm_breakfast_yn.parent().parent().find(".error").show().text("조식 유무를 선택해 주세요.");
 		}
