@@ -206,7 +206,6 @@ public class SearchController {
 			paraMap.put("sort", String.valueOf(request.getParameter("sort")));
 		}
 		
-		
 		mav.addObject("map", paraMap);
 		
 		
