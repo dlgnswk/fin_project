@@ -88,7 +88,7 @@ public class PartnerService_imple implements PartnerService {
 		return n;
 	}
 
-	
+	/*
 	// 채팅쓰기  
 	@Override
 	public int addChat(ReplyVO replyvo) throws Throwable {
@@ -123,7 +123,7 @@ public class PartnerService_imple implements PartnerService {
 	}
 	 
 	 
-	 
+	 */
 	 
 	 
 	

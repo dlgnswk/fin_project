@@ -653,7 +653,7 @@ public class PartnerController {
 	
 	
 	
-	
+	/*
 	
 	
 	// === #84. 댓글쓰기(Ajax로 처리) === //
@@ -757,7 +757,7 @@ public class PartnerController {
 	           4page        ==>       16          20
 	           ....  
 	    */
-	  		
+	  	/*	
 	  		int startRno = ((Integer.parseInt(currentShowPageNo) - 1) * sizePerPage) + 1; // 시작 행번호
 		    int endRno = startRno + sizePerPage - 1; // 끝 행번호 
 	  		
@@ -816,7 +816,7 @@ public class PartnerController {
 	  	
 	
 	  	
-	  	
+	*/ 	
 	  		
 	// ==== CS업무 관리 끝 ==== // 
 	
