@@ -35,7 +35,7 @@
 			$("input#input_destination_search").focus();
 		});
 		
-		// 재훈 : 검색창에 keyup시 검색하기
+		// 재훈 : 검색창에 keyup시 검색하기 
 		$("input#input_destination_search").bind("keyup",function(){
 			var searchWord = $(this).val();
 			// console.log("확인용 searchWord : " + searchWord);
