@@ -642,7 +642,13 @@
 	<fmt:formatDate value="${endDate}" pattern="yyyy-MM-dd(E)" var="endDate_D" />
 	
 	<div class="right_section" style="background-color:#f3f3f5; height: 2000px;  width:100%;">
-		<h4 style="font-weight:bold;padding: 13px 0 0 190px;">확인하고 예약하기</h4>
+		<c:if test="${requestScope.paraMap.payType eq '0'}">
+			<h4 style="font-weight:bold;padding: 13px 0 0 190px;">확인하고 예약하기</h4>
+		</c:if>
+		
+		<c:if test="${requestScope.paraMap.payType eq '1'}">
+			<h4 style="font-weight:bold;padding: 13px 0 0 190px;">확인하고 예약하기<span style="color:#2f7000;">(현장 결제)</span></h4>
+		</c:if>
 		
 		<div style="display:flex;">
 			<div style="margin: 10px auto;width:76.1%;background-color:#ffffff; height:72px; display:flex;">
@@ -1140,7 +1146,7 @@
 				<div style=" background-color:#ffffff; height:412px; padding-bottom:17px;" >
 					<div style="position:relative;">
 						<div>
-							<image src="<%=ctxPath%>/resources/images/ws/payment/ImageTest.png" style="width:100%; height:160px;  filter: brightness(70%)"></image>
+							<image src="<%=ctxPath%>/resources/images/${lodgeInfo.lodge_id}/lodge_img/lodge01.png" style="width:100%; height:160px;  filter: brightness(70%)"></image>
 						</div>
 						<div style="position:absolute;left:2.2%;bottom:6%;">
 							<span style="color:white; font-size:12pt; font-weight:bold;">${lodgeInfo.lg_name}</span>
@@ -1151,18 +1157,36 @@
 					
 					
 					<div class="container" style="padding:0 17px;">
-						<div style="display:flex;padding-top:15px;">
-						
-							<div style="width:35px; height:27px; background-color: #2e6d00; border-radius: 0.25rem; display:flex;">
-								<div style="color:white;margin:auto;font-weight:bold;">9.4</div>
-							</div>
-							<div style="position:relative; bottom:10px;left:10px;">
-								<span style="font-weight:bold;">훌륭해요!</span><br>
-								<span style="font-size:13px;position:relative; bottom:4px;">(이용 후기 1,002개)</span>
-							</div>
-						
-						</div>
-						
+						<c:if test="${not empty requestScope.lodgeReviewList}">
+							<c:forEach var="review" items="${requestScope.lodgeReviewList}">
+								<div style="display:flex;padding-top:15px;">
+								
+									<div style="width:35px; height:27px; background-color: #2e6d00; border-radius: 0.25rem; display:flex;">
+										<div style="color:white;margin:auto;font-weight:bold;">${review.rating}</div>
+									</div>
+									<div style="position:relative; bottom:10px;left:10px;">
+										<c:if test="${review.rating lt 6.0}">
+											<span style="font-weight:bold;">괜찮을까요?</span><br>
+										</c:if>
+										<c:if test="${review.rating ge 7.0 && review.rating lt 8.0}">
+											<span style="font-weight:bold;">나쁘지않아요!</span><br>
+										</c:if>
+										<c:if test="${review.rating ge 8.0 && review.rating lt 9.0}">
+											<span style="font-weight:bold;">좋아요!</span><br>
+										</c:if>
+										<c:if test="${review.rating ge 9.0 && review.rating lt 10.0}">
+											<span style="font-weight:bold;">훌륭해요!</span><br>
+										</c:if>
+										<c:if test="${review.rating == 10.0}">
+											<span style="font-weight:bold;">완벽해요!</span><br>
+										</c:if>
+										
+										<span style="font-size:13px;position:relative; bottom:4px;">(이용 후기 <span><fmt:formatNumber pattern="#,###">${review.rv_cnt}</fmt:formatNumber></span> 개)</span>
+									</div>
+								
+								</div>
+							</c:forEach>
+						</c:if>
 						<span class="text-gray" style="font-size:10pt"><span class="check_span">객실 1개: </span> ${roomInfo.rm_type}</span>
 						<br><br>
 						<div style="display:flex;">
@@ -1441,9 +1465,7 @@
 	<input type="text" name="sum_price" />
 	<input type="text" class="total_priceEnd" value="${roomInfo.rm_price * requestScope.daysGap * 0.9 * 1.1}"/>
 	
-	<form name="frm_paymentConfirm_exp">
-		<input type="text" name="email" />
-	</form>
+
 	
 	<form name="frm_goPaymentConfirm_exp">
 		<input type="text" name="email" />

@@ -474,6 +474,9 @@ public class AdminController {
            mav.addObject("paraMap", paraMap);
         }
 		
+		// 숙소 외관 사진 가져오기
+		
+		
 		// === 페이지바 만들기 시작 === //
 		
 		int blockSize = 3;
