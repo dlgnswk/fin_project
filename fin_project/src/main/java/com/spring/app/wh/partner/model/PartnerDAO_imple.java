@@ -63,9 +63,16 @@ public class PartnerDAO_imple implements PartnerDAO {
 	
 	// 채팅방 불러오기
 	@Override
-	public ChatVO selectChat(String lodge_id) {
-		ChatVO chatvo = sqlsession.selectOne("wh_partner.selectChat", lodge_id);
+	public ChatVO selectChat(Map<String,String> paraMap) {
+		ChatVO chatvo = sqlsession.selectOne("wh_partner.selectChat", paraMap);
 		return chatvo;
+	}
+
+	// 기존 채팅방이 없는 경우 새로운 채팅방을 만들기
+	@Override
+	public int createChat(Map<String, String> paraMap) {
+		int n = sqlsession.insert("wh_partner.createChat", paraMap);
+		return n;
 	}
 
 	

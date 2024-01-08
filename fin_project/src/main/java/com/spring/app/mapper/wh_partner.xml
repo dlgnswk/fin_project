@@ -94,11 +94,19 @@
 	
 	
 	<!-- 채팅방 불러오기 -->
-	<select id="selectChat">
+	<select id="selectChat" parameterType="HashMap" resultType="com.spring.app.expedia.domain.ChatVO">
 		select chat_no, fk_userid, fk_lodge_id ,chat_date
 		from tbl_chat
-		where fk_lodge_id = #{lodge_id}
+		where fk_lodge_id = #{lodge_id} and fk_userid = #{userid}
 	</select>  
+	
+	
+	<!-- 기존 채팅방이 없는 경우 새로운 채팅방을 만들기 -->
+	<insert id="createChat" parameterType="HashMap">
+		insert into tbl_chat(chat_no, fk_userid, fk_lodge_id, chat_date)
+		values (seq_tbl_chat, #{userid}, #{lodge_id}, default)
+	</insert>
+	
 	
 	
 </mapper>
