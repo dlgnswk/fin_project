@@ -49,12 +49,22 @@ public class paymentController {
 		// 받을 값들
 		String startDate = "2024-01-31"; // startDate
 		String endDate = "2024-02-02"; // endDate
-		//String payType = "0";
-		String payType = "1";
+		String payType = "0";
+		//String payType = "1";
 		String rm_seq = "rm-33";
 		String h_userid = "p-city@paradian.com";
 		String guest_cnt = "2"; // ttl_guest_cnt
-
+		String lodge_id = "PARA0001";
+		
+		//String startDate = request.getParameter("startDate");
+		//String endDate = request.getParameter("endDate");
+		//String payType = request.getParameter("payType");
+		//String rm_seq = request.getParameter("rm_seq");
+		//String h_userid = request.getParameter("h_userid");
+		//String guest_cnt = request.getParameter("ttl_guest_cnt");
+		//String lodge_id = request.getParameter("lodge_id");
+		
+		
 		String str_inYear = startDate.substring(0, 4);
 		String str_inMonth = startDate.substring(5, 7);
 		String str_inDay = startDate.substring(8, 10);
@@ -134,15 +144,18 @@ public class paymentController {
 		// 원석 개발전용 취소정책 날짜 계산 정보 가져오기
 		List<Map<String, String>> cancelDateInfo = service.getCancelDateInfo(paraMap);
 		
-		for (Map<String, String> map : cancelDateInfo) {
-			System.out.println(map.get("currentTime"));
-			System.out.println(map.get("B_1"));
-			System.out.println(map.get("B_24"));
-			System.out.println(map.get("B_48"));
-			System.out.println(map.get("B_72"));
-			System.out.println(map.get("checkout_time"));
-			System.out.println(map.get("checkin_time"));
-		}
+		// 숙박업소 별 후기 가져오기
+		List<Map<String, String>> lodgeReviewList = service.getLodgeReview(lodge_id);
+		
+		
+		/*
+		 * for (Map<String, String> map : cancelDateInfo) {
+		 * System.out.println(map.get("currentTime"));
+		 * System.out.println(map.get("B_1")); System.out.println(map.get("B_24"));
+		 * System.out.println(map.get("B_48")); System.out.println(map.get("B_72"));
+		 * System.out.println(map.get("checkout_time"));
+		 * System.out.println(map.get("checkin_time")); }
+		 */
 
 		mav.addObject("cancelDateInfo", cancelDateInfo);
 
@@ -151,7 +164,8 @@ public class paymentController {
 		mav.addObject("myUserInfo", myUserInfo);
 		mav.addObject("roomInfoList", roomInfoList);
 		mav.addObject("lodgeInfo", lodgeInfo);
-
+		mav.addObject("lodgeReviewList", lodgeReviewList);
+		
 		mav.setViewName("ws/payment/payment.tiles1");
 
 		return mav;
@@ -361,7 +375,7 @@ public class paymentController {
 	public ModelAndView paymentConfirm(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		String email = request.getParameter("email");
-		System.out.println(email);
+		// System.out.println(email);
 		
 		mav.addObject("email",email);
 		mav.setViewName("jh/payment/paymentConfirm.tiles1");
