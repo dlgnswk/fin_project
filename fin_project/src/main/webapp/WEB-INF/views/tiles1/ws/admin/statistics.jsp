@@ -283,7 +283,7 @@
 			break;
 			
 		case "yearGenderUser" : // 년도별 성별 등록 회원수 를 선택한 경우
-			
+
 		$.ajax({
 			url:"<%= ctxPath%>/admin/yearGenderUser.exp",
 			dataType:"json",
@@ -298,7 +298,6 @@
 				
 				for(let i=0;i<json.length;i++){
 					let registerYear_Arr = [];
-					registerYear_Arr.push(Number(json[i].Y2016));
 					registerYear_Arr.push(Number(json[i].Y2017));
 					registerYear_Arr.push(Number(json[i].Y2018));
 					registerYear_Arr.push(Number(json[i].Y2019));
@@ -306,6 +305,7 @@
 					registerYear_Arr.push(Number(json[i].Y2021));
 					registerYear_Arr.push(Number(json[i].Y2022));
 					registerYear_Arr.push(Number(json[i].Y2023));
+					registerYear_Arr.push(Number(json[i].Y2024));
 					
 					let obj = {
 					        name:json[i].gender,
@@ -319,7 +319,7 @@
 				Highcharts.chart('chart_container', {
 
 			    title: {
-			        text: '2016-2023 익스피디아 성별  년도별 등록 회원수 '
+			        text: '2017-2024 익스피디아 성별  년도별 등록 회원수 '
 			    },
 			
 			    subtitle: {
@@ -334,7 +334,7 @@
 			
 			    xAxis: {
 			        accessibility: {
-			            rangeDescription: '범위: 2016 to 2023'
+			            rangeDescription: '범위: 2017 to 2024'
 			        }
 			    },
 			
@@ -349,7 +349,7 @@
 			            label: {
 			                connectorAllowed: false
 			            },
-			            pointStart: 2016
+			            pointStart: 2017
 			        }
 			    },
 			
@@ -378,7 +378,6 @@
 			
 			v_html += "<tr>" +
 						"<th>성별</th>" + 
-						"<th>2016년</th>" + 
 						"<th>2017년</th>" +
 						"<th>2018년</th>" +
 						"<th>2019년</th>" +
@@ -386,12 +385,12 @@
 						"<th>2021년</th>" +
 						"<th>2022년</th>" +
 						"<th>2023년</th>" +
+						"<th>2024년</th>" + 
 					  "</tr>";
 		  
 		  	$.each(json, function(index,item){
 		  		v_html += "<tr>" +
 		  					"<td>"+item.gender+"</td>" +
-		  					"<td>"+item.Y2016+"</td>" +
 		  					"<td>"+item.Y2017+"</td>" +
 		  					"<td>"+item.Y2018+"</td>" +
 		  					"<td>"+item.Y2019+"</td>" +
@@ -399,6 +398,7 @@
 		  					"<td>"+item.Y2021+"</td>" +
 		  					"<td>"+item.Y2022+"</td>" +
 		  					"<td>"+item.Y2023+"</td>" +
+		  					"<td>"+item.Y2024+"</td>" +
 		  				  "</tr>";
 		  	});			 
 		  	

@@ -6,7 +6,9 @@ package com.spring.app.mj.comment.controller;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -40,7 +42,20 @@ public class CommentController {
 		int totalCount = service.totalAllCount("1");
 
 		String searchWord = request.getParameter("searchWord");
+		String userId = request.getParameter("userid");
 		
+		System.out.println(userId);
+		
+		
+		 if(searchWord == null) {
+				searchWord = "";
+			 }
+				
+		 if(searchWord != null) {
+			searchWord = searchWord.trim();
+			// "     입니다      " ==>  "입니다"
+			// "             " ==>  ""
+		 }
 		
 		String reviewContent = request.getParameter("reviewContent");
 		// System.out.println(reviewContent);
@@ -52,14 +67,24 @@ public class CommentController {
 		mav.addObject("totalCount", totalCount);
 		
 		
-		Map<String, String> paraMap = new HashMap<>();
+		List<String> lodgeIdList = service.getLodgeIdList(userId);
+		
+		System.out.println(lodgeIdList);
+		
+		HttpSession session = request.getSession();
+		session.setAttribute("lodgeIdList", lodgeIdList);
+		
+		
+		Map<String, Object> paraMap = new HashMap<>();
 		paraMap.put("searchWord", searchWord); 
+		paraMap.put("lodgeIdList", lodgeIdList);
+		paraMap.put("start",1);
+		paraMap.put("end",2);
 		
 		List<Map<String, Object>> commentList = service.getSearchList(paraMap);
 		
 	
 		
-		int commentListSize = commentList.size();
 		//System.out.println("commentList의 크기: " + commentListSize);
 		
 		// System.out.println(commentList);
@@ -88,6 +113,8 @@ public class CommentController {
 
 		
 		mav.addObject("commentList", commentList);
+		mav.addObject("userid", userId);
+		mav.addObject("searchWord", searchWord);
 		
 		
 		
@@ -197,51 +224,137 @@ public class CommentController {
 	
 	
 	// 댓글 수정
-	@ResponseBody
-	@GetMapping(value="/reviewUpdate.exp")
-	public String reviewUpdate(HttpServletRequest request){
+	@PostMapping("updateEnd.exp")
+	public ModelAndView reviewUpdate(HttpServletRequest request,ModelAndView mav){
 		
+		
+		// 글목록
+		List<Map<String, Object>> commentList = service.getSelect();
+		
+		
+		mav.addObject("commentList", commentList);
+
+		
+		String c_content = request.getParameter("c_content");
+		String c_regDate = request.getParameter("c_regDate");
+		String c_seq = request.getParameter("c_seq");
+		
+		
+		
+		c_content = c_content.replaceAll("<", "&lt;");
+		c_content = c_content.replaceAll(">", "&gt;");
+		
+		Map<String, String> paraMap = new HashMap<>();
+		
+		paraMap.put("c_content", c_content);
+		paraMap.put("c_regDate", c_regDate);
+		paraMap.put("c_seq", c_seq);
+		
+		
+		int n = service.edit(paraMap);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		mav.setViewName("mj/sellerReview/reviewList.tiles2");
+		
+		
+		return mav;
+	}
+	
+	// 댓글 삭제
+	@PostMapping("deleteEnd.exp")
+	public ModelAndView deleteReview(HttpServletRequest request,ModelAndView mav){
+		
+		
+		// 글목록
+		List<Map<String, Object>> commentList = service.getSelect();
+		
+		
+		mav.addObject("commentList", commentList);
 		
 		
 	
+		String c_seq = request.getParameter("c_seq");
+		
+		
+		int n = service.goDelete(c_seq);
 		
 		
 		
+		mav.setViewName("mj/sellerReview/reviewList.tiles2");
 		
 		
-		JSONObject jsonObj = new JSONObject();
-		
-		
-		
-		
-		
-		
-		
-		return jsonObj.toString();
+		return mav;
 	}
-
+	
+	
+	
+	
+	// 검색
 	   @ResponseBody
-	    @GetMapping(value="/searchComment.exp")
+	    @GetMapping(value="/mallDisplayJSON.exp")
 	    public String searchComment(HttpServletRequest request){
 	    	
 	    	
+		    String searchWord = request.getParameter("searchWord");
+//	    	int start = Integer.parseInt(request.getParameter("start"));
+//	    	int len = Integer.parseInt(request.getParameter("len"));
+		    
+		    
+		    String start = request.getParameter("start");
+		    String len = request.getParameter("len");
+		    
+		    
+	    	HttpSession session = request.getSession();
+			List<String> lodgeIdList = (ArrayList<String>) session.getAttribute("lodgeIdList");
 	    	
-	    	String searchWord = request.getParameter("searchWord");
-	    	System.out.println(searchWord);
-	    	
+	    	 
+	    //	System.out.println(start);
+	    //	System.out.println(len);
+//	    	System.out.println(searchWord);
+//	    	System.out.println(lodgeIdList);
 	    
+
+			if(searchWord == null) {
+				searchWord = "";
+			}
+	
+			if(searchWord != null) {
+				searchWord = searchWord.trim();
+			}
+			
+			Map<String,Object> paraMap = new HashMap<>();
+			paraMap.put("start",start);
+			paraMap.put("end",start+len);
+			paraMap.put("searchWord",searchWord);
+			paraMap.put("lodgeIdList",lodgeIdList);
+
 	    	
+	    	List<Map<String, Object>> commentList = service.getSearchList(paraMap);
 	    	
-	    	
-	    	
-	    	JSONObject jsonObj = new JSONObject();
-	    	
-	    	
+			JSONArray jsonArr = new JSONArray(); // [] 
+			
+			if(commentList != null) {
+				for(Map<String, Object> word : commentList) {
+					JSONObject jsonObj = new JSONObject(); // {} 
+					jsonObj.put("word", word);
+					//System.out.println(word);
+					// System.out.println(word.get("LG_NAME"));
+					jsonArr.put(jsonObj); // [{},{},{}]
+				}// end of for------------
+			}
+			
 	    	
 	    	
 	   
 	    	
 	    	
-	    	return jsonObj.toString();
+	    	return jsonArr.toString();
 	    }
 }

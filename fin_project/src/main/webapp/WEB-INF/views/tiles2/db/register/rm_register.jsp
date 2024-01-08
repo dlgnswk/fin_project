@@ -211,22 +211,30 @@
 				success:function(json){
 					console.log(JSON.stringify(json));
 					
-					$.each(json, function(index, item){
+					if(JSON.stringify(json) != "[]") {
 						
-						if(item.rm_type == rm_type.val()){
-						// 현재 입력한 rm_type과  기존에 입력된 rm_type이 중복되는 경우이다.
-							rm_type.parent().parent().find(".submit_check").show();
-							rm_type.parent().parent().find(".error").show().text("해당 이름을 가진 객실이 이미 존재합니다.");
-							n1 = 0;
-							return false;
-						}
-						else {
-							rm_type.parent().parent().find(".submit_check").hide();
-							rm_type.parent().parent().find(".error").text("").hide();
-							n1 = 1;
-						}
-						
-					}); // end of $.each(json, function(index, item){
+						$.each(json, function(index, item){
+							
+							if(item.rm_type == rm_type.val()){
+							// 현재 입력한 rm_type과  기존에 입력된 rm_type이 중복되는 경우이다.
+								rm_type.parent().parent().find(".submit_check").show();
+								rm_type.parent().parent().find(".error").show().text("해당 이름을 가진 객실이 이미 존재합니다.");
+								n1 = 0;
+								return false;
+							} 
+							else {
+								rm_type.parent().parent().find(".submit_check").hide();
+								rm_type.parent().parent().find(".error").text("").hide();
+								n1 = 1;
+							}
+							
+						}); // end of $.each(json, function(index, item){
+					}
+					else {
+						rm_type.parent().parent().find(".submit_check").hide();
+						rm_type.parent().parent().find(".error").text("").hide();
+						n1 = 1;
+					}
 					
 				},
 				error: function(request, status, error){
@@ -657,14 +665,14 @@
 		const rm_breakfast_yn = $("input[name='rm_breakfast_yn']");
 		let n17 = 0;
 		
-		if( rm_breakfast_yn.val() > 0 ) {
-		// 침실 개수를 입력
+		if( rm_breakfast_yn.val().length > 0 ) {
+		// 조식 유무 체크
 			rm_breakfast_yn.parent().parent().find(".submit_check").hide();
 			rm_breakfast_yn.parent().parent().find(".error").hide().text("");
 			n17 = 1;
 		}
 		else {
-		// 침실 개수를 입력하지 않음
+		// 조식 유무 체크 안함
 			rm_breakfast_yn.parent().parent().find(".submit_check").show();
 			rm_breakfast_yn.parent().parent().find(".error").show().text("조식 유무를 선택해 주세요.");
 		}

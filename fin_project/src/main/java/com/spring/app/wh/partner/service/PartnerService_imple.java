@@ -2,6 +2,7 @@ package com.spring.app.wh.partner.service;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,11 +11,15 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.app.common.AES256;
 import com.spring.app.expedia.domain.ChatVO;
 import com.spring.app.expedia.domain.HostVO;
+import com.spring.app.expedia.domain.ReplyVO;
 import com.spring.app.wh.partner.model.PartnerDAO;
 
 @Service
@@ -71,13 +76,51 @@ public class PartnerService_imple implements PartnerService {
 	
 	// 채팅방 불러오기
 	@Override
-	public ChatVO selectChat(String lodge_id) {
-		ChatVO chatvo = dao.selectChat(lodge_id);
+	public ChatVO selectChat(Map<String,String> paraMap) {
+		ChatVO chatvo = dao.selectChat(paraMap);
 		return chatvo;
 	}
 
-	
+	// 기존 채팅방이 없는 경우 새로운 채팅방을 만들기
+	@Override
+	public int createChat(Map<String, String> paraMap) {
+		int n = dao.createChat(paraMap);
+		return n;
+	}
 
+	
+	// 채팅쓰기  
+	@Override
+	public int addChat(Map<String,String> paraMap) {
+
+		int n = dao.addChat(paraMap);// 채팅쓰기(tbl_reply 테이블에 insert)
+		//System.out.println("확인용 n =>"+ n);
+		
+		return n;
+	}
+
+ 
+	 
+	// 채팅들을 페이징 처리해서 조회해오기 
+	@Override
+	public List<ReplyVO> getMsgList_Paging(Map<String, String> paraMap) {
+		List<ReplyVO> MsgList = dao.getMsgList_Paging(paraMap);
+		return MsgList;
+	}
+
+	
+	// 채팅방 번호에 해당하는 채팅의 totalPage 수 알아오기
+	@Override
+	public int getMsgTotalPage(Map<String, String> paraMap) {
+		int totalPage = dao.getMsgTotalPage(paraMap);
+		return totalPage;
+	}
+	 
+	 
+	
+	 
+	 
+	
 	
 	
 

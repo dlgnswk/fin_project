@@ -82,5 +82,13 @@ public class PaymentService_imple implements PaymentService {
 		return p;
 	}
 
+
+	// 숙박업소 별 후기 가져오기
+	@Override
+	public List<Map<String, String>> getLodgeReview(String lodge_id) {
+		List<Map<String, String>> lodgeReviewList = dao.getLodgeReview(lodge_id);
+		return lodgeReviewList;
+	}
+
 	
 }
