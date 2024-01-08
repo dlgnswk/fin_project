@@ -104,21 +104,21 @@ public class LodgeViewController {
 		paraMap.put("endDate", endDate);
 		paraMap.put("lodge_id", lodge_id);
 		
-		String d_rate="0";
+		Long d_rate=(long) 0;
 		
 		HttpSession session = request.getSession();
 		UserVO loginuser = (UserVO) session.getAttribute("loginuser");
 		if(loginuser == null) {
-			d_rate = "0";
+			d_rate = (long) 0;
 		}
-		else if(loginuser.getUser_lvl()=="0") {
-			d_rate = "1";
+		else if(loginuser.getUser_lvl()=="블루") {
+			d_rate = (long) 0.1;
 		}
-		else if(loginuser.getUser_lvl()=="1") {
-			d_rate = "15";
+		else if(loginuser.getUser_lvl()=="실버") {
+			d_rate = (long) 0.15;
 		}
-		else if(loginuser.getUser_lvl()=="2") {
-			d_rate = "2";
+		else if(loginuser.getUser_lvl()=="골드") {
+			d_rate = (long) 0.2;
 		}
 		
 		mav.addObject("d_rate", d_rate);
