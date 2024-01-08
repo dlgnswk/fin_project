@@ -828,7 +828,6 @@
 	}); // end of $("button#image_register").click(function()
 			
 			
-	// asdf
 	// 이미지 삭제 버튼	
 	$(document).on("click", "span.delete", function(){
 		
@@ -897,7 +896,6 @@
 					arr = viewImage_arr;
 				}
 				
-				console.log(arr);
 			}
 			else {
 			// 기존에 DB에 추가되어 있었던 이미지 파일이다.
@@ -906,6 +904,19 @@
 			}
 			// == 배열과 이미지에서 삭제 -끝- == //
 			
+			// 
+			let len = images_div.find('div.imageItem').length;
+			
+			$(this).closest("div.image_drop").find(".infoDiv").show();
+			if(len == 0) {
+			// 이미지 다 지움
+				alert("len => " + len +"\n"+ "이미지 없음");
+				$(this).parent().parent().parent().find(".infoDiv").show();
+			}
+			else {
+			// 이미지 아직 남았음
+				alert("len => " + len +"\n"+ "이미지 있음");
+			}
 			
 		} // end of if(confirm("정말로 등록된 사진을 삭제하시겠습니까?")) -------------
 		
@@ -942,9 +953,9 @@
 				      			<div class='imageName'>
 							  	<span class='delete'>&times;</span>
 							  	<span class='fileName'>${LodgeImg.lg_img_name}</span>
-							  	<input type='text' class='lg_img_name' value='${LodgeImg.lg_img_name}' />
-								<input type='text' class='lg_img_save_name' value='${LodgeImg.lg_img_save_name}' />
-								<input type='text' class='fk_img_cano' value='${LodgeImg.fk_img_cano}' />
+							  	<input type='hidden' class='lg_img_name' value='${LodgeImg.lg_img_name}' />
+								<input type='hidden' class='lg_img_save_name' value='${LodgeImg.lg_img_save_name}' />
+								<input type='hidden' class='fk_img_cano' value='${LodgeImg.fk_img_cano}' />
 							</div>
 					 	</div>
 				 	</c:if>		
@@ -974,6 +985,20 @@
 						</div>
 					</div>
 				</div>
+				<c:forEach var="LodgeImg" items="${requestScope.LodgeImgMapList}" >
+					<c:if test="${LodgeImg.fk_img_cano eq 0}">
+						<div class='imageItem'> 
+							<img class='__image' src='<%=ctxPath%>/resources/images/${LodgeImg.fk_lodge_id}/lodge_img/${LodgeImg.lg_img_save_name}' /> 
+				      			<div class='imageName'>
+							  	<span class='delete'>&times;</span>
+							  	<span class='fileName'>${LodgeImg.lg_img_name}</span>
+							  	<input type='hidden' class='lg_img_name' value='${LodgeImg.lg_img_name}' />
+								<input type='hidden' class='lg_img_save_name' value='${LodgeImg.lg_img_save_name}' />
+								<input type='hidden' class='fk_img_cano' value='${LodgeImg.fk_img_cano}' />
+							</div>
+					 	</div>
+				 	</c:if>		
+				</c:forEach>
 			</div>
 			<div class="btnContDiv__ __flex">
 				<div class="flexChild">
@@ -998,6 +1023,20 @@
 						</div>
 					</div>
 				</div>
+				<c:forEach var="LodgeImg" items="${requestScope.LodgeImgMapList}" >
+					<c:if test="${LodgeImg.fk_img_cano eq 1}">
+						<div class='imageItem'> 
+							<img class='__image' src='<%=ctxPath%>/resources/images/${LodgeImg.fk_lodge_id}/lodge_img/${LodgeImg.lg_img_save_name}' /> 
+				      			<div class='imageName'>
+							  	<span class='delete'>&times;</span>
+							  	<span class='fileName'>${LodgeImg.lg_img_name}</span>
+							  	<input type='hidden' class='lg_img_name' value='${LodgeImg.lg_img_name}' />
+								<input type='hidden' class='lg_img_save_name' value='${LodgeImg.lg_img_save_name}' />
+								<input type='hidden' class='fk_img_cano' value='${LodgeImg.fk_img_cano}' />
+							</div>
+					 	</div>
+				 	</c:if>		
+				</c:forEach>
 			</div>
 			<div class="btnContDiv__ __flex">
 				<div class="flexChild">
@@ -1022,6 +1061,20 @@
 						</div>
 					</div>
 				</div>
+				<c:forEach var="LodgeImg" items="${requestScope.LodgeImgMapList}" >
+					<c:if test="${LodgeImg.fk_img_cano eq 2}">
+						<div class='imageItem'> 
+							<img class='__image' src='<%=ctxPath%>/resources/images/${LodgeImg.fk_lodge_id}/lodge_img/${LodgeImg.lg_img_save_name}' /> 
+				      			<div class='imageName'>
+							  	<span class='delete'>&times;</span>
+							  	<span class='fileName'>${LodgeImg.lg_img_name}</span>
+							  	<input type='hidden' class='lg_img_name' value='${LodgeImg.lg_img_name}' />
+								<input type='hidden' class='lg_img_save_name' value='${LodgeImg.lg_img_save_name}' />
+								<input type='hidden' class='fk_img_cano' value='${LodgeImg.fk_img_cano}' />
+							</div>
+					 	</div>
+				 	</c:if>		
+				</c:forEach>
 			</div>
 			<div class="btnContDiv__ __flex">
 				<div class="flexChild">
@@ -1046,6 +1099,20 @@
 						</div>
 					</div>
 				</div>
+				<c:forEach var="LodgeImg" items="${requestScope.LodgeImgMapList}" >
+					<c:if test="${LodgeImg.fk_img_cano eq 3}">
+						<div class='imageItem'> 
+							<img class='__image' src='<%=ctxPath%>/resources/images/${LodgeImg.fk_lodge_id}/lodge_img/${LodgeImg.lg_img_save_name}' /> 
+				      			<div class='imageName'>
+							  	<span class='delete'>&times;</span>
+							  	<span class='fileName'>${LodgeImg.lg_img_name}</span>
+							  	<input type='hidden' class='lg_img_name' value='${LodgeImg.lg_img_name}' />
+								<input type='hidden' class='lg_img_save_name' value='${LodgeImg.lg_img_save_name}' />
+								<input type='hidden' class='fk_img_cano' value='${LodgeImg.fk_img_cano}' />
+							</div>
+					 	</div>
+				 	</c:if>		
+				</c:forEach>
 			</div>
 			<div class="btnContDiv__ __flex">
 				<div class="flexChild">
@@ -1070,6 +1137,20 @@
 						</div>
 					</div>
 				</div>
+				<c:forEach var="LodgeImg" items="${requestScope.LodgeImgMapList}" >
+					<c:if test="${LodgeImg.fk_img_cano eq 4}">
+						<div class='imageItem'> 
+							<img class='__image' src='<%=ctxPath%>/resources/images/${LodgeImg.fk_lodge_id}/lodge_img/${LodgeImg.lg_img_save_name}' /> 
+				      			<div class='imageName'>
+							  	<span class='delete'>&times;</span>
+							  	<span class='fileName'>${LodgeImg.lg_img_name}</span>
+							  	<input type='hidden' class='lg_img_name' value='${LodgeImg.lg_img_name}' />
+								<input type='hidden' class='lg_img_save_name' value='${LodgeImg.lg_img_save_name}' />
+								<input type='hidden' class='fk_img_cano' value='${LodgeImg.fk_img_cano}' />
+							</div>
+					 	</div>
+				 	</c:if>		
+				</c:forEach>
 			</div>
 			<div class="btnContDiv__ __flex">
 				<div class="flexChild">
@@ -1094,6 +1175,20 @@
 						</div>
 					</div>
 				</div>
+				<c:forEach var="LodgeImg" items="${requestScope.LodgeImgMapList}" >
+					<c:if test="${LodgeImg.fk_img_cano eq 5}">
+						<div class='imageItem'> 
+							<img class='__image' src='<%=ctxPath%>/resources/images/${LodgeImg.fk_lodge_id}/lodge_img/${LodgeImg.lg_img_save_name}' /> 
+				      			<div class='imageName'>
+							  	<span class='delete'>&times;</span>
+							  	<span class='fileName'>${LodgeImg.lg_img_name}</span>
+							  	<input type='hidden' class='lg_img_name' value='${LodgeImg.lg_img_name}' />
+								<input type='hidden' class='lg_img_save_name' value='${LodgeImg.lg_img_save_name}' />
+								<input type='hidden' class='fk_img_cano' value='${LodgeImg.fk_img_cano}' />
+							</div>
+					 	</div>
+				 	</c:if>		
+				</c:forEach>
 			</div>
 			<div class="btnContDiv__ __flex">
 				<div class="flexChild">
