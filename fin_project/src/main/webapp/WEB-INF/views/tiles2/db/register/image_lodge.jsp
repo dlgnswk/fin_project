@@ -505,50 +505,6 @@
 		});// end of $("input[name='viewImage']").change(function()
 				
 				
-		// 이미지 전체 삭제 버튼
-		$("button.btnDelete").click(function(){
-			
-			const delId = $(this).parent().parent().parent().find("div.image_drop").attr("id");
-			const removeImgs = $(this).parent().parent().parent().find("div.image_drop");
-			
-			// "x"버튼의 부모의 id를  찾아서 대응 시킨다.
-			if ( delId == "mainImage") {
-			// let mainImage_arr = []; 	// 6 	메인이미지
-				mainImage_arr = [];
-			}
-			else if( delId == "outImage" ) {
-			// let outImage_arr = []; 		// 0	시설외부
-				outImage_arr = [];
-			}
-			else if( delId == "publicImage" ) {
-			// let publicImage_arr = []; 	// 1	공용구역
-				publicImage_arr = [];
-			}
-			else if( delId == "poolImage" ) {
-			// let poolImage_arr = []; 	// 2	수영장
-				poolImage_arr = [];
-			}
-			else if( delId == "diningImage" ) {
-			// let diningImage_arr = []; 	// 3	다이닝
-				diningImage_arr = [];
-			}
-			else if( delId == "serviceImage" ) {
-			// let serviceImage_arr = []; 	// 4	편의시설/서비스
-				serviceImage_arr = [];
-			}
-			else if( delId == "viewImage" ) {
-			// let viewImage_arr = []; 	// 5	전망
-				viewImage_arr = [];
-			}
-			removeImgs.find(".imageItem").remove(); // 이미지들 전부 지우기
-			removeImgs.find(".infoDiv").show();		// "사진 업로드" 다시 보이기
-			
-		});// end of $("button.btnDelete").click(function()
-				
-				
-		
-				
-				
 	});// end of $(document).ready(function(){
 
 	
@@ -588,9 +544,10 @@
     		}
     		else {
     		// 하나의 파일은 10MB를 넘지 못한다.
-    		
-    			if( arr == mainImage_arr && arr.length > 4 ) {
-    				alert("메인 이미지는 최대 5개까지 가능합니다.");
+    			let mainImage_length = $("div#mainImage").find(".imageItem").length;
+    			console.log(mainImage_length);
+    			if( arr == mainImage_arr && mainImage_length > 4) {
+    				alert("메인 이미지는 5개의  사진을 등록해야 합니다.");
     				return;
     			}
     			else {
@@ -661,9 +618,11 @@
 		else {
 		// 하나의 파일은 10MB를 넘지 못한다.
 			// 메인 이미지의 경우
-			if( arr == mainImage_arr && arr.length > 4 ) {
-				alert("메인 이미지는 최대 5개까지 가능합니다.");
-				return;
+   			let mainImage_length = $("div#mainImage").find(".imageItem").length;
+   			console.log(mainImage_length);
+   			if( arr == mainImage_arr && mainImage_length > 4) {
+   				alert("메인 이미지는 5개의  사진을 등록해야 합니다.");
+   				return;
 			}
 			else {
 				
@@ -799,6 +758,11 @@
 			
 		}// end of if(viewImage_arr.length > 0)
 		
+		let mainImage_length = $("div#mainImage").find(".imageItem").length;
+		if( mainImage_length != 5) {
+			alert("메인 이미지는 5개의  사진을 등록해야 합니다.");
+			return false; 
+		}
 		
 		$.ajax({
             url : "<%= ctxPath%>/image_lodge.exp",
@@ -809,7 +773,7 @@
             dataType:"json",
             success:function(json){
           	  	
-            	alert("이미지가 성공적으로 등록되었습니다.");
+            	location.href="javascript:location.reload(true)";
           	  	
             },
             error: function(request, status, error){
@@ -820,27 +784,22 @@
 	}); // end of $("button#image_register").click(function()
 			
 			
-	// asdf
-	// 이미지 삭제 버튼	
+	// 이미지 삭제 버튼
 	$(document).on("click", "span.delete", function(){
 		
-		if(confirm("정말로 등록된 사진을 삭제하시겠습니까?")) {
+		if(confirm("사진을 삭제하겠습니까?")) {
 				
-			// 가장 가까운 조상 태그를 찾는다. "div.images_div" 
-			let images_div = $(this).closest('div.images_div'); // 카테고리 이미지 전부를 담고 있는 div
+			// 각각의 카테고리 이미지들을 담고 있는 div
+			let images_div = $(this).closest('div.images_div'); 
 			
-			let imageItem = $(this).closest('div.imageItem'); // 이미지가 들어있는 div -- 이미지 파일이 경로와 DB에만 존재
+				// 하나의 이미지는 ".imageItem" or ".imageItem .exitData" 안에 있다. 
+			// 한 카테고리의 한개의 이미지를 담고 있는 div
+			let imageItem = $(this).closest('div.imageItem');
+			
+			// 한 카테고리의 한개의 파일을 가지고 있는 이미지 
 			let exitData = $(this).closest('div.exitData'); // 이미지가 들어있는 div -- 이미지 파일을 포함한 경우
 			
-			// 파일이 있는거 선택시 파일 인덱스 를 가지고 제거
-			let imageItemIdx = images_div.find("span.delete").index($(this));
-			console.log("imageItemIdx => "+imageItemIdx);
-			// 이미지가 들어있는 div안에 "x"
-			let exitDataIdx = images_div.find("div.exitData").index(exitData);
-			console.log("exitDataIdx => "+exitDataIdx);
-			// 이미지 파일을 포함한 경우의 index
-			
-		//	console.log(delIdx);   0 1 2 3 4 5 ...
+			$(this).closest('div.imageItem').hasClass("exitData");
 			
 			let infoDiv = images_div.find(".infoDiv");
 		
@@ -849,39 +808,170 @@
 			// arrName => diningImage
 			// arrName => outImage
 			
-			// == 이미등록된 값을 DB에서 삭제 -시작- == //
-			
-			// == 이미등록된 값을 DB에서 삭제 -끝- == //
-			
-			
-			
 			// == 배열과 이미지에서 삭제 -시작- == //
 			if(imageItem.hasClass("exitData")) {
 			// 방금 이미지 파일을 추가하고 "x"를 눌렀다.
 				
-				exitData.eq(exitDataIdx).remove(); // 이미지를 보여주는 div 제거
-			
+				// 내가 누른 "x"의 인덱스를 추가될 파일의 인덱스와 같기때문에 삭제되는 위치를 알 수 있다.
+				let exitDataIdx = images_div.find('div.exitData').index($(this).closest('div.exitData'));
+				
+				exitData.remove();
+				let arr;
+				
 				if(arrName == "mainImage") {
 				// 이미지 파일 배열에서 삭제한다.
 					mainImage_arr.splice(exitDataIdx,1);
-					console.log(mainImage_arr);
+					arr = mainImage_arr;
 				}
 				else if(arrName == "outImage"){
-					console.log(outImage_arr);
+					outImage_arr.splice(exitDataIdx,1);
+					arr = outImage_arr;
+				}
+				else if(arrName == "publicImage"){
+					publicImage.splice(exitDataIdx,1);
+					arr = publicImage_arr;
+				}
+				else if(arrName == "poolImage"){
+					poolImage_arr.splice(exitDataIdx,1);
+					arr = poolImage_arr;
+				}
+				else if(arrName == "diningImage"){
+					diningImage_arr.splice(exitDataIdx,1);
+					arr = diningImage_arr;
+				}
+				else if(arrName == "serviceImage"){
+					serviceImage_arr.splice(exitDataIdx,1);
+					arr = serviceImage_arr;
+				}
+				else if(arrName == "viewImage"){
+					viewImage_arr.splice(exitDataIdx,1);
+					arr = viewImage_arr;
 				}
 				
 			}
 			else {
-			// 기존에 DB에 추가되어 있었던 이미지 파일이다.
-				alert("기존 이미지 파일")
+			// 기존 DB에 있는 이미지의 "x"를 눌렀다.
+				
+				const lg_img_name = $(this).parent().find("input.lg_img_name").val();
+				const lg_img_save_name = $(this).parent().find("input.lg_img_save_name").val();
+				const fk_img_cano = $(this).parent().find("input.fk_img_cano").val();
+				
+			//	console.log(lg_img_name, "  ", lg_img_save_name, "  ",fk_img_cano);
+				// 해당하는 이미지와 같은 경로의 값을 DB에서 삭제한다.
+				$.ajax({
+		            url : "<%= ctxPath%>/delIdxLodgeImg.exp",
+		            type : "post",
+		            data : { "lg_img_name":lg_img_name,
+		            		 "lg_img_save_name":lg_img_save_name,
+		            		 "fk_img_cano":fk_img_cano
+		            		},
+		            async: false,
+		            dataType:"json",
+		            success:function(json){
+		            	
+		            	if(json.reault == 1){
+		            		// 현재 페이지로 이동(==새로고침) 서버에 가서 다시 읽어옴.
+			            	location.href="javascript:location.reload(true)";
+		            	}
+		            	
+		            },
+		            error: function(request, status, error){
+						alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			      	}	
+		        }); // end of $.ajax
+				
+				imageItem.remove();
 			}
 			// == 배열과 이미지에서 삭제 -끝- == //
 			
+			// "사진 업로드" 보여주기 
+			let len = images_div.find('div.imageItem').length;
+			
+			if(len == 0) {
+			// 이미지 다 지움
+				images_div.find(".infoDiv").show();
+			}
+			else {
+			// 이미지 아직 남았음
+				images_div.find(".infoDiv").hide();
+			}
 			
 		} // end of if(confirm("정말로 등록된 사진을 삭제하시겠습니까?")) -------------
 		
 	}); // end of $(document).on("click", "span.delete", function()
 	
+			
+	// "사진 전체 제거" 클릭
+	$(document).on("click", "button.btnDelete", function(){
+		
+		if(confirm("전체 사진을 삭제하겠습니까?")) {
+			
+			let images_div = $(this).closest("div.images_div");
+			let delCate = $(this).parent().parent().parent().find("div.image_drop").attr("id");
+			let fk_img_cano;
+			
+			// "x"버튼의 부모의 id를  찾아서 대응 시킨다.
+			if ( delCate == "mainImage") {
+			// let mainImage_arr = []; 	// 6 	메인이미지
+				mainImage_arr = [];
+				fk_img_cano = 6;
+			}
+			else if( delCate == "outImage" ) {
+			// let outImage_arr = []; 		// 0	시설외부
+				outImage_arr = [];
+				fk_img_cano = 0;
+			}
+			else if( delCate == "publicImage" ) {
+			// let publicImage_arr = []; 	// 1	공용구역
+				publicImage_arr = [];
+				fk_img_cano = 1;
+			}
+			else if( delCate == "poolImage" ) {
+			// let poolImage_arr = []; 	// 2	수영장
+				poolImage_arr = [];
+				fk_img_cano = 2;
+			}
+			else if( delCate == "diningImage" ) {
+			// let diningImage_arr = []; 	// 3	다이닝
+				diningImage_arr = [];
+				fk_img_cano = 3;
+			}
+			else if( delCate == "serviceImage" ) {
+			// let serviceImage_arr = []; 	// 4	편의시설/서비스
+				serviceImage_arr = [];
+				fk_img_cano = 4;
+			}
+			else if( delCate == "viewImage" ) {
+			// let viewImage_arr = []; 	// 5	전망
+				viewImage_arr = [];
+				fk_img_cano = 5;
+			}
+			
+			$.ajax({
+	            url : "<%= ctxPath%>/delCateLodgeImg.exp",
+	            type : "post",
+	            data : { "fk_img_cano":fk_img_cano },
+	            async: false,
+	            dataType:"json",
+	            success:function(json){
+	            	
+	            	if(json.reault == 1){
+	            		// 현재 페이지로 이동(==새로고침) 서버에 가서 다시 읽어옴.
+		            	location.href="javascript:location.reload(true)";
+	            	}
+	            	
+	            },
+	            error: function(request, status, error){
+					alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		      	}	
+	        }); // end of $.ajax			
+			
+			
+			images_div.find(".imageItem").remove(); // 이미지 전부 지우기
+			images_div.find(".infoDiv").show(); // "사진 업로드" 다시 보이기
+			
+		}		
+	});// end of $("button.btnDelete").click(function()	
 </script>
 
 
@@ -910,12 +1000,12 @@
 					<c:if test="${LodgeImg.fk_img_cano eq 6}">
 						<div class='imageItem'> 
 							<img class='__image' src='<%=ctxPath%>/resources/images/${LodgeImg.fk_lodge_id}/lodge_img/${LodgeImg.lg_img_save_name}' /> 
-				      			<div class='imageName'>
+			      			<div class='imageName'>
 							  	<span class='delete'>&times;</span>
 							  	<span class='fileName'>${LodgeImg.lg_img_name}</span>
-							  	<input type='text' class='lg_img_name' value='${LodgeImg.lg_img_name}' />
-								<input type='text' class='lg_img_save_name' value='${LodgeImg.lg_img_save_name}' />
-								<input type='text' class='fk_img_cano' value='${LodgeImg.fk_img_cano}' />
+							  	<input type='hidden' class='lg_img_name' value='${LodgeImg.lg_img_name}' />
+								<input type='hidden' class='lg_img_save_name' value='${LodgeImg.lg_img_save_name}' />
+								<input type='hidden' class='fk_img_cano' value='${LodgeImg.fk_img_cano}' />
 							</div>
 					 	</div>
 				 	</c:if>		
@@ -945,6 +1035,20 @@
 						</div>
 					</div>
 				</div>
+				<c:forEach var="LodgeImg" items="${requestScope.LodgeImgMapList}" >
+					<c:if test="${LodgeImg.fk_img_cano eq 0}">
+						<div class='imageItem'> 
+							<img class='__image' src='<%=ctxPath%>/resources/images/${LodgeImg.fk_lodge_id}/lodge_img/${LodgeImg.lg_img_save_name}' /> 
+				      		<div class='imageName'>
+							  	<span class='delete'>&times;</span>
+							  	<span class='fileName'>${LodgeImg.lg_img_name}</span>
+							  	<input type='hidden' class='lg_img_name' value='${LodgeImg.lg_img_name}' />
+								<input type='hidden' class='lg_img_save_name' value='${LodgeImg.lg_img_save_name}' />
+								<input type='hidden' class='fk_img_cano' value='${LodgeImg.fk_img_cano}' />
+							</div>
+					 	</div>
+				 	</c:if>		
+				</c:forEach>
 			</div>
 			<div class="btnContDiv__ __flex">
 				<div class="flexChild">
@@ -969,6 +1073,20 @@
 						</div>
 					</div>
 				</div>
+				<c:forEach var="LodgeImg" items="${requestScope.LodgeImgMapList}" >
+					<c:if test="${LodgeImg.fk_img_cano eq 1}">
+						<div class='imageItem'> 
+							<img class='__image' src='<%=ctxPath%>/resources/images/${LodgeImg.fk_lodge_id}/lodge_img/${LodgeImg.lg_img_save_name}' /> 
+				      		<div class='imageName'>
+							  	<span class='delete'>&times;</span>
+							  	<span class='fileName'>${LodgeImg.lg_img_name}</span>
+							  	<input type='hidden' class='lg_img_name' value='${LodgeImg.lg_img_name}' />
+								<input type='hidden' class='lg_img_save_name' value='${LodgeImg.lg_img_save_name}' />
+								<input type='hidden' class='fk_img_cano' value='${LodgeImg.fk_img_cano}' />
+							</div>
+					 	</div>
+				 	</c:if>		
+				</c:forEach>
 			</div>
 			<div class="btnContDiv__ __flex">
 				<div class="flexChild">
@@ -993,6 +1111,20 @@
 						</div>
 					</div>
 				</div>
+				<c:forEach var="LodgeImg" items="${requestScope.LodgeImgMapList}" >
+					<c:if test="${LodgeImg.fk_img_cano eq 2}">
+						<div class='imageItem'> 
+							<img class='__image' src='<%=ctxPath%>/resources/images/${LodgeImg.fk_lodge_id}/lodge_img/${LodgeImg.lg_img_save_name}' /> 
+				      		<div class='imageName'>
+							  	<span class='delete'>&times;</span>
+							  	<span class='fileName'>${LodgeImg.lg_img_name}</span>
+							  	<input type='hidden' class='lg_img_name' value='${LodgeImg.lg_img_name}' />
+								<input type='hidden' class='lg_img_save_name' value='${LodgeImg.lg_img_save_name}' />
+								<input type='hidden' class='fk_img_cano' value='${LodgeImg.fk_img_cano}' />
+							</div>
+					 	</div>
+				 	</c:if>		
+				</c:forEach>
 			</div>
 			<div class="btnContDiv__ __flex">
 				<div class="flexChild">
@@ -1017,6 +1149,20 @@
 						</div>
 					</div>
 				</div>
+				<c:forEach var="LodgeImg" items="${requestScope.LodgeImgMapList}" >
+					<c:if test="${LodgeImg.fk_img_cano eq 3}">
+						<div class='imageItem'> 
+							<img class='__image' src='<%=ctxPath%>/resources/images/${LodgeImg.fk_lodge_id}/lodge_img/${LodgeImg.lg_img_save_name}' /> 
+			      			<div class='imageName'>
+							  	<span class='delete'>&times;</span>
+							  	<span class='fileName'>${LodgeImg.lg_img_name}</span>
+							  	<input type='hidden' class='lg_img_name' value='${LodgeImg.lg_img_name}' />
+								<input type='hidden' class='lg_img_save_name' value='${LodgeImg.lg_img_save_name}' />
+								<input type='hidden' class='fk_img_cano' value='${LodgeImg.fk_img_cano}' />
+							</div>
+					 	</div>
+				 	</c:if>		
+				</c:forEach>
 			</div>
 			<div class="btnContDiv__ __flex">
 				<div class="flexChild">
@@ -1041,6 +1187,20 @@
 						</div>
 					</div>
 				</div>
+				<c:forEach var="LodgeImg" items="${requestScope.LodgeImgMapList}" >
+					<c:if test="${LodgeImg.fk_img_cano eq 4}">
+						<div class='imageItem'> 
+							<img class='__image' src='<%=ctxPath%>/resources/images/${LodgeImg.fk_lodge_id}/lodge_img/${LodgeImg.lg_img_save_name}' /> 
+			      			<div class='imageName'>
+							  	<span class='delete'>&times;</span>
+							  	<span class='fileName'>${LodgeImg.lg_img_name}</span>
+							  	<input type='hidden' class='lg_img_name' value='${LodgeImg.lg_img_name}' />
+								<input type='hidden' class='lg_img_save_name' value='${LodgeImg.lg_img_save_name}' />
+								<input type='hidden' class='fk_img_cano' value='${LodgeImg.fk_img_cano}' />
+							</div>
+					 	</div>
+				 	</c:if>		
+				</c:forEach>
 			</div>
 			<div class="btnContDiv__ __flex">
 				<div class="flexChild">
@@ -1065,6 +1225,20 @@
 						</div>
 					</div>
 				</div>
+				<c:forEach var="LodgeImg" items="${requestScope.LodgeImgMapList}" >
+					<c:if test="${LodgeImg.fk_img_cano eq 5}">
+						<div class='imageItem'> 
+							<img class='__image' src='<%=ctxPath%>/resources/images/${LodgeImg.fk_lodge_id}/lodge_img/${LodgeImg.lg_img_save_name}' /> 
+				      			<div class='imageName'>
+							  	<span class='delete'>&times;</span>
+							  	<span class='fileName'>${LodgeImg.lg_img_name}</span>
+							  	<input type='hidden' class='lg_img_name' value='${LodgeImg.lg_img_name}' />
+								<input type='hidden' class='lg_img_save_name' value='${LodgeImg.lg_img_save_name}' />
+								<input type='hidden' class='fk_img_cano' value='${LodgeImg.fk_img_cano}' />
+							</div>
+					 	</div>
+				 	</c:if>		
+				</c:forEach>
 			</div>
 			<div class="btnContDiv__ __flex">
 				<div class="flexChild">

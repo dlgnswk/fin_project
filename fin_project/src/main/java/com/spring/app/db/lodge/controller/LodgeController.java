@@ -504,16 +504,13 @@ public class LodgeController {
 		List<MultipartFile> serviceImage_List  = mtp_request.getFiles("serviceImage_arr");
 		List<MultipartFile> viewImage_List  = mtp_request.getFiles("viewImage_arr");
 		
-		
+		// ================= AOP 로그인한 사용자의 정보 -시작- ==================== //
 		HttpSession session = request.getSession();
 		HostVO loginhost = (HostVO) session.getAttribute("loginhost");
-		
 		String fk_h_userid = loginhost.getH_userid();
 		// 현재 로그인한 판매자의 ID로 숙박시설의 lodge_id를 가져온다.
 		String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
-		System.out.println("fk_lodge_id => "+ fk_lodge_id);
-		
-	//	String fk_lodge_id = "JSUN0231";
+		// ================= AOP 로그인한 사용자의 정보 -끝- ====================== //
 		
 		// 시설 이미지를 저장할 경로
 //		HttpSession session = mtp_request.getSession();
@@ -523,27 +520,9 @@ public class LodgeController {
 		String root = "C:\\git\\fin_project\\fin_project\\src\\main\\webapp\\resources";
 		String path = root +File.separator+"images"+File.separator+fk_lodge_id+File.separator+"lodge_img";
 		
-		System.out.println(path);
+	//	System.out.println(path);
 		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\final_project\resources\images\ "JSUN0231" \lodge_img
 		File dir = new File(path);
-		
-		// ==== 등록전 사전에 등록된 이미지 제거 ==== // 
-		if(dir.exists()) {
-		// images\ "JSUN0231" \lodge_img 파일이 존재하면 제거한다.
-		// 삭제하려는 파일이 폴더이고 폴더 안에 내용물이 있다면 삭제가 되지 않는다.
-			File[] folderList = dir.listFiles(); // 폴더의 내용물이 있는지 확인하다.
-			if( folderList.length > 0) {
-			// 폴더의 내용물이 있다면 전부다 삭제해야 한다.
-				for(int i=0; i<folderList.length; i++) {
-					folderList[i].delete();
-				} // end of for --------------
-			} // end of if( folderList.length > 0) ------------
-			
-		} // end of if(dir.exists()) -----------
-			
-		// ==== tbl_lg_img 테이블 정보 제거 == //
-		service.delLodgeImg(fk_lodge_id); // 테이블 값 제거하기
-			
 		
 		if(!dir.exists()) {
 		//	dir.mkdir(); // 상위 디렉토리 없으면 생성 불가
@@ -553,7 +532,6 @@ public class LodgeController {
 		Map<String,String> paraMap = new HashMap<>(); // insert 및 업데트이를 위한 맵
 		paraMap.put("fk_lodge_id", fk_lodge_id); // 저장할 시설 ID
 		
-			
 		// ==== 첨부파일을 위의 path 경로에 올리기 ==== //
 		
 			// 메인 이미지 
@@ -731,6 +709,164 @@ public class LodgeController {
 		// /WEB-INF/views/tiles2/db/register/register_lodge.jsp
 		// /WEB-INF/views/tiles2/{1}/{2}/{3}.jsp
 	}
+	
+	
+	// 숙박시설 이미지 등록 페이지 "X" 버튼으로 이미지 삭제시 발생하는 ajax
+	@ResponseBody
+	@PostMapping(value="/delIdxLodgeImg.exp")
+	public String requiredHostLogin_delIdxLodgeImg(HttpServletRequest request,
+												   HttpServletResponse response) {
+		
+		// ================= AOP 로그인한 사용자의 정보 -시작- ==================== //
+		HttpSession session = request.getSession();
+		HostVO loginhost = (HostVO) session.getAttribute("loginhost");
+		String fk_h_userid = loginhost.getH_userid();
+		// 현재 로그인한 판매자의 ID로 숙박시설의 lodge_id를 가져온다.
+		String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
+		// ================= AOP 로그인한 사용자의 정보 -끝- ====================== //
+		
+		String lg_img_save_name = request.getParameter("lg_img_save_name");
+		String fk_img_cano = request.getParameter("fk_img_cano");
+		
+		Map<String,String> paraMap = new HashMap<>();
+		paraMap.put("lg_img_save_name", lg_img_save_name);
+		paraMap.put("fk_img_cano", fk_img_cano);
+		
+	//	System.out.println(lg_img_name + "  " + lg_img_save_name + "  " +fk_img_cano);
+		
+		// === 개발 경로에서 이미지 삭제하기 === ///
+		String root = "C:\\git\\fin_project\\fin_project\\src\\main\\webapp\\resources";
+		String path = root+File.separator+"images"+File.separator+fk_lodge_id+File.separator+"lodge_img";
+	//	System.out.println(path);
+		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\final_project\resources\images\JSUN0231\lodge_img
+		
+		// C:\git\fin_project\fin_project\src\main\webapp\resources\images\JSUN0231\lodge_img
+	
+		File dir = new File(path);
+		if(dir.exists()) {
+			// 경로 폴더가 존재한다면
+			File[] folderList = dir.listFiles(); // 폴더의 내용물이 있는지 확인하다.
+			if( folderList.length > 0) {
+			// 경로 폴더안 이미지 파일들이 존재한다면 확인해야 한다.
+				
+				// DB에서 가져온 파일 이름을 저장폴더안에 이미지 파일들과 이름을 비교하여 같은 파일을 삭제한다.
+				for(int i=0; i<folderList.length; i++) {
+					if(folderList[i].getName().equals(lg_img_save_name)) {
+					// 삭제해야할 파일과 이름이 같은 파일은 삭제한다.
+						folderList[i].delete();
+						break; // 한개의 "X"를 눌렀기 때문에 한개의 이미지 파일만 삭제하면 반복문을 빠져나온다.
+					}
+					
+				}// end of for -----------------------------------
+				
+			} // end of if( folderList.length > 0) ------------
+			
+		} // end of if(dir.exists()) -----------
+		
+		// === DB에서 시설 사진 정보를 삭제한다. === //
+		int result = service.delIdxLodgeImg(paraMap);
+		
+		JsonObject jsonObj = new JsonObject();
+		
+		if( result > 0 ) {
+		// DB에서 이미지파일에 대한 정보가 삭제된 경우
+			jsonObj.addProperty("result", result);
+		}
+		else {
+		// 삭제가 정상적으로 진행되지 않은 경우
+			jsonObj.addProperty("result", result);
+		}
+		
+		return new Gson().toJson(jsonObj);
+	}
+	
+	
+	
+	// 숙박시설 이미지 등록 페이지 "X" 버튼으로 이미지 삭제시 발생하는 ajax
+	@ResponseBody
+	@PostMapping(value="/delCateLodgeImg.exp")
+	public String requiredHostLogin_delCateLodgeImg(HttpServletRequest request,
+												   HttpServletResponse response) {
+		
+		// ================= AOP 로그인한 사용자의 정보 -시작- ==================== //
+		HttpSession session = request.getSession();
+		HostVO loginhost = (HostVO) session.getAttribute("loginhost");
+		String fk_h_userid = loginhost.getH_userid();
+		// 현재 로그인한 판매자의 ID로 숙박시설의 lodge_id를 가져온다.
+		String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
+		// ================= AOP 로그인한 사용자의 정보 -끝- ====================== //
+		
+		String fk_img_cano = request.getParameter("fk_img_cano");
+		
+		Map<String,String> paraMap = new HashMap<>();
+		paraMap.put("fk_img_cano", fk_img_cano);
+		paraMap.put("fk_lodge_id", fk_lodge_id);
+		
+		// == 경로에서 삭제할 값 DB에서 가져오기 == //
+		List<String> lg_img_save_name_List = service.getPathDelLodgeImgSaveName(paraMap);
+		
+		
+		// === 개발 경로에서 이미지 삭제하기 === ///
+		String root = "C:\\git\\fin_project\\fin_project\\src\\main\\webapp\\resources";
+		String path = root+File.separator+"images"+File.separator+fk_lodge_id+File.separator+"lodge_img";
+	//	System.out.println(path);
+		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\final_project\resources\images\JSUN0231\lodge_img
+		
+		// C:\git\fin_project\fin_project\src\main\webapp\resources\images\JSUN0231\lodge_img
+	
+		File dir = new File(path);
+		if(dir.exists()) {
+			// 경로 폴더가 존재한다면
+			File[] folderList = dir.listFiles(); // 폴더의 내용물이 있는지 확인하다.
+//			File[] folderList_2 = dir_2.listFiles(); // 폴더의 내용물이 있는지 확인하다.
+			if( folderList.length > 0) {
+			// 경로 폴더안 이미지 파일들이 존재한다면 확인해야 한다.
+				
+				if(lg_img_save_name_List.size() > 0) {
+					// DB에서 가져온 파일 이름을 저장폴더안에 이미지 파일들과 이름을 비교하여 같은 파일을 삭제한다.
+					int cnt = 0;
+					for(int i=0; i<folderList.length; i++) {
+						
+						for(String lg_img_save_name : lg_img_save_name_List) {
+							
+							if( folderList[i].getName().equals(lg_img_save_name) ) {
+								// 삭제해야할 파일과 이름이 같은 파일은 삭제한다.
+								folderList[i].delete();
+								cnt++;
+								break; // 한개의 "X"를 눌렀기 때문에 한개의 이미지 파일만 삭제하면 반복문을 빠져나온다.
+							}
+							
+						} // end of for ---------------
+						
+						if( cnt == lg_img_save_name_List.size() ) {
+							break;
+						}
+						
+					}// end of for -----------------------------------
+					
+				}// end of if(roomImgDataMapList.size() > 0)
+				
+			} // end of if( folderList.length > 0) ------------
+			
+		} // end of if(dir.exists()) -----------
+		
+		
+		// === DB에서 시설 사진 정보를 삭제한다. === //
+		int result = service.delCateLodgeImg(paraMap);
+		
+		JsonObject jsonObj = new JsonObject();
+		
+		if( result > 0 ) {
+		// DB에서 이미지파일에 대한 정보가 삭제된 경우
+			jsonObj.addProperty("result", result);
+		}
+		else {
+		// 삭제가 정상적으로 진행되지 않은 경우
+			jsonObj.addProperty("result", result);
+		}
+		
+		return new Gson().toJson(jsonObj);
+	}	
 	
 	
 	///////////////////////////////////////////////////////////////

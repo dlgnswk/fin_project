@@ -906,6 +906,28 @@ public class LodgeService_imple implements LodgeService {
 		return LodgeImgMapList;
 	}
 
+	// === DB에서 시설 사진 정보를 삭제한다. === //
+	@Override
+	public int delIdxLodgeImg(Map<String, String> paraMap) {
+		int result = dao.delIdxLodgeImg(paraMap);
+		return result;
+	}
+
+	// == 경로에서 숙박시설 이미지 이름 DB에서 가져오기 == //
+	@Override
+	public List<String> getPathDelLodgeImgSaveName(Map<String, String> paraMap) {
+		List<String> lg_img_save_name_List = dao.getPathDelLodgeImgSaveName(paraMap);
+		return lg_img_save_name_List;
+	}
+
+	
+	// === DB에서 숙박시설 사진 정보를 삭제한다. === //
+	@Override
+	public int delCateLodgeImg(Map<String, String> paraMap) {
+		int result = dao.delCateLodgeImg(paraMap);
+		return result;
+	}
+
 	
 	
 }
