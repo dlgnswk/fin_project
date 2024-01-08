@@ -9,6 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.app.expedia.domain.ChatVO;
 import com.spring.app.expedia.domain.HostVO;
+import com.spring.app.expedia.domain.ReplyVO;
 
 public interface PartnerService {
 
@@ -39,10 +40,18 @@ public interface PartnerService {
 	// 기존 채팅방이 없는 경우 새로운 채팅방을 만들기
 	int createChat(Map<String, String> paraMap);
 
+	// 채팅쓰기(transaction 처리)
+	int addChat(ReplyVO replyvo) throws Throwable;
+
+	// 원게시물에 딸린 댓글들을 조회해오기
+	List<ReplyVO> getMsgList(String parentSeq);
+
+	// 원게시물에 딸린 댓글들을 페이징 처리해서 조회해오기
+	List<ReplyVO> getMsgList_Paging(Map<String, String> paraMap);
+
+	// 원글 글번호(parentSeq)에 해당하는 댓글의 totalPage 수 알아오기
+	int getMsgTotalPage(Map<String, String> paraMap);	
 	
-
-
-
 	
 	
 }
