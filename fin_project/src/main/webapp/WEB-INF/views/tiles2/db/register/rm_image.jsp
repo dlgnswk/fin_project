@@ -468,7 +468,6 @@
 					</c:forEach>
 				</select>
 			</span>
-			<span class="addText">*가장 먼저 등록한 사진이 객실의 메인사진으로 사용됩니다.</span>
 			<div class="image_drop __flex" id="roomImage">
 				<div class="infoDiv __flex">
 					<div class="verticalMiddle __flex">
@@ -484,6 +483,7 @@
 			</div>
 			<div class="btnContDiv__ __flex">
 				<div class="flexChild">
+					<span class="addText">*가장 먼저 등록한 사진이 객실의 메인사진으로 사용됩니다.</span>
 					<button type="button" class="btnDelete"><svg class="svgCam" xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#2667b9" d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></svg>사진 전체 제거</button>
 					<button type="button" class="btnAdd" ><svg class="svgCam" xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#2667b9" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>사진 추가</button>
 					<input type="file" name="roomImage" accept=".jpg, .png" style="display:none;"/>
