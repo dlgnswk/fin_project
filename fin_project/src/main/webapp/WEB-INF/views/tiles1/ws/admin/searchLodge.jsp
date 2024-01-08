@@ -428,8 +428,8 @@ function goReject(lodge_id){
 					
 					
 					<tbody>
-					<%-- 숙소 정보 시작--%>
-						
+					
+					<%-- 숙소 정보 시작--%>				
 						<c:if test="${empty requestScope.lodgeIdMapList}">
 							등록된 숙박시설이 없습니다.
 						</c:if>
@@ -467,7 +467,7 @@ function goReject(lodge_id){
 										</tr>
 									
 										<tr>
-											<td colspan="3" rowspan="5" style="padding:0;"><image src="<%=ctxPath%>/resources/images/${lodgeRoom.lodge_id}/lodge_img/${lodgeRoom.lg_img_name}" style="width:250px;"> </image></td>
+											<td colspan="3" rowspan="5" style="padding:0;"><image src="<%=ctxPath%>/resources/images/${lodgeRoom.lodge_id}/lodge_img/${lodgeRoom.lg_img_save_name}" style="width:250px;"> </image></td>
 											<td class="col_style">주소</td>
 											<td colspan="4">${lodgeRoom.total_address}</td>
 										</tr>
