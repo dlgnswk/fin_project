@@ -119,32 +119,32 @@ public class LodgeDAO_imple implements LodgeDAO {
 	}
 
 	@Override
-	public List<Map<String, String>> getBath_opt_list(String rm_seq) {
-		List<Map<String, String>> Bath_opt_list = sqlsession.selectList("jy_lodge.getBath_opt_list",rm_seq);
+	public List<Map<String, String>> getBath_opt_list(Map<String, String> op_paraMap) {
+		List<Map<String, String>> Bath_opt_list = sqlsession.selectList("jy_lodge.getBath_opt_list",op_paraMap);
 		return Bath_opt_list;
 	}
 
 	@Override
-	public List<Map<String, String>> getSnk_opt_list(String rm_seq) {
-		List<Map<String, String>> Snk_opt_list = sqlsession.selectList("jy_lodge.getSnk_opt_list",rm_seq);
+	public List<Map<String, String>> getSnk_opt_list(Map<String, String> op_paraMap) {
+		List<Map<String, String>> Snk_opt_list = sqlsession.selectList("jy_lodge.getSnk_opt_list",op_paraMap);
 		return Snk_opt_list;
 	}
 
 	@Override
-	public List<Map<String, String>> getKt_opt_list(String rm_seq) {
-		List<Map<String, String>> Kt_opt_list = sqlsession.selectList("jy_lodge.getKt_opt_list",rm_seq);
+	public List<Map<String, String>> getKt_opt_list(Map<String, String> op_paraMap) {
+		List<Map<String, String>> Kt_opt_list = sqlsession.selectList("jy_lodge.getKt_opt_list",op_paraMap);
 		return Kt_opt_list;
 	}
 
 	@Override
-	public List<Map<String, String>> getEnt_opt_list(String rm_seq) {
-		List<Map<String, String>> Ent_opt_list = sqlsession.selectList("jy_lodge.getEnt_opt_list",rm_seq);
+	public List<Map<String, String>> getEnt_opt_list(Map<String, String> op_paraMap) {
+		List<Map<String, String>> Ent_opt_list = sqlsession.selectList("jy_lodge.getEnt_opt_list",op_paraMap);
 		return Ent_opt_list;
 	}
 
 	@Override
-	public List<Map<String, String>> getTmp_opt_list(String rm_seq) {
-		List<Map<String, String>> Tmp_opt_list = sqlsession.selectList("jy_lodge.getTmp_opt_list",rm_seq);
+	public List<Map<String, String>> getTmp_opt_list(Map<String, String> op_paraMap) {
+		List<Map<String, String>> Tmp_opt_list = sqlsession.selectList("jy_lodge.getTmp_opt_list",op_paraMap);
 		return Tmp_opt_list;
 	}
 
