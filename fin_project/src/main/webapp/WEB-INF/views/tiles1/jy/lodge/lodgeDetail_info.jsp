@@ -110,7 +110,7 @@
 	    border-radius: 10rem;
 	    width: 75px;
 	    height: 40px;
-	    transform: translate(680%, -130%);
+	    transform: translate(280%, -130%);
 	    background-color: rgba(60, 60, 60, 0.5);
 	    color: white
     }
@@ -127,6 +127,27 @@
 	svg {
         pointer-events: none;
     }
+    div#main_img_0{
+	    grid-column: 1/3;
+	    grid-row: 1/3;
+    }
+    div#main_img_1{
+	    grid-column: 3/4;
+	    grid-row: 1/2;
+    }
+    div#main_img_2{
+	    grid-column: 4/5;
+	    grid-row: 1/2;
+    }
+    div#main_img_3{
+	    grid-column: 3/4;
+	    grid-row: 2/3;
+    }
+    div#main_img_4{
+	    grid-column: 4/5;
+	    grid-row: 2/3;
+    }
+    
     
 }
 	
@@ -301,6 +322,64 @@
 				showMore_info_btn.innerText = "더보기";
 			}
 		})
+		const rm_img_part = document.querySelectorAll('.img_part');
+		for(let i=0; i<rm_img_part.length; i++){			
+			const rm_seq = rm_img_part[i].getAttribute("rm_seq");
+			// console.log("rm_img_part[i]",rm_img_part[i].getAttribute("rm_seq"));
+			$.ajax({
+				url:"get_room_img_json.exp",
+				dataType:"json",
+				data:{"rm_seq":rm_seq},
+				success: function(json){
+					// console.log(json.rm_img_list);
+					// console.log(rm_img_part[i]);
+					const img_list = json.rm_img_list;
+					
+					let html = '<div class="img_slide c_t_border_r1">'
+								+'<div id="rm_img_slide'+i+'" class="carousel slide" data-interval="false">'
+								+'<div class="carousel-inner c_t_border_r1">'
+					if(img_list != null){				
+						$.each(img_list, function(index, item){
+							if(item.rm_img_main==1){
+								html += '<div class="carousel-item active" >'
+											+'<img src="<%=ctxPath%>/resources/images/'+item.fk_lodge_id+'/room_img/'+item.rm_img_save_name+'" class="d-block w-100 image_thumnail"style="object-fit: cover;">'
+										+'</div>';
+							}
+							else{
+								html +=	'<div class="carousel-item" >'
+											+'<img src="<%=ctxPath%>/resources/images/'+item.fk_lodge_id+'/room_img/'+item.rm_img_save_name+'" class="d-block w-100 image_thumnail" style="object-fit: cover;">'
+										+'</div>';						
+							}
+						});// end of $.each(img_list, function(index, item)------
+					}
+					else {
+					html += '<div class="carousel-item active">'
+							+'<img src="<%=ctxPath%>/resources/images/jy/null0.png" class="d-block w-100 image_thumnail"style="object-fit: cover;">'
+						+'</div>'
+							+'<div class="carousel-item"'
+							+'<img src="<%=ctxPath%>/resources/images/jy/null1.png" class="d-block w-100 image_thumnail" style="object-fit: cover;">'
+						+'</div>';	
+					}
+									
+												
+					html +=							'</div>'
+					
+											+'<a class="carousel-control-prev" href="#rm_img_slide'+i+'" role="button" data-slide="prev"><span class="carousel-control-prev-icon" aria-hidden="true"></span><span class="sr-only">Previous</span></a>'
+											+'<a class="carousel-control-next" href="#rm_img_slide'+i+'" role="button" data-slide="next"><span class="carousel-control-next-icon" aria-hidden="true"></span><span class="sr-only">Next</span></a>'
+										+'</div>'
+									+'</div>';
+									
+					rm_img_part[i].innerHTML = html;	
+						
+				},
+				error: function(request, status, error){
+					alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			 	}
+			}) 
+		}
+		
+		console.log(${requestScope.d_rate});
+		
 		
 	});	
 	
@@ -397,23 +476,24 @@
 					
 					if(img_cano != "all" || img_cano != "rm"){
 						$.each(json.lg_ca_img_list, function(index, item){
-							html+= '<button><img src="<%=ctxPath%>/resources/images/jy/'+item.lodge_id+'/'+item.lg_img_save_name+'" ></button>'						
+							html+= '<button><img src="<%=ctxPath%>/resources/images/'+item.lodge_id+'/lodge_img/'+item.lg_img_save_name+'" ></button>'						
 						});
 					}
 					if(img_cano == 'all'){ // 모두 보기일때 => 숙박시설 전체 사진 + 객실 전체 사진
 						$.each(json.lg_all_img_list, function(index, item){
-							html+= '<button><img src="<%=ctxPath%>/resources/images/jy/'+item.lodge_id+'/'+item.lg_img_save_name+'" ></button>'						
+							html+= '<button><img src="<%=ctxPath%>/resources/images/'+item.lodge_id+'/lodge_img/'+item.lg_img_save_name+'" ></button>'						
 						});
 						$.each(json.all_rm_img_list, function(index, item){
-							html+= '<button><img src="<%=ctxPath%>/resources/images/jy/'+item.lodge_id+'/'+item.rm_img_save_name+'" ></button>'						
+							html+= '<button><img src="<%=ctxPath%>/resources/images/'+item.fk_lodge_id+'/room_img/'+item.rm_img_save_name+'" ></button>'						
 						});
 
 					}
 					if (img_cano == "rm"){ // 객실 사진 보기일때 => 객실 전체 사진
 						$.each(json.all_rm_img_list, function(index, item){
-							html+= '<button><img src="<%=ctxPath%>/resources/images/jy/'+item.lodge_id+'/'+item.rm_img_save_name+'" ></button>'						
+							html+= '<button><img src="<%=ctxPath%>/resources/images/'+item.fk_lodge_id+'/room_img/'+item.rm_img_save_name+'" ></button>'						
 						});
 					}
+					console.log(json.all_rm_img_list);
 					
 					html += '</div>';
 					
@@ -568,7 +648,7 @@
 					<div class="">
 						<button>
 							<svg class="" height="18" width="18" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill="#1668E3" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"></path></svg>
-							<a href='<%= ctxPath%>/index.exp'>숙박 시설 모두 보기</a>
+							<a href='javascript:history.back()'>숙박 시설 모두 보기</a>
 						</button>
 					</div>
 				</div>
@@ -592,13 +672,15 @@
 			</div>
 		</div>
 		<div id="top_main_img_container">
-			<div id="top_main_img_wrap" class="c_grid" style="gap: 2px;">
-				<c:if test="${not empty requestScope.lg_img_list}">
+			<c:if test="${not empty requestScope.lg_img_list}">	
+				<div id="top_main_img_wrap" class="c_grid" style="gap: 2px; height: 25rem;">							
 					<c:forEach items="${requestScope.lg_img_list}" var="img_list" varStatus="status">
-						<div id="main_img_${status.index}" onclick="goMoreImg()"><img src="<%= ctxPath%>/resources/images/jy/${lodgeinfo.LODGE_ID}/lodge_img/${img_list.lg_img_save_name}"></div>
+						<c:if test="${not status.last}">
+							<div id="main_img_${status.index}" onclick="goMoreImg()"><img src="<%= ctxPath%>/resources/images/${lodgeinfo.LODGE_ID}/lodge_img/${img_list.lg_img_save_name}"></div>
+						</c:if>
 						<c:if test="${status.last}">
-							<div id="main_img_${status.index}">
-								<img src="<%= ctxPath%>/resources/images/jy/${lodgeinfo.LODGE_ID}/lodge_img/${img_list.lg_img_save_name}">
+							<div id="main_img_${status.index}"  onclick="goMoreImg()">
+								<img src="<%= ctxPath%>/resources/images/${lodgeinfo.LODGE_ID}/lodge_img/${img_list.lg_img_save_name}">
 								<div id="more_pic_btn" class="more_pic_btn" onclick="goMoreImg()">
 									<button type="button" style="width: inherit; height: inherit;">
 										<svg class="c_icon_24" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill="white" fill-rule="evenodd" d="M22 16V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2zm-11-4 2.03 2.71L16 11l4 5H8l3-4zm-9 8V6h2v14h14v2H4a2 2 0 0 1-2-2z" clip-rule="evenodd"></path></svg>
@@ -608,8 +690,9 @@
 							</div>
 						</c:if>						
 					</c:forEach>
-				</c:if>
-			</div>
+				</div>
+			</c:if>
+			
 		</div>
 	</div>
 	<div id="nav_bar" style="z-index:101;">
@@ -688,10 +771,19 @@
 			<c:set var="rv_rate" value="${requestScope.lodgeinfo.RV_RATING_AVG}"/>
 				<c:if test="${rv_rate>0}">			
 					<div class="c_flex" style="margin-bottom: 0.5rem;">
-						<c:if test="${rv_rate>8}">	
-							<span class="uitk-badge uitk-badge-base-large uitk-badge-base-has-text uitk-badge-positive"><span class="uitk-badge-base-text" aria-hidden="true">${requestScope.lodgeinfo.RV_RATING_AVG}</span></span>
+						<c:if test="${rv_rate>=8}">
+							<span class="uitk-badge uitk-badge-base-large uitk-badge-base-has-text uitk-badge-positive"><span class="uitk-badge-base-text" aria-hidden="true"><fmt:formatNumber value="${requestScope.lodgeinfo.RV_RATING_AVG}" pattern=".0"/></span></span>
 						</c:if>
-						<h3 class="c_h3_head5" style="padding-left: 0.5rem;">매우 좋아요</h3>
+						<c:if test="${rv_rate<8}">
+							<span class="uitk-badge uitk-badge-base-large uitk-badge-base-has-text uitk-badge-standard"><span class="uitk-badge-base-text" aria-hidden="true"><fmt:formatNumber value="${requestScope.lodgeinfo.RV_RATING_AVG}" pattern=".0"/></span></span>
+						</c:if>						
+						<h3 class="c_h3_head5" style="padding-left: 0.5rem;">
+							<c:if test="${rv_rate>=7.0 and rv_rate<=7.9}">좋아요</c:if>
+							<c:if test="${rv_rate>=8.0 and rv_rate<=8.4}">매우 좋아요</c:if>
+							<c:if test="${rv_rate>=8.5 and rv_rate<=7.9}">훌륭해요</c:if>
+							<c:if test="${rv_rate>=9.0 and rv_rate<=9.4}">매우 훌륭해요</c:if>
+							<c:if test="${rv_rate>=9.5 and rv_rate<=10.0}">최고에요</c:if>
+						</h3>
 					</div>
 				</c:if>
 				<c:if test="${empty rv_rate}">			
@@ -1171,48 +1263,7 @@
 		<c:if test="${not empty requestScope.avbl_rm_list}">	
 			<c:forEach items="${requestScope.avbl_rm_list}" var="rm_list" varStatus="status">
 				<div id="rm_item${status.index}" class="c_it_container_w c_grid" style="border: solid 1px #dfe0e4">
-						<div id="img_part">
-
-							<!-- 숙소 메인이미지 보여주는 캐러셀 시작 -->
-							<div class="img_slide c_t_border_r1">
-								<div id="rm_img_slide${status.index}" class="carousel slide"
-									data-interval="false">
-									<div class="carousel-inner c_t_border_r1">
-										<c:if test="${not empty requestScope.rm_img_list}">							
-											<c:forEach items="${requestScope.rm_img_list}" var="rm_img" varStatus="status">
-												<c:if test="${status.first}">
-													<div class="carousel-item active">
-														<img src="<%= ctxPath%>/resources/images/${lodgeinfo.lodge_id}/room_img/${rm_img.rm_img_save_name}" class="d-block w-100 image_thumnail" style="object-fit: cover;">
-													</div>
-												</c:if>
-												<c:if test="${not status.first}">
-													<div class="carousel-item">
-														<img src="<%= ctxPath%>/resources/images/${lodgeinfo.lodge_id}/room_img/${rm_img.rm_img_save_name}" class="d-block w-100 h-100 image_thumnail" style="object-fit: cover;">
-													</div>
-												</c:if>
-											</c:forEach>
-										</c:if>
-										<c:if test="${empty requestScope.rm_img_list}">
-											<div class="carousel-item active">
-												<img src="<%= ctxPath%>/resources/images/jy/pic_not_ready.png" class="d-block w-100 height: image_thumnail" style="object-fit: cover;">
-											</div>
-										</c:if>
-									</div>
-
-									<a class="carousel-control-prev"
-										href="#rm_img_slide${status.index}" role="button"
-										data-slide="prev"> <span
-										class="carousel-control-prev-icon" aria-hidden="true"></span>
-										<span class="sr-only">Previous</span>
-									</a> <a class="carousel-control-next"
-										href="#rm_img_slide${status.index}" role="button"
-										data-slide="next"> <span
-										class="carousel-control-next-icon" aria-hidden="true"></span>
-										<span class="sr-only">Next</span>
-									</a>
-								</div>
-							</div>
-
+						<div class="img_part" rm_seq='${rm_list.rm_seq}'>
 						</div>
 						<div class="c_flex" style="flex-direction: column; justify-content: space-between;">
 							<div id="short_info_part" style="padding: 0.75rem 0.75rem;">
@@ -1308,18 +1359,7 @@
 								</div>
 							</div>
 							<c:set var="price" value="${rm_list.rm_price}"/>
-							<c:if test='${empty sessionScope.loginuser.user_lvl}'>
-								<c:set var="d_rate" value="0"/>
-							</c:if>
-							<c:if test='${sessionScope.loginuser.user_lvl eq "블루"}'>
-								<c:set var="d_rate" value="0.1"/>
-							</c:if>
-							<c:if test='${sessionScope.loginuser.user_lvl eq "실버"}'>
-								<c:set var="d_rate" value="0.15"/>
-							</c:if>
-							<c:if test='${sessionScope.loginuser.user_lvl eq "골드"}'>
-								<c:set var="d_rate" value="0.2"/>
-							</c:if>
+							<c:set var="d_rate" value="${requestScope.d_rate}"/>
 							<c:set var="stay_night" value="${requestScope.stayNight}"/>
 							
 							<div id="price_part" style="padding: 0.75rem 0.75rem;">
@@ -2248,7 +2288,7 @@ function show_rm_detail(e) {
 			const l_rmsvc_list = json.rmsvc_opt_list;
 			
 			const rm_info = json.rm_list;
-			console.log(rm_info);
+			console.log(img_list);
 			// console.log(bath_list.length);
 			
 			const price = Math.ceil(Number(rm_info.rm_price)).toLocaleString('en');
@@ -2264,7 +2304,7 @@ function show_rm_detail(e) {
 			html +=
 				'<div>'
 					+'<div id="view_rm_detail_info" class="c_modalContainer" style="overflow-y: hidden;">'
-						+'<div class="c_modalWrap">'
+						+'<div class="c_modalWrap" style="width: 45rem;">'
 							+'<div class="c_flex modalTop_close" style="block-size: 3rem; align-items: center;">'
 								+'<button type="button" id="m_close_btn_rm"class="c_flex modal_close_btn" style="block-size: 3rem; inline-size: 3rem;">'
 									+'<span class="c_round_btn_blue c_flex" style="block-size: 2.3rem; inline-size: 2.3rem; margin: auto;">'
@@ -2282,12 +2322,12 @@ function show_rm_detail(e) {
 				$.each(img_list, function(index, item){
 					if(index==1){
 						html += '<div class="carousel-item active" style="height: 23rem;">'
-									+'<img src="<%=ctxPath%>/resources/images/jy/'+lodge_id+'/'+item.rm_img_save_name+'" class="d-block w-100 image_thumnail"style="object-fit: cover;">'
+									+'<img src="<%=ctxPath%>/resources/images/'+lodge_id+'/room_img/'+item.rm_img_save_name+'" class="d-block w-100 image_thumnail"style="object-fit: cover;">'
 								+'</div>';
 					}
 					else{
 						html +=	'<div class="carousel-item" style="height: 23rem;">'
-									+'<img src="<%=ctxPath%>/resources/images/jy/'+lodge_id+'/'+item.rm_img_save_name+'" class="d-block w-100 h-100 image_thumnail" style="object-fit: cover;">'
+									+'<img src="<%=ctxPath%>/resources/images/'+lodge_id+'/room_img/'+item.rm_img_save_name+'" class="d-block w-100 h-100 image_thumnail" style="object-fit: cover;">'
 								+'</div>';						
 					}
 				});// end of $.each(img_list, function(index, item)------
