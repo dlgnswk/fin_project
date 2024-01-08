@@ -1737,12 +1737,8 @@
 					
 				}
 				
-<<<<<<< HEAD
-				
-=======
->>>>>>> refs/heads/main
 				// 처음 검색화면인 경우
-				if("${requestScope.map.price_min}" == ""){
+				if("${requestScope.map.price_max}" == ""){
 					
 					// 가져온 숙소 리스트중에서 최고가인 금액을 hidden input에 저장하기
 					for(var i=0; i<$("input.origin_price").length; i++){
@@ -1768,12 +1764,8 @@
 					
 					// 가져온 숙소 리스트중에서 최고가인 금액을 hidden input에 저장하기
 					for(var i=0; i<$("input.origin_price").length; i++){
-						
 						var max_price = Number($("input.origin_price").eq(i).val());
-<<<<<<< HEAD
-=======
 						
->>>>>>> refs/heads/main
 						var default_max_price = Number($("input#search_price_max").val());
 						
 						if(default_max_price < max_price){
