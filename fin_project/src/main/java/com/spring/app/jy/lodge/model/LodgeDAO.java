@@ -27,15 +27,15 @@ public interface LodgeDAO {
 
 	List<Map<String, String>> getLg_img_list(Map<String, String> i_paraMap); // 숙박시설 사진 가져오기
 
-	List<Map<String, String>> getBath_opt_list(String rm_seq); // 객실 옵션 - 욕실 
+	List<Map<String, String>> getBath_opt_list(Map<String, String> op_paraMap); // 객실 옵션 - 욕실 
 
-	List<Map<String, String>> getSnk_opt_list(String rm_seq); // 객실 옵션 - 객실 내 다과
+	List<Map<String, String>> getSnk_opt_list(Map<String, String> op_paraMap); // 객실 옵션 - 객실 내 다과
 
-	List<Map<String, String>> getKt_opt_list(String rm_seq); // 객실 옵션 - 조리시설
+	List<Map<String, String>> getKt_opt_list(Map<String, String> op_paraMap); // 객실 옵션 - 조리시설
 
-	List<Map<String, String>> getEnt_opt_list(String rm_seqt); // 객실 옵션 - 엔터테인먼트
+	List<Map<String, String>> getEnt_opt_list(Map<String, String> op_paraMap); // 객실 옵션 - 엔터테인먼트
 
-	List<Map<String, String>> getTmp_opt_list(String rm_seq); // 객실 옵션 - 온도조절
+	List<Map<String, String>> getTmp_opt_list(Map<String, String> op_paraMap); // 객실 옵션 - 온도조절
 
 	List<Map<String, String>> getRm_img_list(Map<String, String> paraMap); // 객실 사진 가져오기
 	

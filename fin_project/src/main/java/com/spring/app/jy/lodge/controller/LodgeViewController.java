@@ -149,6 +149,11 @@ public class LodgeViewController {
       if(request.getParameter("childs") != null) {
          child_cnt = request.getParameter("childs");
       }
+      String ttl_guest_cnt = "0";
+      if(request.getParameter("ttl_guest_cnt") != null) {
+    	  ttl_guest_cnt = request.getParameter("ttl_guest_cnt");
+      }
+      
       mav.addObject("room_cnt", room_cnt);
       mav.addObject("guest_cnt", guest_cnt);
       mav.addObject("adult_cnt", adult_cnt);
@@ -196,25 +201,30 @@ public class LodgeViewController {
       // 조회한 날짜에 예약 가능한 객실 보여주기
       List<Map<String, String>> avbl_rm_list  = service.getAvbl_rm_list(paraMap);
       
-      // 해당 숙박 시설이 가진 객실의 옵션들 가져오기(전체 객실 중 하나라도 갖고있으면 가져오기)
-      List<Map<String, String>> com_bath_opt_list = service.getCom_bath_opt_list(lodge_id);
-      List<Map<String, String>> com_snk_opt_list = service.getCom_snk_opt_list(lodge_id);
-      List<Map<String, String>> com_kt_opt_list = service.getCom_kt_opt_list(lodge_id);
-      List<Map<String, String>> com_ent_opt_list = service.getCom_ent_opt_list(lodge_id);
-      List<Map<String, String>> com_tmp_opt_list = service.getCom_tmp_opt_list(lodge_id);
       
-      // 남은 rm의 총 갯수 < 입력된 객실 갯수 && 결과의 게스트의 평균 < 입력된 guest의 평균 일때만 객실 결과 보여주기
+      Map<String, String> op_paraMap = new HashMap<>();
+      op_paraMap.put("lodge_id", lodge_id);
+      
+      // 해당 숙박 시설이 가진 객실의 옵션들 가져오기(전체 객실 중 하나라도 갖고있으면 가져오기)
+      List<Map<String, String>> com_bath_opt_list = service.getCom_bath_opt_list(op_paraMap);
+      List<Map<String, String>> com_snk_opt_list = service.getCom_snk_opt_list(op_paraMap);
+      List<Map<String, String>> com_kt_opt_list = service.getCom_kt_opt_list(op_paraMap);
+      List<Map<String, String>> com_ent_opt_list = service.getCom_ent_opt_list(op_paraMap);
+      List<Map<String, String>> com_tmp_opt_list = service.getCom_tmp_opt_list(op_paraMap);
+      
+      // 남은 rm의 총 갯수 > 입력된 객실 갯수 && 남은 방 수용 가능 게스트 인원 > 입력된 총 게스트 인원  일때만 객실 결과 보여주기
       if(avbl_rm_list != null) {
          float ttl_left_room_cnt = 0;
-         float ttl_rm_guest_cnt = 0;
+         float ttl_avbl_guest_cnt = 0;
          for (Map<String, String> rm : avbl_rm_list) {
+            ttl_avbl_guest_cnt += Float.parseFloat(String.valueOf(rm.get("rm_guest_cnt"))) * Float.parseFloat(String.valueOf(rm.get("left_room_cnt")));
             ttl_left_room_cnt += Float.parseFloat(String.valueOf(rm.get("left_room_cnt")));
-            ttl_rm_guest_cnt += Float.parseFloat(String.valueOf(rm.get("rm_guest_cnt")));
          }
-         float avg_rm_guest_cnt = ttl_rm_guest_cnt/ttl_left_room_cnt;
+         // System.out.println(ttl_avbl_guest_cnt);
+         // System.out.println(Float.parseFloat(ttl_guest_cnt));
          
-         // 남은 rm의 총 갯수 > 입력된 객실 갯수 && 결과의 게스트의 평균 > 입력된 guest의 평균 일때만 객실 결과 보여주기
-         if(ttl_left_room_cnt>Float.parseFloat(room_cnt)&& avg_rm_guest_cnt>Float.parseFloat(guest_cnt)) {
+         // 남은 rm의 총 갯수 > 입력된 객실 갯수 && 남은 방 수용 가능 게스트 인원 > 입력된 총 게스트 인원
+         if(ttl_left_room_cnt>Float.parseFloat(room_cnt) && ttl_avbl_guest_cnt>Float.parseFloat(ttl_guest_cnt)) {
             mav.addObject("avbl_rm_list",avbl_rm_list);
          }         
          else {
@@ -255,20 +265,22 @@ public class LodgeViewController {
       // System.out.println("확인용 lodge_id => "+lodge_id);
       Map<String, String> paraMap = new HashMap<>();
       paraMap.put("rm_seq", rm_seq);
+      Map<String, String> op_paraMap = new HashMap<>();
+      op_paraMap.put("lodge_id", lodge_id);
       
       // 숙박시설 정보 필요한 데이터 가져오기
       List<Map<String, String>> rmsvc_opt_list = service.getRmsvc_opt_list(lodge_id); // 숙박시설 옵션 - 객실 용품 및 서비스
       List<Map<String, String>> inet_opt_list = service.getInet_opt_list(lodge_id); // 숙박시설 옵션 - 인터넷
       // 객실 정보 가져오기
-      List<Map<String, String>> bath_opt_list = service.getBath_opt_list(rm_seq); 
-      List<Map<String, String>> snk_opt_list = service.getSnk_opt_list(rm_seq);
-      List<Map<String, String>> kt_opt_list = service.getKt_opt_list(rm_seq);
-      List<Map<String, String>> ent_opt_list = service.getEnt_opt_list(rm_seq);
-      List<Map<String, String>> tmp_opt_list = service.getTmp_opt_list(rm_seq);
+      List<Map<String, String>> bath_opt_list = service.getBath_opt_list(op_paraMap); 
+      List<Map<String, String>> snk_opt_list = service.getSnk_opt_list(op_paraMap);
+      List<Map<String, String>> kt_opt_list = service.getKt_opt_list(op_paraMap);
+      List<Map<String, String>> ent_opt_list = service.getEnt_opt_list(op_paraMap);
+      List<Map<String, String>> tmp_opt_list = service.getTmp_opt_list(op_paraMap);
       // 객실 사진 가져오기
       List<Map<String, String>> rm_img_list = service.getRm_img_list(paraMap); // 한 객실에 대한 이미지 가져오려면 paraMap 에 rm_seq 만 들어있어야 함.
       List<Map<String, String>> avbl_rm_list  = service.getAvbl_rm_list(paraMap);
-      System.out.println(rm_img_list);
+      // System.out.println(rm_img_list);
       // List<Map<String, String>> 들을 담아줄 JsonObject 생성!
       JsonObject jsonObj = new JsonObject(); 
       

@@ -604,7 +604,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/user_rewards.exp")
-	public ModelAndView user_rewards(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView requiredLogin_user_rewards(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		// 넘어가야할 정보 - 올해 예약 건수(체크인 날짜 지난 것만), 예약된 내역에서 포인트 
 		// 1. 포인트 테이블에서 로그인유저에 대한 내역 전부 가져오기  2. 올해 예약끝난 건수 (체크인 날짜 지난 것만)
 		
