@@ -831,9 +831,8 @@
 			
 			let imageItem = $(this).closest('div.imageItem'); // 이미지가 들어있는 div -- 이미지 파일이 경로와 DB에만 존재
 			let exitData = $(this).closest('div.exitData'); // 이미지가 들어있는 div -- 이미지 파일을 포함한 경우
-			console.log(imageItem);
-			console.log(exitData);
 			
+			// 파일이 있는거 선택시 파일 인덱스 를 가지고 제거
 			let imageItemIdx = images_div.find("span.delete").index($(this));
 			console.log("imageItemIdx => "+imageItemIdx);
 			// 이미지가 들어있는 div안에 "x"
