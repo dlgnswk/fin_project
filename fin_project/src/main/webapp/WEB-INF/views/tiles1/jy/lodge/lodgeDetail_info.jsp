@@ -110,7 +110,7 @@
 	    border-radius: 10rem;
 	    width: 75px;
 	    height: 40px;
-	    transform: translate(680%, -130%);
+	    transform: translate(280%, -130%);
 	    background-color: rgba(60, 60, 60, 0.5);
 	    color: white
     }
@@ -127,6 +127,27 @@
 	svg {
         pointer-events: none;
     }
+    div#main_img_0{
+	    grid-column: 1/3;
+	    grid-row: 1/3;
+    }
+    div#main_img_1{
+	    grid-column: 3/4;
+	    grid-row: 1/2;
+    }
+    div#main_img_2{
+	    grid-column: 4/5;
+	    grid-row: 1/2;
+    }
+    div#main_img_3{
+	    grid-column: 3/4;
+	    grid-row: 2/3;
+    }
+    div#main_img_4{
+	    grid-column: 4/5;
+	    grid-row: 2/3;
+    }
+    
     
 }
 	
@@ -592,8 +613,8 @@
 			</div>
 		</div>
 		<div id="top_main_img_container">
-			<div id="top_main_img_wrap" class="c_grid" style="gap: 2px;">
-				<c:if test="${not empty requestScope.lg_img_list}">
+			<c:if test="${not empty requestScope.lg_img_list}">	
+				<div id="top_main_img_wrap" class="c_grid" style="gap: 2px; height: 25rem;">							
 					<c:forEach items="${requestScope.lg_img_list}" var="img_list" varStatus="status">
 						<div id="main_img_${status.index}" onclick="goMoreImg()"><img src="<%= ctxPath%>/resources/images/jy/${lodgeinfo.LODGE_ID}/lodge_img/${img_list.lg_img_save_name}"></div>
 						<c:if test="${status.last}">
@@ -608,8 +629,9 @@
 							</div>
 						</c:if>						
 					</c:forEach>
-				</c:if>
-			</div>
+				</div>
+			</c:if>
+			
 		</div>
 	</div>
 	<div id="nav_bar" style="z-index:101;">
@@ -688,10 +710,19 @@
 			<c:set var="rv_rate" value="${requestScope.lodgeinfo.RV_RATING_AVG}"/>
 				<c:if test="${rv_rate>0}">			
 					<div class="c_flex" style="margin-bottom: 0.5rem;">
-						<c:if test="${rv_rate>8}">	
-							<span class="uitk-badge uitk-badge-base-large uitk-badge-base-has-text uitk-badge-positive"><span class="uitk-badge-base-text" aria-hidden="true">${requestScope.lodgeinfo.RV_RATING_AVG}</span></span>
+						<c:if test="${rv_rate>=8}">
+							<span class="uitk-badge uitk-badge-base-large uitk-badge-base-has-text uitk-badge-positive"><span class="uitk-badge-base-text" aria-hidden="true"><fmt:formatNumber value="${requestScope.lodgeinfo.RV_RATING_AVG}" pattern=".0"/></span></span>
 						</c:if>
-						<h3 class="c_h3_head5" style="padding-left: 0.5rem;">매우 좋아요</h3>
+						<c:if test="${rv_rate<8}">
+							<span class="uitk-badge uitk-badge-base-large uitk-badge-base-has-text uitk-badge-standard"><span class="uitk-badge-base-text" aria-hidden="true"><fmt:formatNumber value="${requestScope.lodgeinfo.RV_RATING_AVG}" pattern=".0"/></span></span>
+						</c:if>						
+						<h3 class="c_h3_head5" style="padding-left: 0.5rem;">
+							<c:if test="${rv_rate>=7.0 and rv_rate<=7.9}">좋아요</c:if>
+							<c:if test="${rv_rate>=8.0 and rv_rate<=8.4}">매우 좋아요</c:if>
+							<c:if test="${rv_rate>=8.5 and rv_rate<=7.9}">훌륭해요</c:if>
+							<c:if test="${rv_rate>=9.0 and rv_rate<=9.4}">매우 훌륭해요</c:if>
+							<c:if test="${rv_rate>=9.5 and rv_rate<=10.0}">최고에요</c:if>
+						</h3>
 					</div>
 				</c:if>
 				<c:if test="${empty rv_rate}">			
