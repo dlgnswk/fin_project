@@ -97,14 +97,14 @@
 	<select id="selectChat" parameterType="HashMap" resultType="com.spring.app.expedia.domain.ChatVO">
 		select chat_no, fk_userid, fk_lodge_id ,chat_date
 		from tbl_chat
-		where fk_lodge_id = #{lodge_id} and fk_userid = #{userid}
+		where fk_lodge_id = #{fk_lodge_id} and fk_userid = #{fk_userid}
 	</select>  
 	
 	
 	<!-- 기존 채팅방이 없는 경우 새로운 채팅방을 만들기 -->
 	<insert id="createChat" parameterType="HashMap">
 		insert into tbl_chat(chat_no, fk_userid, fk_lodge_id, chat_date)
-		values (seq_tbl_chat, #{userid}, #{lodge_id}, default)
+		values (seq_tbl_chat, #{fk_userid}, #{fk_lodge_id}, default)
 	</insert>
 	
 	
@@ -119,7 +119,7 @@
 		SELECT reply_no, reply_comment, reply_date, r_status, reply_date
 		FROM 
 		(
-		select row_number() over(order by reply_no asc) AS rno
+		select row_number() over(order by reply_date asc) AS rno
 		     , reply_no, reply_comment, to_char(reply_date, 'yyyy-mm-dd hh24:mi:ss') AS reply_date
 		     , fk_chat_no, r_status 
 		from tbl_reply

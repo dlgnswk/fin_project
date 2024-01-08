@@ -603,20 +603,20 @@ public class PartnerController {
 	
 	// (구매자입장에서) 판매자와 채팅하기  
 	@GetMapping("/chat.exp")
-	public String chat(HttpServletRequest request, HttpServletResponse response) {
+	public String requiredLogin__chat(HttpServletRequest request, HttpServletResponse response) {
 		
 		HttpSession session = request.getSession();
 		
 		UserVO loginuser = (UserVO)session.getAttribute("loginuser");
 		
-		String userid = loginuser.getUserid();
-		String lodge_id = request.getParameter("lodge_id");
+		String fk_userid = loginuser.getUserid();
+		String fk_lodge_id = request.getParameter("lodge_id");
 		
 		
 		Map<String,String> paraMap = new HashMap<>();
 		
-		paraMap.put("userid",userid);
-		paraMap.put("lodge_id",lodge_id);
+		paraMap.put("fk_userid",fk_userid);
+		paraMap.put("fk_lodge_id",fk_lodge_id);
 		
 		
 		// 채팅방 불러오기
@@ -636,18 +636,16 @@ public class PartnerController {
 				chatvo = service.selectChat(paraMap);
 				
 				request.setAttribute("chatvo", chatvo);
-				request.setAttribute("lodge_id", lodge_id);
 				
-				return "wh/partner/chat.tiles2";
+				return "wh/chatting/chat.tiles1";
 			}
 			
 		}
 		
 		
 		request.setAttribute("chatvo", chatvo);
-		request.setAttribute("lodge_id", lodge_id);
 		
-		return "wh/partner/chat.tiles2";
+		return "wh/chatting/chat.tiles1";
 	}
 	
 	
@@ -658,7 +656,7 @@ public class PartnerController {
 	
 	// === 채팅쓰기 === //
  	@ResponseBody
- 	@PostMapping(value="/addChat.exp", produces="text/plain;charset=UTF-8" )
+ 	@GetMapping(value="/addChat.exp", produces="text/plain;charset=UTF-8" )
   	public String addChat(HttpServletRequest request) {
  		
  		String chat_no = request.getParameter("chat_no");

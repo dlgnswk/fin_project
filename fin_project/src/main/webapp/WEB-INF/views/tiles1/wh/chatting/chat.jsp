@@ -74,8 +74,7 @@ function goChatWrite_noAttach() {
 	$.ajax({
 		url:"<%= ctxPath%>/addChat.exp",
 		data:{"msg":$("input:text[name='msg']").val()
-			 ,"chat_no":$("input:text[name='chat_no']").val()},
-		type:"post",
+			 ,"chat_no":$("input:hidden[name='chat_no']").val()},
 		dataType:"json",
 		success:function(json){
 			// console.log(JSON.stringify(json));
@@ -107,8 +106,7 @@ function goViewChat(currentShowPageNo) {
 		url:"<%= ctxPath%>/msgList.exp",
 		data:{"chat_no":"${requestScope.chatvo.chat_no}",
 			  "currentShowPageNo":currentShowPageNo,
-			  "fk_lodge_id":"${requestScope.chatvo.fk_lodge_id}"},
-			  
+			  "fk_lodge_id":"${requestScope.chatvo.fk_lodge_id}"},	  
 		dataType:"json",
 	
 		success:function(json){
@@ -139,7 +137,7 @@ function goViewChat(currentShowPageNo) {
 				   	v_html += '<div style="margin-bottom:3px;">';
 				   	v_html += '[' + '${sessionScope.loginuser.name}' + '] ';
 				   	v_html += item.reply_comment;
-				   	v_html += ' <span style="font-size:11px;color:#777;">' + new Date().toLocaleTimeString() + '</span>';
+				   	v_html += ' <span style="font-size:11px;color:#777;">' + item.reply_date + '</span>';
 				   	v_html += '</div>';
 				   	
 				   	
@@ -148,17 +146,11 @@ function goViewChat(currentShowPageNo) {
 				});
 			}
 			
-			<%--
-			else {
-				v_html =  "<tr>";
-				v_html += 	"<td colspan='4'>댓글이 없습니다.</td>";
-				v_html += "</tr>";
-			}
-			--%>
-			$("div#msgDisplay").html(v_html);
 			
+			$("div#msgDisplay").html(v_html);
 			// 페이지바 함수 호출
 			makeMsgPageBar(currentShowPageNo);
+			
 			
 		},
 		
