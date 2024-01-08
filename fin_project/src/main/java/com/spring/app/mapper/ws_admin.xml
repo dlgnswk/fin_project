@@ -304,13 +304,14 @@
 		(
 		select lodge_id, lg_address as total_address
 		      ,lg_status, fk_h_userid, lg_name
-		      ,row_number() over (order by lg_area asc) as rno
+		      ,row_number() over (order by lodge_id asc) as rno
 		from tbl_lodge
-		)
 		where 1=1
 		<if test='lg_status != ""'>
 	      and lg_status = #{lg_status}
 	    </if>
+		)
+		where 1=1
 		<choose>
 			<when test='searchType == "fk_h_userid" and searchWord != ""'>
 				and lower(fk_h_userid) like '%'||lower(#{searchWord})||'%'
@@ -347,7 +348,7 @@
 		<result property="rm_size_meter" 	column="rm_size_meter" 		javaType="String"/>
 		<result property="rm_size_pyug" 	column="rm_size_pyug" 		javaType="String"/>
 		<result property="rm_price" 		column="rm_price" 			javaType="String"/>
-		<result property="lg_img_name" 		column="lg_img_name" 		javaType="String"/>
+		<result property="lg_img_save_name" column="lg_img_save_name" 	javaType="String"/>
 		<result property="rm_guest_cnt" 	column="rm_guest_cnt" 		javaType="String"/>
 		<result property="lg_status" 		column="lg_status" 			javaType="String"/>
 	</resultMap> 
@@ -356,13 +357,13 @@
 			select lodge_id, fk_h_userid, lg_name, lg_en_name, total_address
 			      ,lg_postcode, lg_hotel_star, fk_lodge_type, lg_qty
 			      ,rm_type, rm_size_meter, rm_size_pyug, rm_price, rm_guest_cnt, rm_cnt
-			      ,lg_img_name, lg_status
+			      ,lg_img_save_name, lg_status
 			from
 			(
 			select L.lodge_id, L.fk_h_userid, L.lg_name, L.lg_en_name, L.lg_address as total_address
 			      ,L.lg_postcode, L.lg_hotel_star, L.fk_lodge_type, L.lg_qty, L.lg_status
 			      ,R.rm_type, R.rm_size_meter, R.rm_size_pyug, R.rm_price, R.rm_guest_cnt
-			      ,R.rm_cnt ,I.lg_img_name, row_number() over (order by I.lg_img_name asc) as rno,
+			      ,R.rm_cnt ,I.lg_img_save_name, row_number() over (order by lodge_id asc) as rno,
 			      (select count(*) from tbl_lodge L join tbl_room R on L.lodge_id = R.fk_lodge_id where 1=1 and lodge_id = #{lodge_id}) as length
 			from tbl_lodge L
 			join tbl_room R
@@ -372,7 +373,7 @@
 			where 1=1 and L.lodge_id = #{lodge_id}
     		and fk_img_cano = '0'
     		and lg_img_seq = (select min(lg_img_seq) from tbl_lg_img where fk_LODGE_ID = #{lodge_id} and fk_img_cano = '0')
-			order by R.rm_type asc, I.lg_img_name asc
+			order by R.rm_type asc, I.lg_img_save_name asc
 			) V
 			where 1=1 and rno between 1 and length
 	</select>
