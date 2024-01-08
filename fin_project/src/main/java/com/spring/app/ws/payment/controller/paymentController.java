@@ -47,22 +47,22 @@ public class paymentController {
 			ModelAndView mav) {
 
 		// 받을 값들
-		String startDate = "2024-01-31"; // startDate
-		String endDate = "2024-02-02"; // endDate
-		String payType = "0";
-		//String payType = "1";
-		String rm_seq = "rm-33";
-		String h_userid = "p-city@paradian.com";
-		String guest_cnt = "2"; // ttl_guest_cnt
-		String lodge_id = "PARA0001";
+//		String startDate = "2024-01-31"; // startDate
+//		String endDate = "2024-02-02"; // endDate
+//		String payType = "0";
+//		//String payType = "1";
+//		String rm_seq = "rm-33";
+//		String h_userid = "p-city@paradian.com";
+//		String guest_cnt = "2"; // ttl_guest_cnt
+//		String lodge_id = "PARA0001";
 		
-		//String startDate = request.getParameter("startDate");
-		//String endDate = request.getParameter("endDate");
-		//String payType = request.getParameter("payType");
-		//String rm_seq = request.getParameter("rm_seq");
-		//String h_userid = request.getParameter("h_userid");
-		//String guest_cnt = request.getParameter("ttl_guest_cnt");
-		//String lodge_id = request.getParameter("lodge_id");
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
+		String payType = request.getParameter("payType");
+		String rm_seq = request.getParameter("rm_seq");
+		String h_userid = request.getParameter("h_userid");
+		String guest_cnt = request.getParameter("ttl_guest_cnt");
+		String lodge_id = request.getParameter("lodge_id");
 		
 		
 		String str_inYear = startDate.substring(0, 4);
