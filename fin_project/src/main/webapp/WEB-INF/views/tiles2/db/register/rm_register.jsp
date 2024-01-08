@@ -211,22 +211,30 @@
 				success:function(json){
 					console.log(JSON.stringify(json));
 					
-					$.each(json, function(index, item){
+					if(JSON.stringify(json) != "[]") {
 						
-						if(item.rm_type == rm_type.val()){
-						// 현재 입력한 rm_type과  기존에 입력된 rm_type이 중복되는 경우이다.
-							rm_type.parent().parent().find(".submit_check").show();
-							rm_type.parent().parent().find(".error").show().text("해당 이름을 가진 객실이 이미 존재합니다.");
-							n1 = 0;
-							return false;
-						}
-						else {
-							rm_type.parent().parent().find(".submit_check").hide();
-							rm_type.parent().parent().find(".error").text("").hide();
-							n1 = 1;
-						}
-						
-					}); // end of $.each(json, function(index, item){
+						$.each(json, function(index, item){
+							
+							if(item.rm_type == rm_type.val()){
+							// 현재 입력한 rm_type과  기존에 입력된 rm_type이 중복되는 경우이다.
+								rm_type.parent().parent().find(".submit_check").show();
+								rm_type.parent().parent().find(".error").show().text("해당 이름을 가진 객실이 이미 존재합니다.");
+								n1 = 0;
+								return false;
+							} 
+							else {
+								rm_type.parent().parent().find(".submit_check").hide();
+								rm_type.parent().parent().find(".error").text("").hide();
+								n1 = 1;
+							}
+							
+						}); // end of $.each(json, function(index, item){
+					}
+					else {
+						rm_type.parent().parent().find(".submit_check").hide();
+						rm_type.parent().parent().find(".error").text("").hide();
+						n1 = 1;
+					}
 					
 				},
 				error: function(request, status, error){
