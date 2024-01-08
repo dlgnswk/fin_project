@@ -28,7 +28,7 @@
 		$.each(images_div, function(index, item){
 		// 이미지가 보여지는 곳은 "사진 업로드" 글이 없어여 한다.			
 			let imageCnt = $(item).find("div.imageItem").length;
-			
+
 			if(imageCnt == 0) {
 				$(item).find("div.infoDiv").show();
 			}
@@ -582,7 +582,7 @@
         	let fileSize = f.size/1024/1024;  /* 파일의 크기는 MB로 나타내기 위하여 /1024/1024 하였음 */
     	
     		if(fileSize >= 10) {
-    			alert("10MB 이상인 파일은 업로드할 수 없습니다.!!");
+    			alert("10MB 이상인 이미지 파일은 업로드할 수 없습니다.!!");
     			elmt.css("background-color", "#fff");
     			return;
     		}
@@ -654,7 +654,7 @@
     	let fileSize = f.size/1024/1024;  /* 파일의 크기는 MB로 나타내기 위하여 /1024/1024 하였음 */
 	
 		if(fileSize >= 10) {
-			alert("10MB 이상인 파일은 업로드할 수 없습니다.!!");
+			alert("10MB 이상인 이미지 파일은 업로드할 수 없습니다.!!");
 			$(this).css("background-color", "#fff");
 			return;
 		}
@@ -827,18 +827,23 @@
 		if(confirm("정말로 등록된 사진을 삭제하시겠습니까?")) {
 				
 			// 가장 가까운 조상 태그를 찾는다. "div.images_div" 
-			const images_div = $(this).closest('div.images_div'); // 카테고리 이미지 전부를 담고 있는 div
+			let images_div = $(this).closest('div.images_div'); // 카테고리 이미지 전부를 담고 있는 div
 			
-			const imageItem = $(this).closest('div.imageItem'); // 이미지가 들어있는 div -- 이미지 파일이 경로와 DB에만 존재
-			const exitData = $(this).closest('div.exitData'); // 이미지가 들어있는 div -- 이미지 파일을 포함한 경우
+			let imageItem = $(this).closest('div.imageItem'); // 이미지가 들어있는 div -- 이미지 파일이 경로와 DB에만 존재
+			let exitData = $(this).closest('div.exitData'); // 이미지가 들어있는 div -- 이미지 파일을 포함한 경우
+			console.log(imageItem);
+			console.log(exitData);
 			
-			const imageItemIdx = images_div.find("span.delete").index($(this)); // 이미지가 들어있는 div안에 "x"
-			const exitDataIdx = exitData.find.("span.delete").index($(this));
+			let imageItemIdx = images_div.find("span.delete").index($(this));
+			console.log("imageItemIdx => "+imageItemIdx);
+			// 이미지가 들어있는 div안에 "x"
+			let exitDataIdx = images_div.find("div.exitData").index(exitData);
+			console.log("exitDataIdx => "+exitDataIdx);
 			// 이미지 파일을 포함한 경우의 index
 			
 		//	console.log(delIdx);   0 1 2 3 4 5 ...
 			
-			const infoDiv = images_div.find(".infoDiv");
+			let infoDiv = images_div.find(".infoDiv");
 		
 			let arrName = $(this).closest('div.image_drop').attr("id");
 		//	console.log("arrName => " + arrName.attr("id"));
@@ -854,63 +859,26 @@
 			// == 배열과 이미지에서 삭제 -시작- == //
 			if(imageItem.hasClass("exitData")) {
 			// 방금 이미지 파일을 추가하고 "x"를 눌렀다.
+				
+				exitData.eq(exitDataIdx).remove(); // 이미지를 보여주는 div 제거
 			
 				if(arrName == "mainImage") {
 				// 이미지 파일 배열에서 삭제한다.
-					
+					mainImage_arr.splice(exitDataIdx,1);
+					console.log(mainImage_arr);
+				}
+				else if(arrName == "outImage"){
+					console.log(outImage_arr);
 				}
 				
 			}
-			
-			if(imageItem.hasClass("exitData") && arrName == "mainImage") {
-			// 이미지 파일이 배열에 추가되어 있는경우 배열에서만 삭제한다.
-				alert("이러한 경우");
-				
+			else {
+			// 기존에 DB에 추가되어 있었던 이미지 파일이다.
+				alert("기존 이미지 파일")
 			}
 			// == 배열과 이미지에서 삭제 -끝- == //
 			
-			// "x"버튼의 부모의 id를  찾아서 대응 시킨다.
-			if ( arrName.attr("id") == "mainImage") {
-			// let mainImage_arr = []; 	// 6 	메인이미지
-				mainImage_arr.splice(delIdx,1);
-				arrLength = mainImage_arr.length;
-			}
-			else if(arrName.attr("id") == "outImage" ) {
-			// let outImage_arr = []; 		// 0	시설외부
-				outImage_arr.splice(delIdx,1);
-				arrLength = outImage_arr.length;
-			}
-			else if(arrName.attr("id") == "publicImage" ) {
-			// let publicImage_arr = []; 	// 1	공용구역
-				publicImage_arr.splice(delIdx,1);
-				arrLength = publicImage_arr.length;
-			}
-			else if(arrName.attr("id") == "poolImage" ) {
-			// let poolImage_arr = []; 	// 2	수영장
-				poolImage_arr.splice(delIdx,1);
-				arrLength = poolImage_arr.length;
-			}
-			else if(arrName.attr("id") == "diningImage" ) {
-			// let diningImage_arr = []; 	// 3	다이닝
-				diningImage_arr.splice(delIdx,1);
-				arrLength = diningImage_arr.length;
-			}
-			else if(arrName.attr("id") == "serviceImage" ) {
-			// let serviceImage_arr = []; 	// 4	편의시설/서비스
-				serviceImage_arr.splice(delIdx,1);
-				arrLength = serviceImage_arr.length;
-			}
-			else if(arrName.attr("id") == "viewImage" ) {
-			// let viewImage_arr = []; 	// 5	전망
-				viewImage_arr.splice(delIdx,1);
-				arrLength = viewImage_arr.length;
-			}
 			
-			if ( arrLength == 0 ) {
-				infoDiv.show();
-			}
-			
-			removeImg.remove(); // 이미지 제거하기
 		} // end of if(confirm("정말로 등록된 사진을 삭제하시겠습니까?")) -------------
 		
 	}); // end of $(document).on("click", "span.delete", function()

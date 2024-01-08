@@ -18,6 +18,9 @@
 <script type="text/javascript">
 	
 	$(document).ready(function(){
+		var lg_name = "${requestScope.map.lg_name}";
+		var lg_area = "${requestScope.map.lg_area}";
+		var lg_area_2 = "${requestScope.map.lg_area_2}";
 		
 		// 재훈 : 넘어온 최초 검색 조건들을 통해 숙박시설 리스트 보여주기
 		ajax_form_search();
@@ -32,7 +35,7 @@
 			$("input#input_destination_search").focus();
 		});
 		
-		// 재훈 : 검색창에 keyup시 검색하기
+		// 재훈 : 검색창에 keyup시 검색하기 
 		$("input#input_destination_search").bind("keyup",function(){
 			var searchWord = $(this).val();
 			// console.log("확인용 searchWord : " + searchWord);
@@ -47,7 +50,7 @@
 						var searchResultArr = [];
 						
 						// '제' 검색시 나오는 결과
-						console.log(JSON.stringify(json))
+						// console.log(JSON.stringify(json))
 						/*
 							[{"lg_nation":"한국","lg_area":"제주특별자치도"}
 							,{"lg_nation":"한국","lg_area_2":"제주시","lg_area":"제주특별자치도"}
@@ -91,8 +94,6 @@
 										nation: item.lg_nation
 				                	});
 								}
-									
-								console.log(searchResultArr)
 								
 							}); // end of $.each(json, function(index,item)
 							
@@ -428,7 +429,8 @@
 			// =========== 날짜 검색 유효성 검사 끝 =========== //
 			
 			const frm = document.searchFrm;
-			frm.submit(); 
+			frm.price_max.value = "";
+			frm.submit();
 			
 		});
 	
@@ -891,6 +893,465 @@
 	// =========== 더 보기, 간단히 보기 버튼 클릭시 나오는 함수    끝 =========== //
 	
 	
+	// ======================================================================================= //
+	// ================================= form 을 통한 ajax 검색 시작 ================================= //
+	function ajax_form_search_new(){
+		
+		$.ajax({
+			url:"<%= ctxPath%>/lodgeSearchAjax.action",
+			data:{"lg_name":"${requestScope.map.lg_name}",
+				  "lg_area_2":"${requestScope.map.lg_area_2}",
+				  "lg_area":"${requestScope.map.lg_area}",
+				  "check_in":"${requestScope.map.check_in}",
+				  "check_out":"${requestScope.map.check_out}",
+				  "travlers":"${requestScope.map.travlers}",
+				  "adult":"${requestScope.map.adult}",
+				  "kid":"${requestScope.map.kid}",
+				  "price_min":"${requestScope.map.price_min}",
+				  "price_max":"",
+				  "lg_star":"${requestScope.map.lg_star}",
+				  "lodge_type":"${requestScope.map.lodge_type}",
+				  "breakfast":"${requestScope.map.breakfast}",
+				  "pool":"${requestScope.map.pool}",
+				  "wifi":"${requestScope.map.wifi}",
+				  "seaView":"${requestScope.map.seaView}",
+				  "pet":"${requestScope.map.pet}",
+				  "spa":"${requestScope.map.spa}",
+				  "parking":"${requestScope.map.parking}",
+				  "kitchen":"${requestScope.map.kitchen}",
+				  "aircon":"${requestScope.map.aircon}",
+				  "restaurant":"${requestScope.map.restaurant}",
+				  "babyBed":"${requestScope.map.babyBed}",
+				  "washerDryer":"${requestScope.map.washerDryer}",
+				  "breakfast":"${requestScope.map.breakfast}",
+				  "rating":"${requestScope.map.rating}",
+				  "sort":"${requestScope.map.sort}"},
+			dataType:"json",
+			success : function(json){
+			// 	console.log(JSON.stringify(json))
+			/*
+				[{"fk_cancel_opt":" ","lg_area_2":"서귀포시","lodge_id":"JESH0001","rm_price":"550000","lg_name":"제주신라호텔","lg_area":"제주특별자치도"}
+				,{"fk_cancel_opt":" ","lg_area_2":"서귀포시","lodge_id":"JEHI0002","rm_price":"410227","lg_name":"히든 클리프 호텔&네이쳐","lg_area":"제주특별자치도"}]
+			*/
+				
+				let v_html = "";
+				
+				// 검색결과가 있는 경우
+				if(json.length > 0){
+					
+					$.each(json, function(index, item){
+						
+						const lodgeImgArr = ${requestScope.lodgeImgArr};
+						
+						v_html += 	"<div class='search_item_view'>";
+								 		<%-- 숙소 메인이미지 보여주는 캐러셀 시작 --%>
+								 		
+						const lodgeIdArr = ${requestScope.lodgeIdArr};
+						var wishlistYN = 0;
+						
+						if(${sessionScope.loginuser != null}){
+						
+							if(lodgeIdArr.length > 0) {
+								$.each(lodgeIdArr, function(index3, item3){
+									
+									if(wishlistYN == 0){
+										
+										if(item3.fk_lodge_id == item.lodge_id){
+										
+											v_html += "<div class='add_wishlist_btn'>"
+										
+											v_html +=	"<svg class='uitk-icon fill_heart' aria-hidden='true' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>"
+											v_html +=		"<path fill-rule='evenodd' d='m12 22-8.44-8.69a5.55 5.55 0 0 1 0-7.72C4.53 4.59 5.9 4 7.28 4c1.4 0 2.75.59 3.72 1.59l1 1.02 1-1.02c.97-1 2.32-1.59 3.72-1.59 1.4 0 2.75.59 3.72 1.59a5.55 5.55 0 0 1 0 7.72L12 22Z' clip-rule='evenodd'></path>"
+											v_html +=	"</svg>"
+	
+											v_html +=	"<input type='hidden' class='wishlist_status' value='fill_heart'/>"
+											v_html +=	"<input type='hidden' class='add_wishlist_lodge_id' value='" + item.lodge_id + "' />"
+											v_html += "</div>"
+											
+											wishlistYN = wishlistYN + 1;
+										}
+										else{
+											
+											v_html += "<div class='add_wishlist_btn'>"
+											
+											v_html +=	"<svg class='uitk-icon uitk-favorite-switch-border' aria-hidden='true' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>"
+											v_html +=		"<path fill-rule='evenodd' d='m12 22 8.44-8.69a5.55 5.55 0 0 0 0-7.72A5.24 5.24 0 0 0 16.72 4 5.22 5.22 0 0 0 13 5.59L12 6.6l-1-1.02a5.2 5.2 0 0 0-7.44 0 5.55 5.55 0 0 0 0 7.72L12 22Zm0-2.87-7-7.21a3.55 3.55 0 0 1 0-4.94C5.6 6.36 6.44 6 7.28 6c.84 0 1.69.36 2.3.98L12 9.48l2.43-2.5c.6-.62 1.45-.98 2.29-.98.84 0 1.68.36 2.28.98a3.55 3.55 0 0 1 0 4.94l-7 7.2Z' clip-rule='evenodd' opacity='.9'></path>"
+											v_html +=	"</svg>"
+	
+											v_html +=	"<input type='hidden' class='wishlist_status' value='border_heart'/>"
+											v_html +=	"<input type='hidden' class='add_wishlist_lodge_id' value='" + item.lodge_id + "' />"
+											v_html += "</div>"
+										}
+									}
+									
+								});
+							}
+							else{
+								
+								v_html += "<div class='add_wishlist_btn'>"
+								
+								v_html +=	"<svg class='uitk-icon uitk-favorite-switch-border' aria-hidden='true' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>"
+								v_html +=		"<path fill-rule='evenodd' d='m12 22 8.44-8.69a5.55 5.55 0 0 0 0-7.72A5.24 5.24 0 0 0 16.72 4 5.22 5.22 0 0 0 13 5.59L12 6.6l-1-1.02a5.2 5.2 0 0 0-7.44 0 5.55 5.55 0 0 0 0 7.72L12 22Zm0-2.87-7-7.21a3.55 3.55 0 0 1 0-4.94C5.6 6.36 6.44 6 7.28 6c.84 0 1.69.36 2.3.98L12 9.48l2.43-2.5c.6-.62 1.45-.98 2.29-.98.84 0 1.68.36 2.28.98a3.55 3.55 0 0 1 0 4.94l-7 7.2Z' clip-rule='evenodd' opacity='.9'></path>"
+								v_html +=	"</svg>"
+	
+								v_html +=	"<input type='hidden' class='wishlist_status' value='border_heart'/>"
+								v_html +=	"<input type='hidden' class='add_wishlist_lodge_id' value='" + item.lodge_id + "' />"
+								v_html += "</div>"
+								
+							};
+						};
+						
+						v_html +=		"<div class='search_item_img'>";
+						v_html +=			"<div id='carouselExampleIndicators" + index + "' class='carousel slide' data-interval='false'>";
+						
+						v_html +=				"<div class='carousel-inner'>";
+						v_html +=					"<c:if test='${not empty requestScope.lodgeImgArr}'>";
+						
+						var carousel_cnt = 0;
+						
+						$.each(lodgeImgArr, function(index2, item2){
+							
+							if(item2.fk_lodge_id == item.lodge_id){
+								if(carousel_cnt == 0){
+									v_html +=			"<div class='carousel-item active'>";
+									v_html +=				"<img src='<%= ctxPath%>/resources/images/" + item.lodge_id + "/lodge_img/" + item2.lg_img_save_name + "' class='d-block w-100 image_thumnail'>";
+									v_html +=			"</div>";
+									
+									carousel_cnt = carousel_cnt + 1;
+								}
+								else{
+									v_html +=			"<div class='carousel-item'>";
+									v_html +=				"<img src='<%= ctxPath%>/resources/images/" + item.lodge_id + "/lodge_img/" + item2.lg_img_save_name + "' class='d-block w-100 h-100 image_thumnail'>";
+									v_html +=			"</div>";
+								}
+							}
+						});
+						
+						v_html +=					"</c:if>";
+						v_html +=				"</div>";
+							
+						v_html +=				"<a class='carousel-control-prev' href='#carouselExampleIndicators" + index + "' role='button' data-slide='prev'>";
+						v_html +=					"<span class='carousel-control-prev-icon' aria-hidden='true'></span>";
+						v_html +=					"<span class='sr-only'>Previous</span>";
+						v_html +=				"</a>"
+						v_html +=				"<a class='carousel-control-next' href='#carouselExampleIndicators" + index + "' role='button' data-slide='next'>";
+						v_html +=					"<span class='carousel-control-next-icon' aria-hidden='true'></span>";
+						v_html +=					"<span class='sr-only'>Next</span>";
+						v_html +=				"</a>";
+						v_html +=			"</div>";
+						v_html +=		"</div>";
+						
+										<%-- 숙소 상세 정보 보여주기 --%>
+						v_html +=		"<div class='search_item_desc'>";
+											<%-- 상단 정보(숙소이름, 지역명) --%>
+						v_html +=			"<div class='lodge_desc_top'>";
+						v_html +=				"<form name='RoomListFrm'>";
+						v_html +=					"<input type='hidden' class='lodge_id' value='" + item.lodge_id + "' />";
+						v_html +=					"<input type='hidden' class='check_in' value='" + item.check_in + "' />";
+						v_html +=					"<input type='hidden' class='check_out' value='" + item.check_out + "' />";
+						v_html +=					"<input type='hidden' class='guest' value='${requestScope.map.travlers}' />";
+						v_html +=					"<input type='hidden' class='adults' value='${requestScope.map.adult}' />";
+						v_html +=					"<input type='hidden' class='childs' value='${requestScope.map.kid}' />";
+						v_html +=					"<input type='hidden' class='room' value='1' />";
+						v_html +=				"</form>";
+						v_html +=				"<div class='lg_name'>" + item.lg_name + "</div>";
+						v_html +=				"<div class='lg_area'>";
+						v_html +=					"<span>" + item.lg_area_2 + "</span>";
+						v_html +=					"<span>, </span>";
+						v_html +=					"<span>" + item.lg_area + "</span>";
+						v_html +=				"</div>"
+						v_html +=			"</div>"
+							
+						v_html +=				"<div class='under_info'>";
+												<%-- 중단 정보 --%>
+						v_html +=				"<div class='lodge_desc_middle'>";
+													<%-- 좌중단 정보(환불가능, 현장결제) --%>
+						v_html +=					"<div class='lodge_desc_middle_left'>";
+						v_html +=						"<div>";
+						v_html +=							item.fk_cancel_opt;
+						v_html +=						"</div>";
+						v_html +=						"<div>";
+						v_html +=							"지금 예약하고 현장결제";
+						v_html +=						"</div>";
+						v_html +=					"</div>";
+													
+													<%-- 우중단 정보(회원할인율, 금액(원가, 할인가)) --%>
+						v_html +=					"<div class='lodge_desc_middle_right'>";
+									
+						<%---------------------------- 비회원일때 보여주는 금액 ----------------------------%>
+						if(${sessionScope.loginuser == null}){
+							v_html +=					"<div class='member_discount'>";
+							v_html +=						"<span class='uitk-badge uitk-badge-deal-member uitk-badge-has-text uitk-layout-flex-item-align-self-flex-end uitk-layout-flex-item'>";
+							v_html +=						"</span>";
+							v_html +=					"</div>";
+							
+														<%-- 금액 --%>
+							v_html +=					"<div class='lg_price'>";
+															<%-- 원가 --%>
+							v_html +=						"<div class='lg_price_org_no_login'>";
+							v_html +=							"&#8361;" + Number(item.rm_price).toLocaleString('en');
+							v_html +=							"<input type='hidden' class='origin_price' value='" + Number(item.rm_price) + "'/>";
+							v_html +=						"</div>";
+							v_html +=					"</div>";
+						}
+						<%---------------------------- 회원일때 보여주는 금액 ----------------------------%>
+						else{
+														<%-- 회원할인율 --%>
+							v_html +=					"<div class='member_discount'>";
+							v_html +=						"<span class='uitk-badge uitk-badge-large uitk-badge-deal-member uitk-badge-has-text uitk-layout-flex-item-align-self-flex-end uitk-layout-flex-item'>";
+							v_html +=							"<svg class='uitk-icon uitk-icon-small' aria-hidden='true' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>";
+							v_html +=								"<path fill-rule='evenodd' d='m17.1 16.05 1.22-1.18 3.48-3.48a.78.78 0 0 0 .2-.6l-1.3-7.1a.57.57 0 0 0-.42-.42l-7.06-1.26a.78.78 0 0 0-.61.19L2.1 12.7a.36.36 0 0 0 0 .51l8.68 8.69c.14.13.37.14.5 0l4.24-4.23a2.88 2.88 0 0 0 4.9-2.26v-.1c0-.28-.03-1.02-.26-1.5L19 14.9a1.54 1.54 0 1 1-3 .62c-.03-.5.19-2.34.5-4.07a26.11 26.11 0 0 1 .56-2.48l.02.04a1.62 1.62 0 1 0-1.42-.12c-.13.57-.26 1.26-.41 2.1a29.62 29.62 0 0 0-.57 4.88l-.83.83-6.56-6.55 6.04-6.04c.07-.08.2-.12.3-.1l5.2.94c.09.01.18.1.2.2l.98 5.18c.02.1-.03.23-.1.3l-3.1 3.1c-.2.75-.43 2.05.3 2.31zm-6.24 3.4-6.29-6.32a.18.18 0 0 1 0-.25l1.72-1.72 6.56 6.56-1.74 1.73a.18.18 0 0 1-.25 0z' clip-rule='evenodd'></path>";
+							v_html +=							"</svg>";
+							
+							if ("${sessionScope.loginuser.user_lvl}" == "블루"){
+								v_html +=						"<span class='uitk-badge-text' aria-hidden='false'>" + "회원가 10% 할인 " + "</span>";
+							}
+							else if ("${sessionScope.loginuser.user_lvl}" == "실버") {
+								v_html +=						"<span class='uitk-badge-text' aria-hidden='false'>" + "회원가 15% 할인 " + "</span>";
+							}
+							else{
+								v_html +=						"<span class='uitk-badge-text' aria-hidden='false'>" + "회원가 20% 할인 " + "</span>";
+							}
+							
+							v_html +=						"</span>";
+							v_html +=					"</div>";
+							
+														<%-- 금액 --%>
+							v_html +=					"<div class='lg_price'>";
+															<%-- 원가 --%>
+							v_html +=						"<div class='lg_price_org'>";
+							v_html +=							"&#8361;" + Number(item.rm_price).toLocaleString('en');
+							v_html +=							"<input type='hidden' class='origin_price' value='" + Number(item.rm_price) + "'/>";
+							v_html +=						"</div>";
+							if ("${sessionScope.loginuser.user_lvl}" == "블루"){
+															<%-- 할인가 --%>
+								v_html +=						"<div class='lg_price_disc'>";
+								v_html +=							"&#8361;" + Math.ceil(Number(item.rm_price * 0.9)).toLocaleString('en');
+								v_html +=						"</div>";
+							}
+							else if ("${sessionScope.loginuser.user_lvl}" == "실버") {
+															<%-- 할인가 --%>
+								v_html +=						"<div class='lg_price_disc'>";
+								v_html +=							"&#8361;" + Math.ceil(Number(item.rm_price * 0.85)).toLocaleString('en');
+								v_html +=						"</div>";
+							}
+							else {
+															<%-- 할인가 --%>
+								v_html +=						"<div class='lg_price_disc'>";
+								v_html +=							"&#8361;" + Math.ceil(Number(item.rm_price * 0.8)).toLocaleString('en');
+								v_html +=						"</div>";
+							}
+							v_html +=					"</div>";
+						}
+						
+						v_html +=					"</div>";
+						v_html +=				"</div>";
+						v_html +=			"</div>";
+											<%-- 하단 정보 --%>
+						v_html +=			"<div class='lodge_desc_bottom'>";
+												<%-- 좌하단 정보(=평점, 후기) --%>
+						v_html +=				"<div class='lodge_desc_bottom_left'>";
+						
+						
+						<%---------------------------- 점수 구분 ----------------------------%>
+						if(Number(item.rating).toFixed(1) >= 9){
+							<%-- 평점 --%>
+							v_html +=				"<div class='rv_rating'>";
+							v_html +=					"<span class='uitk-badge uitk-badge-base-large uitk-badge-base-has-text uitk-badge-positive'>";
+							v_html +=						"<span class='uitk-badge-base-text'>" + Number(item.rating).toFixed(1) + "</span>";
+							v_html +=					"</span>";
+							v_html +=				"</div>";
+														
+													<%-- 후기 --%>
+							v_html +=				"<div class='rv_rating_desc'>";
+							v_html +=					"<div>";
+							v_html +=						"매우 훌륭해요";
+							v_html +=					"</div>";
+						}
+						else if(Number(item.rating).toFixed(1) >= 8){
+							<%-- 평점 --%>
+							v_html +=				"<div class='rv_rating'>";
+							v_html +=					"<span class='uitk-badge uitk-badge-base-large uitk-badge-base-has-text uitk-badge-positive'>";
+							v_html +=						"<span class='uitk-badge-base-text'>" + Number(item.rating).toFixed(1) + "</span>";
+							v_html +=					"</span>";
+							v_html +=				"</div>";
+														
+													<%-- 후기 --%>
+							v_html +=				"<div class='rv_rating_desc'>";
+							v_html +=					"<div>";
+							v_html +=						"훌륭해요";
+							v_html +=					"</div>";
+						}
+						else if(Number(item.rating).toFixed(1) < 8 && Number(item.rating).toFixed(1) > 0){
+							<%-- 평점 --%>
+							v_html +=				"<div class='rv_rating'>";
+							v_html +=					"<span class='uitk-badge uitk-badge-base-large uitk-badge-base-has-text uitk-badge-positive'>";
+							v_html +=						"<span class='uitk-badge-base-text'>" + Number(item.rating).toFixed(1) + "</span>";
+							v_html +=					"</span>";
+							v_html +=				"</div>";
+														
+													<%-- 후기 --%>
+							v_html +=				"<div class='rv_rating_desc'>";
+							v_html +=					"<div>";
+							v_html +=						"훌륭해요";
+							v_html +=					"</div>";
+						}
+						else {
+							<%-- 평점 --%>
+							v_html +=				"<div class='rv_rating'>";
+							v_html +=					"<span class='uitk-badge uitk-badge-base-large uitk-badge-base-has-text uitk-badge-standard'>";
+							v_html +=						"<span class='uitk-badge-base-text'>" + Number(item.rating).toFixed(1) + "</span>";
+							v_html +=					"</span>";
+							v_html +=				"</div>";
+														
+													<%-- 후기 --%>
+							v_html +=				"<div class='rv_rating_desc'>";
+							v_html +=					"<div>";
+							v_html +=						"후기없음";
+							v_html +=					"</div>";
+						}
+						
+														
+						v_html +=						"<div class='rv_cnt'>";
+						v_html +=							"이용 후기 " + Math.ceil(Number(item.review_cnt * 0.8)).toLocaleString('en') + "개";
+						v_html +=						"</div>";
+						v_html +=					"</div>";
+						v_html +=				"</div>";
+												
+												<%-- 우중단 정보(전체금액, 세금 및 수수료) --%>
+						v_html +=				"<div class='lodge_desc_bottom_right'>";
+						v_html +=					"<div class='total_price'>";
+						
+														var date = getDate(item.check_in, item.check_out);
+														
+						<%---------------------------- 비회원일때 보여주는 금액 ----------------------------%>
+						if(${sessionScope.loginuser == null}){
+							v_html +=					"총 요금 : &#8361;" + Math.ceil(Number((item.rm_price * date)) * 1.1 ).toLocaleString('en');
+						}
+						<%---------------------------- 회원일때 보여주는 금액 ----------------------------%>
+						else{
+							if ("${sessionScope.loginuser.user_lvl}" == "블루"){
+								v_html +=				"총 요금 : &#8361;" + Math.ceil(Number((item.rm_price * 0.9 * date)) * 1.1 ).toLocaleString('en');
+							}
+							else if ("${sessionScope.loginuser.user_lvl}" == "실버") {
+								v_html +=				"총 요금 : &#8361;" + Math.ceil(Number((item.rm_price * 0.85 * date)) * 1.1 ).toLocaleString('en');
+							}
+							else{
+								v_html +=				"총 요금 : &#8361;" + Math.ceil(Number((item.rm_price * 0.8 * date)) * 1.1 ).toLocaleString('en');
+							}
+						}
+						
+						v_html +=					"</div>";
+													
+						v_html +=					"<div>";
+						v_html +=						"세금 및 수수료 포함";
+						v_html +=					"</div>";
+						v_html +=				"</div>";
+						v_html +=			"</div>";
+						v_html +=		"</div>";
+						v_html +=	"</div>";
+						
+						$("div#search_item_list").html(v_html);
+						
+					});
+
+				}
+				else{
+					
+					v_html += 	"<div class='no_search_item_view'>";
+					v_html += 		"<div class='no_search_item_view_inner'>";
+					v_html += 			"<div>";
+					v_html += 				"<svg class='uitk-icon' aria-hidden='true' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>";
+					v_html += 					"<path fill-rule='evenodd' d='M14.71 14h.79l4.99 5L19 20.49l-5-4.99v-.79l-.27-.28a6.5 6.5 0 1 1 .7-.7l.28.27zM5 9.5a4.5 4.5 0 1 0 8.99.01A4.5 4.5 0 0 0 5 9.5z' clip-rule='evenodd'></path>";
+					v_html += 				"</svg>";
+					v_html += 			"</div>";
+					v_html += 			"<div class=''>";
+					v_html += 				"<h3>검색 결과 없음</h3>";
+					v_html += 			"</div>";
+					v_html += 			"<div class=''>필터를 삭제하고 다시 시도해 보세요.</div>";
+					v_html += 		"</div>";
+					v_html += 	"</div>";
+					
+					$("div#search_item_list").html(v_html);
+					
+				}
+				
+				// 처음 검색화면인 경우
+				if("${requestScope.map.price_max}" == ""){
+					
+					// 가져온 숙소 리스트중에서 최고가인 금액을 hidden input에 저장하기
+					for(var i=0; i<$("input.origin_price").length; i++){
+						
+						var max_price = Number($("input.origin_price").eq(i).val());
+						var default_max_price = Number($("input#search_price_max").val());
+						
+						if(default_max_price < max_price){
+							$("input#search_price_max").val(max_price);
+						} 
+					}// end of for-------------------------------------
+					
+					// 로드시 최저가 최대가 입력하기
+					$("input[name='price_min']").val(Number($("input#search_price_min").val()));
+					$("input#search_price_min").val("￦" + Number($("input#search_price_min").val()).toLocaleString('en'));
+					
+					$("input[name='price_max']").val(Number($("input#search_price_max").val()));
+					$("input#search_price_max").val("￦" + Number($("input#search_price_max").val()).toLocaleString('en'));
+					
+				}
+				// 필터를 사용한 경우
+				else{
+					
+					// 가져온 숙소 리스트중에서 최고가인 금액을 hidden input에 저장하기
+					for(var i=0; i<$("input.origin_price").length; i++){
+						var max_price = Number($("input.origin_price").eq(i).val());
+						
+						var default_max_price = Number($("input#search_price_max").val());
+						
+						if(default_max_price < max_price){
+							$("input#search_price_max").val(max_price);
+						}
+					}// end of for-------------------------------------
+					
+					// 로드시 최저가 최대가 입력하기
+					$("input[name='price_min']").val(Number(${requestScope.map.price_min}));
+					$("input#search_price_min").val("￦" + Number(${requestScope.map.price_min}).toLocaleString('en'));
+					
+					$("input[name='price_max']").val(Number(${requestScope.map.price_max}));
+					$("input#search_price_max").val("￦" + Number(${requestScope.map.price_max}).toLocaleString('en'));
+					
+				};
+				
+				// 처음 검색화면에서 넘어온 날짜를 hidden input에 넣어두기
+				$("input[name='check_in']").val("${requestScope.map.check_in}");
+				$("input[name='check_out']").val("${requestScope.map.check_out}");
+				
+				// 처음 검색화면에서 넘어온 성급을 보여주기
+				$("input[name='lg_star']").val("${requestScope.map.lg_star}");
+				
+				// 처음 검색화면에서 넘어온 성급을 보여주기
+				$("input[name='lodge_type']").val("${requestScope.map.lodge_type}");
+				
+				// 체크된 숙소성급을 표시해주기
+				$("input.lg_star:checked").each(function(){
+					$(this).next().removeClass("unchecked_lg_star");
+					$(this).next().addClass("checked_lg_star");
+				});
+				
+				if("${requestScope.map.lg_name}" == "" &&
+				   "${requestScope.map.lg_area}" == "" &&
+				   "${requestScope.map.lg_area_2}" == ""){
+					$("input#input_destination").val("전체");
+				}
+				
+				
+			},
+			error: function(request, status, error){
+				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+		});// end of ajax
+	} // end of ajax_form_search(){};
+	// ================================= form 을 통한 ajax 검색   끝 ================================= //
+	// ======================================================================================= //
 	
 	
 	// ======================================================================================= //
@@ -1276,7 +1737,10 @@
 					
 				}
 				
+<<<<<<< HEAD
 				
+=======
+>>>>>>> refs/heads/main
 				// 처음 검색화면인 경우
 				if("${requestScope.map.price_min}" == ""){
 					
@@ -1306,6 +1770,10 @@
 					for(var i=0; i<$("input.origin_price").length; i++){
 						
 						var max_price = Number($("input.origin_price").eq(i).val());
+<<<<<<< HEAD
+=======
+						
+>>>>>>> refs/heads/main
 						var default_max_price = Number($("input#search_price_max").val());
 						
 						if(default_max_price < max_price){
