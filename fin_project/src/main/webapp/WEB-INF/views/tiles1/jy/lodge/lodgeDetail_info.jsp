@@ -29,31 +29,32 @@
 		object-fit: cover;
 		aspect-ratio: 16:9;
 	} 
-	#main_img_1{
+	#main_img_0{
+		height: inherit;
 		grid-column-start: 1;
 		grid-column-end: 3;
 		grid-row-start: 1;
 		grid-row-end: 3;
 	}
-	#main_img_2{
+	#main_img_1{
 		grid-column-start: 3;
 		grid-column-end: 4;
 		grid-row-start: 1;
 		grid-row-end: 2;
 	}
-	#main_img_3{
+	#main_img_2{
 		grid-column-start: 4;
 		grid-column-end: 5;
 		grid-row-start: 1;
 		grid-row-end: 2;
 	}
-	#main_img_4{
+	#main_img_3{
 		grid-column-start: 3;
 		grid-column-end: 4;
 		grid-row-start: 2;
 		grid-row-end: 3;
 	}	
-	#main_img_5{
+	#main_img_4{
 		grid-column-start: 4;
 		grid-column-end: 5;
 		grid-row-start: 2;
@@ -127,27 +128,10 @@
 	svg {
         pointer-events: none;
     }
-    div#main_img_0{
-	    grid-column: 1/3;
-	    grid-row: 1/3;
+    /* 헤더 로고 크기 안맞음 수정 */
+    #headerOfheader > div > section > div > div > a > img {
+   		width: 126px;
     }
-    div#main_img_1{
-	    grid-column: 3/4;
-	    grid-row: 1/2;
-    }
-    div#main_img_2{
-	    grid-column: 4/5;
-	    grid-row: 1/2;
-    }
-    div#main_img_3{
-	    grid-column: 3/4;
-	    grid-row: 2/3;
-    }
-    div#main_img_4{
-	    grid-column: 4/5;
-	    grid-row: 2/3;
-    }
-    
     
 }
 	
@@ -281,6 +265,7 @@
 		const guest_cnt = adults+childs;
 		const room = Number($("input[name='need_rm_cnt']").val());
 		$("input[name='guest']").val(guest_cnt/room);
+		$("input[name='ttl_guest_cnt']").val(guest_cnt);
 		$("input[name='room']").val(room);
 		
 		$("button#guest_cnt_field").html("객실 "+room+"개, "+guest_cnt+"명&nbsp;&nbsp;<span class='c_txt_sm'>(아동"+childs+"명)<span>");
@@ -331,8 +316,8 @@
 				dataType:"json",
 				data:{"rm_seq":rm_seq},
 				success: function(json){
-					// console.log(json.rm_img_list);
-					// console.log(rm_img_part[i]);
+					 // console.log(json.rm_img_list);
+					 // console.log(rm_img_part[i]);
 					const img_list = json.rm_img_list;
 					
 					let html = '<div class="img_slide c_t_border_r1">'
@@ -342,22 +327,22 @@
 						$.each(img_list, function(index, item){
 							if(item.rm_img_main==1){
 								html += '<div class="carousel-item active" >'
-											+'<img src="<%=ctxPath%>/resources/images/'+item.fk_lodge_id+'/room_img/'+item.rm_img_save_name+'" class="d-block w-100 image_thumnail"style="object-fit: cover;">'
+											+'<img src="<%=ctxPath%>/resources/images/'+item.fk_lodge_id+'/room_img/'+item.rm_img_save_name+'" class="d-block w-100 image_thumnail"style="object-fit: cover; aspect-ratio: 16/9;">'
 										+'</div>';
 							}
 							else{
 								html +=	'<div class="carousel-item" >'
-											+'<img src="<%=ctxPath%>/resources/images/'+item.fk_lodge_id+'/room_img/'+item.rm_img_save_name+'" class="d-block w-100 image_thumnail" style="object-fit: cover;">'
-										+'</div>';						
+											+'<img src="<%=ctxPath%>/resources/images/'+item.fk_lodge_id+'/room_img/'+item.rm_img_save_name+'" class="d-block w-100 image_thumnail" style="object-fit: cover; aspect-ratio: 16/9;">'
+										+'</div>';						 
 							}
 						});// end of $.each(img_list, function(index, item)------
 					}
 					else {
 					html += '<div class="carousel-item active">'
-							+'<img src="<%=ctxPath%>/resources/images/jy/null0.png" class="d-block w-100 image_thumnail"style="object-fit: cover;">'
+							+'<img src="<%=ctxPath%>/resources/images/jy/null0.png" class="d-block w-100 image_thumnail"style="object-fit: cover; aspect-ratio: 16/9;">'
 						+'</div>'
 							+'<div class="carousel-item"'
-							+'<img src="<%=ctxPath%>/resources/images/jy/null1.png" class="d-block w-100 image_thumnail" style="object-fit: cover;">'
+							+'<img src="<%=ctxPath%>/resources/images/jy/null1.png" class="d-block w-100 image_thumnail" style="object-fit: cover; aspect-ratio: 16/9;">'
 						+'</div>';	
 					}
 									
@@ -377,8 +362,6 @@
 			 	}
 			}) 
 		}
-		
-		console.log(${requestScope.d_rate});
 		
 		
 	});	
@@ -402,6 +385,33 @@
 			nav.classList.remove("c_fix");
 		}
 		
+	}
+	
+	// 숙박 시설 모두 보기 클릭 시, 검색 조건 get방식으로  lodgeSearch.action 에 보내준다
+	// 보내줘야할 정보 lg_area, lg_area_2, check_in, check_out, travlers, adult, kid
+	// http://localhost:9090/expedia/lodgeSearch.action?lg_area=%EA%B0%95%EC%9B%90%ED%8A%B9%EB%B3%84%EC%9E%90%EC%B9%98%EB%8F%84&lg_area_2=%EA%B0%95%EB%A6%89%EC%8B%9C&lg_name=&check_in=2024-01-09&check_out=2024-01-11&travlers=2&adult=2&kid=0
+	function goBackLodgeSearch() {
+	/*
+		<form name="lodgeSearchFrm">
+			<input type="hidden" name="check_in" readonly value="">
+			<input type="hidden" name="check_out" readonly value="">
+			<input type="hidden" name="travlers" readonly value="">
+			<input type="hidden" name="adult" readonly value="">
+			<input type="hidden" name="kid" readonly value="">							
+		</form>
+	*/	
+		$("input[name='check_in']").val($("input[name='startDate']").val());
+		$("input[name='check_out']").val($("input[name='endDate']").val());
+		$("input[name='travlers']").val($("input[name='guest']").val());
+		$("input[name='adult']").val($("input[name='adults']").val());
+		$("input[name='kid']").val($("input[name='childs']").val());
+		
+		console.log($("input[name='kid']").val());
+		
+		const frm = document.lodgeSearchFrm;
+		frm.action = "lodgeSearch.action";
+		frm.method = "get";
+		frm.submit();
 	}
 	
 	function go_reservation (price_aft_dis, st_rm_seq) {
@@ -595,7 +605,7 @@
 		const childs = Number($("input[name='child_cnt']").val());
 		const guest_cnt = adults+childs;
 		const room = Number($("input[name='need_rm_cnt']").val());
-		$("input[name='guest']").val(guest_cnt/room);
+		$("input[name='guest']").val(guest_cnt);
 		$("input[name='adults']").val(adults);
 		$("input[name='childs']").val(childs);
 		$("input[name='room']").val(room);
@@ -644,11 +654,11 @@
 	<div id="top_bar_img_container">
 		<div id="top_bar_container" class="" style="background-color: white; height: 4rem;">
 			<div id="top_bar_wrap" class="c_flex c_flex_grow-1">
-				<div class="" onclick="location.href='<%= ctxPath%>/index.exp'">
+				<div class="" onclick="javascript:goBackLodgeSearch()">
 					<div class="">
 						<button>
 							<svg class="" height="18" width="18" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill="#1668E3" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"></path></svg>
-							<a href='javascript:history.back()'>숙박 시설 모두 보기</a>
+							<a class="c_text_link_m">숙박 시설 모두 보기</a>
 						</button>
 					</div>
 				</div>
@@ -676,11 +686,11 @@
 				<div id="top_main_img_wrap" class="c_grid" style="gap: 2px; height: 25rem;">							
 					<c:forEach items="${requestScope.lg_img_list}" var="img_list" varStatus="status">
 						<c:if test="${not status.last}">
-							<div id="main_img_${status.index}" onclick="goMoreImg()"><img src="<%= ctxPath%>/resources/images/${lodgeinfo.LODGE_ID}/lodge_img/${img_list.lg_img_save_name}"></div>
+							<div id="main_img_${status.index}" onclick="goMoreImg()"><img src="<%= ctxPath%>/resources/images/${lodgeinfo.LODGE_ID}/lodge_img/${img_list.lg_img_save_name}" style="aspect-ratio:16/9;"></div>
 						</c:if>
 						<c:if test="${status.last}">
 							<div id="main_img_${status.index}"  onclick="goMoreImg()">
-								<img src="<%= ctxPath%>/resources/images/${lodgeinfo.LODGE_ID}/lodge_img/${img_list.lg_img_save_name}">
+								<img src="<%= ctxPath%>/resources/images/${lodgeinfo.LODGE_ID}/lodge_img/${img_list.lg_img_save_name}"style="aspect-ratio:16/9;">
 								<div id="more_pic_btn" class="more_pic_btn" onclick="goMoreImg()">
 									<button type="button" style="width: inherit; height: inherit;">
 										<svg class="c_icon_24" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill="white" fill-rule="evenodd" d="M22 16V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2zm-11-4 2.03 2.71L16 11l4 5H8l3-4zm-9 8V6h2v14h14v2H4a2 2 0 0 1-2-2z" clip-rule="evenodd"></path></svg>
@@ -941,6 +951,7 @@
 							</div>
 						</div>	
 					</div>
+					<c:if test="${requestScope.lodgeinfo.LG_BREAKFAST_YN eq 1 or not empty requestScope.din_opt_list}">
 					<div id="m_food">
 						<div>
 							<h3 class="c_h3_head5" style="padding-bottom: 0.75rem;">식사 및 음료</h3>
@@ -958,6 +969,7 @@
 							</ul>
 						</div>
 					</div>
+					</c:if>
 					<c:if test="${not empty requestScope.inet_opt_list}">			
 						<div id="m_internet">
 							<div>
@@ -1165,6 +1177,16 @@
 									<input type="hidden" name="payType" readonly value="">
 								</div>	
 							</div>						
+						</form>
+						<form name="lodgeSearchFrm">
+							<input type="text" name="lg_area" readonly value="${requestScope.lodgeinfo.LG_AREA}" style="display: none;">
+							<input type="text" name="lg_area_2" readonly value="${requestScope.lodgeinfo.LG_AREA_2}" style="display: none;">
+							<input type="text" name="lg_name" readonly value="" style="display: none;">
+							<input type="hidden" name="check_in" readonly value="">
+							<input type="hidden" name="check_out" readonly value="">
+							<input type="hidden" name="travlers" readonly value="">
+							<input type="hidden" name="adult" readonly value="">
+							<input type="hidden" name="kid" readonly value="">							
 						</form>
 					</div>
 				</div>
@@ -2260,8 +2282,8 @@ function show_rm_detail(e) {
 	// 모달창에 띄워서 보여줄 객실의 rm_seq 가져오기
 	const rm_seq = $(e).attr("rm_seq");
 	const lodge_id = $(e).attr("lodge_id");
-	console.log("rm_seq => ",rm_seq);
-	console.log("lodge_id => ",lodge_id);
+	// console.log("rm_seq => ",rm_seq);
+	// console.log("lodge_id => ",lodge_id);
 	
 	$.ajax({
 		url:"rmDetail_info_json.exp",
@@ -2288,7 +2310,7 @@ function show_rm_detail(e) {
 			const l_rmsvc_list = json.rmsvc_opt_list;
 			
 			const rm_info = json.rm_list;
-			console.log(img_list);
+			// console.log(img_list);
 			// console.log(bath_list.length);
 			
 			const price = Math.ceil(Number(rm_info.rm_price)).toLocaleString('en');
@@ -2322,22 +2344,22 @@ function show_rm_detail(e) {
 				$.each(img_list, function(index, item){
 					if(index==1){
 						html += '<div class="carousel-item active" style="height: 23rem;">'
-									+'<img src="<%=ctxPath%>/resources/images/'+lodge_id+'/room_img/'+item.rm_img_save_name+'" class="d-block w-100 image_thumnail"style="object-fit: cover;">'
+									+'<img src="<%=ctxPath%>/resources/images/'+lodge_id+'/room_img/'+item.rm_img_save_name+'" class="d-block w-100 image_thumnail"style="object-fit: cover; aspect-ratio: 16/9;">'
 								+'</div>';
 					}
 					else{
 						html +=	'<div class="carousel-item" style="height: 23rem;">'
-									+'<img src="<%=ctxPath%>/resources/images/'+lodge_id+'/room_img/'+item.rm_img_save_name+'" class="d-block w-100 h-100 image_thumnail" style="object-fit: cover;">'
+									+'<img src="<%=ctxPath%>/resources/images/'+lodge_id+'/room_img/'+item.rm_img_save_name+'" class="d-block w-100 h-100 image_thumnail" style="object-fit: cover; aspect-ratio: 16/9;">'
 								+'</div>';						
 					}
 				});// end of $.each(img_list, function(index, item)------
 			}
 			else {
 				html += '<div class="carousel-item active" style="height: 23rem;">'
-							+'<img src="<%=ctxPath%>/resources/images/jy/null0.png" class="d-block w-100 image_thumnail"style="object-fit: cover;">'
+							+'<img src="<%=ctxPath%>/resources/images/jy/null0.png" class="d-block w-100 image_thumnail"style="object-fit: cover; aspect-ratio: 16/9;">'
 						+'</div>'
 		       			+'<div class="carousel-item" style="height: 23rem;">'
-							+'<img src="<%=ctxPath%>/resources/images/jy/null1.png" class="d-block w-100 h-100 image_thumnail" style="object-fit: cover;">'
+							+'<img src="<%=ctxPath%>/resources/images/jy/null1.png" class="d-block w-100 h-100 image_thumnail" style="object-fit: cover; aspect-ratio: 16/9;">'
 						+'</div>';	
 			}
 									
