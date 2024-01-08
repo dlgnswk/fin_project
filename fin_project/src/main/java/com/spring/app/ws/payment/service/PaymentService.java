@@ -33,4 +33,7 @@ public interface PaymentService {
 	// 포인트만 update하기
 	int updateUsedPoint(Map<String, String> paraMap);
 
+	// 숙박업소 별 후기 가져오기
+	List<Map<String, String>> getLodgeReview(String lodge_id);
+
 }

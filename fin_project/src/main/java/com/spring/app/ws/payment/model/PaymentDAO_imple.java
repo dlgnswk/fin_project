@@ -82,4 +82,12 @@ public class PaymentDAO_imple implements PaymentDAO {
 		return p;
 	}
 
+
+	// 숙박업소 별 후기 가져오기
+	@Override
+	public List<Map<String, String>> getLodgeReview(String lodge_id) {
+		List<Map<String, String>> lodgeReviewList = sqlsession.selectList("ws_payment.ws_getLodgeReview",lodge_id);
+		return lodgeReviewList;
+	}
+
 }
