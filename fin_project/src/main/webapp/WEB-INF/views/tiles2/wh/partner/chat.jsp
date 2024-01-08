@@ -66,20 +66,15 @@ function goChatWrite_noAttach() {
         // jQuery에서 사용하는 것으로써,
         // form태그의 선택자.serialize(); 을 해주면 form 태그내의 모든 값들을 name값을 키값으로 만들어서 보내준다. 
            const queryString = $("form[name='addWriteFrm']").serialize();
+           
+           data:queryString,
     --%>
-    const queryString = $("form[name='chatWriteFrm']").serialize();
+    // const queryString = $("form[name='chatWriteFrm']").serialize();
     
 	$.ajax({
 		url:"<%= ctxPath%>/addChat.exp",
-	
-	/*
-		data:{"fk_userid":$("input:hidden[name='fk_userid']").val()
-			 ,"name":$("input:text[name='name']").val()
-		     ,"content":$("input:text[name='content']").val()
-		     ,"parentSeq":$("input:hidden[name='parentSeq']").val() },
-	*/
-		// 또는     
-		data:queryString,
+		data:{"msg":$("input:text[name='msg']").val()
+			 ,"chat_no":$("input:text[name='chat_no']").val()},
 		type:"post",
 		dataType:"json",
 		success:function(json){
@@ -111,7 +106,9 @@ function goViewChat(currentShowPageNo) {
 	$.ajax({
 		url:"<%= ctxPath%>/msgList.exp",
 		data:{"chat_no":"${requestScope.chatvo.chat_no}",
-			  "currentShowPageNo":currentShowPageNo},
+			  "currentShowPageNo":currentShowPageNo,
+			  "fk_lodge_id":"${requestScope.chatvo.fk_lodge_id}"},
+			  
 		dataType:"json",
 	
 		success:function(json){
@@ -140,7 +137,7 @@ function goViewChat(currentShowPageNo) {
 				$.each(json, function(index, item){
 			
 				   	v_html += '<div style="margin-bottom:3px;">';
-				   	v_html += '[' + item.fk_userid + '] ';
+				   	v_html += '[' + '${sessionScope.loginuser.name}' + '] ';
 				   	v_html += item.reply_comment;
 				   	v_html += ' <span style="font-size:11px;color:#777;">' + new Date().toLocaleTimeString() + '</span>';
 				   	v_html += '</div>';
@@ -369,6 +366,7 @@ function goView(chat_no) {
 		   	   <input type="hidden" name="chat_no" value="${requestScope.chatvo.chat_no}">
 		  	   <input type="hidden" name="chat_date" value="${requestScope.chatvo.chat_date}">
 		  	   <input type="hidden" name="fk_userid" value="${requestScope.chatvo.fk_userid}">
+		  	   <input type="hidden" name="fk_lodge_id" value="${requestScope.chatvo.fk_lodge_id}">
 		   </form>
 		   
 		  

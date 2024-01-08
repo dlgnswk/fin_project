@@ -603,16 +603,14 @@ public class PartnerController {
 	
 	// (구매자입장에서) 판매자와 채팅하기  
 	@GetMapping("/chat.exp")
-	public String requiredLogin_chat(HttpServletRequest request, HttpServletResponse response) {
+	public String chat(HttpServletRequest request, HttpServletResponse response) {
 		
 		HttpSession session = request.getSession();
 		
 		UserVO loginuser = (UserVO)session.getAttribute("loginuser");
 		
 		String userid = loginuser.getUserid();
-		System.out.println("컨트롤러 확인용 userid : "+userid);
 		String lodge_id = request.getParameter("lodge_id");
-		System.out.println("컨트롤러 확인용 lodge_id : "+lodge_id);
 		
 		
 		Map<String,String> paraMap = new HashMap<>();
@@ -638,6 +636,7 @@ public class PartnerController {
 				chatvo = service.selectChat(paraMap);
 				
 				request.setAttribute("chatvo", chatvo);
+				request.setAttribute("lodge_id", lodge_id);
 				
 				return "wh/partner/chat.tiles2";
 			}
@@ -646,6 +645,7 @@ public class PartnerController {
 		
 		
 		request.setAttribute("chatvo", chatvo);
+		request.setAttribute("lodge_id", lodge_id);
 		
 		return "wh/partner/chat.tiles2";
 	}
