@@ -827,19 +827,23 @@
 		if(confirm("정말로 등록된 사진을 삭제하시겠습니까?")) {
 				
 			// 가장 가까운 조상 태그를 찾는다. "div.images_div" 
-			const images_div = $(this).closest('div.images_div'); // 카테고리 이미지 전부를 담고 있는 div
+			let images_div = $(this).closest('div.images_div'); // 카테고리 이미지 전부를 담고 있는 div
 			
-			const imageItem = $(this).closest('div.imageItem'); // 이미지가 들어있는 div -- 이미지 파일이 경로와 DB에만 존재
-			const exitData = $(this).closest('div.exitData'); // 이미지가 들어있는 div -- 이미지 파일을 포함한 경우
+			let imageItem = $(this).closest('div.imageItem'); // 이미지가 들어있는 div -- 이미지 파일이 경로와 DB에만 존재
+			let exitData = $(this).closest('div.exitData'); // 이미지가 들어있는 div -- 이미지 파일을 포함한 경우
+			console.log(imageItem);
+			console.log(exitData);
 			
-			const imageItemIdx = images_div.find("span.delete").index($(this)); 
+			let imageItemIdx = images_div.find("span.delete").index($(this));
+			console.log("imageItemIdx => "+imageItemIdx);
 			// 이미지가 들어있는 div안에 "x"
-			const exitDataIdx = exitData.find("span.delete").index($(this));
+			let exitDataIdx = images_div.find("div.exitData").index(exitData);
+			console.log("exitDataIdx => "+exitDataIdx);
 			// 이미지 파일을 포함한 경우의 index
 			
 		//	console.log(delIdx);   0 1 2 3 4 5 ...
 			
-			const infoDiv = images_div.find(".infoDiv");
+			let infoDiv = images_div.find(".infoDiv");
 		
 			let arrName = $(this).closest('div.image_drop').attr("id");
 		//	console.log("arrName => " + arrName.attr("id"));
@@ -862,6 +866,9 @@
 				// 이미지 파일 배열에서 삭제한다.
 					mainImage_arr.splice(exitDataIdx,1);
 					console.log(mainImage_arr);
+				}
+				else if(arrName == "outImage"){
+					console.log(outImage_arr);
 				}
 				
 			}
