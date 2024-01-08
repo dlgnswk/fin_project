@@ -352,7 +352,6 @@
 				const rm_img_save_name = $(this).parent().find("input.rm_img_save_name").val();
 				const rm_img_main = $(this).parent().find("input.rm_img_main").val();
 				
-				console.log(rm_img_name, rm_img_save_name);
 				// 해당하는 이미지와 같은 경로의 값을 DB에서 삭제한다.
 				$.ajax({
 		            url : "<%= ctxPath%>/delIdxImg.exp",

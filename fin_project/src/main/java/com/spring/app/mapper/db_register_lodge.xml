@@ -588,6 +588,26 @@
 	</select>
 	
 	
+	<!-- === DB에서 시설 사진 정보를 삭제한다. === -->
+	<delete id="delIdxLodgeImg" parameterType="HashMap">
+		delete from tbl_lg_img
+		where lg_img_save_name=#{lg_img_save_name} and fk_img_cano=#{fk_img_cano}
+	</delete>
+	
+	
+	<!-- == 경로에서 숙박시설 이미지 이름 DB에서 가져오기 == -->
+	<select id="getPathDelLodgeImgSaveName" resultType="String">
+		select lg_img_save_name
+		from tbl_lg_img
+		where fk_lodge_id = #{fk_lodge_id} and fk_img_cano = #{fk_img_cano}
+	</select>	
+	
+	<!-- === DB에서 숙박시설 사진 정보를 삭제한다. === -->
+	<delete id="delCateLodgeImg">
+		delete from tbl_lg_img
+		where fk_lodge_id=#{fk_lodge_id} and fk_img_cano=#{fk_img_cano}
+	</delete>
+	
 
 <!-- //////////////////////        객실 등록 하기            /////////////////////////////// -->
 
