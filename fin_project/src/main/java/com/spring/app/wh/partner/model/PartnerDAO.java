@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.spring.app.expedia.domain.ChatVO;
 import com.spring.app.expedia.domain.HostVO;
+import com.spring.app.expedia.domain.ReplyVO;
 
 @Repository
 public interface PartnerDAO {
@@ -35,12 +36,14 @@ public interface PartnerDAO {
 	// 기존 채팅방이 없는 경우 새로운 채팅방을 만들기
 	int createChat(Map<String, String> paraMap);
 
+	// 채팅 쓰기
+	int addChat(Map<String,String> paraMap);  
 
+	// 채팅들을 페이징 처리해서 조회해오기 
+	List<ReplyVO> getMsgList_Paging(Map<String, String> paraMap);
 
-
-
-
-	
+	// 채팅방 번호에 해당하는 채팅의 totalPage 수 알아오기
+	int getMsgTotalPage(Map<String, String> paraMap);	
 	
 	
 }

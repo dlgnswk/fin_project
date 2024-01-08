@@ -20,15 +20,17 @@
 	});// end of $(document).ready(function(){}--------------------------------------
 
 	function goComment() {
-		
-		// 명진 누나 꺼
+		const frm = document.useridSendFrm;
+	      frm.action  = "<%= ctxPath%>/reviewlist.exp";
+	      frm.method = "get";
+	      frm.submit();
 		
 	}
 		
 	
 	function goChat() {
 		const frm = document.useridSendFrm;
-		frm.action  = "<%= ctxPath%>/chatting.exp";
+		frm.action  = "<%= ctxPath%>/reply.exp";
 		frm.method = "post";
 		frm.submit();
 	}
