@@ -8,7 +8,9 @@ import javax.annotation.Resource;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.spring.app.expedia.domain.ChatVO;
 import com.spring.app.expedia.domain.HostVO;
+import com.spring.app.expedia.domain.ReplyVO;
 
 @Repository
 public class PartnerDAO_imple implements PartnerDAO {
@@ -60,13 +62,43 @@ public class PartnerDAO_imple implements PartnerDAO {
 	}
 
 	
+	// 채팅방 불러오기
+	@Override
+	public ChatVO selectChat(Map<String,String> paraMap) {
+		ChatVO chatvo = sqlsession.selectOne("wh_partner.selectChat", paraMap);
+		return chatvo;
+	}
+
+	// 기존 채팅방이 없는 경우 새로운 채팅방을 만들기
+	@Override
+	public int createChat(Map<String, String> paraMap) {
+		int n = sqlsession.insert("wh_partner.createChat", paraMap);
+		return n;
+	}
+
 	
+	// 채팅쓰기(tbl_reply 테이블에 insert)
+	@Override
+	public int addChat(Map<String,String> paraMap) {
+		int n = sqlsession.insert("wh_partner.addChat",paraMap);
+		return n;
+	}
 	
 
-
+	// 채팅들을 페이징 처리해서 조회해오기
+	@Override
+	public List<ReplyVO> getMsgList_Paging(Map<String, String> paraMap) {
+		List<ReplyVO> msgList = sqlsession.selectList("wh_partner.getMsgList_Paging",paraMap);
+		return msgList;
+	}
 
 	
-	
+	// 채팅방 번호에 해당하는 채팅의 totalPage 수 알아오기
+	@Override
+	public int getMsgTotalPage(Map<String, String> paraMap) {
+		int totalPage = sqlsession.selectOne("wh_partner.getMsgTotalPage",paraMap);
+		return totalPage;
+	}
 	
 
 }

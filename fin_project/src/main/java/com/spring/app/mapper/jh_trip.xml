@@ -6,6 +6,7 @@
 	
 	<!-- 예정된 예약 가져오기(최대 3개) -->
 	<resultMap type="HashMap" id="beforeReservationMap">
+	    <result property="fk_h_userid" 			column="fk_h_userid" 		javaType="String" />
 	    <result property="lodge_id" 			column="lodge_id" 			javaType="String" />
 	    <result property="lg_name" 				column="lg_name" 			javaType="String" />
 	    <result property="rs_month" 			column="rs_month" 			javaType="String" />
@@ -14,13 +15,13 @@
 	    <result property="lg_img_save_name"		column="lg_img_save_name" 	javaType="String" />
 	</resultMap>
 	<select id="beforeReservation" resultMap="beforeReservationMap">
-		select rno, lodge_id, lg_name, rs_month, rs_day, rs_no, lg_img_save_name
+		select rno, fk_h_userid, lodge_id, lg_name, rs_month, rs_day, rs_no, lg_img_save_name
 		from
 		(
-		    select rownum as rno, lodge_id, lg_name, rs_month, rs_day, rs_no, lg_img_save_name
+		    select rownum as rno, fk_h_userid, lodge_id, lg_name, rs_month, rs_day, rs_no, lg_img_save_name
 		    from
 		    (
-		        select lg_name, to_number(to_char(rs_checkindate, 'mm')) as rs_month, to_number(to_char(rs_checkindate, 'dd')) as rs_day, rs_seq as rs_no, lg_img_save_name, rs_date, lodge_id
+		        select L.fk_h_userid, lg_name, to_number(to_char(rs_checkindate, 'mm')) as rs_month, to_number(to_char(rs_checkindate, 'dd')) as rs_day, rs_seq as rs_no, lg_img_save_name, rs_date, lodge_id
 		        from
 		        (
 		            select *
@@ -35,14 +36,14 @@
 		            select lodge_id, lg_name, fk_h_userid, lg_img_save_name
 		            from
 		            (
-		                select lodge_id, lg_name, rno, L.fk_h_userid, lg_img_save_name
+		            	select row_number() over(partition by L.lodge_id order by lg_img_save_name asc) as rno, L.lodge_id, lg_name, L.fk_h_userid, lg_img_save_name
 		                from
 		                (
-		                    select row_number() over(partition by fk_lodge_id order by lg_img_save_name asc) as rno, fk_lodge_id, lg_img_save_name
+		                    select fk_lodge_id, lg_img_save_name
 		                    from tbl_lg_img I
 		                    order by lg_img_save_name
 		                ) I
-		                join tbl_lodge L
+		                right join tbl_lodge L
 		                on I.fk_lodge_id = L.lodge_id
 		            )
 		            where rno = 1
@@ -111,6 +112,7 @@
 	
 	<!-- 예정된 예약 가져오기(전부) -->
 	<resultMap type="HashMap" id="beforeReservationAllMap">
+	    <result property="fk_h_userid" 			column="fk_h_userid" 		javaType="String" />
 	    <result property="lodge_id" 			column="lodge_id" 			javaType="String" />
 	    <result property="lg_name" 				column="lg_name" 			javaType="String" />
 	    <result property="rs_month" 			column="rs_month" 			javaType="String" />
@@ -119,10 +121,10 @@
 	    <result property="lg_img_save_name"		column="lg_img_save_name" 	javaType="String" />
 	</resultMap>
 	<select id="beforeReservationAll" resultMap="beforeReservationAllMap">
-		select rownum as rno, lodge_id, lg_name, rs_month, rs_day, rs_no, lg_img_save_name
+		select rownum as rno, fk_h_userid, lodge_id, lg_name, rs_month, rs_day, rs_no, lg_img_save_name
 	    from
 	    (
-	        select lg_name, to_number(to_char(rs_checkindate, 'mm')) as rs_month, to_number(to_char(rs_checkindate, 'dd')) as rs_day, rs_seq as rs_no, lg_img_save_name, rs_date, lodge_id
+	        select L.fk_h_userid, lg_name, to_number(to_char(rs_checkindate, 'mm')) as rs_month, to_number(to_char(rs_checkindate, 'dd')) as rs_day, rs_seq as rs_no, lg_img_save_name, rs_date, lodge_id
 	        from
 	        (
 	            select *
@@ -137,14 +139,14 @@
 	            select lodge_id, lg_name, fk_h_userid, lg_img_save_name
 	            from
 	            (
-	                select lodge_id, lg_name, rno, L.fk_h_userid, lg_img_save_name
+	            	select row_number() over(partition by L.lodge_id order by lg_img_save_name asc) as rno, L.lodge_id, lg_name, L.fk_h_userid, lg_img_save_name
 	                from
 	                (
-	                    select row_number() over(partition by fk_lodge_id order by lg_img_save_name asc) as rno, fk_lodge_id, lg_img_save_name
+	                    select fk_lodge_id, lg_img_save_name
 	                    from tbl_lg_img I
 	                    order by lg_img_save_name
 	                ) I
-	                join tbl_lodge L
+	                right join tbl_lodge L
 	                on I.fk_lodge_id = L.lodge_id
 	            )
 	            where rno = 1
@@ -279,7 +281,7 @@
 		        on R.fk_lodge_id = L.lodge_id
 		        group by lodge_id
 		    ) A 
-		    join
+		    left join
 		    (
 		        select fk_lodge_id, count(*) as review_cnt, avg(to_number(fk_rv_rating)) as rating
 		        from tbl_review

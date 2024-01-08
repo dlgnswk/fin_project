@@ -301,22 +301,64 @@
 				showMore_info_btn.innerText = "더보기";
 			}
 		})
+		const rm_img_part = document.querySelectorAll('.img_part');
+		for(let i=0; i<rm_img_part.length; i++){			
+			const rm_seq = rm_img_part[i].getAttribute("rm_seq");
+			// console.log("rm_img_part[i]",rm_img_part[i].getAttribute("rm_seq"));
+			$.ajax({
+				url:"get_room_img_json.exp",
+				dataType:"json",
+				data:{"rm_seq":rm_seq},
+				success: function(json){
+					// console.log(json.rm_img_list);
+					// console.log(rm_img_part[i]);
+					const img_list = json.rm_img_list;
+					
+					let html = '<div class="img_slide c_t_border_r1">'
+								+'<div id="rm_img_slide'+i+'" class="carousel slide" data-interval="false">'
+								+'<div class="carousel-inner c_t_border_r1">'
+					if(img_list != null){				
+						$.each(img_list, function(index, item){
+							if(item.rm_img_main==1){
+								html += '<div class="carousel-item active" >'
+											+'<img src="<%=ctxPath%>/resources/images/'+item.fk_lodge_id+'/room_img/'+item.rm_img_save_name+'" class="d-block w-100 image_thumnail"style="object-fit: cover;">'
+										+'</div>';
+							}
+							else{
+								html +=	'<div class="carousel-item" >'
+											+'<img src="<%=ctxPath%>/resources/images/'+item.fk_lodge_id+'/room_img/'+item.rm_img_save_name+'" class="d-block w-100 image_thumnail" style="object-fit: cover;">'
+										+'</div>';						
+							}
+						});// end of $.each(img_list, function(index, item)------
+					}
+					else {
+					html += '<div class="carousel-item active">'
+							+'<img src="<%=ctxPath%>/resources/images/jy/null0.png" class="d-block w-100 image_thumnail"style="object-fit: cover;">'
+						+'</div>'
+							+'<div class="carousel-item"'
+							+'<img src="<%=ctxPath%>/resources/images/jy/null1.png" class="d-block w-100 image_thumnail" style="object-fit: cover;">'
+						+'</div>';	
+					}
+									
+												
+					html +=							'</div>'
+					
+											+'<a class="carousel-control-prev" href="#rm_img_slide'+i+'" role="button" data-slide="prev"><span class="carousel-control-prev-icon" aria-hidden="true"></span><span class="sr-only">Previous</span></a>'
+											+'<a class="carousel-control-next" href="#rm_img_slide'+i+'" role="button" data-slide="next"><span class="carousel-control-next-icon" aria-hidden="true"></span><span class="sr-only">Next</span></a>'
+										+'</div>'
+									+'</div>';
+									
+					rm_img_part[i].innerHTML = html;	
+						
+				},
+				error: function(request, status, error){
+					alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			 	}
+			}) 
+		}
 		
-		if ( $("span.rm_view_desc").html() == '해변 전망' || $("span.rm_view_desc").html() == '강 전망' || $("span.rm_view_desc").html() == '호수 전망' ) {
-		$("div.rm_view_svg").html('<svg class="c_icon_18" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M21.98 14H22h-.02ZM5.35 13c1.19 0 1.42 1 3.33 1 1.95 0 2.09-1 3.33-1 1.19 0 1.42 1 3.33 1 1.95 0 2.09-1 3.33-1 1.19 0 1.4.98 3.31 1v-2c-1.19 0-1.42-1-3.33-1-1.95 0-2.09 1-3.33 1-1.19 0-1.42-1-3.33-1-1.95 0-2.09 1-3.33 1-1.19 0-1.42-1-3.33-1-1.95 0-2.09 1-3.33 1v2c1.9 0 2.17-1 3.35-1Zm13.32 2c-1.95 0-2.09 1-3.33 1-1.19 0-1.42-1-3.33-1-1.95 0-2.1 1-3.34 1-1.24 0-1.38-1-3.33-1-1.95 0-2.1 1-3.34 1v2c1.95 0 2.11-1 3.34-1 1.24 0 1.38 1 3.33 1 1.95 0 2.1-1 3.34-1 1.19 0 1.42 1 3.33 1 1.94 0 2.09-1 3.33-1 1.19 0 1.42 1 3.33 1v-2c-1.24 0-1.38-1-3.33-1ZM5.35 9c1.19 0 1.42 1 3.33 1 1.95 0 2.09-1 3.33-1 1.19 0 1.42 1 3.33 1 1.95 0 2.09-1 3.33-1 1.19 0 1.4.98 3.31 1V8c-1.19 0-1.42-1-3.33-1-1.95 0-2.09 1-3.33 1-1.19 0-1.42-1-3.33-1-1.95 0-2.09 1-3.33 1-1.19 0-1.42-1-3.33-1C3.38 7 3.24 8 2 8v2c1.9 0 2.17-1 3.35-1Z"></path></svg>');
-		}
-		// 객실 뷰가 산 일때 svg 및 설명 글자
-		if ( $("span.rm_view_desc").html() == '산 전망' ) {
-			$("div.rm_view_svg").html('<svg class="c_icon_18" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="m14 6-3.75 5 2.85 3.8-1.6 1.2L7 10l-6 8h22L14 6z"></path></svg>');
-		}
-		// 객실 뷰가 시내 일때 svg 및 설명 글자
-		if ( $("span.rm_view_desc").html() == '시내 전망' ) {
-			$("div.rm_view_svg").html('<svg class="c_icon_18" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill-rule="evenodd" d="M15 5v6h6v10H3V7h6V5l3-3 3 3zM5 19h2v-2H5v2zm2-4H5v-2h2v2zm-2-4h2V9H5v2zm6 8v-2h2v2h-2zm0-6v2h2v-2h-2zm0-2V9h2v2h-2zm0-6v2h2V5h-2zm8 14h-2v-2h2v2zm-2-4h2v-2h-2v2z" clip-rule="evenodd"></path></svg>');
-		}
-		// 객실 뷰가 공원 일때 svg 및 설명 글자
-		if ( $("span.rm_view_desc").html() == '공원 전망' ) {
-			$("div.rm_view_svg").html('<svg class="c_icon_18" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M13 15.93a7 7 0 1 0-2 0V20H5v2h14v-2h-6v-4.07z"></path></svg>');
-		}
+		console.log(${requestScope.d_rate});
+		
 		
 	});	
 	
@@ -362,18 +404,24 @@
 		
 		m_close_btn_pm.onclick = function() {
 			view_pay_method_modal.style.display = 'none';
-		  	if(view_rm_detail_info_modal.display == 'none'){
+			if(view_rm_detail_info_modal == null){
 		  		document.body.style.overflow = 'auto';
 		  	}
+			else if(view_rm_detail_info_modal.style.display == 'none'){
+				document.body.style.overflow = 'auto';
+			}
 			
 		}
 
 		window.addEventListener('click', function (e) {
 		    if (e.target === view_pay_method_modal) {
 		    	view_pay_method_modal.style.display = 'none';
-		    	if(view_rm_detail_info_modal.display == 'none'){
+		    	if(view_rm_detail_info_modal == null){
 			  		document.body.style.overflow = 'auto';
 			  	}
+				else if(view_rm_detail_info_modal.style.display == 'none'){
+					document.body.style.overflow = 'auto';
+				}
 		    }
 		});
 	
@@ -407,23 +455,24 @@
 					
 					if(img_cano != "all" || img_cano != "rm"){
 						$.each(json.lg_ca_img_list, function(index, item){
-							html+= '<button><img src="<%=ctxPath%>/resources/images/jy/'+item.lodge_id+'/'+item.lg_img_save_name+'" ></button>'						
+							html+= '<button><img src="<%=ctxPath%>/resources/images/'+item.lodge_id+'/lodge_img/'+item.lg_img_save_name+'" ></button>'						
 						});
 					}
 					if(img_cano == 'all'){ // 모두 보기일때 => 숙박시설 전체 사진 + 객실 전체 사진
 						$.each(json.lg_all_img_list, function(index, item){
-							html+= '<button><img src="<%=ctxPath%>/resources/images/jy/'+item.lodge_id+'/'+item.lg_img_save_name+'" ></button>'						
+							html+= '<button><img src="<%=ctxPath%>/resources/images/'+item.lodge_id+'/lodge_img/'+item.lg_img_save_name+'" ></button>'						
 						});
 						$.each(json.all_rm_img_list, function(index, item){
-							html+= '<button><img src="<%=ctxPath%>/resources/images/jy/'+item.lodge_id+'/'+item.rm_img_save_name+'" ></button>'						
+							html+= '<button><img src="<%=ctxPath%>/resources/images/'+item.fk_lodge_id+'/room_img/'+item.rm_img_save_name+'" ></button>'						
 						});
 
 					}
 					if (img_cano == "rm"){ // 객실 사진 보기일때 => 객실 전체 사진
 						$.each(json.all_rm_img_list, function(index, item){
-							html+= '<button><img src="<%=ctxPath%>/resources/images/jy/'+item.lodge_id+'/'+item.rm_img_save_name+'" ></button>'						
+							html+= '<button><img src="<%=ctxPath%>/resources/images/'+item.fk_lodge_id+'/room_img/'+item.rm_img_save_name+'" ></button>'						
 						});
 					}
+					console.log(json.all_rm_img_list);
 					
 					html += '</div>';
 					
@@ -578,7 +627,7 @@
 					<div class="">
 						<button>
 							<svg class="" height="18" width="18" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill="#1668E3" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"></path></svg>
-							<a href='<%= ctxPath%>/index.exp'>숙박 시설 모두 보기</a>
+							<a href='javascript:history.back()'>숙박 시설 모두 보기</a>
 						</button>
 					</div>
 				</div>
@@ -605,10 +654,12 @@
 			<div id="top_main_img_wrap" class="c_grid" style="gap: 2px;">
 				<c:if test="${not empty requestScope.lg_img_list}">
 					<c:forEach items="${requestScope.lg_img_list}" var="img_list" varStatus="status">
-						<div id="main_img_${status.index}" onclick="goMoreImg()"><img src="<%= ctxPath%>/resources/images/jy/${lodgeinfo.LODGE_ID}/lodge_img/${img_list.lg_img_save_name}"></div>
+						<c:if test="${not status.last}">
+							<div id="main_img_${status.index}" onclick="goMoreImg()"><img src="<%= ctxPath%>/resources/images/${lodgeinfo.LODGE_ID}/lodge_img/${img_list.lg_img_save_name}"></div>
+						</c:if>
 						<c:if test="${status.last}">
-							<div id="main_img_${status.index}">
-								<img src="<%= ctxPath%>/resources/images/jy/${lodgeinfo.LODGE_ID}/lodge_img/${img_list.lg_img_save_name}">
+							<div id="main_img_${status.index}"  onclick="goMoreImg()">
+								<img src="<%= ctxPath%>/resources/images/${lodgeinfo.LODGE_ID}/lodge_img/${img_list.lg_img_save_name}">
 								<div id="more_pic_btn" class="more_pic_btn" onclick="goMoreImg()">
 									<button type="button" style="width: inherit; height: inherit;">
 										<svg class="c_icon_24" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill="white" fill-rule="evenodd" d="M22 16V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2zm-11-4 2.03 2.71L16 11l4 5H8l3-4zm-9 8V6h2v14h14v2H4a2 2 0 0 1-2-2z" clip-rule="evenodd"></path></svg>
@@ -695,10 +746,19 @@
 				</div>
 			</div>
 			<div id="go_review" class="c_pd_b_15r" style="padding-bottom: 1.25rem;">
-				<c:if test="${requestScope.lodgeinfo.RV_RATING_AVG>0}">			
+			<c:set var="rv_rate" value="${requestScope.lodgeinfo.RV_RATING_AVG}"/>
+				<c:if test="${rv_rate>0}">			
 					<div class="c_flex" style="margin-bottom: 0.5rem;">
-						<span class="uitk-badge uitk-badge-base-large uitk-badge-base-has-text uitk-badge-positive"><span class="uitk-badge-base-text" aria-hidden="true">8.4</span><span class="is-visually-hidden">8.4</span></span>
+						<c:if test="${rv_rate>8}">	
+							<span class="uitk-badge uitk-badge-base-large uitk-badge-base-has-text uitk-badge-positive"><span class="uitk-badge-base-text" aria-hidden="true">${requestScope.lodgeinfo.RV_RATING_AVG}</span></span>
+						</c:if>
 						<h3 class="c_h3_head5" style="padding-left: 0.5rem;">매우 좋아요</h3>
+					</div>
+				</c:if>
+				<c:if test="${empty rv_rate}">			
+					<div class="c_flex" style="margin-bottom: 0.5rem;">
+						<span class="uitk-badge uitk-badge-base-large uitk-badge-base-has-text uitk-badge-standard"><span class="uitk-badge-base-text" aria-hidden="true">0.0</span></span>
+						<h3 class="c_h3_head5" style="padding-left: 0.5rem;">이용 후기 없음</h3>
 					</div>
 				</c:if>
 				<div>
@@ -1172,48 +1232,7 @@
 		<c:if test="${not empty requestScope.avbl_rm_list}">	
 			<c:forEach items="${requestScope.avbl_rm_list}" var="rm_list" varStatus="status">
 				<div id="rm_item${status.index}" class="c_it_container_w c_grid" style="border: solid 1px #dfe0e4">
-						<div id="img_part">
-
-							<!-- 숙소 메인이미지 보여주는 캐러셀 시작 -->
-							<div class="img_slide c_t_border_r1">
-								<div id="rm_img_slide${status.index}" class="carousel slide"
-									data-interval="false">
-									<div class="carousel-inner c_t_border_r1">
-										<c:if test="${not empty requestScope.rm_img_list}">							
-											<c:forEach items="${requestScope.rm_img_list}" var="rm_img" varStatus="status">
-												<c:if test="${status.first}">
-													<div class="carousel-item active">
-														<img src="<%= ctxPath%>/resources/images/${lodgeinfo.lodge_id}/room_img/${rm_img.rm_img_save_name}" class="d-block w-100 image_thumnail" style="object-fit: cover;">
-													</div>
-												</c:if>
-												<c:if test="${not status.first}">
-													<div class="carousel-item">
-														<img src="<%= ctxPath%>/resources/images/${lodgeinfo.lodge_id}/room_img/${rm_img.rm_img_save_name}" class="d-block w-100 h-100 image_thumnail" style="object-fit: cover;">
-													</div>
-												</c:if>
-											</c:forEach>
-										</c:if>
-										<c:if test="${empty requestScope.rm_img_list}">
-											<div class="carousel-item active">
-												<img src="<%= ctxPath%>/resources/images/jy/pic_not_ready.png" class="d-block w-100 height: image_thumnail" style="object-fit: cover;">
-											</div>
-										</c:if>
-									</div>
-
-									<a class="carousel-control-prev"
-										href="#rm_img_slide${status.index}" role="button"
-										data-slide="prev"> <span
-										class="carousel-control-prev-icon" aria-hidden="true"></span>
-										<span class="sr-only">Previous</span>
-									</a> <a class="carousel-control-next"
-										href="#rm_img_slide${status.index}" role="button"
-										data-slide="next"> <span
-										class="carousel-control-next-icon" aria-hidden="true"></span>
-										<span class="sr-only">Next</span>
-									</a>
-								</div>
-							</div>
-
+						<div class="img_part" rm_seq='${rm_list.rm_seq}'>
 						</div>
 						<div class="c_flex" style="flex-direction: column; justify-content: space-between;">
 							<div id="short_info_part" style="padding: 0.75rem 0.75rem;">
@@ -1269,8 +1288,18 @@
 										</c:if>
 										<c:if test="${rm_list.fk_view_no ne 0}">			
 											<li class="c_flex">
-												<%-- 이 부분은 js 에서 줌! --%>
-												<div class="c_flex rm_view_svg" style="margin: auto 0; padding-right: 0.5rem;"></div>
+												<c:if test="${rm_list.fk_view_no eq 1 or rm_list.fk_view_no eq 3 or rm_list.fk_view_no eq 6}">
+													<div class="c_flex rm_view_svg" style="margin: auto 0; padding-right: 0.5rem;"><svg class="c_icon_18" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M21.98 14H22h-.02ZM5.35 13c1.19 0 1.42 1 3.33 1 1.95 0 2.09-1 3.33-1 1.19 0 1.42 1 3.33 1 1.95 0 2.09-1 3.33-1 1.19 0 1.4.98 3.31 1v-2c-1.19 0-1.42-1-3.33-1-1.95 0-2.09 1-3.33 1-1.19 0-1.42-1-3.33-1-1.95 0-2.09 1-3.33 1-1.19 0-1.42-1-3.33-1-1.95 0-2.09 1-3.33 1v2c1.9 0 2.17-1 3.35-1Zm13.32 2c-1.95 0-2.09 1-3.33 1-1.19 0-1.42-1-3.33-1-1.95 0-2.1 1-3.34 1-1.24 0-1.38-1-3.33-1-1.95 0-2.1 1-3.34 1v2c1.95 0 2.11-1 3.34-1 1.24 0 1.38 1 3.33 1 1.95 0 2.1-1 3.34-1 1.19 0 1.42 1 3.33 1 1.94 0 2.09-1 3.33-1 1.19 0 1.42 1 3.33 1v-2c-1.24 0-1.38-1-3.33-1ZM5.35 9c1.19 0 1.42 1 3.33 1 1.95 0 2.09-1 3.33-1 1.19 0 1.42 1 3.33 1 1.95 0 2.09-1 3.33-1 1.19 0 1.4.98 3.31 1V8c-1.19 0-1.42-1-3.33-1-1.95 0-2.09 1-3.33 1-1.19 0-1.42-1-3.33-1-1.95 0-2.09 1-3.33 1-1.19 0-1.42-1-3.33-1C3.38 7 3.24 8 2 8v2c1.9 0 2.17-1 3.35-1Z"></path></svg></div>
+												</c:if>
+												<c:if test="${rm_list.fk_view_no eq 2}">
+													<div class="c_flex rm_view_svg" style="margin: auto 0; padding-right: 0.5rem;"><svg class="c_icon_18" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="m14 6-3.75 5 2.85 3.8-1.6 1.2L7 10l-6 8h22L14 6z"></path></svg></div>
+												</c:if>
+												<c:if test="${rm_list.fk_view_no eq 4}">
+													<div class="c_flex rm_view_svg" style="margin: auto 0; padding-right: 0.5rem;"><svg class="c_icon_18" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill-rule="evenodd" d="M15 5v6h6v10H3V7h6V5l3-3 3 3zM5 19h2v-2H5v2zm2-4H5v-2h2v2zm-2-4h2V9H5v2zm6 8v-2h2v2h-2zm0-6v2h2v-2h-2zm0-2V9h2v2h-2zm0-6v2h2V5h-2zm8 14h-2v-2h2v2zm-2-4h2v-2h-2v2z" clip-rule="evenodd"></path></svg></div>
+												</c:if>
+												<c:if test="${rm_list.fk_view_no eq 5}">
+													<div class="c_flex rm_view_svg" style="margin: auto 0; padding-right: 0.5rem;"><svg class="c_icon_18" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M13 15.93a7 7 0 1 0-2 0V20H5v2h14v-2h-6v-4.07z"></path></svg></div>
+												</c:if>
 												<span class="c_content_txt rm_view_desc">${rm_list.view_desc}</span>
 											</li>
 										</c:if>				
@@ -1299,18 +1328,7 @@
 								</div>
 							</div>
 							<c:set var="price" value="${rm_list.rm_price}"/>
-							<c:if test='${empty sessionScope.loginuser.user_lvl}'>
-								<c:set var="d_rate" value="0"/>
-							</c:if>
-							<c:if test='${sessionScope.loginuser.user_lvl eq "블루"}'>
-								<c:set var="d_rate" value="0.1"/>
-							</c:if>
-							<c:if test='${sessionScope.loginuser.user_lvl eq "실버"}'>
-								<c:set var="d_rate" value="0.15"/>
-							</c:if>
-							<c:if test='${sessionScope.loginuser.user_lvl eq "골드"}'>
-								<c:set var="d_rate" value="0.2"/>
-							</c:if>
+							<c:set var="d_rate" value="${requestScope.d_rate}"/>
 							<c:set var="stay_night" value="${requestScope.stayNight}"/>
 							
 							<div id="price_part" style="padding: 0.75rem 0.75rem;">
@@ -1319,7 +1337,7 @@
 										<c:if test="${d_rate>0}">
 											<span class="uitk-badge uitk-badge-large uitk-badge-deal-member uitk-badge-has-text uitk-spacing uitk-spacing-margin-blockend-one">
 												<svg class="uitk-icon uitk-icon-small" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill-rule="evenodd" d="m17.1 16.05 1.22-1.18 3.48-3.48a.78.78 0 0 0 .2-.6l-1.3-7.1a.57.57 0 0 0-.42-.42l-7.06-1.26a.78.78 0 0 0-.61.19L2.1 12.7a.36.36 0 0 0 0 .51l8.68 8.69c.14.13.37.14.5 0l4.24-4.23a2.88 2.88 0 0 0 4.9-2.26v-.1c0-.28-.03-1.02-.26-1.5L19 14.9a1.54 1.54 0 1 1-3 .62c-.03-.5.19-2.34.5-4.07a26.11 26.11 0 0 1 .56-2.48l.02.04a1.62 1.62 0 1 0-1.42-.12c-.13.57-.26 1.26-.41 2.1a29.62 29.62 0 0 0-.57 4.88l-.83.83-6.56-6.55 6.04-6.04c.07-.08.2-.12.3-.1l5.2.94c.09.01.18.1.2.2l.98 5.18c.02.1-.03.23-.1.3l-3.1 3.1c-.2.75-.43 2.05.3 2.31zm-6.24 3.4-6.29-6.32a.18.18 0 0 1 0-.25l1.72-1.72 6.56 6.56-1.74 1.73a.18.18 0 0 1-.25 0z" clip-rule="evenodd"></path></svg>
-												<span class="uitk-badge-text" aria-hidden="false"> 회원가 ${d_rate*100}% 할인</span>
+												<span class="uitk-badge-text" aria-hidden="false"> 회원가 <fmt:formatNumber value="${d_rate*100}" pattern="###,###" />% 할인</span>
 											</span>
 										</c:if>
 										<div class="c_flex" style="gap: 0.3rem; align-items: center;">																				
@@ -1610,6 +1628,7 @@
 							</ul>
 						</div>
 						<div class="c_content_txt">객실 특징</div>
+						<c:if test="${not empty requestScope.com_tmp_opt_list and not empty requestScope.com_ent_opt_list}">
 						<div class="c_content_txt">모든 <fmt:formatNumber pattern="###,###" >${requestScope.lodgeinfo.TTL_RM_CNT}</fmt:formatNumber>개 객실에는 
 							<c:if test="${not empty requestScope.com_tmp_opt_list and not empty requestScope.com_ent_opt_list}">
 								쾌적한 실내를 위한  
@@ -1656,8 +1675,8 @@
 								</c:forEach>
 								 등이 제공됩니다.
 							</c:if>
-						
 						</div>
+						</c:if>
 						<c:if test="${empty requestScope.com_tmp_opt_list and empty requestScope.com_ent_opt_list}">					
 							<div class="c_content_txt">모든 <fmt:formatNumber pattern="###,###" >${requestScope.lodgeinfo.TTL_RM_CNT}</fmt:formatNumber>개 객실에는 다양한 편의 시설 등을 이용할 수 있습니다.</div>
 						</c:if>
@@ -2198,21 +2217,7 @@
 <script>
 
 $(document).ready(function(){
-	if ( $("span.rm_view_desc").html() == '해변 전망' || $("span.rm_view_desc").html() == '강 전망' || $("span.rm_view_desc").html() == '호수 전망' ) {
-		$("div.rm_view_svg").html('<svg class="c_icon_18" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M21.98 14H22h-.02ZM5.35 13c1.19 0 1.42 1 3.33 1 1.95 0 2.09-1 3.33-1 1.19 0 1.42 1 3.33 1 1.95 0 2.09-1 3.33-1 1.19 0 1.4.98 3.31 1v-2c-1.19 0-1.42-1-3.33-1-1.95 0-2.09 1-3.33 1-1.19 0-1.42-1-3.33-1-1.95 0-2.09 1-3.33 1-1.19 0-1.42-1-3.33-1-1.95 0-2.09 1-3.33 1v2c1.9 0 2.17-1 3.35-1Zm13.32 2c-1.95 0-2.09 1-3.33 1-1.19 0-1.42-1-3.33-1-1.95 0-2.1 1-3.34 1-1.24 0-1.38-1-3.33-1-1.95 0-2.1 1-3.34 1v2c1.95 0 2.11-1 3.34-1 1.24 0 1.38 1 3.33 1 1.95 0 2.1-1 3.34-1 1.19 0 1.42 1 3.33 1 1.94 0 2.09-1 3.33-1 1.19 0 1.42 1 3.33 1v-2c-1.24 0-1.38-1-3.33-1ZM5.35 9c1.19 0 1.42 1 3.33 1 1.95 0 2.09-1 3.33-1 1.19 0 1.42 1 3.33 1 1.95 0 2.09-1 3.33-1 1.19 0 1.4.98 3.31 1V8c-1.19 0-1.42-1-3.33-1-1.95 0-2.09 1-3.33 1-1.19 0-1.42-1-3.33-1-1.95 0-2.09 1-3.33 1-1.19 0-1.42-1-3.33-1C3.38 7 3.24 8 2 8v2c1.9 0 2.17-1 3.35-1Z"></path></svg>');
-	}
-	// 객실 뷰가 산 일때 svg 및 설명 글자
-	if ( $("span.rm_view_desc").html() == '산 전망' ) {
-		$("div.rm_view_svg").html('<svg class="c_icon_18" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="m14 6-3.75 5 2.85 3.8-1.6 1.2L7 10l-6 8h22L14 6z"></path></svg>');
-	}
-	// 객실 뷰가 시내 일때 svg 및 설명 글자
-	if ( $("span.rm_view_desc").html() == '시내 전망' ) {
-		$("div.rm_view_svg").html('<svg class="c_icon_18" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill-rule="evenodd" d="M15 5v6h6v10H3V7h6V5l3-3 3 3zM5 19h2v-2H5v2zm2-4H5v-2h2v2zm-2-4h2V9H5v2zm6 8v-2h2v2h-2zm0-6v2h2v-2h-2zm0-2V9h2v2h-2zm0-6v2h2V5h-2zm8 14h-2v-2h2v2zm-2-4h2v-2h-2v2z" clip-rule="evenodd"></path></svg>');
-	}
-	// 객실 뷰가 공원 일때 svg 및 설명 글자
-	if ( $("span.rm_view_desc").html() == '공원 전망' ) {
-		$("div.rm_view_svg").html('<svg class="c_icon_18" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M13 15.93a7 7 0 1 0-2 0V20H5v2h14v-2h-6v-4.07z"></path></svg>');
-	}	
+	
 	
 	
 });
@@ -2252,7 +2257,7 @@ function show_rm_detail(e) {
 			const l_rmsvc_list = json.rmsvc_opt_list;
 			
 			const rm_info = json.rm_list;
-			console.log(rm_info);
+			console.log(img_list);
 			// console.log(bath_list.length);
 			
 			const price = Math.ceil(Number(rm_info.rm_price)).toLocaleString('en');
@@ -2268,7 +2273,7 @@ function show_rm_detail(e) {
 			html +=
 				'<div>'
 					+'<div id="view_rm_detail_info" class="c_modalContainer" style="overflow-y: hidden;">'
-						+'<div class="c_modalWrap">'
+						+'<div class="c_modalWrap" style="width: 45rem;">'
 							+'<div class="c_flex modalTop_close" style="block-size: 3rem; align-items: center;">'
 								+'<button type="button" id="m_close_btn_rm"class="c_flex modal_close_btn" style="block-size: 3rem; inline-size: 3rem;">'
 									+'<span class="c_round_btn_blue c_flex" style="block-size: 2.3rem; inline-size: 2.3rem; margin: auto;">'
@@ -2286,12 +2291,12 @@ function show_rm_detail(e) {
 				$.each(img_list, function(index, item){
 					if(index==1){
 						html += '<div class="carousel-item active" style="height: 23rem;">'
-									+'<img src="<%=ctxPath%>/resources/images/jy/'+lodge_id+'/'+item.rm_img_save_name+'" class="d-block w-100 image_thumnail"style="object-fit: cover;">'
+									+'<img src="<%=ctxPath%>/resources/images/'+lodge_id+'/room_img/'+item.rm_img_save_name+'" class="d-block w-100 image_thumnail"style="object-fit: cover;">'
 								+'</div>';
 					}
 					else{
 						html +=	'<div class="carousel-item" style="height: 23rem;">'
-									+'<img src="<%=ctxPath%>/resources/images/jy/'+lodge_id+'/'+item.rm_img_save_name+'" class="d-block w-100 h-100 image_thumnail" style="object-fit: cover;">'
+									+'<img src="<%=ctxPath%>/resources/images/'+lodge_id+'/room_img/'+item.rm_img_save_name+'" class="d-block w-100 h-100 image_thumnail" style="object-fit: cover;">'
 								+'</div>';						
 					}
 				});// end of $.each(img_list, function(index, item)------
@@ -2704,27 +2709,32 @@ function goPriceDetail(st_price, rm_seq) {
 	view_price_detail.style.display="flex";
 	document.body.style.overflow = 'hidden';
 	
+	// 객실 상세 모달창 없을때 요금상세 페이지 닫을 시(요금상세 모달 밖의 body 클릭) overflow auto 로 변경해준다.
 	window.onclick = function(e) {
 	  if (e.target == view_price_detail) {
 		  view_price_detail.style.display = "none";
-		  if(view_rm_detail_info_modal.display == 'none'){
+		  if(view_rm_detail_info_modal == null){
 		  		document.body.style.overflow = 'auto';
 		  	}
+		  else if(view_rm_detail_info_modal.style.display == 'none'){
+				document.body.style.overflow = 'auto';
+			}
 	  }
 	}
 	
+	// 객실 상세 모달창 없을때 요금상세 페이지 닫을 시(x 클릭) overflow auto 로 변경해준다. 
 	m_close_btn_pd.onclick = function() {
 		view_price_detail.style.display = 'none';
-		if(view_rm_detail_info_modal.display == 'none'){
+		if(view_rm_detail_info_modal == null){
 	  		document.body.style.overflow = 'auto';
 	  	}
+		else if(view_rm_detail_info_modal.style.display == 'none'){
+			document.body.style.overflow = 'auto';
+		}
 
 	}
 	
 }
-
-
-
 
 
 

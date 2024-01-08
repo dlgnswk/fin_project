@@ -93,6 +93,43 @@ local.properties
 hs_err_pid*
 replay_pid*
 
-/final_expedia/target/
+
+#########################################################################
+
+/fin_project/src/main/java/com/spring/app/HomeController.java
+/fin_project/src/main/java/com/spring/app/aop/
+/fin_project/src/main/java/com/spring/app/common/
+/fin_project/src/main/java/com/spring/app/expedia/domain/
+/fin_project/src/main/java/com/spring/app/interceptor/controller/
+
+/fin_project/src/main/resources/
+
+/fin_project/src/main/webapp/META-INF/
+
+/fin_project/src/main/webapp/resources/bootstrap-4.6.2-dist/
+/fin_project/src/main/webapp/resources/css/com_expedia.css
+/fin_project/src/main/webapp/resources/fullcalendar_5.10.1/
+/fin_project/src/main/webapp/resources/Highcharts-10.3.3/
+/fin_project/src/main/webapp/resources/images/tl_transp.gif
+/fin_project/src/main/webapp/resources/jquery-ui-1.13.1.custom/
+/fin_project/src/main/webapp/resources/js/jquery.form.min.js
+/fin_project/src/main/webapp/resources/js/jquery-3.7.1.min.js
+/fin_project/src/main/webapp/resources/smarteditor/
+/fin_project/src/main/webapp/resources/SQL/
+
+/fin_project/src/main/webapp/WEB-INF/spring/
+/fin_project/src/main/webapp/WEB-INF/tiles/
+/fin_project/src/main/webapp/WEB-INF/views/msg.jsp
+/fin_project/src/main/webapp/WEB-INF/views/paymentGateway.jsp
+/fin_project/src/main/webapp/WEB-INF/web.xml
+
+/fin_project/common/
+/fin_project/NCS/
+/fin_project/target/
+
+/fin_project/pom.xml
+
+#########################################################################
+
 
 # End of https://www.toptal.com/developers/gitignore/api/java,eclipse

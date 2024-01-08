@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.spring.app.expedia.domain.HostVO;
 import com.spring.app.expedia.domain.LodgeVO;
 import com.spring.app.db.lodge.model.LodgeDAO;
 
@@ -132,11 +133,11 @@ public class LodgeService_imple implements LodgeService {
 		
 		int n1=0, n2=0, n3=0, n4=0, n5=0, n6=0, n7=0, n8=0, n9=0, n10=0, result=0;
 		
-	//	HttpSession session = request.getSession();
-	//	HostVO loginuser = session.getAttribute("loginuser");
-	//	String fk_h_userid = loginuser.getH_userid();
-		String fk_h_userid = "grandjusun@gmail.com"; // 실제 판매자 아이디로 체크해야됨.
-		paraMap.put("fk_h_userid", fk_h_userid);
+		// ================= AOP 로그인한 사용자의 정보 -시작- ==================== //
+		HttpSession session = request.getSession();
+		HostVO loginhost = (HostVO) session.getAttribute("loginhost");
+		String fk_h_userid = loginhost.getH_userid();
+		// ================= AOP 로그인한 사용자의 정보 -끝- ====================== //
 		
 		// 기존에 입력되어있는 lodge정보 가져오기
 		LodgeVO LodgeInfo = dao.getLodgeInfo(fk_h_userid);
@@ -851,19 +852,6 @@ public class LodgeService_imple implements LodgeService {
 		return rm_typeList;
 	}
 
-	// == 삭제 해야할 이미지 파일 이름 가져오기 == //
-	@Override
-	public List<String> getDeleteImgFileName(String fk_rm_seq) {
-		List<String> delFileNameList = dao.getDeleteImgFileName(fk_rm_seq);
-		return delFileNameList;
-	}
-
-	// == tbl_rm_img 테이블 정보 제거 == //
-	@Override
-	public void delRoomImg(String fk_rm_seq) {
-		dao.delRoomImg(fk_rm_seq);
-	}
-
 	// === 객실 이미지 등록하기 === //
 	@Override
 	public void insertRoomImages(Map<String, String> paraMap) {
@@ -875,6 +863,47 @@ public class LodgeService_imple implements LodgeService {
 	public List<Map<String, String>> getRmImgData(String fk_rm_seq) {
 		List<Map<String,String>> roomImgDataMapList = dao.getRmImgData(fk_rm_seq);
 		return roomImgDataMapList;
+	}
+
+	// === DB에서 이미지를 삭제한다. === //
+	@Override
+	public int delIdxImg(Map<String, String> paraMap) {
+		int result = dao.delIdxImg(paraMap);
+		return result;
+	}
+
+	// 다음 메인이미지 rm_img_seq 가져오기
+	@Override
+	public List<String> nextMainImgUpdate(String fk_rm_seq) {
+		List<String> nextMainImg_rm_img_seq = dao.nextMainImgUpdate(fk_rm_seq);
+		return nextMainImg_rm_img_seq;
+	}
+
+	// rm_img_seq값에 해당하는 이미지 정보의 rm_img_main를 "1"로 업데이트 하기
+	@Override
+	public void updateNextMainImg(String next_rm_img_seq) {
+		dao.updateNextMainImg(next_rm_img_seq);
+	}
+
+	// 객실 사진등록 "사진 전체 제거" 버튼 클릭
+	@Override
+	public int delRoomImgFk_rm_seq(String fk_rm_seq) {
+		int result = dao.delRoomImgFk_rm_seq(fk_rm_seq);
+		return result;
+	}
+
+	// DB에 fk_rm_seq객실에 메인이미지가 등록되어 있는지 체크한다.
+	@Override
+	public String getMainImgCheck(String fk_rm_seq) {
+		String check = dao.getMainImgCheck(fk_rm_seq);
+		return check;
+	}
+
+	// DB에 등록된 이미지 파일명을 가지고 온다.
+	@Override
+	public List<Map<String, String>> getLodgeImgData(String fk_lodge_id) {
+		List<Map<String,String>> LodgeImgMapList = dao.getLodgeImgData(fk_lodge_id);
+		return LodgeImgMapList;
 	}
 
 	

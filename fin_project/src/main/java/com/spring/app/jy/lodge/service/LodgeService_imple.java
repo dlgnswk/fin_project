@@ -150,8 +150,8 @@ public class LodgeService_imple implements LodgeService {
 	}
 
 	@Override
-	public List<Map<String, String>> getRm_img_list(String rm_seq) {
-		List<Map<String, String>> Rm_img_list = dao.getRm_img_list(rm_seq);
+	public List<Map<String, String>> getRm_img_list(Map<String, String> paraMap) {
+		List<Map<String, String>> Rm_img_list = dao.getRm_img_list(paraMap);
 		return Rm_img_list;
 	}
 
@@ -161,11 +161,6 @@ public class LodgeService_imple implements LodgeService {
 		return Lg_img_ca_list;
 	}
 
-	@Override
-	public List<Map<String, String>> getAll_rm_img_list(String lodge_id) {
-		List<Map<String, String>> Rm_img_list = dao.getRm_img_list(lodge_id);
-		return Rm_img_list;
-	}
 
 	@Override
 	public String getLg_ca_name(String img_cano) {

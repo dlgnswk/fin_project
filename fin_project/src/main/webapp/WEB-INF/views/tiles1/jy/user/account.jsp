@@ -121,7 +121,7 @@
      </svg>
     </div>
     <div class="uitk-card-content-section uitk-card-content-section-padded uitk-layout-flex-item uitk-layout-flex-item-flex-grow-1">
-     <a target="_self" href="account/point_history.exp" rel="noreferrer" class="uitk-card-link"><span class="is-visually-hidden">포인트 내역</span></a>
+     <a target="_self" href="<%= ctxPath%>/user_rewards.exp" rel="noreferrer" class="uitk-card-link"><span class="is-visually-hidden">포인트 내역</span></a>
      <div class="uitk-text uitk-type-400 uitk-text-default-theme uitk-spacing uitk-spacing-margin-block-half">포인트 내역</div>
     </div>
     <div class="uitk-card-content-section uitk-card-content-section-padded-block-start uitk-card-content-section-padded-block-end uitk-card-content-section-padded-inline-end uitk-layout-flex-item-align-self-center uitk-layout-flex-item uitk-layout-flex-item-flex-grow-0">
@@ -139,7 +139,7 @@
      </svg>
     </div>
     <div class="uitk-card-content-section uitk-card-content-section-padded uitk-layout-flex-item uitk-layout-flex-item-flex-grow-1">
-     <a target="_self" href="account/user_writeReviews.exp" rel="noreferrer" class="uitk-card-link"><span class="is-visually-hidden">이용후기</span></a>
+     <a target="_self" href="<%= ctxPath%>/myrvlist.exp" rel="noreferrer" class="uitk-card-link"><span class="is-visually-hidden">이용후기</span></a>
      <div class="uitk-text uitk-type-400 uitk-text-default-theme uitk-spacing uitk-spacing-margin-block-half">이용후기</div>
     </div>
     <div class="uitk-card-content-section uitk-card-content-section-padded-block-start uitk-card-content-section-padded-block-end uitk-card-content-section-padded-inline-end uitk-layout-flex-item-align-self-center uitk-layout-flex-item uitk-layout-flex-item-flex-grow-0">
@@ -287,6 +287,7 @@
        </div>
       </div>
      </div>
+    <%-- 추가정보 - 여권 / 다른여행객 추가 삭제
      <div id="more-details-additional-travelers-section">
       <div class="uitk-layout-grid uitk-layout-grid-has-auto-columns uitk-layout-grid-has-columns-by-large uitk-layout-grid-has-space uitk-layout-grid-display-grid" style="--uitk-layoutgrid-auto-columns: minmax(var(--uitk-layoutgrid-egds-size__0x), 1fr); --uitk-layoutgrid-columns-large: repeat(2, minmax(0, 1fr)); --uitk-layoutgrid-column-gap: var(--uitk-layoutgrid-space-twelve); --uitk-layoutgrid-row-gap: var(--uitk-layoutgrid-space-twelve);">
        <div id="more-details-section" class="uitk-layout-grid-item">
@@ -348,6 +349,7 @@
       </div>
      </div>
     </div>
+    --%>
    </div>	
   </div>
  </div>

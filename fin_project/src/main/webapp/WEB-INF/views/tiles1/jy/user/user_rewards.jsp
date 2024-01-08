@@ -95,15 +95,15 @@
 						int now = (int) request.getAttribute("user_rs_cnt");
 						UserVO loginuser = (UserVO) session.getAttribute("loginuser");
 						String user_lvl = loginuser.getUser_lvl();
-						String next_uer_lvl = "";
+						String next_user_lvl = "";
 						
-						if(user_lvl == "블루") { next_uer_lvl = "실버"; }
-						if(user_lvl == "실버") { next_uer_lvl = "골드"; }
+						if(now < 10) { next_user_lvl = "실버"; }
+						else if(now < 25) { next_user_lvl = "골드"; }
 						int left_cnt_next = 0;
-						if(user_lvl == "실버"){
+						if(next_user_lvl == "골드"){
 							left_cnt_next = gold - now;
 						}
-						if(user_lvl == "블루"){
+						if(next_user_lvl == "실버"){
 							left_cnt_next = silver - now;
 						}
 					
@@ -112,7 +112,7 @@
 					<div class="box  tier-progress" id="tier_progress">
 						<header class="cols-row-header cf section-header no-group">
 							<c:if test="${requestScope.loginuser.user_lvl ne '골드'}">
-								<h3 class="section-header-main  tier-progress-suggestion"> <%= nextYear%>년에  <a style="color: #1668e3; font-weight:bold;"><%=next_uer_lvl%> 등급</a>이 되고 싶으세요? 
+								<h3 class="section-header-main  tier-progress-suggestion"> <%= nextYear%>년에  <a style="color: #1668e3; font-weight:bold;"><%=next_user_lvl%> 등급</a>이 되고 싶으세요? 
 								<%= thisYear%>년 12월 31일까지 여행 아이템을 <%= left_cnt_next%>개 더 적립해 주세요.</h3>
 							</c:if>
 							<c:if test="${requestScope.loginuser.user_lvl eq '골드'}">
@@ -228,7 +228,7 @@
 						<section id="redeem-modules" class="redeem-modules count-1">
 							<div class="redeem-module redeem_for_hotel"
 								id="redeem_for_hotel_link">
-								<a href="/rewards/redeem?rfrr=Rewards.PointsRedeem.Hotel"> 호텔에 사용 </a>
+								<a href="<%= ctxPath%>/index.exp"> 호텔에 사용 </a>
 								<p>할인가로 숙박</p>
 							</div>
 						</section>

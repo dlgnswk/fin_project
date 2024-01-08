@@ -92,7 +92,49 @@
 		where h_userid = #{userid} 
 	</update>
 	
-	  
+	
+	<!-- 채팅방 불러오기 -->
+	<select id="selectChat" parameterType="HashMap" resultType="com.spring.app.expedia.domain.ChatVO">
+		select chat_no, fk_userid, fk_lodge_id ,chat_date
+		from tbl_chat
+		where fk_lodge_id = #{lodge_id} and fk_userid = #{userid}
+	</select>  
+	
+	
+	<!-- 기존 채팅방이 없는 경우 새로운 채팅방을 만들기 -->
+	<insert id="createChat" parameterType="HashMap">
+		insert into tbl_chat(chat_no, fk_userid, fk_lodge_id, chat_date)
+		values (seq_tbl_chat, #{userid}, #{lodge_id}, default)
+	</insert>
+	
+	
+	<!-- 채팅쓰기(tbl_reply 테이블에 insert) -->
+	<insert id="addChat" parameterType="HashMap" >
+	     insert into tbl_reply(reply_no, reply_comment, reply_date, fk_chat_no, r_status)
+	     values(seq_tbl_reply.nextval, #{msg}, default, #{chat_no}, 0)
+	</insert>
+	
+	<!-- 채팅들을 페이징 처리해서 조회해오기 -->
+	<select id="getMsgList_Paging" parameterType="HashMap" resultType="com.spring.app.expedia.domain.ReplyVO"> 
+		SELECT reply_no, reply_comment, reply_date, r_status, reply_date
+		FROM 
+		(
+		select row_number() over(order by reply_no desc) AS rno
+		     , reply_no, reply_comment, to_char(reply_date, 'yyyy-mm-dd hh24:mi:ss') AS reply_date
+		     , fk_chat_no, r_status 
+		from tbl_reply
+		where r_status = 0 and fk_chat_no = #{fk_chat_no}
+		) V
+		WHERE rno BETWEEN #{startRno} AND #{endRno}
+	</select>
+	
+	
+	<!-- 채팅방 번호에 해당하는 채팅의 totalPage 수 알아오기 -->
+	<select id="getMsgTotalPage" parameterType="HashMap" resultType="int">
+		select ceil(count(*)/#{sizePerPage})
+		from tbl_reply
+		where fk_chat_no = #{fk_chat_no}
+	</select> 
 	
 	
 </mapper>

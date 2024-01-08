@@ -391,7 +391,7 @@
 								v_html += 		"<div><a class='go_lodge reviewWrite' onclick='reviewWrite(" + item.rs_no + ")'>리뷰 작성하기</a></div>";
 							}
 							else{
-								v_html += 		"<div><a class='go_lodge reviewWrite' onclick='reviewWrite(" + item.rs_no + ")'>작성한 리뷰보기</a></div>";
+								v_html += 		"<div><a class='go_lodge reviewWrite' href='<%= ctxPath%>/myrvlist.exp'>작성한 리뷰보기</a></div>";
 							}
 						}
 						v_html += 			"</div>";
@@ -500,7 +500,7 @@
 								v_html += 		"<div><a class='go_lodge reviewWrite' onclick='reviewWrite(" + item.rs_no + ")'>리뷰 작성하기</a></div>";
 							}
 							else{
-								v_html += 		"<div><a class='go_lodge reviewWrite' onclick='reviewWrite(" + item.rs_no + ")'>작성한 리뷰보기</a></div>";
+								v_html += 		"<div><a class='go_lodge reviewWrite' href='<%= ctxPath%>/myrvlist.exp'>작성한 리뷰보기</a></div>";
 							}
 						}
 						v_html += 			"</div>";
@@ -610,7 +610,7 @@
 							
 						<%-- 세번째 줄 정보 --%>
 						v_html += 			"<div class='third_content'>";
-						v_html += 				"<div class='lodge_price'>";
+						v_html += 				"<div class='lodge_price'>";console.log(item.min_price);
 						v_html += 					"&#8361; <span>" + Number(item.min_price).toLocaleString('en') +"</span>";
 						v_html += 				"</div>";
 						v_html += 			"</div>";
@@ -618,7 +618,18 @@
 						<%-- 네번째 줄 정보 --%>
 						v_html += 			"<div class='fourth_content wishlist_content'>";
 						v_html += 				"<div class='lodge_rating'>";
-						v_html += 					"<span>" + item.rating + "</span>/10 (<span>" + item.review_cnt + "</span>개 이용 후기)";
+						if(item.rating == "평점없음"){
+							v_html += 				"<span>" + item.rating + "</span> (";
+						}
+						else{
+							v_html += 				"<span>" + item.rating + "</span>/10 (";
+						}
+						if(item.review_cnt == "리뷰없음"){
+							v_html += 				"<span>이용후기없음</span>)";
+						}
+						else{
+							v_html += 				"<span>" + item.review_cnt + "</span>개 이용 후기)";
+						}
 						v_html += 				"</div>";
 						v_html += 				"<div class='lodge_price_date'>1박당</div>";
 						v_html += 			"</div>";

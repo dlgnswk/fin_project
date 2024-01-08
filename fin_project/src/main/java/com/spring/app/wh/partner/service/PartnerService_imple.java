@@ -2,6 +2,7 @@ package com.spring.app.wh.partner.service;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,10 +11,15 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.app.common.AES256;
+import com.spring.app.expedia.domain.ChatVO;
 import com.spring.app.expedia.domain.HostVO;
+import com.spring.app.expedia.domain.ReplyVO;
 import com.spring.app.wh.partner.model.PartnerDAO;
 
 @Service
@@ -30,16 +36,6 @@ public class PartnerService_imple implements PartnerService {
 	@Override
 	public HostVO getLoginHost(Map<String, String> paraMap) {
 		HostVO loginhost = dao.getLoginHost(paraMap);
-		// System.out.println("확인용 : service loginhost : "+loginhost);
-		// === #48. aes 의존객체를 사용하여 로그인 되어진 사용자(loginuser)의 이메일 값을 복호화 하도록 한다. === 
-	    //          또한 암호변경 메시지와 휴면처리 유무 메시지를 띄우도록 업무처리를 하도록 한다.
-		
-		
-		if(loginhost != null && loginhost.getH_pwdchangegap() >= 3 ) {
-			// 마지막으로 암호를 변경한 날짜가 현재시각으로부터 3개월이 지났으면
-			loginhost.setRequirePwdChange(true); // 로그인 시 암호를 변경하라는 alert 를 띄우도록 한다.
-		}
-		
 		
 		return loginhost;
 	}
@@ -78,7 +74,53 @@ public class PartnerService_imple implements PartnerService {
 	}
 
 	
+	// 채팅방 불러오기
+	@Override
+	public ChatVO selectChat(Map<String,String> paraMap) {
+		ChatVO chatvo = dao.selectChat(paraMap);
+		return chatvo;
+	}
 
+	// 기존 채팅방이 없는 경우 새로운 채팅방을 만들기
+	@Override
+	public int createChat(Map<String, String> paraMap) {
+		int n = dao.createChat(paraMap);
+		return n;
+	}
+
+	
+	// 채팅쓰기  
+	@Override
+	public int addChat(Map<String,String> paraMap) {
+
+		int n = dao.addChat(paraMap);// 채팅쓰기(tbl_reply 테이블에 insert)
+		//System.out.println("확인용 n =>"+ n);
+		
+		return n;
+	}
+
+ 
+	 
+	// 채팅들을 페이징 처리해서 조회해오기 
+	@Override
+	public List<ReplyVO> getMsgList_Paging(Map<String, String> paraMap) {
+		List<ReplyVO> MsgList = dao.getMsgList_Paging(paraMap);
+		return MsgList;
+	}
+
+	
+	// 채팅방 번호에 해당하는 채팅의 totalPage 수 알아오기
+	@Override
+	public int getMsgTotalPage(Map<String, String> paraMap) {
+		int totalPage = dao.getMsgTotalPage(paraMap);
+		return totalPage;
+	}
+	 
+	 
+	
+	 
+	 
+	
 	
 	
 

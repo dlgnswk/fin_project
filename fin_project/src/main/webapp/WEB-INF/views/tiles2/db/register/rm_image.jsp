@@ -87,29 +87,6 @@
 		});// end of $("input[name='mainImage']").change(function()
 		
 		
-				
-		// 이미지 전체 삭제 버튼
-		$("button.btnDelete").click(function(){
-			
-			const delId = $(this).parent().parent().parent().find("div.image_drop").attr("id");
-			const removeImgs = $(this).parent().parent().parent().find("div.image_drop");
-			
-			// "x"버튼의 부모의 id를  찾아서 대응 시킨다.
-			if ( delId == "roomImage") {
-			// let roomImage_arr = []; 	// 6 	메인이미지
-				roomImage_arr = [];
-			}
-			
-			removeImgs.find(".imageItem").remove(); // 이미지들 전부 지우기
-			removeImgs.find(".infoDiv").show();		// "사진 업로드" 다시 보이기
-			
-		});// end of $("button.btnDelete").click(function()
-				
-				
-	});// end of $(document).ready(function(){
-
-	
-	
 	// 들어온 파일의 타입을 체크한다.
 	function fileCheck(file) {
 	
@@ -263,42 +240,50 @@
 	
 	// === 사진 등록 하기  === //
 	$(document).on("click", "button#image_register", function(){
-		
-		var formData = new FormData($("form[name='addFrm']").get(0));
-		
-		console.log(roomImage_arr);
-		// 메인 이미지 
-		if(roomImage_arr.length > 0) {
-			
-			roomImage_arr.forEach(function(item){
-				// 첨부파일 추가하기 "file_arr" 이 키값이고  item 이 밸류값인데 file_arr 배열속에 저장되어진 배열요소인 파일첨부되어진 파일이 되어진다.
-				// 같은 key를 가진 값을 여러 개 넣을 수 있다.(덮어씌워지지 않고 추가가 된다.)
-	        	formData.append("roomImage_arr", item);  
-	        });
-			
-		}// end of if(mainImage_arr.length > 0)
-			
 		const fk_rm_seq = $("select[name='fk_rm_seq']").val();
-		formData.append("fk_rm_seq", fk_rm_seq);
-	
-		$.ajax({
-            url : "<%= ctxPath%>/rm_image.exp",
-            type : "post",
-            data : formData,
-            async: false,
-            processData:false,  // 파일 전송시 설정 -> query string(쿼리 스트링) 하지마라
-            contentType:false,  // 파일 전송시 설정 
-            dataType:"json",
-            success:function(json){
-          	  	
-            	alert("이미지가 성공적으로 등록되었습니다.");
-          	  	
-            },
-            error: function(request, status, error){
-				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-		      }
-        });
-	
+		
+		if (fk_rm_seq != "") {
+		// 사진등록 객실을 선택한 경우		
+			var formData = new FormData($("form[name='addFrm']").get(0));
+			
+			console.log(roomImage_arr);
+			// 메인 이미지 
+			if(roomImage_arr.length > 0) {
+				
+				roomImage_arr.forEach(function(item){
+					// 첨부파일 추가하기 "file_arr" 이 키값이고  item 이 밸류값인데 file_arr 배열속에 저장되어진 배열요소인 파일첨부되어진 파일이 되어진다.
+					// 같은 key를 가진 값을 여러 개 넣을 수 있다.(덮어씌워지지 않고 추가가 된다.)
+		        	formData.append("roomImage_arr", item);  
+		        });
+				
+			}// end of if(mainImage_arr.length > 0)
+				
+			
+			formData.append("fk_rm_seq", fk_rm_seq);
+		
+			$.ajax({
+	            url : "<%= ctxPath%>/rm_image.exp",
+	            type : "post",
+	            data : formData,
+	            async: false,
+	            processData:false,  // 파일 전송시 설정 -> query string(쿼리 스트링) 하지마라
+	            contentType:false,  // 파일 전송시 설정 
+	            dataType:"json",
+	            success:function(json){
+	          	  	
+	            	alert("이미지가 성공적으로 등록되었습니다.");
+	            },
+	            error: function(request, status, error){
+					alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		      	}
+	        });
+		}
+		else{
+			alert("사진을 등록하시려는 객실을 선택해 주세요.");
+		}
+		
+		location.href="javascript:location.reload(true)";
+		
 	}); // end of $("button#image_register").click(function()
 	
 	
@@ -309,6 +294,7 @@
 		let elmt = $("input[name='roomImage']"); 
 		// 새로운 객실을 보여주기 위해 -> 현재 보여주는 객실이미지들 제거
 		elmt.parent().parent().parent().find(".imageItem").remove();
+		elmt.parent().parent().parent().find(".infoDiv").show();
 		
 		$.ajax({
             url : "<%= ctxPath%>/getRmImgData.exp",
@@ -321,14 +307,15 @@
             	$.each(json, function(index, item){
 				//	console.log(item.rm_img_name +"\n" + item.rm_img_save_name);
             		
-					// 'C:/git/final_exp/final_project/src/main/webapp/resources/images/'+'${requestScope.fk_lodge_id}'+"/room_image/"+item.rm_img_save_name
+					// 'C:/git/final_exp/final_project/src/main/webapp/resources/images/'+'${requestScope.fk_lodge_id}'+"/room_img/"+item.rm_img_save_name
 					let html = "<div class='imageItem'>" +
-		          			      "<img class='__image' src='<%=ctxPath%>/resources/images/"+"${requestScope.fk_lodge_id}"+"/room_image/"+item.rm_img_save_name+"' />" + 
+		          			      "<img class='__image' src='<%=ctxPath%>/resources/images/"+"${requestScope.fk_lodge_id}"+"/room_img/"+item.rm_img_save_name+"' />" + 
 		                   	      "<div class='imageName'>" +
 		          			        "<span class='delete'>&times;</span>" +
 		          			        "<span class='fileName'>"+item.rm_img_name+"</span>" +
-		          			        "<input type='text' class='rm_img_name' value='"+item.rm_img_name+"' />"+
-		          			      	"<input type='text' class='rm_img_save_name' value='"+item.rm_img_save_name+"' />"+
+		          			        "<input type='hidden' class='rm_img_name' value='"+item.rm_img_name+"' />"+
+		          			      	"<input type='hidden' class='rm_img_save_name' value='"+item.rm_img_save_name+"' />"+
+		          			      	"<input type='hidden' class='rm_img_main' value='"+item.rm_img_main+"' />" +
 		          			      "</div>"+
 	               			   "</div>";					// &times;는 X로 보여주는 것이다.
 	               		
@@ -337,7 +324,7 @@
 	               	elmt.parent().parent().parent().find(".infoDiv").hide();
 	               	
             	}); // end of $.each(json, function(index, item)
-				
+            			
             },
             error: function(request, status, error){
 				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -346,6 +333,105 @@
 		
 	}); // end of $(document).on("change","select[name='fk_rm_seq']",function(){
 	
+	// 페이지가 로드 되면 첫번째 객실의 사진을 가져오는 이벤트 발생
+	$("select[name='fk_rm_seq']").trigger("change");	
+	
+	// "x"를 눌렀을때 저장 경로와 DB에서 삭제한다.
+	$(document).on("click","span.delete",function(){
+		
+		if( confirm("선택한 이미지를 정말로 삭제하시겠습니까?") ) {
+		
+			if($(this).parent().parent().hasClass("exitData")) {
+			// 이미지 파일 배열에 값이 추가된 이미지를 제거했다.			
+				const deleteIdx = $(this).parent().parent().index(".exitData");
+				roomImage_arr.splice(deleteIdx,1); // 삭제가 발생한 index와 같은 index를 가지는 파일을 배열에서 삭제한다.
+			}
+			else{
+			// DB에서 가져온 이미지라 roomImage_arr에 값이 없는 경우이다.
+				const rm_img_name = $(this).parent().find("input.rm_img_name").val();
+				const rm_img_save_name = $(this).parent().find("input.rm_img_save_name").val();
+				const rm_img_main = $(this).parent().find("input.rm_img_main").val();
+				
+				console.log(rm_img_name, rm_img_save_name);
+				// 해당하는 이미지와 같은 경로의 값을 DB에서 삭제한다.
+				$.ajax({
+		            url : "<%= ctxPath%>/delIdxImg.exp",
+		            type : "post",
+		            data : { "fk_lodge_id":"${requestScope.fk_lodge_id}",
+		            		 "fk_rm_seq":$("select[name='fk_rm_seq']").val(),
+		            		 "rm_img_save_name":rm_img_save_name,
+		            		 "rm_img_name":rm_img_name,
+		            		 "rm_img_main":rm_img_main
+		            		},
+		            async: false,
+		            dataType:"json",
+		            success:function(json){
+		            	
+		            	if(json.reault == 1){
+		            		// 현재 페이지로 이동(==새로고침) 서버에 가서 다시 읽어옴.
+			            	location.href="javascript:location.reload(true)";
+		            	}
+		            	
+		            },
+		            error: function(request, status, error){
+						alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			      	}	
+		        }); // end of $.ajax
+				
+			}
+		//	console.log(roomImage_arr);
+			$(this).parent().parent().remove(); // 사진 지우기
+		}
+		
+		// "사진 업로드"설명 보여줄지 결정한다.
+		imageItem();
+		
+	}); // end of $(document).on("click","span.delete",function(){
+	
+	// 이미지 전체 삭제 버튼
+	$("button.btnDelete").click(function(){
+		
+		if( confirm("등록된 사진을 정말로 삭제하시겠습니까?") ) {
+		// 등록된 사진을 전부 삭제한다.
+			let cnt = $("div.imageItem").length;
+			
+			if( cnt > 0 ) {
+			// 이미지가 들어와 있는 경우이다.
+				// 이미지 파일 배열 초기화
+				roomImage_arr = [];
+				
+				// == 해당 객실이름의 이미지 정보를 DB와 저장경로에서 삭제하기 == //
+				const removeImgs = $(this).parent().parent().parent().find("div.image_drop");
+				
+				// fk_rm_seq값을 가진 행 삭제
+				$.ajax({
+		            url : "<%= ctxPath%>/delRoomImgFk_rm_seq.exp",
+		            type : "post",
+		            data : { "fk_rm_seq":$("select[name='fk_rm_seq']").val() },
+		            async: false,
+		            dataType:"json",
+		            success:function(json){
+		            	
+		            	location.href="javascript:location.reload(true)";
+		            	
+		            },
+		            error: function(request, status, error){
+						alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			      	}	
+		        }); // end of $.ajax
+			
+				// 페이지에서 보이는 이미지들 제거 
+				removeImgs.find(".imageItem").remove();
+				imageItem(); // "사진 업로드"설명 보여줄지 결정한다
+			
+			}
+			
+		} // end of if( confirm("등록된 사진을 정말로 삭제하시겠습니까?") ) ---------
+		
+	});// end of $("button.btnDelete").click(function()
+			
+			
+			
 	
 	// "사진 업로드"설명 보여줄지 결정한다
 	function imageItem() {
@@ -360,54 +446,8 @@
 		}
 	
 	} // end of function imageItem() {
-
-	
-	// "x"를 눌렀을때 경로와 DB에서 삭제한다.
-	$(document).on("click","span.delete",function(){
+});// end of $(document).ready(function(){	
 		
-		if( confirm("선택한 이미지를 정말로 삭제하시겠습니까?") ) {
-		
-			if($(this).parent().parent().hasClass("exitData")) {
-			// 이미지 파일 배열에 값이 추가된 이미지를 제거했다.			
-				const deleteIdx = $(this).parent().parent().index(".exitData");
-				roomImage_arr.splice(deleteIdx,1); // 삭제가 발생한 index와 같은 index를 가지는 파일을 배열에서 삭제한다.
-			}
-			else{
-			// DB에서 가져온 이미지라 배열에 추가되어 있지 않다.
-				const rm_img_name = $(this).parent().find("input.rm_img_name").val();
-				const rm_img_save_name = $(this).parent().find("input.rm_img_save_name").val();
-				console.log(rm_img_name, rm_img_save_name);
-				// 해당하는 이미지와 같은 경로의 값을 DB에서 삭제한다.
-				$.ajax({
-		            url : "<%= ctxPath%>/delIdxImg.exp",
-		            type : "post",
-		            data : { "fk_lodge_id":"${requestScope.fk_lodge_id}",
-		            		 "fk_rm_seq":$("select[name='fk_rm_seq']").val(),
-		            		 "rm_img_save_name":rm_img_name,
-		            		 "rm_img_name":rm_img_save_name,
-		            		},
-		            async: false,
-		            dataType:"json",
-		            success:function(json){
-						
-		            },
-		            error: function(request, status, error){
-						alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-			      	}	
-		        }); // end of $.ajax
-				
-			}
-			console.log(roomImage_arr);
-			
-			$(this).parent().parent().remove(); // 사진 지우기
-			
-		}
-		
-		// "사진 업로드"설명 보여줄지 결정한다.
-		imageItem();
-		
-	}); // end of $(document).on("click","span.delete",function(){
-	
 		
 </script>
 
@@ -422,12 +462,12 @@
 		<div class="images_div">
 			<span class="div_span">
 				<select name="fk_rm_seq">
+					<option value="">--선택--</option>
 					<c:forEach var="updateRmInfo" items="${updateRmInfoMapList}" >
 						<option value="${updateRmInfo.rm_seq}">${updateRmInfo.rm_type}</option>
 					</c:forEach>
 				</select>
 			</span>
-			<span class="addText">*가장 먼저 등록한 사진이 객실의 메인사진으로 사용됩니다.</span>
 			<div class="image_drop __flex" id="roomImage">
 				<div class="infoDiv __flex">
 					<div class="verticalMiddle __flex">
@@ -443,6 +483,7 @@
 			</div>
 			<div class="btnContDiv__ __flex">
 				<div class="flexChild">
+					<span class="addText">*가장 먼저 등록한 사진이 객실의 메인사진으로 사용됩니다.</span>
 					<button type="button" class="btnDelete"><svg class="svgCam" xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#2667b9" d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/></svg>사진 전체 제거</button>
 					<button type="button" class="btnAdd" ><svg class="svgCam" xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#2667b9" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>사진 추가</button>
 					<input type="file" name="roomImage" accept=".jpg, .png" style="display:none;"/>

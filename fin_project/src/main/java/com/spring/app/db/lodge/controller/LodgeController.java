@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
@@ -25,6 +26,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.spring.app.common.FileManager;
 import com.spring.app.db.lodge.service.LodgeService;
+import com.spring.app.expedia.domain.HostVO;
 
 @Controller
 public class LodgeController {
@@ -39,27 +41,30 @@ public class LodgeController {
 	
 	// *** 숙박 시설 등록 페이지 *** //
 	@RequestMapping(value="/register_lodge.exp")
-	public String register_lodge(HttpServletRequest request) {
+	public String requiredHostLogin_register_lodge(HttpServletRequest request,
+												   HttpServletResponse response) {
 		
 		// !!!! 로그인 한 사용자(판매자)에게 사용자등록번호를 받아와 넣어줘야 한다.
 		// 관리자 승인 유무 체크
-	//	HttpSession session = request.getSession();
-		//	HostVO loginuser = (HostVO) session.getAttribute("loginuser");
-		//	String fk_h_userid = loginuser.getFk_h_userid();
-	//	String fk_h_userid = "grandjusun@gmail.com";
+		HttpSession session = request.getSession();
+		HostVO loginhost = (HostVO) session.getAttribute("loginhost");
+		
+		String fk_h_userid = loginhost.getH_userid();
+		
+	//	System.out.println("fk_h_userid => "+ fk_h_userid); // 현재 로그인 호스트의 아이디 이다.
 		
 		// 현재 로그인한 판매자의 ID로 숙박시설의 lodge_id를 가져온다.
-	//	String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
+		String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
 		
-		String fk_lodge_id = "JSUN0231";
+	//	System.out.println("fk_lodge_id => "+ fk_lodge_id); // 현재 로그인 호스트의 호텔아이디 이다.
+		String front_id = "";
+		String back_id = "";
 		
-		String front_id = fk_lodge_id.substring(0,4);
-		String back_id = fk_lodge_id.substring(4);
-
+		if(fk_lodge_id != null) {
+			front_id = fk_lodge_id.substring(0,4);
+			back_id = fk_lodge_id.substring(4);
+		}
 		
-		request.setAttribute("fk_lodge_id", fk_lodge_id);
-		request.setAttribute("front_id", front_id);
-		request.setAttribute("back_id", back_id);
 		
 		// == 숙박시설 유형 테이블에서 select == //
 		List<Map<String,String>> lodgeTypeMapList = service.getLodgeType();
@@ -162,6 +167,11 @@ public class LodgeController {
 		request.setAttribute("businessTypeMapList", businessTypeMapList);		// 비즈니스 공간 종류 체크박스(중복가능)
 		request.setAttribute("familyServiceTypeMapList", familyServiceTypeMapList);		// 가족서비스 종류 체크박스(중복가능)
 		
+		// 이미 호텔이 등록되어 있는 경우 보여준다.
+		request.setAttribute("fk_lodge_id", fk_lodge_id);
+		request.setAttribute("front_id", front_id);
+		request.setAttribute("back_id", back_id);
+		request.setAttribute("fk_h_userid", fk_h_userid);
 		
 		return "db/register/register_lodge.tiles2";
 		// /WEB-INF/views/tiles2/db/register/register_lodge.jsp
@@ -171,7 +181,8 @@ public class LodgeController {
 	
 	// === *** 숙박시설 등록 *** === //
 	@PostMapping(value="/lodge_register.exp", produces = "text/plain;charset=UTF-8")
-	public String lodgeRegister(@RequestParam(required = false) HashMap<String,String> paraMap, HttpServletRequest request) {
+	public String requiredHostLogin_lodgeRegister(HttpServletRequest request, HttpServletResponse response,
+												  @RequestParam(required = false) HashMap<String,String> paraMap) {
 		
 		
 		// 숙박시설 등록 데이터 -시작- //
@@ -190,12 +201,23 @@ public class LodgeController {
 		String lg_area = paraMap.get("lg_area");
 		String lg_area_2 = paraMap.get("lg_area_2");
 		String fk_lodge_type = paraMap.get("fk_lodge_type");
+		
 		String lg_hotel_star = paraMap.get("lg_hotel_star");
+		if(lg_hotel_star == null) {
+			lg_hotel_star ="";
+			paraMap.put("lg_hotel_star", lg_hotel_star);
+		}
+		
 		String lg_qty = paraMap.get("lg_qty");
 		
 		String fk_cancel_opt = paraMap.get("fk_cancel_opt");
 		String fd_status = paraMap.get("fd_status");
 		String fd_time = paraMap.get("fd_time");
+		if(fd_time == null) {
+			fd_time = "";
+			paraMap.put("fd_time", fd_time);
+		}
+		
 		String fk_s_checkin_type = paraMap.get("fk_s_checkin_type");
 		String lg_checkin_start_time = paraMap.get("lg_checkin_start_time"); // 20
 		
@@ -301,16 +323,17 @@ public class LodgeController {
 		}
 		
 		// 등록 이후
-		if( /*n == 1*/ false ) {
+		if( n == 1 ) {
 		// 숙박시설 등록 성공
 		// 페이지 이동
 			request.setAttribute("message", "숙박시설이 등록되었습니다.");
-			request.setAttribute("loc", "/expedia/register_lodge.exp");
+			request.setAttribute("loc", request.getContextPath()+"/lodgeControl.exp");
 		}
 		else {
 		// 숙박시설등록 실패
+			request.setAttribute("message", "시설 등록중 문제가 발생했습니다.");
+			request.setAttribute("loc", request.getContextPath()+"/lodgeControl.exp");
 		}
-		
 		
 		/*
 			Controller 에서  return "product/prodview"; 로 하면
@@ -318,8 +341,7 @@ public class LodgeController {
 	               
        		위치는 숙박 시설 관리 페이지로 이동 /webapp/WEB-INF/views/msg.jsp
 		 */
-	//	return "msg";
-		return "db/register/register_lodge.tiles2";
+		return "msg";
 	}
 	
 	
@@ -444,18 +466,35 @@ public class LodgeController {
 	
 	/////////////////////////// 시설 사진 등록 /////////////////////////////////////
 	
-	
+	// 시설 사진 등록 페이지
 	@GetMapping(value="/image_lodge.exp")
-	public String image_lodge(HttpServletRequest request) {
+	public String requiredHostLogin_image_lodge(HttpServletRequest request, HttpServletResponse response) {
+		
+		// ================= AOP 로그인한 사용자의 정보 -시작- ==================== //
+		HttpSession session = request.getSession();
+		HostVO loginhost = (HostVO) session.getAttribute("loginhost");
+		String fk_h_userid = loginhost.getH_userid();
+		// 현재 로그인한 판매자의 ID로 숙박시설의 lodge_id를 가져온다.
+		String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
+		// ================= AOP 로그인한 사용자의 정보 -끝- ====================== //
+		
+		// DB에 등록된 이미지 파일명을 가지고 온다.
+		List<Map<String,String>> LodgeImgMapList = service.getLodgeImgData(fk_lodge_id);
+		
+		
+		request.setAttribute("LodgeImgMapList", LodgeImgMapList);
 		
 		return "db/register/image_lodge.tiles2";
 		// /WEB-INF/views/tiles2/db/register/register_lodge.jsp
 		// /WEB-INF/views/tiles2/{1}/{2}/{3}.jsp
 	}
 	
+	
+	// 시설 사진 등록 버튼 클릭시
 	@ResponseBody
 	@PostMapping(value="/image_lodge.exp")
-	public String image_register(MultipartHttpServletRequest mtp_request) {
+	public String requiredHostLogin_image_register(HttpServletRequest request, HttpServletResponse response,
+												   MultipartHttpServletRequest mtp_request) {
 		
 		List<MultipartFile> mainImage_List  = mtp_request.getFiles("mainImage_arr");
 		List<MultipartFile> outImage_List  = mtp_request.getFiles("outImage_arr");
@@ -465,23 +504,32 @@ public class LodgeController {
 		List<MultipartFile> serviceImage_List  = mtp_request.getFiles("serviceImage_arr");
 		List<MultipartFile> viewImage_List  = mtp_request.getFiles("viewImage_arr");
 		
-		String fk_lodge_id = "JSUN0231";
+		
+		HttpSession session = request.getSession();
+		HostVO loginhost = (HostVO) session.getAttribute("loginhost");
+		
+		String fk_h_userid = loginhost.getH_userid();
+		// 현재 로그인한 판매자의 ID로 숙박시설의 lodge_id를 가져온다.
+		String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
+		System.out.println("fk_lodge_id => "+ fk_lodge_id);
+		
+	//	String fk_lodge_id = "JSUN0231";
 		
 		// 시설 이미지를 저장할 경로
 //		HttpSession session = mtp_request.getSession();
 //		String root = session.getServletContext().getRealPath("/");
-//		String path = root + "resources"+File.separator+"images"+File.separator+fk_lodge_id+File.separator+"lodge_image";
+//		String path = root + "resources"+File.separator+"images"+File.separator+fk_lodge_id+File.separator+"lodge_img";
 		
-		String root = "C:\\git\\final_exp\\final_project\\src\\main\\webapp\\resources";
-		String path = root +File.separator+"images"+File.separator+fk_lodge_id+File.separator+"lodge_image";
+		String root = "C:\\git\\fin_project\\fin_project\\src\\main\\webapp\\resources";
+		String path = root +File.separator+"images"+File.separator+fk_lodge_id+File.separator+"lodge_img";
 		
 		System.out.println(path);
-		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\final_project\resources\images\ "JSUN0231" \lodge_image
+		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\final_project\resources\images\ "JSUN0231" \lodge_img
 		File dir = new File(path);
 		
 		// ==== 등록전 사전에 등록된 이미지 제거 ==== // 
 		if(dir.exists()) {
-		// images\ "JSUN0231" \lodge_image 파일이 존재하면 제거한다.
+		// images\ "JSUN0231" \lodge_img 파일이 존재하면 제거한다.
 		// 삭제하려는 파일이 폴더이고 폴더 안에 내용물이 있다면 삭제가 되지 않는다.
 			File[] folderList = dir.listFiles(); // 폴더의 내용물이 있는지 확인하다.
 			if( folderList.length > 0) {
@@ -689,7 +737,7 @@ public class LodgeController {
 	
 	// ==== 객실 등록 ==== //
 	@GetMapping(value="/rm_register.exp")
-	public String rm_register(HttpServletRequest request) {
+	public String requiredHostLogin_rm_register(HttpServletRequest request, HttpServletResponse response) {
 		
 		// == 욕실 옵션 종류 checkbox == //
 		List<Map<String,String>> bathOptMapList = service.getBathOpt();
@@ -709,14 +757,13 @@ public class LodgeController {
 		// == 전망 옵션 종류 select == // 
 		List<Map<String,String>> viewOptMapList = service.getViewOpt();
 		
-		
-	//	HttpSession session = request.getSession();
-	//	HostVO loginuser = (HostVO) session.getAttribute("loginuser");
-	//	String fk_h_userid = loginuser.getFk_h_userid();
-		String fk_h_userid = "grandjusun@gmail.com";
-		
+		// ================= AOP 로그인한 사용자의 정보 -시작- ==================== //
+		HttpSession session = request.getSession();
+		HostVO loginhost = (HostVO) session.getAttribute("loginhost");
+		String fk_h_userid = loginhost.getH_userid();
 		// 현재 로그인한 판매자의 ID로 숙박시설의 lodge_id를 가져온다.
 		String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
+		// ================= AOP 로그인한 사용자의 정보 -끝- ==================== //
 		
 		// == ** 이미 입력된 room 정보가 있다면 수정과 추가를 하기위해서 체크 해야 된다 ** == //
 		List<Map<String,String>> updateRmInfoMapList = service.getRmInfo(fk_lodge_id); // rm_seq, rm_type
@@ -740,8 +787,8 @@ public class LodgeController {
 
 	// ==== 객실 등록 ==== //
 	@PostMapping(value="/rm_register.exp")
-	public String register_rm(@RequestParam(required = false) HashMap<String,String> paraMap,
-							  HttpServletRequest request) {
+	public String requiredHostLogin_register_rm(HttpServletRequest request, HttpServletResponse response,
+												@RequestParam(required = false) HashMap<String,String> paraMap) {
 		// 로그인한 사용자의 숙박시설 아이디 가져오기
 		
 		String update_room_seq = paraMap.get("update_room_seq");
@@ -855,22 +902,30 @@ public class LodgeController {
 		}
 		
 		// 등록 이후
-		if( /*n == 1*/ false ) {
-		// 객실등록
+		if( n == 1 ) {
+		// 객실 등록 성공
 		// 페이지 이동
 			request.setAttribute("message", "객실이 등록되었습니다.");
-			request.setAttribute("loc", "/expedia/register_lodge.exp");
+			request.setAttribute("loc", request.getContextPath()+"/lodgeControl.exp");
 		}
 		else {
-		// 숙박시설등록 실패
+		// 객실 등록 실패
+			request.setAttribute("message", "등록중 문제가 발생하였습니다.");
+			request.setAttribute("loc", request.getContextPath()+"/lodgeControl.exp");
 		}
 		
-		return "db/register/rm_register.tiles2";
+		/*
+			Controller 에서  return "product/prodview"; 로 하면
+	               자동적으로 view단 페이지는   "/WEB-INF/views/product/prodview.jsp"; 가 되어진다.
+	               
+       		위치는 숙박 시설 관리 페이지로 이동 /webapp/WEB-INF/views/msg.jsp
+		 */
+		return "msg";
 		// /WEB-INF/views/tiles2/db/register/register_lodge.jsp
 		// /WEB-INF/views/tiles2/{1}/{2}/{3}.jsp
 	}
 	
-	
+	// 객실을 등록할 때 "추가" "수정"할지를 선택할 수 있는 select를 위한 정보이다.
 	@ResponseBody
 	@GetMapping(value = "/checkRm_type.exp", produces = "text/plain;charset=UTF-8") // GET 방식만 허락한 것이다.
 	public String checkRm_type(@RequestParam String fk_lodge_id) {
@@ -904,15 +959,18 @@ public class LodgeController {
 	
 	// 객실 사진 등록 페이지
 	@GetMapping(value="/rm_image.exp")
-	public String rm_image(HttpServletRequest request) {
+	public String requiredHostLogin_rm_image(HttpServletRequest request, HttpServletResponse response) {
 		
-		//	HttpSession session = request.getSession();
-		//	HostVO loginuser = (HostVO) session.getAttribute("loginuser");
-		//	String fk_h_userid = loginuser.getFk_h_userid();
-		String fk_h_userid = "grandjusun@gmail.com";
-		
+		// === 로그인한 사용자의 정보 -시작- === //
+		HttpSession session = request.getSession();
+		HostVO loginhost = (HostVO) session.getAttribute("loginhost");
+		String fk_h_userid = loginhost.getH_userid();
+	//	System.out.println("fk_h_userid => " + fk_h_userid);
 		// 현재 로그인한 판매자의 ID로 숙박시설의 lodge_id를 가져온다.
 		String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
+	//	System.out.println("fk_lodge_id => " + fk_lodge_id);
+		// === 로그인한 사용자의 정보 -끝- === //
+		
 		
 		// == ** 이미 입력된 room 정보가 있다면 수정과 추가를 하기위해서 체크 해야 된다 ** == //
 		List<Map<String,String>> updateRmInfoMapList = service.getRmInfo(fk_lodge_id); // rm_seq, rm_type
@@ -929,112 +987,114 @@ public class LodgeController {
 	// 객실 사진 등록 버튼 클릭
 	@ResponseBody
 	@PostMapping(value="/rm_image.exp")
-	public String rm_image_register(MultipartHttpServletRequest mtp_request) {
+	public String requiredHostLogin_rm_image_register(HttpServletRequest request, HttpServletResponse response,
+													  MultipartHttpServletRequest mtp_request) {
 		
 		List<MultipartFile> roomImage_List  = mtp_request.getFiles("roomImage_arr");
 		String fk_rm_seq = mtp_request.getParameter("fk_rm_seq");
+	//	System.out.println("fk_rm_seq => "+ fk_rm_seq);
 		
 	//	System.out.println(fk_rm_seq);
 		
-//		HttpSession session = request.getSession();
-		//	HostVO loginuser = (HostVO) session.getAttribute("loginuser");
-		//	String fk_h_userid = loginuser.getFk_h_userid();
-	//	String fk_h_userid = "grandjusun@gmail.com";
-		
+		// === 로그인한 사용자의 정보 -시작- === //
+		HttpSession session = request.getSession();
+		HostVO loginhost = (HostVO) session.getAttribute("loginhost");
+		String fk_h_userid = loginhost.getH_userid();
 		// 현재 로그인한 판매자의 ID로 숙박시설의 lodge_id를 가져온다.
-	//	String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
-		
-		String fk_lodge_id = "JSUN0231";
-		
+		String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
+		// === 로그인한 사용자의 정보 -끝- === //
 		
 		// 시설 이미지를 저장할 경로
 	//	HttpSession session = mtp_request.getSession();
 	//	String root = session.getServletContext().getRealPath("/");
-	//	String path = root + "resources"+File.separator+"images"+File.separator+fk_lodge_id+File.separator+"room_image";
-		String root = "C:\\git\\final_exp\\final_project\\src\\main\\webapp\\resources";
-		String path = root +File.separator+"images"+File.separator+fk_lodge_id+File.separator+"room_image";
-		System.out.println(path);
-		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\final_project\resources\images\JSUN0231\room_image
+	//	String path = root + "resources"+File.separator+"images"+File.separator+fk_lodge_id+File.separator+"room_img";
+		String root = "C:\\git\\fin_project\\fin_project\\src\\main\\webapp\\resources";
+		String path = root +File.separator+"images"+File.separator+fk_lodge_id+File.separator+"room_img";
+	//	System.out.println(path);
+		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\final_project\resources\images\JSUN0231\room_img
 		
-		// C:/final_project/src/main/webapp/resources/images
+		// C:\git\fin_project\fin_project\src\main\webapp\resources
 		File dir = new File(path);
 		
-		
-		// ==== 등록전 사전에 등록된 이미지 제거 ==== // 
-		
-			// == 삭제 해야할 이미지 파일 이름 가져오기 == //
-		List<String> delFileNameList = service.getDeleteImgFileName(fk_rm_seq);
-		
-		
-		if(dir.exists()) {
-		// 경로 폴더가 존재한다면
-			File[] folderList = dir.listFiles(); // 폴더의 내용물이 있는지 확인하다.
+		/*
+		 	roomImage_List-이미지 배열, fk_rm_seq-객실 번호
+			1. 이미지 등록 버튼 클릭 => 이미지 배열이 넘어온 경우(roomImage_List), 이미지 배열이 넘어오지 않은 경우
+			<이미지 배열이 넘어옴>
+				2. 기존 DB에 메인 이미지가 존재하는지 존재하지 않는지 체크해야됨
+					배열의 첫번째로 넘어온 이미지 파일을 메인이미지로 설정해야되는지 하지말아야 되는지
+					
+					DB에서 메인이미지 여부 체크 -> 있을경우 새로 들어온 파일들을 메인이미지 여부 0으로 insert
+										-> 없을을경우 배열의 첫번째 이미지파일은 메인여부 1로 insert
 			
-			if( folderList.length > 0) {
-			// 경로 폴더안 이미지 파일들이 존재한다면 확인해야 한다.
+			<이미지 배열이 넘어오지 않은 경우>
+				아무일도 일어나지 않음
+		*/
+		if(roomImage_List != null && roomImage_List.size() > 0) {
+		// 이미지 파일이 넘어온 경우
+			// DB에 fk_rm_seq객실에 메인이미지가 등록되어 있는지 체크한다.
+			String check = service.getMainImgCheck(fk_rm_seq);
+			
+			Map<String,String> paraMap = new HashMap<>(); // insert 및 업데트이를 위한 맵
+			paraMap.put("fk_rm_seq", fk_rm_seq); // 저장할 시설 ID
+			
+			if(check == null) {
+			// 메인이미지가 없는경우
+				// 배열의 첫번째 이미지파일은 메인여부 1로 insert
 				
-				for(String fileName : delFileNameList) {
-				// DB에서 가져온 파일 이름을 저장폴더안에 이미지 파일들과 이름을 비교하여 같은 파일을 삭제한다.
-					for(int i=0; i<folderList.length; i++) {
-						
-						if(folderList[i].getName().equals(fileName)) {
-						// 삭제해야할 파일과 이름이 같은 파일은 삭제한다.
-							folderList[i].delete();
-							break;
+				if(!dir.exists()) {
+				//	dir.mkdir(); // 상위 디렉토리 없으면 생성 불가
+					dir.mkdirs(); // 상위 디렉토리 없으면 상위디렉토리도 같이 생성
+				}
+				
+				for(int i = 0; i<roomImage_List.size(); i++) {
+					MultipartFile imageFile = roomImage_List.get(i);
+					
+					try {
+						Map<String, String> resultmap = fileManager.imageUpload(imageFile, path);
+						// 운영경로에 파일생성 & 저장 파일명 & 파일명 가져오기
+						if(i == 0) {
+							paraMap.put("rm_img_main", "1"); // 첫번째로 들어온 이미지가 메인이미지 여부를 결정한다.
+						}
+						else {
+							paraMap.put("rm_img_main", "0");
 						}
 						
-					} // end of for --------------
-					
-				}// end of for -----------------------------------
-				
-			} // end of if( folderList.length > 0) ------------
-			
-		} // end of if(dir.exists()) -----------
-		
-		// == tbl_rm_img 테이블 정보 제거 == //
-		service.delRoomImg(fk_rm_seq); // 테이블 값 제거하기
-		
-		
-		if(!dir.exists()) {
-		//	dir.mkdir(); // 상위 디렉토리 없으면 생성 불가
-			dir.mkdirs(); // 상위 디렉토리 없으면 상위디렉토리도 같이 생성
-		}
-
-		
-		
-		Map<String,String> paraMap = new HashMap<>(); // insert 및 업데트이를 위한 맵
-		paraMap.put("fk_rm_seq", fk_rm_seq); // 저장할 시설 ID
-			
-		// ==== 첨부파일을 위의 path 경로에 올리기 ==== //
-			// 객실 이미지 등록하기
-		if( roomImage_List != null && roomImage_List.size() > 0 ) {
-		// 객실 이미지가 등록되었다면
-			
-			for(int i = 0; i<roomImage_List.size(); i++) {
-				MultipartFile imageFile = roomImage_List.get(i);
-				
-				try {
-					Map<String, String> resultmap = fileManager.imageUpload(imageFile, path);
-					// 운영경로에 파일생성 & 저장 파일명 & 파일명 가져오기
-					if(i == 0) {
-						paraMap.put("rm_img_main", "1"); // 첫번째로 들어온 이미지가 메인이미지 여부를 결정한다.
+						paraMap.put("rm_img_name", resultmap.get("img_name"));
+						paraMap.put("rm_img_save_name", resultmap.get("img_save_name"));
+						
+						// === 객실 이미지 등록하기 === //
+						service.insertRoomImages(paraMap);
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-					else {
+				}// end of for ---------------------------
+				
+			}
+			else {
+			// 메인이미지가 있는 경우
+				// 새로 들어온 파일들을 메인이미지 여부 0으로 insert
+			
+				for(int i = 0; i<roomImage_List.size(); i++) {
+					MultipartFile imageFile = roomImage_List.get(i);
+					
+					try {
+						Map<String, String> resultmap = fileManager.imageUpload(imageFile, path);
+						// 운영경로에 파일생성 & 저장 파일명 & 파일명 가져오기
+
 						paraMap.put("rm_img_main", "0");
+						paraMap.put("rm_img_name", resultmap.get("img_name"));
+						paraMap.put("rm_img_save_name", resultmap.get("img_save_name"));
+						
+						// === 객실 이미지 등록하기 === //
+						service.insertRoomImages(paraMap);
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-					
-					paraMap.put("rm_img_name", resultmap.get("img_name"));
-					paraMap.put("rm_img_save_name", resultmap.get("img_save_name"));
-					
-					// === 객실 이미지 등록하기 === //
-					service.insertRoomImages(paraMap);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}// end of for ---------------------------
+				}// end of for ---------------------------
+				
+			}// end of if(check == null) 
 			
-		}// end of if( roomImage_List != null && roomImage_List.size() > 0 )
-
+		} // 이미지 파일이 넘어온 경우
 		
 		JSONObject jsonObj = new JSONObject(); 
 		
@@ -1055,6 +1115,23 @@ public class LodgeController {
 		// 변경된 객실의 기존에 입력된 사진 정보를 가져온다.
 		List<Map<String,String>> roomImgDataMapList = service.getRmImgData(fk_rm_seq);
 		
+		if(roomImgDataMapList.size() > 0 ) {
+		// 이미지 이름 "..." 표시 하기
+			for(int i=0; i<roomImgDataMapList.size(); i++) {
+				String rm_img_name = roomImgDataMapList.get(i).get("rm_img_name");
+				
+				if( rm_img_name.length() > 7 ) {
+					rm_img_name.lastIndexOf(".");
+					rm_img_name = rm_img_name.substring(0,6)+"···"+rm_img_name.substring(rm_img_name.lastIndexOf("."));
+					
+					roomImgDataMapList.get(i).put("rm_img_name",rm_img_name);
+				}
+				
+			} // end of for -----------------
+			
+		} // end of if(roomImgDataMapList.size() > 0 )
+		
+		
 		JsonArray jsonArr = new JsonArray();
 		
 		if(roomImgDataMapList.size() > 0 ) {
@@ -1064,6 +1141,7 @@ public class LodgeController {
 				
 				jsonObj.addProperty("rm_img_name", map.get("rm_img_name"));
 				jsonObj.addProperty("rm_img_save_name", map.get("rm_img_save_name"));
+				jsonObj.addProperty("rm_img_main", map.get("rm_img_main"));
 				
 				jsonArr.add(jsonObj);
 				
@@ -1077,48 +1155,43 @@ public class LodgeController {
 	}
 	
 	
-	// "X"버튼을 눌러서 이미지를 삭제했다.
+	// "X"버튼을 눌러서 이미지를 삭제했다.  --> DB와 저장 경로에서 이미지파일을 삭제한다.
 	@ResponseBody
 	@PostMapping(value="/delIdxImg.exp")
-	public String delIdxImg(@RequestParam(required = false) Map<String,String> paraMap,
-							HttpServletRequest request) {
+	public String requiredHostLogin_delIdxImg(HttpServletRequest request, HttpServletResponse response,
+											  @RequestParam(required = false) Map<String,String> paraMap) {
 		
-	//	String fk_rm_seq = paraMap.get("fk_rm_seq");
-		String rm_img_save_name = paraMap.get("rm_img_save_name");
-		String fk_lodge_id = paraMap.get("fk_lodge_id");
-	//	String rm_img_name = paraMap.get("rm_img_name");
-	//	System.out.println(fk_rm_seq + rm_img_save_name + rm_img_name);
-		// rm-47프리미어2.png2024010222343548229689336800.png
+		String fk_rm_seq = paraMap.get("fk_rm_seq");
+		String rm_img_save_name = paraMap.get("rm_img_save_name");	// 저장 이름
+		String fk_lodge_id = paraMap.get("fk_lodge_id");	// 시설 이름
+	//	String rm_img_name = paraMap.get("rm_img_name");	// 이미지 이름
+		String rm_img_main = paraMap.get("rm_img_main");	// 메인 이미지 여부
+	//	System.out.println(fk_rm_seq +"    "+ rm_img_save_name +"    "+ rm_img_name+"    "+rm_img_main);
+		// rm-47    프리미어2.png    2024010222343548229689336800.png    0
+		// rm-45    슈페리어1.png    2024010222331848151868402000.png    1
 
 		
-		// === DB에서 이미지를 삭제한다. === //
-	//	int result = service.delIdxImg(paraMap);
-		
-		
-		
 		// === 개발 경로에서 이미지 삭제하기 === ///
-		String root = "C:\\git\\final_exp\\final_project\\src\\main\\webapp\\resources";
-		String path = root +File.separator+"images"+File.separator+fk_lodge_id+File.separator+"room_image";
-		System.out.println(path);
-		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\final_project\resources\images\JSUN0231\room_image
+		String root = "C:\\git\\fin_project\\fin_project\\src\\main\\webapp\\resources";
+		String path = root +File.separator+"images"+File.separator+fk_lodge_id+File.separator+"room_img";
+	//	System.out.println(path);
+		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\final_project\resources\images\JSUN0231\room_img
 		
-		// C:/final_project/src/main/webapp/resources/images
+		// C:\git\fin_project\fin_project\src\main\webapp\resources
+	
 		File dir = new File(path);
-		
 		if(dir.exists()) {
 			// 경로 폴더가 존재한다면
 			File[] folderList = dir.listFiles(); // 폴더의 내용물이 있는지 확인하다.
-			
 			if( folderList.length > 0) {
 			// 경로 폴더안 이미지 파일들이 존재한다면 확인해야 한다.
 				
 				// DB에서 가져온 파일 이름을 저장폴더안에 이미지 파일들과 이름을 비교하여 같은 파일을 삭제한다.
 				for(int i=0; i<folderList.length; i++) {
-					
 					if(folderList[i].getName().equals(rm_img_save_name)) {
 					// 삭제해야할 파일과 이름이 같은 파일은 삭제한다.
 						folderList[i].delete();
-						break;
+						break; // 한개의 "X"를 눌렀기 때문에 한개의 이미지 파일만 삭제하면 반복문을 빠져나온다.
 					}
 					
 				}// end of for -----------------------------------
@@ -1127,29 +1200,141 @@ public class LodgeController {
 			
 		} // end of if(dir.exists()) -----------
 		
+		// === DB에서 이미지를 삭제한다. === //
+		int result = service.delIdxImg(paraMap);
 		
 		
-		JsonArray jsonArr = new JsonArray();
-		/*
-		if(roomImgDataMapList.size() > 0 ) {
+		if( "1".equals(rm_img_main) ) {
+		// 메인이미지가 삭제된 경우에
+			// 바로 다음 이미지를 메인이미지로 업데이트  -> 다음 이미지 존재여부 확인
 			
-			for(Map<String,String> map :roomImgDataMapList) {
-				JsonObject jsonObj = new JsonObject();
-				
-				jsonObj.addProperty("rm_img_name", map.get("rm_img_name"));
-				jsonObj.addProperty("rm_img_save_name", map.get("rm_img_save_name"));
-				
-				jsonArr.add(jsonObj);
-				
-			} // end of for ---------
+			// 다음 메인이미지 rm_img_seq 가져오기
+			List<String> nextMainImg_rm_img_seq = service.nextMainImgUpdate(fk_rm_seq);
+			// nextMainImg_rm_img_seq => 메인이미지 여부가 "1"로 변경될  이미지의 seq
 			
-		}// end of if(roomImgDataMapList.size() > 0 ) {
-		*/
-		return new Gson().toJson(jsonArr);
+			if( nextMainImg_rm_img_seq.size() > 0 ) {
+			// 다음 이미지가 있는경우 ==> 업데이트 가능
+				// rm_img_seq값에 해당하는 이미지 정보의 rm_img_main를 "1"로 업데이트 하기
+				String next_rm_img_seq = nextMainImg_rm_img_seq.get(0);
+				service.updateNextMainImg(next_rm_img_seq);
+			}
+			
+		} // end of if( "1".equals(rm_img_main) )
+		// 메인 이미지가 아닌 이미지가 삭제된 경우에는 업데이트가 발생하지 않는다. 
+		
+		
+		JsonObject jsonObj = new JsonObject();
+		
+		if( result > 0 ) {
+		// DB에서 이미지파일에 대한 정보가 삭제된 경우
+			jsonObj.addProperty("result", result);
+		}
+		else {
+		// 삭제가 정상적으로 진행되지 않은 경우
+			jsonObj.addProperty("result", result);
+		}
+		
+		return new Gson().toJson(jsonObj);
 		// /WEB-INF/views/tiles2/db/register/register_lodge.jsp
 		// /WEB-INF/views/tiles2/{1}/{2}/{3}.jsp
 	}
 	
+	
+	// "X"버튼을 눌러서 이미지를 삭제했다.  --> DB와 저장 경로에서 이미지파일을 삭제한다.
+	@ResponseBody
+	@PostMapping(value="/delRoomImgFk_rm_seq.exp")
+	public String requiredHostLogin_delRoomImgFk_rm_seq(HttpServletRequest request, HttpServletResponse response,
+											  			@RequestParam(required = false) String fk_rm_seq) {
+		
+		// ================= AOP 로그인한 사용자의 정보 -시작- ==================== //
+		HttpSession session = request.getSession();
+		HostVO loginhost = (HostVO) session.getAttribute("loginhost");
+		String fk_h_userid = loginhost.getH_userid();
+		// 현재 로그인한 판매자의 ID로 숙박시설의 lodge_id를 가져온다.
+		String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
+		// ================= AOP 로그인한 사용자의 정보 -끝- ====================== //
+		
+		
+		// fk_rm_seq를 사용해서 제거할 이미지파일 정보를 가져온다.
+		List<Map<String,String>> roomImgDataMapList = service.getRmImgData(fk_rm_seq);
+		// rm_img_save_name를 사용하여 제거
+		
+		// === 개발 경로에서 이미지 삭제하기 === ///
+		String root = "C:\\git\\fin_project\\fin_project\\src\\main\\webapp\\resources";
+		String path = root +File.separator+"images"+File.separator+fk_lodge_id+File.separator+"room_img";
+	//	System.out.println(path);
+		// C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\final_project\resources\images\JSUN0231\room_img
+		
+		// === 운영 경로에서 이미지 삭제 === //
+//		String root_2 = session.getServletContext().getRealPath("/");
+//		String path_2 = root_2 + "resources"+File.separator+"images"+File.separator+fk_lodge_id+File.separator+"room_img";
+//		File dir_2 = new File(path_2); // 운영 경로
+		// 개발 경로에서 삭제되면 운영경로에서도 삭제된다
+		// 개발 경로에서 추가되면 운영경로에서도 삭제된다.
+			// 자바에서 삭제하면 삭제가 바로 적용되는데
+			// 탐색기에서 삭제시 바로 적용되지 않는다. refresh 필요
+		
+		// C:\git\fin_project\fin_project\src\main\webapp\resources
+	
+		int roopCnt = 0;
+		
+		File dir = new File(path);
+		if(dir.exists()) {
+			// 경로 폴더가 존재한다면
+			File[] folderList = dir.listFiles(); // 폴더의 내용물이 있는지 확인하다.
+//			File[] folderList_2 = dir_2.listFiles(); // 폴더의 내용물이 있는지 확인하다.
+			if( folderList.length > 0) {
+			// 경로 폴더안 이미지 파일들이 존재한다면 확인해야 한다.
+				
+				if(roomImgDataMapList.size() > 0) {
+					// DB에서 가져온 파일 이름을 저장폴더안에 이미지 파일들과 이름을 비교하여 같은 파일을 삭제한다.
+					for(int i=0; i<folderList.length; i++) {
+						
+						for(Map<String,String> roomImgData : roomImgDataMapList) {
+							
+							if( folderList[i].getName().equals(roomImgData.get("rm_img_save_name")) ) {
+								// 삭제해야할 파일과 이름이 같은 파일은 삭제한다.
+								folderList[i].delete();
+								roopCnt++;
+								break; // 한개의 "X"를 눌렀기 때문에 한개의 이미지 파일만 삭제하면 반복문을 빠져나온다.
+							}
+							
+						} // end of for ---------------
+						
+						if( roopCnt == roomImgDataMapList.size() ) {
+							break;
+						}
+						
+					}// end of for -----------------------------------
+					
+				}// end of if(roomImgDataMapList.size() > 0)
+				
+			} // end of if( folderList.length > 0) ------------
+			
+		} // end of if(dir.exists()) -----------
+		
+		// === DB에서 이미지를 삭제한다. === //
+		int result=0;
+		if(roomImgDataMapList.size() > 0) {
+			// 객실 사진등록 "사진 전체 제거" 버튼 클릭
+			result = service.delRoomImgFk_rm_seq(fk_rm_seq);
+		}
+		
+		JsonObject jsonObj = new JsonObject();
+		
+		if( result > 0 ) {
+		// DB에서 이미지파일에 대한 정보가 삭제된 경우
+			jsonObj.addProperty("result", result);
+		}
+		else {
+		// 삭제가 정상적으로 진행되지 않은 경우
+			jsonObj.addProperty("result", result);
+		}
+		
+		return new Gson().toJson(jsonObj);
+		// /WEB-INF/views/tiles2/db/register/register_lodge.jsp
+		// /WEB-INF/views/tiles2/{1}/{2}/{3}.jsp
+	}
 	
 	
 }

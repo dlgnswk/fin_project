@@ -22,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.spring.app.common.MyUtil;
 import com.spring.app.expedia.domain.UserVO;
 import com.spring.app.jy.lodge.service.LodgeService;
 
@@ -34,7 +35,6 @@ public class LodgeViewController {
 	@GetMapping("/lodgeDetail_info.exp")
 	public ModelAndView lodgeDetail_info(ModelAndView mav, HttpServletRequest request) {
 		
-
 		// 오늘날짜 가져오기
 		Calendar cal = Calendar.getInstance();
 		String format = "yyyy-MM-dd";
@@ -66,7 +66,16 @@ public class LodgeViewController {
 		mav.addObject("date_map", date_map);
 
 		String lodge_id = request.getParameter("lodge_id");
-		// String lodge_id = "GWGN0002";
+		if(lodge_id==null) {
+			String loc = request.getContextPath() + "/index.exp"; 
+			String message = "숙소를 검색하여 주세요"; 
+			mav.addObject("loc", loc);
+			mav.addObject("message", message);
+
+			mav.setViewName("msg");
+			return mav;
+		}
+		
 		// String rm_seq = "rm-2";
 		String startDate = request.getParameter("startDate");
 		//String startDate = "2024-02-26";
@@ -95,23 +104,22 @@ public class LodgeViewController {
 		paraMap.put("endDate", endDate);
 		paraMap.put("lodge_id", lodge_id);
 		
-		String d_rate="0";
+		float d_rate=(float) 0;
 		
 		HttpSession session = request.getSession();
 		UserVO loginuser = (UserVO) session.getAttribute("loginuser");
 		if(loginuser == null) {
-			d_rate = "0";
+			d_rate = (float) 0;
 		}
-		else if(loginuser.getUser_lvl()=="0") {
-			d_rate = "0.1";
+		else if(loginuser.getUser_lvl()=="블루") {
+			d_rate = (float) 0.1;
 		}
-		else if(loginuser.getUser_lvl()=="1") {
-			d_rate = "0.15";
+		else if(loginuser.getUser_lvl()=="실버") {
+			d_rate = (float) 0.15;
 		}
-		else if(loginuser.getUser_lvl()=="2") {
-			d_rate = "0.2";
+		else if(loginuser.getUser_lvl()=="골드") {
+			d_rate = (float) 0.2;
 		}
-		
 		mav.addObject("d_rate", d_rate);
 		
 	//	Map<String, String> i_paraMap = new HashMap<>();
@@ -123,7 +131,7 @@ public class LodgeViewController {
 			paraMap.put("userid", loginuser.getUserid());
 		}
 		
-		String guest_cnt = "1";
+		String guest_cnt = "1"; // 총인원/객실수 나눈 값
 		if(request.getParameter("guest") != null) {
 			guest_cnt = request.getParameter("guest");
 		}
@@ -145,6 +153,7 @@ public class LodgeViewController {
 		mav.addObject("guest_cnt", guest_cnt);
 		mav.addObject("adult_cnt", adult_cnt);
 		mav.addObject("child_cnt", child_cnt);
+		mav.addObject("lodge_id", lodge_id);
 		
 		// 숙박 시설에 대한 정보 및 옵션 가져오기
 		Map<String, String> lodgeinfo_map = service.getLodgeInfo(lodge_id); // 숙박시설 기본 정보 (w/ 리뷰 평점, 갯수)
@@ -183,6 +192,7 @@ public class LodgeViewController {
 		mav.addObject("all_lg_img_list",all_lg_img_list);
 		mav.addObject("isExist_wish",isExist_wish);
 		
+		
 		// 조회한 날짜에 예약 가능한 객실 보여주기
 		List<Map<String, String>> avbl_rm_list  = service.getAvbl_rm_list(paraMap);
 		
@@ -192,28 +202,36 @@ public class LodgeViewController {
 		List<Map<String, String>> com_kt_opt_list = service.getCom_kt_opt_list(lodge_id);
 		List<Map<String, String>> com_ent_opt_list = service.getCom_ent_opt_list(lodge_id);
 		List<Map<String, String>> com_tmp_opt_list = service.getCom_tmp_opt_list(lodge_id);
-		// List<Map<String, String>> rm_img_list = service.getRm_img_list(rm_seq);
 		
 		// 남은 rm의 총 갯수 < 입력된 객실 갯수 && 결과의 게스트의 평균 < 입력된 guest의 평균 일때만 객실 결과 보여주기
 		if(avbl_rm_list != null) {
-			int ttl_left_room_cnt = 0;
-			int ttl_rm_guest_cnt = 0;
+			float ttl_left_room_cnt = 0;
+			float ttl_rm_guest_cnt = 0;
 			for (Map<String, String> rm : avbl_rm_list) {
-				ttl_left_room_cnt += Integer.parseInt(String.valueOf(rm.get("LEFT_ROOM_CNT")));
-				ttl_rm_guest_cnt += Integer.parseInt(String.valueOf(rm.get("rm_guest_cnt")));
+				ttl_left_room_cnt += Float.parseFloat(String.valueOf(rm.get("left_room_cnt")));
+				ttl_rm_guest_cnt += Float.parseFloat(String.valueOf(rm.get("rm_guest_cnt")));
 			}
-			float avg_rm_guest_cnt = ttl_rm_guest_cnt/Integer.parseInt(guest_cnt);
+			float avg_rm_guest_cnt = ttl_rm_guest_cnt/ttl_left_room_cnt;
 			
 			// 남은 rm의 총 갯수 > 입력된 객실 갯수 && 결과의 게스트의 평균 > 입력된 guest의 평균 일때만 객실 결과 보여주기
-			if(ttl_left_room_cnt>Integer.parseInt(room_cnt) && avg_rm_guest_cnt>Integer.parseInt(guest_cnt)) {
+			if(ttl_left_room_cnt>Float.parseFloat(room_cnt)&& avg_rm_guest_cnt>Float.parseFloat(guest_cnt)) {
 				mav.addObject("avbl_rm_list",avbl_rm_list);
+			}			
+			else {
+				for (Map<String, String> rm : avbl_rm_list) {
+					if (Float.parseFloat(rm.get("rm_guest_cnt")) > Float.parseFloat(guest_cnt)) {
+						if(Float.parseFloat(rm.get("left_room_cnt"))>Float.parseFloat(room_cnt)){
+							mav.addObject("avbl_rm_list",avbl_rm_list);
+							break;
+						}						
+					}
+				}
 			}
 		}
 		
 		
-		// 객실 사진 가져오기
-		List<Map<String, String>> all_rm_img_list = service.getAll_rm_img_list(lodge_id);
-
+		// 전체 객실 사진 가져오기		
+		List<Map<String, String>> all_rm_img_list = service.getRm_img_list(paraMap); // 전체 객실 이미지 가져오려면 paraMap 에 lodge_id 만 들어있어야 함.
 		
 		mav.addObject("com_bath_opt_list",com_bath_opt_list);
 		mav.addObject("com_snk_opt_list",com_snk_opt_list);
@@ -222,16 +240,14 @@ public class LodgeViewController {
 		mav.addObject("com_tmp_opt_list",com_tmp_opt_list);
 		// mav.addObject("rm_img_list",rm_img_list);
 		mav.addObject("all_rm_img_list",all_rm_img_list);
-		
-		
 		mav.setViewName("jy/lodge/lodgeDetail_info.tiles1");
-		
+				
 		return mav;
 	}
 
 	@ResponseBody
 	@GetMapping(value="/rmDetail_info_json.exp", produces="text/plain;charset=UTF-8")
-	public String lodgeDetail_info_json(HttpServletRequest request) {
+	public String rmDetail_info_json(HttpServletRequest request) {
 		
 		String rm_seq = request.getParameter("rm_seq");
 		// System.out.println(rm_seq);
@@ -250,9 +266,9 @@ public class LodgeViewController {
 		List<Map<String, String>> ent_opt_list = service.getEnt_opt_list(rm_seq);
 		List<Map<String, String>> tmp_opt_list = service.getTmp_opt_list(rm_seq);
 		// 객실 사진 가져오기
-		List<Map<String, String>> rm_img_list = service.getRm_img_list(rm_seq);
+		List<Map<String, String>> rm_img_list = service.getRm_img_list(paraMap); // 한 객실에 대한 이미지 가져오려면 paraMap 에 rm_seq 만 들어있어야 함.
 		List<Map<String, String>> avbl_rm_list  = service.getAvbl_rm_list(paraMap);
-		
+		System.out.println(rm_img_list);
 		// List<Map<String, String>> 들을 담아줄 JsonObject 생성!
 		JsonObject jsonObj = new JsonObject(); 
 		
@@ -345,6 +361,7 @@ public class LodgeViewController {
 				jsonObj2.addProperty("rm_breakfast_yn", map.get("rm_breakfast_yn"));
 				jsonObj2.addProperty("rm_smoke_yn", map.get("rm_smoke_yn"));
 				jsonObj2.addProperty("rm_wheelchair_yn", map.get("rm_wheelchair_yn"));
+				jsonObj2.addProperty("rm_price", map.get("rm_price"));
 	            
 				jsonObj.add("rm_list", jsonObj2);
 			}
@@ -395,7 +412,7 @@ public class LodgeViewController {
 		List<Map<String, String>> lg_ca_img_list = service.getLg_img_list(i_paraMap); // 숙박시설 사진
 		
 		// 객실 사진 가져오기
-		List<Map<String, String>> all_rm_img_list = service.getAll_rm_img_list(lodge_id);
+		List<Map<String, String>> all_rm_img_list = service.getRm_img_list(i_paraMap); // 전체 객실 이미지 가져오려면 paraMap 에 lodge_id 만 들어있어야 함.
 		
 		JsonObject jsonObj = new JsonObject();
 		if(lg_ca_img_list != null && lg_ca_img_list.size() > 0) {	
@@ -418,6 +435,7 @@ public class LodgeViewController {
 			for(Map<String, String> map : all_rm_img_list) {
 				JsonObject jsonObj2 = new JsonObject(); 
 				jsonObj2.addProperty("rm_seq", map.get("rm_seq"));
+				jsonObj2.addProperty("fk_lodge_id", map.get("fk_lodge_id"));
 				jsonObj2.addProperty("rm_img_save_name", map.get("rm_img_save_name"));
 	            
 				jsonArr.add(jsonObj2);
@@ -472,5 +490,38 @@ public class LodgeViewController {
 		}
 				
 		return jsonObj.toString();
+		
+		
 	}
-}
+	
+	@ResponseBody
+	@GetMapping(value="/get_room_img_json.exp", produces="text/plain;charset=UTF-8")
+	public String get_room_img_json(HttpServletRequest request) {
+		
+		String rm_seq = request.getParameter("rm_seq");
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("rm_seq", rm_seq);
+		
+		List<Map<String, String>> rm_img_list = service.getRm_img_list(paraMap);
+		JsonObject jsonObj = new JsonObject();
+		if(rm_img_list != null && rm_img_list.size() > 0) {	
+			JsonArray jsonArr = new JsonArray(); 
+			for(Map<String, String> map : rm_img_list) {
+				JsonObject jsonObj2 = new JsonObject(); 
+				jsonObj2.addProperty("rm_seq", map.get("rm_seq"));
+				jsonObj2.addProperty("fk_lodge_id", map.get("fk_lodge_id"));
+				jsonObj2.addProperty("rm_img_save_name", map.get("rm_img_save_name"));
+				jsonObj2.addProperty("rm_img_main", map.get("rm_img_main"));
+	            
+				jsonArr.add(jsonObj2);
+			}
+			jsonObj.add("rm_img_list", jsonArr);
+		}
+		
+		return jsonObj.toString();
+		
+	}
+	
+}	
+
+	

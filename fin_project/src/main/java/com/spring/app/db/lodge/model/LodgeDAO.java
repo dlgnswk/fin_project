@@ -214,17 +214,29 @@ public interface LodgeDAO {
 	// 기존에 입력되어 있는 rm_type List 가져오기
 	List<String> getRm_typeData(String fk_lodge_id);
 
-	// == 삭제 해야할 이미지 파일 이름 가져오기 == //
-	List<String> getDeleteImgFileName(String fk_rm_seq);
-
-	// == tbl_rm_img 테이블 정보 제거 == //
-	void delRoomImg(String fk_rm_seq);
-
 	// === 객실 이미지 등록하기 === //
 	void insertRoomImages(Map<String, String> paraMap);
 
 	// 변경된 객실의 기존에 입력된 사진 정보를 가져온다.
 	List<Map<String, String>> getRmImgData(String fk_rm_seq);
+
+	// === DB에서 이미지를 삭제한다. === //
+	int delIdxImg(Map<String, String> paraMap);
+
+	// 다음 메인이미지 rm_img_seq 가져오기
+	List<String> nextMainImgUpdate(String fk_rm_seq);
+
+	// rm_img_seq값에 해당하는 이미지 정보의 rm_img_main를 "1"로 업데이트 하기
+	void updateNextMainImg(String next_rm_img_seq);
+
+	// 객실 사진등록 "사진 전체 제거" 버튼 클릭
+	int delRoomImgFk_rm_seq(String fk_rm_seq);
+
+	// DB에 fk_rm_seq객실에 메인이미지가 등록되어 있는지 체크한다.
+	String getMainImgCheck(String fk_rm_seq);
+
+	// DB에 등록된 이미지 파일명을 가지고 온다.
+	List<Map<String, String>> getLodgeImgData(String fk_lodge_id);
 	
 
 }

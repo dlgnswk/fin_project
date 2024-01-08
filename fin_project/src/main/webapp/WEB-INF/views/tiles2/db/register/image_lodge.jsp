@@ -22,6 +22,24 @@
 
 	$(document).ready(function(){
 		
+		// -- 이미지가 보여지는 곳은 "사진 업로드" 글이 없어여 한다. -- //
+		let images_div = $("div.images_div");
+		
+		$.each(images_div, function(index, item){
+		// 이미지가 보여지는 곳은 "사진 업로드" 글이 없어여 한다.			
+			let imageCnt = $(item).find("div.imageItem").length;
+
+			if(imageCnt == 0) {
+				$(item).find("div.infoDiv").show();
+			}
+			else {
+				$(item).find("div.infoDiv").hide();
+			}
+			
+		}); // end of $.each(images_div, function(index, item){
+		
+		
+		
 		// == mainImage메인이미지 Drag & Drop 만들기 == //
 		$("div#mainImage").on("dragenter", function(e){ /* "dragenter" 이벤트는 드롭대상인 박스 안에 Drag 한 파일이 최초로 들어왔을 때 */ 
        		e.preventDefault();
@@ -487,71 +505,6 @@
 		});// end of $("input[name='viewImage']").change(function()
 				
 				
-				
-		// 이미지 삭제 버튼	
-		$(document).on("click", "span.delete", function(){
-			
-			const delIdx = $(this).parent().parent().parent().find("span.delete").index($(this));
-			const removeImg = $(this).parent().parent();
-		//	console.log(delIdx);   0 1 2 3 4 5 ...
-			
-			const infoDiv = $(this).parent().parent().parent().find(".infoDiv");
-			
-		
-			let arrName = $(this).parent().parent().parent();
-		//	console.log("arrName => " + arrName.attr("id"));
-			// arrName => diningImage
-			// arrName => outImage
-			
-			let arrLength;
-			
-			// "x"버튼의 부모의 id를  찾아서 대응 시킨다.
-			if ( arrName.attr("id") == "mainImage") {
-			// let mainImage_arr = []; 	// 6 	메인이미지
-				mainImage_arr.splice(delIdx,1);
-				arrLength = mainImage_arr.length;
-			}
-			else if(arrName.attr("id") == "outImage" ) {
-			// let outImage_arr = []; 		// 0	시설외부
-				outImage_arr.splice(delIdx,1);
-				arrLength = outImage_arr.length;
-			}
-			else if(arrName.attr("id") == "publicImage" ) {
-			// let publicImage_arr = []; 	// 1	공용구역
-				publicImage_arr.splice(delIdx,1);
-				arrLength = publicImage_arr.length;
-			}
-			else if(arrName.attr("id") == "poolImage" ) {
-			// let poolImage_arr = []; 	// 2	수영장
-				poolImage_arr.splice(delIdx,1);
-				arrLength = poolImage_arr.length;
-			}
-			else if(arrName.attr("id") == "diningImage" ) {
-			// let diningImage_arr = []; 	// 3	다이닝
-				diningImage_arr.splice(delIdx,1);
-				arrLength = diningImage_arr.length;
-			}
-			else if(arrName.attr("id") == "serviceImage" ) {
-			// let serviceImage_arr = []; 	// 4	편의시설/서비스
-				serviceImage_arr.splice(delIdx,1);
-				arrLength = serviceImage_arr.length;
-			}
-			else if(arrName.attr("id") == "viewImage" ) {
-			// let viewImage_arr = []; 	// 5	전망
-				viewImage_arr.splice(delIdx,1);
-				arrLength = viewImage_arr.length;
-			}
-			
-			if ( arrLength == 0 ) {
-				infoDiv.show();
-			}
-			
-			removeImg.remove(); // 이미지 제거하기
-			
-		}); // end of $(document).on("click", "span.delete", function()
-		
-				
-				
 		// 이미지 전체 삭제 버튼
 		$("button.btnDelete").click(function(){
 			
@@ -629,7 +582,7 @@
         	let fileSize = f.size/1024/1024;  /* 파일의 크기는 MB로 나타내기 위하여 /1024/1024 하였음 */
     	
     		if(fileSize >= 10) {
-    			alert("10MB 이상인 파일은 업로드할 수 없습니다.!!");
+    			alert("10MB 이상인 이미지 파일은 업로드할 수 없습니다.!!");
     			elmt.css("background-color", "#fff");
     			return;
     		}
@@ -674,7 +627,7 @@
 			          	*/
 			          	
 			          	html += 
-			          		"<div class='imageItem'>" +
+			          		"<div class='imageItem exitData'>" +
     		                   	"<img class='__image' src='"+fileReader.result+"' />" + // &times;는 X로 보여주는 것이다.
     		                   	"<div class='imageName'><span class='delete'>&times;</span><span class='fileName'>"+viewFileName+"</span></div>"
 		               		"</div>";
@@ -701,7 +654,7 @@
     	let fileSize = f.size/1024/1024;  /* 파일의 크기는 MB로 나타내기 위하여 /1024/1024 하였음 */
 	
 		if(fileSize >= 10) {
-			alert("10MB 이상인 파일은 업로드할 수 없습니다.!!");
+			alert("10MB 이상인 이미지 파일은 업로드할 수 없습니다.!!");
 			$(this).css("background-color", "#fff");
 			return;
 		}
@@ -746,7 +699,7 @@
 		          	*/
 		          	
 		          	html += 
-		          		"<div class='imageItem'>" +
+		          		"<div class='imageItem exitData'>" +
 		                   	"<img class='__image' src='"+fileReader.result+"' />" + // &times;는 X로 보여주는 것이다.
 		                   	"<div class='imageName'><span class='delete'>&times;</span><span class='fileName'>"+viewFileName+"</span></div>"
 	               		"</div>";
@@ -865,6 +818,69 @@
         });
 		
 	}); // end of $("button#image_register").click(function()
+			
+			
+	// asdf
+	// 이미지 삭제 버튼	
+	$(document).on("click", "span.delete", function(){
+		
+		if(confirm("정말로 등록된 사진을 삭제하시겠습니까?")) {
+				
+			// 가장 가까운 조상 태그를 찾는다. "div.images_div" 
+			let images_div = $(this).closest('div.images_div'); // 카테고리 이미지 전부를 담고 있는 div
+			
+			let imageItem = $(this).closest('div.imageItem'); // 이미지가 들어있는 div -- 이미지 파일이 경로와 DB에만 존재
+			let exitData = $(this).closest('div.exitData'); // 이미지가 들어있는 div -- 이미지 파일을 포함한 경우
+			
+			// 파일이 있는거 선택시 파일 인덱스 를 가지고 제거
+			let imageItemIdx = images_div.find("span.delete").index($(this));
+			console.log("imageItemIdx => "+imageItemIdx);
+			// 이미지가 들어있는 div안에 "x"
+			let exitDataIdx = images_div.find("div.exitData").index(exitData);
+			console.log("exitDataIdx => "+exitDataIdx);
+			// 이미지 파일을 포함한 경우의 index
+			
+		//	console.log(delIdx);   0 1 2 3 4 5 ...
+			
+			let infoDiv = images_div.find(".infoDiv");
+		
+			let arrName = $(this).closest('div.image_drop').attr("id");
+		//	console.log("arrName => " + arrName.attr("id"));
+			// arrName => diningImage
+			// arrName => outImage
+			
+			// == 이미등록된 값을 DB에서 삭제 -시작- == //
+			
+			// == 이미등록된 값을 DB에서 삭제 -끝- == //
+			
+			
+			
+			// == 배열과 이미지에서 삭제 -시작- == //
+			if(imageItem.hasClass("exitData")) {
+			// 방금 이미지 파일을 추가하고 "x"를 눌렀다.
+				
+				exitData.eq(exitDataIdx).remove(); // 이미지를 보여주는 div 제거
+			
+				if(arrName == "mainImage") {
+				// 이미지 파일 배열에서 삭제한다.
+					mainImage_arr.splice(exitDataIdx,1);
+					console.log(mainImage_arr);
+				}
+				else if(arrName == "outImage"){
+					console.log(outImage_arr);
+				}
+				
+			}
+			else {
+			// 기존에 DB에 추가되어 있었던 이미지 파일이다.
+				alert("기존 이미지 파일")
+			}
+			// == 배열과 이미지에서 삭제 -끝- == //
+			
+			
+		} // end of if(confirm("정말로 등록된 사진을 삭제하시겠습니까?")) -------------
+		
+	}); // end of $(document).on("click", "span.delete", function()
 	
 </script>
 
@@ -890,6 +906,20 @@
 						</div>
 					</div>
 				</div>
+				<c:forEach var="LodgeImg" items="${requestScope.LodgeImgMapList}" >
+					<c:if test="${LodgeImg.fk_img_cano eq 6}">
+						<div class='imageItem'> 
+							<img class='__image' src='<%=ctxPath%>/resources/images/${LodgeImg.fk_lodge_id}/lodge_img/${LodgeImg.lg_img_save_name}' /> 
+				      			<div class='imageName'>
+							  	<span class='delete'>&times;</span>
+							  	<span class='fileName'>${LodgeImg.lg_img_name}</span>
+							  	<input type='text' class='lg_img_name' value='${LodgeImg.lg_img_name}' />
+								<input type='text' class='lg_img_save_name' value='${LodgeImg.lg_img_save_name}' />
+								<input type='text' class='fk_img_cano' value='${LodgeImg.fk_img_cano}' />
+							</div>
+					 	</div>
+				 	</c:if>		
+				</c:forEach>				
 			</div>
 			<div class="btnContDiv__ __flex">
 				<div class="flexChild">

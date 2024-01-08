@@ -322,7 +322,7 @@
 		
 		
 		// 호텔 등급 (1성급 2성급) 선택하기
-	//	$("div.select_hotel_star").hide();
+		$("div.select_hotel_star").hide();
 		
 		$("select[name='fk_lodge_type']").change(function(){
 			
@@ -506,6 +506,7 @@
 			e_par.parent().next("div.y_btn_after").find("select").prop("disabled",false);
 			e_par.parent().next("div.y_btn_after").find("div.checkbox_div").find("div.use_time").find("input[name='pool_use_time']").prop("disabled",true);
 			e_par.parent().next("div.y_btn_after").find("div.checkbox_div").find("input[name='fk_pool_opt_no']").prop("checked",false);
+			e_par.parent().next("div.y_btn_after").find("div.checkbox_div").find(".use_time").hide();
 		}
 		else{
 		// "아니오" 
@@ -609,15 +610,16 @@
 				const lg_hotel_star = $("select[name='lg_hotel_star']");
 				
 				if(lg_hotel_star.val() == "") {
-				// 값이 없는경우
+				// 호텔 등급을 선택하지 않은 경우
 					lg_hotel_star.parent().parent().find(".submit_check").show();
 					lg_hotel_star.parent().parent().find(".error").show().text("호텔 등급을 선택해 주세요.");
 				}
 				else{
+				// 호텔 등급을 선택한 경우
 					lg_hotel_star.parent().parent().find(".submit_check").hide();
 					lg_hotel_star.parent().parent().find(".error").hide().text("");
+					n5 = 1;
 				}
-			
 			}
 			else {
 			// 호텔이 아닌경우			
@@ -1036,25 +1038,33 @@
 		
 			const y_btn_after = lg_pet_yn.parent().parent().next(".y_btn_after");
 			
-			if( y_btn_after.find("input.submit_input").val() != "" ) {
-			// 입력된 값이 있다.
+			if(lg_pet_yn.val() == "0") {
+			// 반려 동물 동반 여부 "안됨"
 				y_btn_after.find(".submit_check").hide();
 				y_btn_after.find(".error").hide().text("");
 				n19 = 1;
 			}
 			else {
-			// 입력된 값이 없다.
-				y_btn_after.find(".submit_check").show();
-				y_btn_after.find(".error").show().text("금액을 입력해 주세요.");
-			}
-		
+			// 반려 동물 동반 여부 "됨" --> 되는 경우는 금액 체크  0 이상의 금액이 입력되어야 한다.
+				
+				if( y_btn_after.find("input.submit_input").val() != "" ) {
+				// 반려 동물 요금이 정해졌다.
+					y_btn_after.find(".submit_check").hide();
+					y_btn_after.find(".error").hide().text("");
+					n19 = 1;
+				}
+				else {
+				// 요금이 정해지지 않았다.
+					y_btn_after.find(".submit_check").show();
+					y_btn_after.find(".error").show().text("금액을 입력해 주세요.");
+				}
+			} // end of if(lg_pet_yn.val() == "0") -- 반려 동물 동반 여부 "됨"
 		}
 		else {
 		// 반려동물 동반 여부 선택 안함
 			lg_pet_yn.parent().parent().find(".submit_check").show();
 			lg_pet_yn.parent().parent().find(".error").show().text("반려동물 동반 여부를 선택해 주세요.");
 		}				
-				
 		
 		
 		// 숙박 시설에 장애인 편의 시설이 있나요? "예" "아니오" 체크박스
@@ -1336,11 +1346,22 @@
 		// n21, n22, n23, n24, n25, n26
 		
 		if( confirm("시설을 등록하시겠습니까?") ) {
-			let a1 = n1*n2*n3*n4*n5*n6*n7*n8*n9*n10;
-			let a2 = n11*n12*n13*n14*n15*n16*n17*n18*n19*n20;
-			let a3 = n21*n22*n23*n24*n25*n26;
+			let a1 = n1*n2*n3*n4*n5;
+			let a2 = n6*n7*n8*n9*n10;
+			let a3 = n11*n12*n13*n14*n15;
+			let a4 = n16*n17*n18*n19*n20;
+			let a5 = n21*n22*n23*n24*n25*n26;
 			
-			if(a1*a2*a3 == 1) {
+			let pass = a1*a2*a3*a4*a5;
+			
+			console.log(a1 ,a2, a3, a4, a5);
+			console.log("a1 => ", n1, n2, n3, n4, n5);
+			console.log("a2 => ", n6, n7, n8, n9, n10);
+			console.log("a3 => ", n11, n12, n13, n14, n15);
+			console.log("a4 => ", n16, n17, n18, n19, n20);
+			console.log("a5 => ", n21, n22, n23, n24, n25, n26);
+			
+			if(pass == 1) {
 				const frm = document.lodge_info_Frm;
 				frm.method = "post";
 				frm.action = "<%=ctxPath%>/lodge_register.exp";
@@ -1501,7 +1522,12 @@
 					
 					<div class="__data">
 						<div class="div_sub">
-							<span class="sub">숙박시설 ID를 입력하여 주세요.</span><svg class="submit_check" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#a01313" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg><span class="lodgeId_error"></span><span class="error"></span>
+							<c:if test="${empty requestScope.fk_lodge_id}">
+								<span class="sub">숙박시설 ID를 입력하여 주세요.</span><svg class="submit_check" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#a01313" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg><span class="lodgeId_error"></span><span class="error"></span>
+							</c:if>
+							<c:if test="${not empty requestScope.fk_lodge_id}">
+								<span class="sub">숙박시설 ID를 입력하여 주세요.</span><svg class="submit_check" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#a01313" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg><span class="lodgeId_error ok_check"></span><span class="error"></span>
+							</c:if>
 						</div>
 						<div class="lodge_id">
 							<c:if test="${empty requestScope.fk_lodge_id}">
@@ -1522,8 +1548,8 @@
 						<div class="div_sub">
 							<span class="sub">등록자ID</span>
 						</div>
-						<div class="fk_h_userid"> <%-- 회원가입시 사용한 값 가져오면됨 --%> 
-							<input type="text" name="fk_h_userid" value="sinho3004@naver.com" readonly />
+						<div class="fk_h_userid"> <%-- 회원가입시 사용한 값 가져오면됨 --%>
+							<input type="text" name="fk_h_userid" value="${requestScope.fk_h_userid}" readonly />
 						</div>
 					</div>
 					
@@ -1634,11 +1660,11 @@
 						<div id="lg_hotel_star_div" class="lg_hotel_star">
 							<select name="lg_hotel_star">
 									<option value="">--선택--</option>
-									<option>1성급</option>
-									<option>2성급</option>
-									<option>3성급</option>
-									<option>4성급</option>
-									<option>5성급</option>
+									<option value="1">1성급</option>
+									<option value="2">2성급</option>
+									<option value="3">3성급</option>
+									<option value="4">4성급</option>
+									<option value="5">5성급</option>
 							</select>
 						</div>
 					</div>
@@ -1699,7 +1725,7 @@
 							</select>
 						</div>
 						<input id="fontdesc_all_time" class="all_time_" type="checkbox" value="없음" /><label for="fontdesc_all_time">24시간</label>
-						<input type="text" class="submit_input" name="fd_time" />
+						<input type="hidden" class="submit_input" name="fd_time" />
 					</div>
 					
 					<div class="_br"></div>
@@ -1917,7 +1943,7 @@
 										</select>
 									</div>
 									<input id="fk_pool_opt_no_${poolType.pool_opt_no}_all_time" class="all_time_" type="checkbox" value="없음" /><label for="fk_pool_opt_no_${poolType.pool_opt_no}_all_time">24시간</label>
-									<input type="text" class="submit_input" name="pool_use_time" />
+									<input type="hidden" class="submit_input" name="pool_use_time" />
 								</div>
 							</div>
 							</c:forEach>
