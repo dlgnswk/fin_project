@@ -588,9 +588,10 @@
     		}
     		else {
     		// 하나의 파일은 10MB를 넘지 못한다.
-    		
-    			if( arr == mainImage_arr && arr.length > 4 ) {
-    				alert("메인 이미지는 최대 5개까지 가능합니다.");
+    			let mainImage_length = $("div#mainImage").find(".imageItem").length;
+    			console.log(mainImage_length);
+    			if( arr == mainImage_arr && mainImage_length > 4) {
+    				alert("메인 이미지는 5개의  사진을 등록해야 합니다.");
     				return;
     			}
     			else {
@@ -661,9 +662,11 @@
 		else {
 		// 하나의 파일은 10MB를 넘지 못한다.
 			// 메인 이미지의 경우
-			if( arr == mainImage_arr && arr.length > 4 ) {
-				alert("메인 이미지는 최대 5개까지 가능합니다.");
-				return;
+   			let mainImage_length = $("div#mainImage").find(".imageItem").length;
+   			console.log(mainImage_length);
+   			if( arr == mainImage_arr && mainImage_length > 4) {
+   				alert("메인 이미지는 5개의  사진을 등록해야 합니다.");
+   				return;
 			}
 			else {
 				
@@ -799,6 +802,11 @@
 			
 		}// end of if(viewImage_arr.length > 0)
 		
+		let mainImage_length = $("div#mainImage").find(".imageItem").length;
+		if( mainImage_length != 5) {
+			alert("메인 이미지는 5개의  사진을 등록해야 합니다.");
+			return false; 
+		}
 		
 		$.ajax({
             url : "<%= ctxPath%>/image_lodge.exp",
@@ -824,23 +832,19 @@
 	// 이미지 삭제 버튼	
 	$(document).on("click", "span.delete", function(){
 		
-		if(confirm("정말로 등록된 사진을 삭제하시겠습니까?")) {
+		if(confirm("사진을 삭제하겠습니까?")) {
 				
-			// 가장 가까운 조상 태그를 찾는다. "div.images_div" 
-			let images_div = $(this).closest('div.images_div'); // 카테고리 이미지 전부를 담고 있는 div
+			// 각각의 카테고리 이미지들을 담고 있는 div
+			let images_div = $(this).closest('div.images_div'); 
 			
-			let imageItem = $(this).closest('div.imageItem'); // 이미지가 들어있는 div -- 이미지 파일이 경로와 DB에만 존재
+				// 하나의 이미지는 ".imageItem" or ".imageItem .exitData" 안에 있다. 
+			// 한 카테고리의 한개의 이미지를 담고 있는 div
+			let imageItem = $(this).closest('div.imageItem');
+			
+			// 한 카테고리의 한개의 파일을 가지고 있는 이미지 
 			let exitData = $(this).closest('div.exitData'); // 이미지가 들어있는 div -- 이미지 파일을 포함한 경우
 			
-			// 파일이 있는거 선택시 파일 인덱스 를 가지고 제거
-			let imageItemIdx = images_div.find("span.delete").index($(this));
-			console.log("imageItemIdx => "+imageItemIdx);
-			// 이미지가 들어있는 div안에 "x"
-			let exitDataIdx = images_div.find("div.exitData").index(exitData);
-			console.log("exitDataIdx => "+exitDataIdx);
-			// 이미지 파일을 포함한 경우의 index
-			
-		//	console.log(delIdx);   0 1 2 3 4 5 ...
+			$(this).closest('div.imageItem').hasClass("exitData");
 			
 			let infoDiv = images_div.find(".infoDiv");
 		
@@ -853,27 +857,52 @@
 			
 			// == 이미등록된 값을 DB에서 삭제 -끝- == //
 			
-			
-			
 			// == 배열과 이미지에서 삭제 -시작- == //
 			if(imageItem.hasClass("exitData")) {
 			// 방금 이미지 파일을 추가하고 "x"를 눌렀다.
 				
-				exitData.eq(exitDataIdx).remove(); // 이미지를 보여주는 div 제거
-			
+				// 내가 누른 "x"의 인덱스를 추가될 파일의 인덱스와 같기때문에 삭제되는 위치를 알 수 있다.
+				let exitDataIdx = images_div.find('div.exitData').index($(this).closest('div.exitData'));
+				
+				exitData.remove();
+				let arr;
+				
 				if(arrName == "mainImage") {
 				// 이미지 파일 배열에서 삭제한다.
 					mainImage_arr.splice(exitDataIdx,1);
-					console.log(mainImage_arr);
+					arr = mainImage_arr;
 				}
 				else if(arrName == "outImage"){
-					console.log(outImage_arr);
+					outImage_arr.splice(exitDataIdx,1);
+					arr = outImage_arr;
+				}
+				else if(arrName == "publicImage"){
+					publicImage.splice(exitDataIdx,1);
+					arr = publicImage_arr;
+				}
+				else if(arrName == "poolImage"){
+					poolImage_arr.splice(exitDataIdx,1);
+					arr = poolImage_arr;
+				}
+				else if(arrName == "diningImage"){
+					diningImage_arr.splice(exitDataIdx,1);
+					arr = diningImage_arr;
+				}
+				else if(arrName == "serviceImage"){
+					serviceImage_arr.splice(exitDataIdx,1);
+					arr = serviceImage_arr;
+				}
+				else if(arrName == "viewImage"){
+					viewImage_arr.splice(exitDataIdx,1);
+					arr = viewImage_arr;
 				}
 				
+				console.log(arr);
 			}
 			else {
 			// 기존에 DB에 추가되어 있었던 이미지 파일이다.
-				alert("기존 이미지 파일")
+				alert("기존 이미지 파일");
+				imageItem.remove();
 			}
 			// == 배열과 이미지에서 삭제 -끝- == //
 			
