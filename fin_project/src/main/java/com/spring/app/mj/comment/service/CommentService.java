@@ -49,7 +49,7 @@ public interface CommentService {
 	* @param paraMap
 	* @return 
 	*/
-	List<Map<String, Object>> getSearchList(Map<String, String> paraMap);
+	List<Map<String, Object>> getSearchList(Map<String, Object> paraMap);
 
 	/** 
 	* @Method Name  : getInsert 
@@ -71,5 +71,38 @@ public interface CommentService {
 	* @return 
 	*/
 	int add_Comment(Map<String, String> paraMap);
+
+	/** 
+	* @Method Name  : edit 
+	* @작성일   : 2024. 1. 5 
+	* @작성자   : 손명진
+	* @변경이력  : 
+	* @Method 설명 : 기존 답변에 수정해주기
+	* @param paraMap
+	* @return 
+	*/
+	int edit(Map<String, String> paraMap);
+
+	/** 
+	* @Method Name  : goDelete 
+	* @작성일   : 2024. 1. 5 
+	* @작성자   : 먕지 
+	* @변경이력  : 
+	* @Method 설명 : 삭제구현하기
+	* @param paraMap
+	* @return 
+	*/
+	int goDelete(String c_seq);
+
+	/** 
+	* @Method Name  : getLodgeIdList 
+	* @작성일   : 2024. 1. 7 
+	* @작성자   : 손명진 
+	* @변경이력  : 
+	* @Method 설명 : 사업자아이디랑 숙박시설 비교하는 것
+	* @param userId
+	* @return 
+	*/
+	List<String> getLodgeIdList(String userId);
 
 }

@@ -151,7 +151,6 @@ public class AdminService_imple implements AdminService {
 			
 			JsonObject jsonObj = new JsonObject();
 			jsonObj.addProperty("gender", 		map.get("gender")); 	// put  {"gender":"남"}
-			jsonObj.addProperty("Y2016", 		map.get("Y2016")); 		// put  {"gender":"남","Y2001":"0"}
 			jsonObj.addProperty("Y2017", 		map.get("Y2017")); 		// put  {"gender":"남","Y2001":"0","Y2002":"2"}
 			jsonObj.addProperty("Y2018", 		map.get("Y2018")); 		// put  {"gender":"남","Y2001":"0","Y2002":"2", Y2003":"4"}
 			jsonObj.addProperty("Y2019", 		map.get("Y2019")); 		// put  {"gender":"남","Y2001":"0","Y2002":"2", Y2003":"4", "Y2004":"4"}
@@ -159,6 +158,7 @@ public class AdminService_imple implements AdminService {
 			jsonObj.addProperty("Y2021", 		map.get("Y2021")); 		// put  {"gender":"남","Y2001":"0","Y2002":"2", Y2003":"4", "Y2004":"4", "Y2005":"15", "Y2006":"17"}
 			jsonObj.addProperty("Y2022", 		map.get("Y2022")); 		// put  {"gender":"남","Y2001":"0","Y2002":"2", Y2003":"4", "Y2004":"4", "Y2005":"15", "Y2006":"17", "Y2007":"8"}
 			jsonObj.addProperty("Y2023", 		map.get("Y2023"));
+			jsonObj.addProperty("Y2024", 		map.get("Y2024"));
 			
 			jsonArr.add(jsonObj);
 		}

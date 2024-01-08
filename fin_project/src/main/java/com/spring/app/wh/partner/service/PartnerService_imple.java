@@ -88,34 +88,28 @@ public class PartnerService_imple implements PartnerService {
 		return n;
 	}
 
-	/*
+	
 	// 채팅쓰기  
 	@Override
-	public int addChat(ReplyVO replyvo) throws Throwable {
+	public int addChat(Map<String,String> paraMap) {
 
-		int n = dao.addChat(replyvo);// 채팅쓰기(tbl_reply 테이블에 insert)
+		int n = dao.addChat(paraMap);// 채팅쓰기(tbl_reply 테이블에 insert)
 		//System.out.println("확인용 n =>"+ n);
 		
 		return n;
 	}
 
-	// === #91. 원게시물에 딸린 댓글들을 조회해오기 === //
-	@Override
-	public List<ReplyVO> getMsgList(String parentSeq) {
-		List<ReplyVO> MsgList = dao.getMsgList(parentSeq);
-		return MsgList;
-	}
  
 	 
-	 // === #129. 원게시물에 딸린 댓글들을 페이징 처리해서 조회해오기 === //
+	// 채팅들을 페이징 처리해서 조회해오기 
 	@Override
 	public List<ReplyVO> getMsgList_Paging(Map<String, String> paraMap) {
 		List<ReplyVO> MsgList = dao.getMsgList_Paging(paraMap);
 		return MsgList;
 	}
 
-
-	// === #133. 채팅방 번호(fk_chat_no)에 해당하는 댓글의 totalPage 수 알아오기 === //
+	
+	// 채팅방 번호에 해당하는 채팅의 totalPage 수 알아오기
 	@Override
 	public int getMsgTotalPage(Map<String, String> paraMap) {
 		int totalPage = dao.getMsgTotalPage(paraMap);
@@ -123,7 +117,7 @@ public class PartnerService_imple implements PartnerService {
 	}
 	 
 	 
-	 */
+	
 	 
 	 
 	

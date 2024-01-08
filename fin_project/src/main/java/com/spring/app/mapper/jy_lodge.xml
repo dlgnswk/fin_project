@@ -289,6 +289,7 @@
 		<if test="img_cano!=null">
 			and fk_img_cano = #{img_cano}
 		</if>
+		order by lg_img_seq
 		
 	</select>
 	
@@ -436,12 +437,11 @@
 	
 	<resultMap type="HashMap" id="getRm_img_list_Map">
 		<result property="rm_seq"            column="rm_seq"           javaType="String"></result>
-		<result property="fk_lodge_id"       column="fk_lodge_id"      javaType="String"></result>
 		<result property="rm_img_name"       column="rm_img_name"      javaType="String"></result>
 		<result property="rm_img_main"       column="rm_img_main"      javaType="String"></result>
 		<result property="rm_img_save_name"  column="rm_img_save_name" javaType="String"></result>
 	</resultMap>		
-	<select id="getRm_img_list" parameterType="HashMap" resultMap="getRm_img_list_Map">
+	<select id="getRm_img_list" parameterType="String" resultMap="getRm_img_list_Map">
 		with V
 		as 
 		(
@@ -449,7 +449,7 @@
 		    from tbl_rm_img RI
 		    join tbl_room R on RI.fk_rm_seq = R.rm_seq
 		)
-		select rm_seq, rm_img_name, rm_img_main, rm_img_save_name, fk_lodge_id
+		select rm_seq, rm_img_name, rm_img_main, rm_img_save_name
 		from V
 		<choose>
 			<when test="lodge_id != null">

@@ -34,23 +34,23 @@ public interface PartnerService {
 	// tbl_host 에 저장된 판매자의 정보를 update 해주는 메소드
 	int editHost(Map<String, String> paraMap);
 
+	
+	
+	
 	// 채팅방 불러오기
 	ChatVO selectChat(Map<String,String> paraMap);
 
 	// 기존 채팅방이 없는 경우 새로운 채팅방을 만들기
 	int createChat(Map<String, String> paraMap);
 
-	// 채팅쓰기(transaction 처리)
-	// int addChat(ReplyVO replyvo) throws Throwable;
+	// 채팅쓰기
+	int addChat(Map<String,String> paraMap);
 
-	// 원게시물에 딸린 댓글들을 조회해오기
-	// List<ReplyVO> getMsgList(String parentSeq);
+	// 채팅들을 페이징 처리해서 조회해오기 
+	List<ReplyVO> getMsgList_Paging(Map<String, String> paraMap);
 
-	// 원게시물에 딸린 댓글들을 페이징 처리해서 조회해오기
-	// List<ReplyVO> getMsgList_Paging(Map<String, String> paraMap);
-
-	// 원글 글번호(parentSeq)에 해당하는 댓글의 totalPage 수 알아오기
-	// int getMsgTotalPage(Map<String, String> paraMap);	
+	// 채팅방 번호에 해당하는 채팅의 totalPage 수 알아오기
+	int getMsgTotalPage(Map<String, String> paraMap);	
 	
 	
 	

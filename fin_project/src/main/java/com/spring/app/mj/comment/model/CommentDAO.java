@@ -46,7 +46,7 @@ public interface CommentDAO {
 	* @param paraMap
 	* @return 
 	*/
-	List<Map<String, Object>> getSearchList(Map<String, String> paraMap);
+	List<Map<String, Object>> getSearchList(Map<String, Object> paraMap);
 
 	/** 
 	* @Method Name  : getInsert 
@@ -68,5 +68,38 @@ public interface CommentDAO {
 	* @return 
 	*/
 	int getComment(Map<String, String> paraMap);
+
+	/** 
+	* @Method Name  : changeUpdate 
+	* @작성일   : 2024. 1. 5 
+	* @작성자   : 먕지 
+	* @변경이력  : 
+	* @Method 설명 : 기존 답변에 수정해주기
+	* @param paraMap
+	* @return 
+	*/
+	int changeUpdate(Map<String, String> paraMap);
+
+	/** 
+	* @Method Name  : deleteComment 
+	* @작성일   : 2024. 1. 5 
+	* @작성자   : 먕지 
+	* @변경이력  : 
+	* @Method 설명 : 삭제하기
+	* @param paraMap
+	* @return 
+	*/
+	int deleteComment(String c_seq);
+
+	/** 
+	* @Method Name  : getLodgeIdList 
+	* @작성일   : 2024. 1. 7 
+	* @작성자   : 먕지 
+	* @변경이력  : 
+	* @Method 설명 : 사업자아이디랑 숙박시설 비교하는 것
+	* @param userId
+	* @return 
+	*/
+	List<String> getLodgeIdList(String userId);
 
 }

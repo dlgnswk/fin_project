@@ -653,171 +653,110 @@ public class PartnerController {
 	
 	
 	
+	
+	
+	
+	// === 채팅쓰기 === //
+ 	@ResponseBody
+ 	@PostMapping(value="/addChat.exp", produces="text/plain;charset=UTF-8" )
+  	public String addComment(HttpServletRequest request) {
+ 		
+ 		String chat_no = request.getParameter("chat_no");
+ 		String msg = request.getParameter("msg");
+ 		
+ 		Map<String,String> paraMap = new HashMap<>();
+ 		
+ 		paraMap.put("chat_no", chat_no);
+ 		paraMap.put("msg", msg);
+ 		
+		int n = service.addChat(paraMap);
+			
+ 		JSONObject jsonObj = new JSONObject();
+ 		jsonObj.put("n", n); // {"n":1} {"n":0}
+ 		
+ 		return jsonObj.toString();	// "{"n":1,"name":"이순신"}"	또는  "{"n":0,"name":}"
+ 	}
+	  	
+	  	
+ 	// === 채팅들을 페이징 처리해서 조회해오기  === //
+  	@ResponseBody
+  	@GetMapping(value="/msgList.exp", produces="text/plain;charset=UTF-8" )
+  	public String msgList(HttpServletRequest request) {
+  		
+  		String fk_chat_no = request.getParameter("chat_no");
+  		String currentShowPageNo = request.getParameter("currentShowPageNo");
+  		
+  		if(currentShowPageNo == null) {
+  			currentShowPageNo = "1";
+  		}
+  		
+  		int sizePerPage = 10; // 한 페이지당 5개의 댓글을 보여줄 것임.
+  		
 	/*
-	
-	
-	// === #84. 댓글쓰기(Ajax로 처리) === //
-	 	@ResponseBody
-	 	@PostMapping(value="/addChat.exp", produces="text/plain;charset=UTF-8" )
-	  	public String addComment(ReplyVO replyvo) {
-	 		// 댓글쓰기에 첨부파일이 없는 경우
-	 		int n = 0;
-	 		
-	 		try {
-				n = service.addChat(replyvo);
-				
-			} catch (Throwable e) {
-				e.printStackTrace();
-			}
-	 		
-	 		JSONObject jsonObj = new JSONObject();
-	 		jsonObj.put("n", n); // {"n":1} {"n":0}
-	 		jsonObj.put("r_status", replyvo.getR_status()); // {"n":1, "name":"이순신"} {"n":0, "name":"최우현"}
-	 		
-	 		return jsonObj.toString();	// "{"n":1,"name":"이순신"}"	또는  "{"n":0,"name":}"
-	 	}
-	 	
-	 	// ==== #90. 원게시물에 딸린 댓글들을 조회해오기(Ajax로 처리) ==== //
-	  	@ResponseBody
-	  	@GetMapping(value="/readComment.action", produces="text/plain;charset=UTF-8" )
-	  	public String readComment(HttpServletRequest request) {
-	  		
-	  		String parentSeq = request.getParameter("parentSeq");
-	  		
-	  		List<CommentVO> commentList = service.getCommentList(parentSeq);
-	  		
-	  		JSONArray jsonArr = new JSONArray(); // []
-	  		
-	  		if(commentList != null) {
-	  			for(CommentVO cmtvo : commentList) {
-	  				JSONObject jsonObj = new JSONObject();
-	  				jsonObj.put("name",cmtvo.getName());
-	  				jsonObj.put("content",cmtvo.getContent());
-	  				jsonObj.put("regDate",cmtvo.getRegDate());
-	  				
-	  				jsonArr.put(jsonObj);
-	  			}// end of for----------------------------------
-	  			
-	  		}
-	  		
-	  		return jsonArr.toString(); 
-	  	}
+        currentShowPageNo      startRno     endRno
+        --------------------------------------------
+           1page        ==>       1           5
+           2page        ==>       6           10
+           3page        ==>       11          15
+           4page        ==>       16          20
+           ....  
+    */
+  	
+  		int startRno = ((Integer.parseInt(currentShowPageNo) - 1) * sizePerPage) + 1; // 시작 행번호
+	    int endRno = startRno + sizePerPage - 1; // 끝 행번호 
+  		
+  		Map<String,String> paraMap = new HashMap<>();
+  		paraMap.put("fk_chat_no", fk_chat_no);
+  		paraMap.put("startRno", String.valueOf(startRno));
+  		paraMap.put("endRno", String.valueOf(endRno));
+  		
+  		List<ReplyVO> msgList = service.getMsgList_Paging(paraMap);
+  		
+	    JSONArray jsonArr = new JSONArray();
+	    
+	    if(msgList != null) {
+	    	for(ReplyVO replyvo : msgList) {
+	    		JSONObject jsonObj = new JSONObject();
+	    		jsonObj.put("reply_no", replyvo.getReply_no());
+	    		jsonObj.put("fk_chat_no", replyvo.getFk_chat_no());
+	    		jsonObj.put("reply_comment", replyvo.getReply_comment());
+	    		jsonObj.put("reply_date", replyvo.getReply_date());
+	    		jsonObj.put("r_status", replyvo.getR_status());
+	    		
+	    		
+	    		jsonArr.put(jsonObj);
+	    	}// end of for----------------------------------------------
+	    }
+  		
+  		return jsonArr.toString();
+  	}
 	  	
 	  	
-	  	
-	  	// === #108. 검색어 입력 시 자동글 완성하기 3 === //
-	  	@ResponseBody
-	  	@GetMapping(value="/wordSearchShow.action", produces="text/plain;charset=UTF-8" )
-	  	public String wordSearchShow(HttpServletRequest request) {
-	  		String searchType = request.getParameter("searchType");
-	  		String searchWord = request.getParameter("searchWord");
-	  		
-	  		Map<String, String> paraMap = new HashMap<>();
-	  		paraMap.put("searchType", searchType);
-	  		paraMap.put("searchWord", searchWord);
-	  		
-	  		List<String> wordList =  service.wordSearchShow(paraMap);
-	  		
-	  		JSONArray jsonArr = new JSONArray();
-	  		
-	  		if(wordList != null) {
-	  			
-	  			for(String word :wordList) {
-	  				JSONObject jsonObj = new JSONObject();
-	  				jsonObj.put("word", word);
-	  				
-	  				jsonArr.put(jsonObj);
-	  				
-	  			}// end of for-------------------------------------------------
-	  		}
-	  		
-	  		return jsonArr.toString();
-	  	}
-	  	
-	  	// === #128. 원게시물에 딸린 댓글들을 페이징 처리해서 조회해오기(Ajax 로 처리) === //
-	  	@ResponseBody
-	  	@GetMapping(value="/commentList.action", produces="text/plain;charset=UTF-8" )
-	  	public String commentList(HttpServletRequest request) {
-	  		
-	  		String parentSeq = request.getParameter("parentSeq");
-	  		String currentShowPageNo = request.getParameter("currentShowPageNo");
-	  		
-	  		if(currentShowPageNo == null) {
-	  			currentShowPageNo = "1";
-	  		}
-	  		
-	  		int sizePerPage = 5; // 한 페이지당 5개의 댓글을 보여줄 것임.
-	  		
-		/*
-	        currentShowPageNo      startRno     endRno
-	        --------------------------------------------
-	           1page        ==>       1           5
-	           2page        ==>       6           10
-	           3page        ==>       11          15
-	           4page        ==>       16          20
-	           ....  
-	    */
-	  	/*	
-	  		int startRno = ((Integer.parseInt(currentShowPageNo) - 1) * sizePerPage) + 1; // 시작 행번호
-		    int endRno = startRno + sizePerPage - 1; // 끝 행번호 
-	  		
-	  		Map<String,String> paraMap = new HashMap<>();
-	  		paraMap.put("parentSeq", parentSeq);
-	  		paraMap.put("startRno", String.valueOf(startRno));
-	  		paraMap.put("endRno", String.valueOf(endRno));
-	  		
-	  		List<CommentVO> commentList = service.getCommentList_Paging(paraMap);
-	  		
-		    JSONArray jsonArr = new JSONArray();
-		    
-		    if(commentList != null) {
-		    	for(CommentVO cmtvo : commentList) {
-		    		JSONObject jsonObj = new JSONObject();
-		    		jsonObj.put("name", cmtvo.getName());
-		    		jsonObj.put("content", cmtvo.getContent());
-		    		jsonObj.put("regdate", cmtvo.getRegDate());
-		    		
-		    		// ==== 댓글읽어오기에 있어서 첨부파일 기능을 넣은 경우 시작 ==== //
-		    		jsonObj.put("seq", cmtvo.getSeq());
-		    		jsonObj.put("fileName", cmtvo.getFileName());
-		    		jsonObj.put("orgFilename", cmtvo.getOrgFilename());
-		    		jsonObj.put("fileSize", cmtvo.getFileSize());
-		    		// ==== 댓글읽어오기에 있어서 첨부파일 기능을 넣은 경우 끝 ==== //
-		    		
-		    		
-		    		jsonArr.put(jsonObj);
-		    	}// end of for----------------------------------------------
-		    }
-	  		
-	  		return jsonArr.toString();
-	  	}
-	  	
-	  	// === #132. 원게시물에 딸린 댓글의 totalPage 알아오기(JSON 으로 처리) === //
-	  	@ResponseBody
-	  	@GetMapping(value="getCommentTotalPage.action")
-	  	public String getCommentTotalPage(HttpServletRequest request) {
-	  		
-	  		String parentSeq = request.getParameter("parentSeq");
-	  		String sizePerPage = request.getParameter("sizePerPage");
-	  		
-	  		Map<String,String> paraMap = new HashMap<>();
-	  		paraMap.put("parentSeq", parentSeq);
-	  		paraMap.put("sizePerPage", sizePerPage);
-	  		
-	  		// 원글 글번호(parentSeq)에 해당하는 댓글의 totalPage 수 알아오기
-	  		int totalPage = service.getCommentTotalPage(paraMap);
-	  		
-	  		JSONObject jsonObj = new JSONObject(); 
-	  		jsonObj.put("totalPage", totalPage);  
-	  		
-	  		
-	  		return jsonObj.toString();
-	  	}
-	  	
-	
-	  	
-	*/ 	
-	  		
+  	// === 채팅방 번호에 해당하는 채팅의 totalPage 수 알아오기 === //
+  	@ResponseBody
+  	@GetMapping(value="getMsgTotalPage.exp")
+  	public String getMsgTotalPage(HttpServletRequest request) {
+  		
+  		String fk_chat_no = request.getParameter("chat_no");
+  		String sizePerPage = request.getParameter("sizePerPage");
+  		
+  		Map<String,String> paraMap = new HashMap<>();
+  		paraMap.put("fk_chat_no", fk_chat_no);
+  		paraMap.put("sizePerPage", sizePerPage);
+  		
+  		int totalPage = service.getMsgTotalPage(paraMap);
+  		
+  		JSONObject jsonObj = new JSONObject(); 
+  		jsonObj.put("totalPage", totalPage);  
+  		
+  		
+  		return jsonObj.toString();
+  	}
+  	
+
+  	
+
+  		
 	// ==== CS업무 관리 끝 ==== // 
 	
 	

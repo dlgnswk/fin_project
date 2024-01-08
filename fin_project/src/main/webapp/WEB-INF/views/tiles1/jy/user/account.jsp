@@ -287,6 +287,7 @@
        </div>
       </div>
      </div>
+    <%-- 추가정보 - 여권 / 다른여행객 추가 삭제
      <div id="more-details-additional-travelers-section">
       <div class="uitk-layout-grid uitk-layout-grid-has-auto-columns uitk-layout-grid-has-columns-by-large uitk-layout-grid-has-space uitk-layout-grid-display-grid" style="--uitk-layoutgrid-auto-columns: minmax(var(--uitk-layoutgrid-egds-size__0x), 1fr); --uitk-layoutgrid-columns-large: repeat(2, minmax(0, 1fr)); --uitk-layoutgrid-column-gap: var(--uitk-layoutgrid-space-twelve); --uitk-layoutgrid-row-gap: var(--uitk-layoutgrid-space-twelve);">
        <div id="more-details-section" class="uitk-layout-grid-item">
@@ -348,6 +349,7 @@
       </div>
      </div>
     </div>
+    --%>
    </div>	
   </div>
  </div>

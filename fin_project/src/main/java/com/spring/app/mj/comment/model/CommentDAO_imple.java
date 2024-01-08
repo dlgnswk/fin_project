@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.tomcat.jdbc.pool.interceptor.StatementCacheMBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -50,7 +51,7 @@ public class CommentDAO_imple implements CommentDAO {
 	
 	// 글목록보기
 	@Override
-	public List<Map<String, Object>> getSearchList(Map<String, String> paraMap) {
+	public List<Map<String, Object>> getSearchList(Map<String, Object> paraMap) {
 		List<Map<String, Object>> getSearchList = sqlsession.selectList("mj_comment.selectReview", paraMap);
 		return  getSearchList;
 	}
@@ -67,6 +68,28 @@ public class CommentDAO_imple implements CommentDAO {
 	public int getComment(Map<String, String> paraMap) {
 		int n =  sqlsession.insert("mj_comment.commentInsert", paraMap);
 		return n;
+	}
+
+    // 기존 답변에 수정해주기
+	@Override
+	public int changeUpdate(Map<String, String> paraMap) {
+		int n = sqlsession.update("mj_comment.changeComment", paraMap);
+		return n;
+	}
+
+
+	// 삭제하기
+	@Override
+	public int deleteComment(String c_seq) {
+		int n = sqlsession.delete("mj_comment.deleteComment", c_seq);
+		return n;
+	}
+
+
+	@Override
+	public List<String> getLodgeIdList(String userId) {
+		 List<String> getLodgeIdList = sqlsession.selectList("mj_comment.selectLodgeIdList", userId);
+		return getLodgeIdList;
 	}
 
 }
