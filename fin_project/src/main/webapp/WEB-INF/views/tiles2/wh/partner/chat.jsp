@@ -23,7 +23,7 @@
 
 	$(document).ready(function(){
 		
-		goViewComment(1); // 페이징 처리한 댓글 읽어오기
+		goViewChat(1); // 페이징 처리한 댓글 읽어오기
 		
 		
 		$("input:text[name='msg']").bind("keydown",function(e){
@@ -47,7 +47,7 @@ function goChatWrite() {
 	
 	if($("input:file[name='attach']").val() == "") {
 		// 첨부파일이 없는 댓글쓰기인 경우
-		goAddWrite_noAttach();
+		goChatWrite_noAttach();
 	}
 	
 	
@@ -72,7 +72,7 @@ function goChatWrite_noAttach() {
     
 	$.ajax({
 		url:"<%= ctxPath%>/addChat.exp",
-	<%--url:"<%= ctxPath%>/addComment.action" --%>
+	
 	/*
 		data:{"fk_userid":$("input:hidden[name='fk_userid']").val()
 			 ,"name":$("input:text[name='name']").val()
@@ -142,7 +142,7 @@ function goViewChat(currentShowPageNo) {
 			
 				   	v_html += '<div style="margin-bottom:3px;">';
 				   	v_html += '[' + item.fk_userid + '] ';
-				   	v_html += item.reply;
+				   	v_html += item.reply_comment;
 				   	v_html += ' <span style="font-size:11px;color:#777;">' + new Date().toLocaleTimeString() + '</span>';
 				   	v_html += '</div>';
 				   	
@@ -159,10 +159,10 @@ function goViewChat(currentShowPageNo) {
 				v_html += "</tr>";
 			}
 			--%>
-			$("tbody#msgDisplay").html(v_html);
+			$("div#msgDisplay").html(v_html);
 			
 			// 페이지바 함수 호출
-			makeCommentPageBar(currentShowPageNo);
+			makeMsgPageBar(currentShowPageNo);
 			
 		},
 		
@@ -174,13 +174,13 @@ function goViewChat(currentShowPageNo) {
 }// end of function goReadComment() ---------------------------------------------------
 
 // === 댓글내용 페이지바 Ajax 로 만들기 === //
-function makeCommentPageBar(currentShowPageNo) {
+function makeMsgPageBar(currentShowPageNo) {
 	
 	<%-- === 원글에 대한 댓글의 totalPage 수를 알아와야 한다. === --%>
 	$.ajax({
-		url:"<%=ctxPath%>/getCommentTotalPage.action",
+		url:"<%=ctxPath%>/getMsgTotalPage.exp",
 		data:{"chat_no":"${requestScope.chatvo.chat_no}",
-			  "sizePerPage":"5"},
+			  "sizePerPage":"10"},
 		type:"get",
 		dataType:"json",
 		success:function(json){
@@ -322,7 +322,7 @@ function makeCommentPageBar(currentShowPageNo) {
 
 
 	
-
+<%--
 function goView(chat_no) {
 	
 	const goBackURL = "${requestScope.goBackURL}";
@@ -338,7 +338,7 @@ function goView(chat_no) {
     
     
 }// end of function goView(seq) --------------------------------
-	
+--%>	
 	
 	
 </script>    
@@ -359,8 +359,8 @@ function goView(chat_no) {
 						<td colspan="2"><div id="msgDisplay"></div></td>
 					</tr>
 					<tr>
-						<td colspan="2"><input type="text" name="msg" id="msg" placeholder="대화 내용을 입력하세요." class="form-control" size="100" maxlength="1000" disabled>
-						<button type="button" class="btn btn-success btn-sm mr-3" onclick="goAddWrite()">전송</button></td>
+						<td colspan="2"><input type="text" name="msg" id="msg" placeholder="대화 내용을 입력하세요." class="form-control" size="100" maxlength="1000">
+						<button type="button" class="btn btn-success btn-sm mr-3" onclick="goChatWrite()">전송</button></td>
 					</tr>
 				
 				
@@ -369,7 +369,7 @@ function goView(chat_no) {
 		   
 		   	   <input type="hidden" name="chat_no" value="${requestScope.chatvo.chat_no}">
 		  	   <input type="hidden" name="chat_date" value="${requestScope.chatvo.chat_date}">
-		  	   <input type="hidden" name="chat_date" value="${requestScope.chatvo.fk_userid}">
+		  	   <input type="hidden" name="fk_userid" value="${requestScope.chatvo.fk_userid}">
 		   </form>
 		   
 		  

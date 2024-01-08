@@ -25,7 +25,7 @@
 	
 	<!-- 원석 개발전용 취소정책 불러오기 -->
 	<select id="ws_getLodgeInfo" parameterType="String" resultType="com.spring.app.expedia.domain.LodgeVO">
-		select fk_cancel_opt, lg_park_yn, lg_internet_yn, lg_name, lg_checkin_start_time, lg_address
+		select fk_cancel_opt, lg_park_yn, lg_internet_yn, lg_name, lg_checkin_start_time, lg_address, lodge_id
 		from tbl_lodge
 		where fk_h_userid = #{h_userid}
 	</select>
@@ -90,5 +90,19 @@
 		update tbl_user set point = point + to_number(#{to_insert_point})
 		where userid = #{userid}
 	</update>
+	
+	
+	<!-- 숙박업소 별 후기 가져오기 -->
+	<resultMap type="HashMap" id="ws_getLodgeReview_Map"><!-- 한 컬럼씩 써야한다. (property는 컬럼에 대한 키값)-->
+		<result property="rating" 	column="rating" 	javaType="String" />
+		<result property="rv_cnt" 	column="rv_cnt" 	javaType="String" />
+	</resultMap>
+	
+	<select id="ws_getLodgeReview" parameterType="String" resultMap="ws_getLodgeReview_Map">
+		select to_char(round(sum(fk_rv_rating)/count(*),1),'FM9990.0') as rating
+		       ,count(*) as rv_cnt
+		from tbl_review
+		where fk_lodge_id = #{lodge_id}
+	</select>
 	
 </mapper>

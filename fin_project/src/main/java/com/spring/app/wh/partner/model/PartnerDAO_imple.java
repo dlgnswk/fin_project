@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.spring.app.expedia.domain.ChatVO;
 import com.spring.app.expedia.domain.HostVO;
+import com.spring.app.expedia.domain.ReplyVO;
 
 @Repository
 public class PartnerDAO_imple implements PartnerDAO {
@@ -76,13 +77,28 @@ public class PartnerDAO_imple implements PartnerDAO {
 	}
 
 	
-	
+	// 채팅쓰기(tbl_reply 테이블에 insert)
+	@Override
+	public int addChat(Map<String,String> paraMap) {
+		int n = sqlsession.insert("wh_partner.addChat",paraMap);
+		return n;
+	}
 	
 
-
+	// 채팅들을 페이징 처리해서 조회해오기
+	@Override
+	public List<ReplyVO> getMsgList_Paging(Map<String, String> paraMap) {
+		List<ReplyVO> msgList = sqlsession.selectList("wh_partner.getMsgList_Paging",paraMap);
+		return msgList;
+	}
 
 	
-	
+	// 채팅방 번호에 해당하는 채팅의 totalPage 수 알아오기
+	@Override
+	public int getMsgTotalPage(Map<String, String> paraMap) {
+		int totalPage = sqlsession.selectOne("wh_partner.getMsgTotalPage",paraMap);
+		return totalPage;
+	}
 	
 
 }
