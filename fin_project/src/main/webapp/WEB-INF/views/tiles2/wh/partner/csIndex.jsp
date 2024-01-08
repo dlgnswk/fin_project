@@ -20,8 +20,10 @@
 	});// end of $(document).ready(function(){}--------------------------------------
 
 	function goComment() {
-		
-		// 명진 누나 꺼
+		const frm = document.useridSendFrm;
+		frm.action  = "<%= ctxPath%>/reviewlist.exp";
+		frm.method = "get";
+		frm.submit();
 		
 	}
 		
@@ -65,7 +67,7 @@
 						<img src="https://apps.expediapartnercentral.com/list/static/images/Lodging.svg" style="width:80px; height:80px;"/>
 					</div>
 					
-					<div style="font-family: Century Gothic,CenturyGothic,AppleGothic,sans-serif; font-weight: 600; font-size: 18px; line-height: 26px; text-align: center; color: #121617;">
+					<div onclick="goComment()"  style="font-family: Century Gothic,CenturyGothic,AppleGothic,sans-serif; font-weight: 600; font-size: 18px; line-height: 26px; text-align: center; color: #121617;">
 							이용 후기 관리
 					</div>
 				</div>

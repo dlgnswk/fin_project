@@ -50,7 +50,7 @@ public class CommentService_imple implements CommentService {
 
 	// 글목록보기
 	@Override
-	public List<Map<String, Object>> getSearchList(Map<String, String> paraMap) {
+	public List<Map<String, Object>> getSearchList(Map<String, Object> paraMap) {
 		List<Map<String, Object>> getSearchList = dao.getSearchList(paraMap);
 		return getSearchList;
 	}
@@ -67,6 +67,28 @@ public class CommentService_imple implements CommentService {
 	public int add_Comment(Map<String, String> paraMap ) {
 		int n = dao.getComment(paraMap);
 		return n;
+	}
+
+	// 수정하기
+	@Override
+	public int edit(Map<String, String> paraMap) {
+		int n = dao.changeUpdate(paraMap);
+		return n;
+	}
+
+	// 삭제하기
+	@Override
+	public int goDelete(String c_seq) {
+		int n = dao.deleteComment(c_seq);
+		return n;
+	}
+
+
+	// 사업자아이디랑 숙박시설 비교하는 것
+	@Override
+	public List<String> getLodgeIdList(String userId) {
+		List<String> getLodgeIdList = dao.getLodgeIdList(userId);
+		return getLodgeIdList;
 	}
 
 }
