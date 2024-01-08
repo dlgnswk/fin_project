@@ -42,7 +42,7 @@ public class paymentController {
 	 */
 
 	// 결제페이지
-	@GetMapping(value = "/payment/payment.exp")
+	@RequestMapping(value = "/payment/payment.exp")
 	public ModelAndView requiredLogin_searchUser(HttpServletRequest request, HttpServletResponse response,
 			ModelAndView mav) {
 

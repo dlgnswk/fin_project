@@ -191,3 +191,4 @@ public class LodgeDAO_imple implements LodgeDAO {
 	}
 
 }
+
