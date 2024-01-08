@@ -746,10 +746,19 @@
 				</div>
 			</div>
 			<div id="go_review" class="c_pd_b_15r" style="padding-bottom: 1.25rem;">
-				<c:if test="${requestScope.lodgeinfo.RV_RATING_AVG>0}">			
+			<c:set var="rv_rate" value="${requestScope.lodgeinfo.RV_RATING_AVG}"/>
+				<c:if test="${rv_rate>0}">			
 					<div class="c_flex" style="margin-bottom: 0.5rem;">
-						<span class="uitk-badge uitk-badge-base-large uitk-badge-base-has-text uitk-badge-positive"><span class="uitk-badge-base-text" aria-hidden="true">8.4</span><span class="is-visually-hidden">8.4</span></span>
+						<c:if test="${rv_rate>8}">	
+							<span class="uitk-badge uitk-badge-base-large uitk-badge-base-has-text uitk-badge-positive"><span class="uitk-badge-base-text" aria-hidden="true">${requestScope.lodgeinfo.RV_RATING_AVG}</span></span>
+						</c:if>
 						<h3 class="c_h3_head5" style="padding-left: 0.5rem;">매우 좋아요</h3>
+					</div>
+				</c:if>
+				<c:if test="${empty rv_rate}">			
+					<div class="c_flex" style="margin-bottom: 0.5rem;">
+						<span class="uitk-badge uitk-badge-base-large uitk-badge-base-has-text uitk-badge-standard"><span class="uitk-badge-base-text" aria-hidden="true">0.0</span></span>
+						<h3 class="c_h3_head5" style="padding-left: 0.5rem;">이용 후기 없음</h3>
 					</div>
 				</c:if>
 				<div>
@@ -1328,7 +1337,7 @@
 										<c:if test="${d_rate>0}">
 											<span class="uitk-badge uitk-badge-large uitk-badge-deal-member uitk-badge-has-text uitk-spacing uitk-spacing-margin-blockend-one">
 												<svg class="uitk-icon uitk-icon-small" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill-rule="evenodd" d="m17.1 16.05 1.22-1.18 3.48-3.48a.78.78 0 0 0 .2-.6l-1.3-7.1a.57.57 0 0 0-.42-.42l-7.06-1.26a.78.78 0 0 0-.61.19L2.1 12.7a.36.36 0 0 0 0 .51l8.68 8.69c.14.13.37.14.5 0l4.24-4.23a2.88 2.88 0 0 0 4.9-2.26v-.1c0-.28-.03-1.02-.26-1.5L19 14.9a1.54 1.54 0 1 1-3 .62c-.03-.5.19-2.34.5-4.07a26.11 26.11 0 0 1 .56-2.48l.02.04a1.62 1.62 0 1 0-1.42-.12c-.13.57-.26 1.26-.41 2.1a29.62 29.62 0 0 0-.57 4.88l-.83.83-6.56-6.55 6.04-6.04c.07-.08.2-.12.3-.1l5.2.94c.09.01.18.1.2.2l.98 5.18c.02.1-.03.23-.1.3l-3.1 3.1c-.2.75-.43 2.05.3 2.31zm-6.24 3.4-6.29-6.32a.18.18 0 0 1 0-.25l1.72-1.72 6.56 6.56-1.74 1.73a.18.18 0 0 1-.25 0z" clip-rule="evenodd"></path></svg>
-												<span class="uitk-badge-text" aria-hidden="false"> 회원가 ${d_rate*100}% 할인</span>
+												<span class="uitk-badge-text" aria-hidden="false"> 회원가 <fmt:formatNumber value="${d_rate*100}" pattern="###,###" />% 할인</span>
 											</span>
 										</c:if>
 										<div class="c_flex" style="gap: 0.3rem; align-items: center;">																				
@@ -2726,10 +2735,6 @@ function goPriceDetail(st_price, rm_seq) {
 	}
 	
 }
-
-
-
-
 
 
 
