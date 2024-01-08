@@ -144,8 +144,8 @@
 	          	if( fileFrontName.length > 7) {
 	          		console.log(fileFrontName);
 	          		console.log(fileTypeName);
-	          		console.log(fileFrontName.substr(0,6) + "···" + fileTypeName);
-	          		viewFileName = fileFrontName.substr(0,6) + "···" + fileTypeName;
+	          		console.log(fileFrontName.substr(0,6) + "··" + fileTypeName);
+	          		viewFileName = fileFrontName.substr(0,6) + "··" + fileTypeName;
 	          	}
                	
    				fileReader.onload = function(){
@@ -211,8 +211,8 @@
           	if( fileFrontName.length > 7) {
           		console.log(fileFrontName);
           		console.log(fileTypeName);
-          		console.log(fileFrontName.substr(0,6) + "···" + fileTypeName);
-          		viewFileName = fileFrontName.substr(0,6) + "···" + fileTypeName;
+          		console.log(fileFrontName.substr(0,6) + "··" + fileTypeName);
+          		viewFileName = fileFrontName.substr(0,6) + "··" + fileTypeName;
           	}
            	
 			fileReader.onload = function(){

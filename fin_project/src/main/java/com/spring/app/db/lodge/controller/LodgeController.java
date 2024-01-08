@@ -482,6 +482,22 @@ public class LodgeController {
 		List<Map<String,String>> LodgeImgMapList = service.getLodgeImgData(fk_lodge_id);
 		
 		
+		if(LodgeImgMapList.size() > 0 ) {
+		// 이미지 이름 "..." 표시 하기
+			for(int i=0; i<LodgeImgMapList.size(); i++) {
+				String lg_img_name = LodgeImgMapList.get(i).get("lg_img_name");
+				
+				if( lg_img_name.length() > 7 ) {
+					lg_img_name.lastIndexOf(".");
+					lg_img_name = lg_img_name.substring(0,6)+"··"+lg_img_name.substring(lg_img_name.lastIndexOf("."));
+					
+					LodgeImgMapList.get(i).put("lg_img_name",lg_img_name);
+				}
+				
+			} // end of for -----------------
+			
+		} // end of if(LodgeImgMapList.size() > 0 )
+		
 		request.setAttribute("LodgeImgMapList", LodgeImgMapList);
 		
 		return "db/register/image_lodge.tiles2";
@@ -1258,7 +1274,7 @@ public class LodgeController {
 				
 				if( rm_img_name.length() > 7 ) {
 					rm_img_name.lastIndexOf(".");
-					rm_img_name = rm_img_name.substring(0,6)+"···"+rm_img_name.substring(rm_img_name.lastIndexOf("."));
+					rm_img_name = rm_img_name.substring(0,6)+"··"+rm_img_name.substring(rm_img_name.lastIndexOf("."));
 					
 					roomImgDataMapList.get(i).put("rm_img_name",rm_img_name);
 				}
