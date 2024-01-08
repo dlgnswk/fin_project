@@ -64,14 +64,19 @@
 		<result property="lg_name"           column="lg_name"         javaType="String"></result>
 	</resultMap>	
 	<select id="get_user_point_list" parameterType="String" resultMap="get_user_point_list_Map">
-		select to_number(pt_seq) as pt_seq, P.fk_userid as fk_userid, R.rs_seq as rs_seq, to_char(pt_change_date, 'yyyy-mm-dd') as pt_change_date, pt_amount
-     		 , L.lg_name
-		from tbl_point P
-		join tbl_reservation R on R.rs_seq = P.fk_rs_seq
-		join tbl_room RM on RM.rm_seq = R.fk_rm_seq
-		join tbl_lodge L on L.lodge_id = RM.fk_lodge_id
-		where P.fk_userid = #{userid} and R.rs_cancel = 0
-		order by pt_seq
+		
+		select pt_seq, fk_userid, rs_seq, pt_change_date, pt_amount, lg_name
+		from 
+		(  
+		    select to_number(pt_seq) as pt_seq, P.fk_userid as fk_userid, R.rs_seq as rs_seq, to_char(pt_change_date, 'yyyy-mm-dd') as pt_change_date, pt_amount
+		         , L.lg_name, row_number() over(order by to_char(P.pt_change_date, 'yyyy-mm-dd hh24:mi:ss') desc) as RNO
+		    from tbl_point P
+		    join tbl_reservation R on R.rs_seq = P.fk_rs_seq
+		    join tbl_room RM on RM.rm_seq = R.fk_rm_seq
+		    join tbl_lodge L on L.lodge_id = RM.fk_lodge_id
+		    where P.fk_userid = #{userid} and R.rs_cancel = 0
+		) V
+		where RNO between 1 and 5 <!-- #{startNo} and #{endNo} -->
 	</select>	
 	
 	<select id="get_user_rs_cnt" parameterType="String" resultType="int">

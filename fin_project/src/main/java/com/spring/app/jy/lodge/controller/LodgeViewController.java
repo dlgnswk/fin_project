@@ -104,23 +104,22 @@ public class LodgeViewController {
 		paraMap.put("endDate", endDate);
 		paraMap.put("lodge_id", lodge_id);
 		
-		String d_rate="0";
+		float d_rate=(float) 0;
 		
 		HttpSession session = request.getSession();
 		UserVO loginuser = (UserVO) session.getAttribute("loginuser");
 		if(loginuser == null) {
-			d_rate = "0";
+			d_rate = (float) 0;
 		}
-		else if(loginuser.getUser_lvl()=="0") {
-			d_rate = "1";
+		else if(loginuser.getUser_lvl()=="블루") {
+			d_rate = (float) 0.1;
 		}
-		else if(loginuser.getUser_lvl()=="1") {
-			d_rate = "15";
+		else if(loginuser.getUser_lvl()=="실버") {
+			d_rate = (float) 0.15;
 		}
-		else if(loginuser.getUser_lvl()=="2") {
-			d_rate = "2";
+		else if(loginuser.getUser_lvl()=="골드") {
+			d_rate = (float) 0.2;
 		}
-		
 		mav.addObject("d_rate", d_rate);
 		
 	//	Map<String, String> i_paraMap = new HashMap<>();
@@ -192,6 +191,7 @@ public class LodgeViewController {
 		mav.addObject("lg_img_ca_list",lg_img_ca_list);
 		mav.addObject("all_lg_img_list",all_lg_img_list);
 		mav.addObject("isExist_wish",isExist_wish);
+		
 		
 		// 조회한 날짜에 예약 가능한 객실 보여주기
 		List<Map<String, String>> avbl_rm_list  = service.getAvbl_rm_list(paraMap);

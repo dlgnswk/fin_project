@@ -1115,6 +1115,23 @@ public class LodgeController {
 		// 변경된 객실의 기존에 입력된 사진 정보를 가져온다.
 		List<Map<String,String>> roomImgDataMapList = service.getRmImgData(fk_rm_seq);
 		
+		if(roomImgDataMapList.size() > 0 ) {
+		// 이미지 이름 "..." 표시 하기
+			for(int i=0; i<roomImgDataMapList.size(); i++) {
+				String rm_img_name = roomImgDataMapList.get(i).get("rm_img_name");
+				
+				if( rm_img_name.length() > 7 ) {
+					rm_img_name.lastIndexOf(".");
+					rm_img_name = rm_img_name.substring(0,6)+"···"+rm_img_name.substring(rm_img_name.lastIndexOf("."));
+					
+					roomImgDataMapList.get(i).put("rm_img_name",rm_img_name);
+				}
+				
+			} // end of for -----------------
+			
+		} // end of if(roomImgDataMapList.size() > 0 )
+		
+		
 		JsonArray jsonArr = new JsonArray();
 		
 		if(roomImgDataMapList.size() > 0 ) {
