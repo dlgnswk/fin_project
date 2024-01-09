@@ -139,6 +139,19 @@ div.hadan > button#room_register {
 	box-shadow: #000;
 }
 
+div.delete_btn {
+	margin-top:30px;	
+}
+
+div.delete_btn > button#rm_delete_btn {
+	width:150px;
+	height:30px;
+	font-weight:bold;
+	background-color:#ff3333;
+	border:solid 1px #000;
+	box-shadow: #000;
+	color:#fff;
+}
 
 /*  == 구분선, 데이터, 이름 == */
 span.sub {

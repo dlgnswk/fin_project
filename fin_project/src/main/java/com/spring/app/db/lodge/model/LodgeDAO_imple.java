@@ -485,14 +485,6 @@ public class LodgeDAO_imple implements LodgeDAO {
 		return n6;
 	}
 	
-	
-	// 기존에 입력되어 있는 rm_type List 가져오기
-	@Override
-	public List<String> getRm_typeData(String fk_lodge_id) {
-		List<String> rm_typeList = sqlsession.selectList("db_register_lodge.getRm_typeData", fk_lodge_id);
-		return rm_typeList;
-	}
-
 	// === 객실 이미지 등록하기 === //
 	@Override
 	public void insertRoomImages(Map<String, String> paraMap) {
@@ -566,6 +558,13 @@ public class LodgeDAO_imple implements LodgeDAO {
 	public int delCateLodgeImg(Map<String, String> paraMap) {
 		int result = sqlsession.delete("db_register_lodge.delCateLodgeImg", paraMap);
 		return result;
+	}
+
+	// 기존에 입력되어 있는 rm_type List 가져오기
+	@Override
+	public List<String> getRm_typeData(Map<String, String> paraMap) {
+		List<String> rm_typeList = sqlsession.selectList("db_register_lodge.getRm_typeData", paraMap);
+		return rm_typeList;
 	}
 
 	

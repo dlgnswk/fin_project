@@ -211,9 +211,6 @@ public interface LodgeDAO {
 	// 온도조절기능 옵션 insert 하기
 	int tmpDataInsert(Map<String, String> insertMap);
 
-	// 기존에 입력되어 있는 rm_type List 가져오기
-	List<String> getRm_typeData(String fk_lodge_id);
-
 	// === 객실 이미지 등록하기 === //
 	void insertRoomImages(Map<String, String> paraMap);
 
@@ -246,6 +243,9 @@ public interface LodgeDAO {
 
 	// === DB에서 숙박시설 사진 정보를 삭제한다. === //
 	int delCateLodgeImg(Map<String, String> paraMap);
+
+	// 기존에 입력되어 있는 rm_type List 가져오기
+	List<String> getRm_typeData(Map<String, String> paraMap);
 	
 
 }
