@@ -86,9 +86,6 @@ public interface LodgeService {
 	// == ** 이미 입력된 room 정보가 있다면 수정과 추가를 하기위해서 체크 해야 된다 ** == //
 	List<Map<String, String>> getRmInfo(String fk_lodge_id);
 
-	// 기존에 입력되어 있는 rm_type List 가져오기
-	List<String> getRm_typeData(String fk_lodge_id);
-	
 	// === 객실 이미지 등록하기 === //
 	void insertRoomImages(Map<String, String> paraMap);
 
@@ -112,5 +109,17 @@ public interface LodgeService {
 
 	// DB에 등록된 이미지 파일명을 가지고 온다.
 	List<Map<String, String>> getLodgeImgData(String fk_lodge_id);
+
+	// === DB에서 시설 사진 정보를 삭제한다. === //
+	int delIdxLodgeImg(Map<String, String> paraMap);
+
+	// == 경로에서 숙박시설 이미지 이름 DB에서 가져오기 == //
+	List<String> getPathDelLodgeImgSaveName(Map<String, String> paraMap);
+
+	// === DB에서 숙박시설 사진 정보를 삭제한다. === //
+	int delCateLodgeImg(Map<String, String> paraMap);
+
+	// 기존에 입력되어 있는 rm_type List 가져오기
+	List<String> getRm_typeData(Map<String, String> paraMap);
 
 }
