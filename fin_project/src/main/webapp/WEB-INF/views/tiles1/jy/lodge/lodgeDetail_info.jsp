@@ -12,6 +12,8 @@
 %>
 <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/css/jy/common.css"/>
 <style>
+	
+	/* ======== 숙소 상세보기 CSS 시작 - 지연 ======== */
 	#top_bar_wrap {
 		justify-content: space-between;
 		line-height: 3.75rem;
@@ -132,6 +134,208 @@
     #headerOfheader > div > section > div > div > a > img {
    		width: 126px;
     }
+    
+    /* ======== 숙소 상세보기 CSS 끝 - 지연 ========  */
+    
+    /* 이용후기 모달 관련 CSS 시작 - 채혁 */
+    
+    .reviewshow > div {
+		color: rgba(0, 58, 255, 0.77);		
+	}
+	.reviewshow > div:hover {
+	 	text-decoration: underline;
+	 	cursor: pointer;
+	}
+	
+	/* 모달 css 시작 */
+	
+	.reviewModal{ 
+	    position:absolute;
+	    width:100%; 
+	    height:100%; 
+	    background: rgba(0, 0, 0, 0.21); 
+	    top:0; 
+	    left:0; 
+	    display:none;
+	    z-index: 100;
+	}
+	
+	body.modal-open {
+	    overflow: hidden; /* 페이지 스크롤 막기 */
+	}
+	
+	.reviewModal_header{		
+	    width: 720px; /* 500px를 16px 기준으로 나눈 값 */
+	    height: 640px;        /* 300px를 16px 기준으로 나눈 값 */
+	    background:#fff; 
+	    border-radius:0.625rem; /* 10px를 16px 기준으로 나눈 값 */
+	    position:relative; 
+	    top:50%; 
+	    left:50%;
+	    margin-top:-320px; /* height의 절반 */
+	    margin-left:-360px; /* width의 절반 */
+	    text-align:left;
+	    box-sizing:border-box; 
+	    padding: 50px 0; /* 74px를 16px 기준으로 나눈 값 */
+	    line-height:1.4375rem; /* 23px를 16px 기준으로 나눈 값 */
+	    cursor:pointer;
+	}
+	
+
+	#mycontent > div.reviewModal > div > span.close {
+	    position: absolute; 
+	    top: 6px; /* 15px를 16px 기준으로 나눈 값 */
+	    left: 0.9375rem; /* 15px를 16px 기준으로 나눈 값 */
+	    color: #0073ff;
+	    font-size: 30px;
+	    cursor: pointer;	    	    
+	}
+	
+	#mycontent > div.reviewModal > div > span:nth-child(1) {
+		position: absolute; 
+	   	top: 13px;
+    	left: 2.8125rem; 
+	}
+	
+	.rating_avg {
+		font-family: 'Josefin Sans', sans-serif;
+	}
+	
+	#mycontent > div.reviewModal > div > div > h4 > span {
+		font-family: 'Gothic A1', sans-serif;
+		font-size: 20px;
+	}
+	
+	/* 그래프 바 css 시작 */
+	
+	progress {
+	  -webkit-appearance: none;
+	}
+	
+	::-webkit-progress-bar {
+		width: 35rem;  /* --> bar 전체 길이 */
+	   	height: 8px;   /* --> bar 두께 */
+ 		border: 0px solid gray;
+ 		border-radius: 12px;    
+	   	background-color: rgba(0, 0, 0, 0.13); /* --> 진행률  배경 색상 */
+	}
+	
+	::-webkit-progress-value {
+	  	background-color: rgba(0, 0, 88, 0.96); /* --> 진행률  값 색상 */
+	  	border: 0px solid gray;
+		border-radius: 12px;
+	}
+	
+	/* progress 바 css 보완 - 지연 */
+	.progress_wrap {
+		display: flex;
+	    flex-direction: column;
+	    gap: 0.4rem;
+	
+	}
+	
+	/* 그래프 바 css 끝 */
+	
+	/* 검색창 css 시작 */
+	
+	
+	.input-wrapper {
+    position: relative;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+	}
+	
+	#search-input-box {
+	    height: 3rem;
+	    border: 1px solid rgba(0, 0, 0, 0.21);
+	    border-radius: 10px;
+	    outline: none;
+	    padding-left: 0.625rem;
+	    background-color: #fff;
+	    transition: border-color 0.3s ease;
+	    margin-right: 10px; /* 버튼과의 간격을 조절하기 위한 마진 추가 */
+	}
+	
+	#search-input-box:focus {
+	    border: 2px solid #0073ff;
+	}
+	
+	#search-input-label {
+	    position: absolute;
+	    top: 18px; /* 레이블의 상단 여백 조정 */
+	    left: 10px; /* 레이블의 좌측 여백 조정 */
+	    color: #aaa;
+	    pointer-events: none;
+	    transition: all 0.3s ease;
+	}
+	
+	#search-input-box:focus + #search-input-label,
+	#search-input-box:not(:placeholder-shown) + #search-input-label {
+	    top: 0;
+	    font-size: 13px;
+	    color: black;
+	}
+	
+	#mycontent > div.reviewModal > div > div > div.search_filter > form > div > button {
+		padding-right: 5.8%;
+	    background-color: #0073ff;
+	    border: 0px solid #555555;
+	    border-radius: 100%;
+	    color: white;
+	    height: 3rem;
+	}
+	
+	#mycontent > div.reviewModal > div > div > div.search_filter > form > div > button:hover {
+	    background-color: rgba(0, 80, 229, 0.91);
+	    box-shadow: 0 0.25rem 0.375rem -0.0625rem rgba(0, 0, 0, 0.1), 0 0.125rem 0.25rem -0.0625rem rgba(0, 0, 0, 0.08);	
+	}	
+	
+	/* 검색창 css 끝 */
+	
+	/* 셀렉트 창 css 시작 */	
+	select#rvOrderType:focus {
+	    border: 2px solid #0073ff;
+	    outline: none;
+	}
+	
+	select#rvOrderType {
+	    height: 3rem; /* 32px → 2rem 변환 */
+	    font-size: 0.9375rem; /* 15px → 0.9375rem 변환 */
+	    border: 1px solid rgba(0, 0, 0, 0.21);
+	    border-radius: 0.9375rem; /* 15px → 0.9375rem 변환 */
+	    outline: none;
+	    padding: 0.625rem; /* 10px → 0.625rem 변환 */
+	    background-color: #fff;	
+	}
+	/* 셀렉트 창 css 끝 */
+	
+		
+	/* 댓글목록 시작  */
+	
+	.review {
+	   background-color: #fff;
+	   width: 95.6%;
+	}
+	
+	/* 훌륭해요 글짜크기  */
+	
+	#review > div > div > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div {
+	   font-size:1.25rem;
+	}
+	
+	/* 아이디 글짜크기 */
+	#review > div > div > div:nth-child(2) > div:nth-child(1) > div:nth-child(4) > div,
+	#review > div > div > div:nth-child(2) > div:nth-child(1) > div:nth-child(5) > div,
+	#review > div > div > div:nth-child(2) > div:nth-child(1) > div:nth-child(8) > div{
+	   font-size:.875rem;
+	}
+	
+	
+	/* 모달 css 끝 */
+    
+    /* 이용후기 모달 관련 CSS 끝 - 채혁 */
+    
     
 }
 	
@@ -363,8 +567,96 @@
 			}) 
 		}
 		
+		// 고객 이용후기 모달 창에서 검색 정렬 조건이 변경 되었을 때,
+		$("select[name='rvOrderType']").bind("change",function(e){
+			// alert($(e.target).val());
+			// recent_rv, h_rate_rv, l_rate_rv
+			const orderType = $(e.target).val();
+			$.ajax({
+				url:"showReviewList_search_json.exp",
+				data:{"lodge_id":"${requestScope.lodgeinfo.LODGE_ID}",
+					  "orderType":orderType},
+				dataType:"json",
+				success:function(json){
+					// console.log(json);
+					// 정렬 조건에 맞게 정렬된 댓글을  div#view_reviewList 에 뿌려준다~
+					const reviewList = json.reviewList;
+					
+					let html = "";
+					if(reviewList != null){
+						$.each(reviewList, function(index, item){
+							html += '<div style="border-bottom: 1px solid black">';
+							// console.log(item);
+							if(item.RV_DEPTHNO == 0){
+								html += '<div class="c_grid" style="gap:0.875rem; padding:1.2rem 0;">'
+									  + 	'<div class="c_h3_head6" style="font-weight:600;">'+item.FK_RV_RATING+'/10 - '+item.RV_RATING_DESC+'</div>'
+									  + 	'<div>'
+									  +			'<div class="c_txt_sm" style="font-weight:600">'+item.RS_NAME+'</div>'
+									  +			'<div class="c_txt_sm">'+item.RV_REGDATE+'</div>'
+									  + 	'</div>'
+									  + 	'<div class="c_flex" style="flex-direction: column; gap: 0.5rem;">'
+									  +			'<div class="c_content_txt">'+item.RV_CONTENT+'</div>'
+									  +			'<div class="c_txt_sm">'+item.RS_DATE+'에 '+item.LIVEDATE+' 숙박함</div>'
+									  + 	'</div>'
+									  + 	'<div class="reviewfindBtn">'
+									  +				'<button type="button" onclick="golikeAdd(\''+item.RV_SEQ+'\',this)"><svg xmlns="http://www.w3.org/2000/svg" style="margin-right: 5px;" height="16" width="16" fill="rgba(35, 121, 255, 0.89)" viewBox="0 0 512 512"> <path d="M313.4 32.9c26 5.2 42.9 30.5 37.7 56.5l-2.3 11.4c-5.3 26.7-15.1 52.1-28.8 75.2H464c26.5 0 48 21.5 48 48c0 18.5-10.5 34.6-25.9 42.6C497 275.4 504 288.9 504 304c0 23.4-16.8 42.9-38.9 47.1c4.4 7.3 6.9 15.8 6.9 24.9c0 21.3-13.9 39.4-33.1 45.6c.7 3.3 1.1 6.8 1.1 10.4c0 26.5-21.5 48-48 48H294.5c-19 0-37.5-5.6-53.3-16.1l-38.5-25.7C176 420.4 160 390.4 160 358.3V320 272 247.1c0-29.2 13.3-56.7 36-75l7.4-5.9c26.5-21.2 44.6-51 51.2-84.2l2.3-11.4c5.2-26 30.5-42.9 56.5-37.7zM32 192H96c17.7 0 32 14.3 32 32V448c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32V224c0-17.7 14.3-32 32-32z" /></svg><button>'
+									  +			'<span class="likeCnt">'+item.LIKECNT+'</span>'
+									  + 	'</div>'
+									  + '</div>';
+							}
+							if(item.RV_DEPTHNO > 0){
+								html += '<input type="hidden" name="rv_seq" size="38" value="'+item.RV_SEQ+'" autocomplete="off" readonly />'
+									  +	'<div>답변 제공: '+item.LG_NAME+'&nbsp;님 , '+item.RV_REGDATE+'</div>'
+									  + '<div>'+item.FK_USERID+'</div>'
+									  + '<div>'+item.RV_CONTENT+'</div>'
+									  + '<br>';				
+							}							
+							html += '</div>';
+						});
+
+					}
+					 console.log(html);
+					$("div#view_reviewList").html(html);					
+				},
+				error: function(request, status, error){
+					alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			 	}
+			})
+			
+		})
 		
-	});	
+		// 고객 이용 후기 모달에서 검색 시 엔터 쳤을 때, 
+		$("input[name='reviewSearch']").bind("keyup",function(e){
+			if( e.keyCode== 13){
+				goReviewSearch();
+			}
+		});
+		
+		
+		// 이용 후기 모두 보기 클릭 시, 모달 창 띄우기
+		const view_reviewList_btn = document.getElementById('view_reviewList');
+		const reviewModal = document.getElementById('reviewModal');
+		const m_close_btn_rv = document.getElementById('m_close_btn_rv');
+
+		view_reviewList_btn.onclick = function() {
+			reviewModal.style.display = 'flex';
+		  	document.body.style.overflow = 'hidden';
+		}
+		m_close_btn_rv.onclick = function() {
+			reviewModal.style.display = 'none';
+		  	document.body.style.overflow = 'auto';
+		}
+
+		window.addEventListener('click', function (e) {
+		    if (e.target === reviewModal) {
+		    	reviewModal.style.display = 'none';
+		    	document.body.style.overflow = 'auto';
+		    }
+		    
+		});
+		
+		
+	}); // end of $(document).ready(function(){})----------
 	
 	function onScrollForNav() {
 		
@@ -647,6 +939,103 @@
 		frm.submit();
 	}
 	
+	// 고객 이용 후기 모달에서 keyword 검색 버튼 클릭 시 호출 되는 함수 
+	function goReviewSearch() {
+		
+		// alert($("input[name='reviewSearch']").val().trim());
+		const searchWord = $("input[name='reviewSearch']").val().trim();
+		if(searchWord == ""){
+			alert("검색어를 입력해주세요");
+		}
+		else {
+			
+			$.ajax({
+				url:"showReviewList_search_json.exp",
+				data:{"lodge_id":"${requestScope.lodgeinfo.LODGE_ID}",
+					  "searchWord":searchWord},
+				dataType:"json",
+				success:function(json){
+					// console.log(json);
+					// 정렬 조건에 맞게 정렬된 댓글을  div#view_reviewList 에 뿌려준다~
+					const reviewList = json.reviewList;
+					let html = "";
+					if(reviewList != null){
+						$.each(reviewList, function(index, item){
+							html += '<div style="border-bottom: 1px solid black">';
+							// console.log(item);
+							if(item.RV_DEPTHNO == 0){
+								console.log(item);
+								html += '<div class="c_grid" style="gap:0.875rem; padding:1.2rem 0;">'
+									  + 	'<div class="c_h3_head6" style="font-weight:600;">'+item.FK_RV_RATING+'/10 - '+item.RV_RATING_DESC+'</div>'
+									  + 	'<div>'
+									  +			'<div class="c_txt_sm" style="font-weight:600">'+item.RS_NAME+'</div>'
+									  +			'<div class="c_txt_sm">'+item.RV_REGDATE+'</div>'
+									  + 	'</div>'
+									  + 	'<div class="c_flex" style="flex-direction: column; gap: 0.5rem;">'
+									  +			'<div class="c_content_txt">'+item.RV_CONTENT+'</div>'
+									  +			'<div class="c_txt_sm">'+item.RS_DATE+'에 '+item.LIVEDATE+' 숙박함</div>'
+									  + 	'</div>'
+									  + 	'<div class="reviewfindBtn">'
+									  +			'<button type="button" onclick="golikeAdd(\''+item.RV_SEQ+'\',this)"><svg xmlns="http://www.w3.org/2000/svg" style="margin-right: 5px;" height="16" width="16" fill="rgba(35, 121, 255, 0.89)" viewBox="0 0 512 512"> <path d="M313.4 32.9c26 5.2 42.9 30.5 37.7 56.5l-2.3 11.4c-5.3 26.7-15.1 52.1-28.8 75.2H464c26.5 0 48 21.5 48 48c0 18.5-10.5 34.6-25.9 42.6C497 275.4 504 288.9 504 304c0 23.4-16.8 42.9-38.9 47.1c4.4 7.3 6.9 15.8 6.9 24.9c0 21.3-13.9 39.4-33.1 45.6c.7 3.3 1.1 6.8 1.1 10.4c0 26.5-21.5 48-48 48H294.5c-19 0-37.5-5.6-53.3-16.1l-38.5-25.7C176 420.4 160 390.4 160 358.3V320 272 247.1c0-29.2 13.3-56.7 36-75l7.4-5.9c26.5-21.2 44.6-51 51.2-84.2l2.3-11.4c5.2-26 30.5-42.9 56.5-37.7zM32 192H96c17.7 0 32 14.3 32 32V448c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32V224c0-17.7 14.3-32 32-32z" /></svg><button>'
+									  +			'<svg xmlns="http://www.w3.org/2000/svg" style="margin-right: 5px;" height="16" width="16" fill="rgba(35, 121, 255, 0.89)" viewBox="0 0 512 512" onclick="golikeAdd('+item.RV_SEQ+')"> <path d="M313.4 32.9c26 5.2 42.9 30.5 37.7 56.5l-2.3 11.4c-5.3 26.7-15.1 52.1-28.8 75.2H464c26.5 0 48 21.5 48 48c0 18.5-10.5 34.6-25.9 42.6C497 275.4 504 288.9 504 304c0 23.4-16.8 42.9-38.9 47.1c4.4 7.3 6.9 15.8 6.9 24.9c0 21.3-13.9 39.4-33.1 45.6c.7 3.3 1.1 6.8 1.1 10.4c0 26.5-21.5 48-48 48H294.5c-19 0-37.5-5.6-53.3-16.1l-38.5-25.7C176 420.4 160 390.4 160 358.3V320 272 247.1c0-29.2 13.3-56.7 36-75l7.4-5.9c26.5-21.2 44.6-51 51.2-84.2l2.3-11.4c5.2-26 30.5-42.9 56.5-37.7zM32 192H96c17.7 0 32 14.3 32 32V448c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32V224c0-17.7 14.3-32 32-32z" /></svg>'
+									  +			'<span class="likeCnt">'+item.LIKECNT+'</span>'
+									  + 	'</div>'
+									  + '</div>';
+							}
+							if(item.RV_DEPTHNO > 0){
+								html += '<input type="hidden" name="rv_seq" size="38" value="'+item.RV_SEQ+'" autocomplete="off" readonly />'
+									  +	'<div>답변 제공: '+item.LG_NAME+'&nbsp;님 , '+item.RV_REGDATE+'</div>'
+									  + '<div>'+item.FK_USERID+'</div>'
+									  + '<div>'+item.RV_CONTENT+'</div>'
+									  + '<br>';				
+							}							
+							html += '</div>';
+						});
+
+					}
+					 // console.log(html);
+					 $("div#view_reviewList").html(html);					
+				},
+				error: function(request, status, error){
+					alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			 	}
+			})
+		}
+	}
+	
+	// 고객 이용후기 모달 창에서 이용후기에 좋아요를 눌렀을 때 호출되는 함수 - 채혁
+	function golikeAdd(rv_seq, e){
+		if(${empty sessionScope.loginuser}){
+           alert("좋아요를 하시려면 먼저 로그인 하셔야 합니다.");
+           return false;
+       	}
+
+        $.ajax({
+             url:"<%= ctxPath%>/likeAdd2.exp",
+             type:"post",
+             data:{"rv_seq":rv_seq,
+                   "userid":"${sessionScope.loginuser.userid}"},
+             dataType:"json",
+             context: this,
+             success:function(json) {
+                // console.log(JSON.stringify(json));
+                // {"msg":"해당제품에\n 좋아요를 클릭하셨습니다."}
+                // 또는
+                // {"msg":"이미 좋아요를 클릭하셨기에\n 두번 이상 좋아요는 불가합니다."}
+                   
+             	alert(json.msg);
+             	const likecnt = json.likecnt;
+             	// console.log(likecnt);             	
+             	$(e).parent().parent().find("span.likeCnt").html(likecnt); // 해당 후기의 좋아요 숫자 업데이트 
+              //swal(json.msg);
+              
+             },
+             error: function(request, status, error){
+                alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+             }
+          });
+	}
+	
 	
 </script>
 
@@ -803,9 +1192,9 @@
 					</div>
 				</c:if>
 				<div>
-					<button>
+					<button type="button" id="view_reviewList">
 						<c:if test="${requestScope.lodgeinfo.RV_CNT>0}">
-							<a class="c_text_link_m" href=""><fmt:formatNumber pattern="###,###" >${requestScope.lodgeinfo.RV_CNT}</fmt:formatNumber>개 이용 후기 모두 보기</a>
+							<a class="c_text_link_m"><fmt:formatNumber pattern="###,###" >${requestScope.lodgeinfo.RV_CNT}</fmt:formatNumber>개 이용 후기 모두 보기</a>
 							<svg class="c_icon_18" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill="#1668e3" d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6-6-6z"></path></svg>
 						</c:if>
 					</button>
@@ -2266,6 +2655,131 @@
 		
 	</div>
 </div>
+
+<!-- 이용후기 모달 -->
+<div>
+	<div id="reviewModal" class="c_modalContainer">
+		<div class="c_modalWrap" style="width:40rem; overflow: hidden;" >
+			<div class="c_flex modalTop_close" style="block-size: 3rem; align-items: center;">
+				<button type="button" id="m_close_btn_rv"class="c_flex modal_close_btn" style="block-size: 3rem; inline-size: 3rem;">
+					<span class="c_round_btn_blue c_flex" style="block-size: 2.3rem; inline-size: 2.3rem; margin: auto;">
+						<svg class="c_icon_24" style="margin: auto;" aria-label="닫기" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"  xmlns:xlink="http://www.w3.org/1999/xlink"><title id="undefined-close-toolbar-title">닫기.</title><path fill="#1668e3" d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path></svg>
+					</span>
+				</button>
+				고객 이용 후기
+			</div>			
+			<div class="reviewModal_content" style="height: 525px; overflow-y: auto;  overflow-x: hidden; padding: 0 2rem;">
+				<br>
+				<h4 class="rating_avg" style=" font-size: 1.25rem; font-weight: 600;"><fmt:formatNumber value="${requestScope.lodgeinfo.RV_RATING_AVG}" pattern=".0"/>/10.0 - 
+					<span>
+						<c:if test="${rv_rate>=7.0 and rv_rate<=7.9}">좋아요</c:if>
+						<c:if test="${rv_rate>=8.0 and rv_rate<=8.4}">매우 좋아요</c:if>
+						<c:if test="${rv_rate>=8.5 and rv_rate<=7.9}">훌륭해요</c:if>
+						<c:if test="${rv_rate>=9.0 and rv_rate<=9.4}">매우 훌륭해요</c:if>
+						<c:if test="${rv_rate>=9.5 and rv_rate<=10.0}">최고에요</c:if>
+					</span>
+				
+				</h4>
+				<span style="font-size: 0.875rem;">${requestScope.lodgeinfo.RV_CNT}개 실제 이용 고객 후기</span>
+				<div class="rating" style="margin-top: 3%;">
+					<div class="progressbar_1 progress_wrap">					    
+				      <h5 class="c_txt_sm">
+						10 - 훌륭해요 <span style="float: right;">${requestScope.rv_cnt_byRate.TEN}</span>
+					  </h5>
+					 	<progress id="progress" value="${requestScope.rv_cnt_byRate.TEN}" min="0" max="${requestScope.lodgeinfo.RV_CNT}"></progress>			
+					</div>
+					<div class="progressbar_2 progress_wrap">
+						<h5 class="c_txt_sm">
+							8 - 좋아요 <span style="float: right;">${requestScope.rv_cnt_byRate.EIGHT}</span>
+						</h5>
+						<progress id="progress" value="${requestScope.rv_cnt_byRate.EIGHT}" min="0" max="${requestScope.lodgeinfo.RV_CNT}"></progress>
+					</div>
+					<div class="progressbar_3 progress_wrap">
+						<h5 class="c_txt_sm">
+							6 - 괜찮아요 <span style="float: right;">${requestScope.rv_cnt_byRate.SIX}</span>
+						</h5>
+						<progress id="progress" value="${requestScope.rv_cnt_byRate.SIX}" min="0" max="${requestScope.lodgeinfo.RV_CNT}"></progress>
+					</div>
+					<div class="progressbar_4 progress_wrap">
+						<h5 class="c_txt_sm">
+							4 - 별로에요 <span style="float: right;">${requestScope.rv_cnt_byRate.FOUR}</span>
+						</h5>
+						<progress id="progress" value="${requestScope.rv_cnt_byRate.FOUR}" min="0" max="${requestScope.lodgeinfo.RV_CNT}"></progress>
+					</div>
+					<div class="progressbar_5 progress_wrap">
+						<h5 class="c_txt_sm">
+							2 - 너무 별로에요<span style="float: right;">${requestScope.rv_cnt_byRate.TWO}</span>
+						</h5>
+						<progress id="progress" value="${requestScope.rv_cnt_byRate.TWO}" min="0" max="${requestScope.lodgeinfo.RV_CNT}"></progress>
+					</div>
+				</div>
+	
+	
+	
+				<div class="search_filter c_flex" style="margin-top: 3%; flex-direction: column;">
+					<!-- <input type="text" style="height: 50px; border: 1px solid black; border-radius: 10px;" id="search-input-box" name="reviewSearch" placeholder="  이용 후기 검색" /> -->
+					<form name="rv_searchFrm">
+						<div class="input-wrapper c_flex">
+							<input type="text" id="search-input-box" name="reviewSearch" style="flex-grow: 1; padding-block-start:1rem; font-size: 0.875rem"  maxlength="200" autocomplete="off" /> 
+							<label for="search-input-box" id="search-input-label">이용 후기 검색</label>
+							<button type="button" onclick="goReviewSearch()" style="background: #0073FF; inline-size: 3rem; block-size: 3rem;">
+								<svg class="uitk-icon uitk-icon-leading" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill="white" fill-rule="evenodd" d="M14.71 14h.79l4.99 5L19 20.49l-5-4.99v-.79l-.27-.28a6.5 6.5 0 1 1 .7-.7l.28.27zM5 9.5a4.5 4.5 0 1 0 8.99.01A4.5 4.5 0 0 0 5 9.5z" clip-rule="evenodd"></path></svg>
+							</button>
+						</div>
+						<select name="rvOrderType" id="rvOrderType" style="">
+							<option value="recent_rv">최근 이용 후기</option>
+							<option value="h_rate_rv">최고 고객 평점</option>
+							<option value="l_rate_rv">최저 고객 평점</option>
+						</select>
+						<input type="text" value="" style="display:none;"/>
+						<input type="text" value="" style="display:none;"/>
+					</form>
+				</div>
+								
+				<div id="view_reviewList" class="review">
+					<c:forEach var="reviewList" items="${requestScope.reviewList}">		
+						<div style="border-bottom: 1px solid black;">
+							<c:if test="${reviewList.RV_DEPTHNO == 0}">                       
+		                        <div class="c_grid" style="gap:0.875rem; padding:1.2rem 0;">
+			                        <div class="c_h3_head6" style="font-weight:600;">${reviewList.FK_RV_RATING}/10 - ${reviewList.RV_RATING_DESC}</div>
+			                        
+			                        <div>
+			                           <div class="c_txt_sm" style="font-weight:600">${reviewList.RS_NAME}</div>
+			                           <div class="c_txt_sm">${reviewList.RV_REGDATE}</div>
+			                        </div>
+			                        <div class="c_flex" style="flex-direction: column; gap: 0.5rem;">
+			                        	<div class="c_content_txt">${reviewList.RV_CONTENT}</div>
+			                        	<div class="c_txt_sm">${reviewList.RS_DATE}에 ${reviewList.LIVEDATE} 숙박함</div>
+			                        </div>
+			                        <div class="reviewfindBtn">
+			                           	<%-- <button type="button" class="btn_like" id="btnLike">좋아요</button>&nbsp;&nbsp; --%>
+			                           	<button type="button" onclick="golikeAdd('${reviewList.RV_SEQ}',this)">
+			                           		<svg xmlns="http://www.w3.org/2000/svg" style="margin-right: 5px;" height="16" width="16" fill="rgba(35, 121, 255, 0.89)" viewBox="0 0 512 512"><path d="M313.4 32.9c26 5.2 42.9 30.5 37.7 56.5l-2.3 11.4c-5.3 26.7-15.1 52.1-28.8 75.2H464c26.5 0 48 21.5 48 48c0 18.5-10.5 34.6-25.9 42.6C497 275.4 504 288.9 504 304c0 23.4-16.8 42.9-38.9 47.1c4.4 7.3 6.9 15.8 6.9 24.9c0 21.3-13.9 39.4-33.1 45.6c.7 3.3 1.1 6.8 1.1 10.4c0 26.5-21.5 48-48 48H294.5c-19 0-37.5-5.6-53.3-16.1l-38.5-25.7C176 420.4 160 390.4 160 358.3V320 272 247.1c0-29.2 13.3-56.7 36-75l7.4-5.9c26.5-21.2 44.6-51 51.2-84.2l2.3-11.4c5.2-26 30.5-42.9 56.5-37.7zM32 192H96c17.7 0 32 14.3 32 32V448c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32V224c0-17.7 14.3-32 32-32z" /></svg>
+			                           	</button>
+			                           	<span class="likeCnt">${reviewList.LIKECNT}</span>
+			                        </div>
+	                        	</div>
+							</c:if>
+		                    <c:if test="${reviewList.RV_DEPTHNO > 0}">
+		                    	<input type="hidden" name="rv_seq" size="38" value="${reviewList.RV_SEQ}" autocomplete="off" readonly />
+								<div>답변 제공: ${reviewList.LG_NAME}님 , ${reviewList.RV_REGDATE}</div>
+								<div>${reviewList.FK_USERID}</div>
+								<div>${reviewList.RV_CONTENT}</div>
+								<br>
+		                    </c:if>
+	                    </div>    
+					</c:forEach>                   
+                   	<br>
+                	<div style="display: flex; justify-content: center;">
+					    <button type="button" style="width: 30%; height: 30px; border: 1px solid black; margin-bottom: 5%; background-color: #fff; color: #1668e3; border-radius: 2500rem;">이용 후기 더보기</button>
+					</div>
+					<br>
+				</div>
+			</div>
+		</div>	
+	</div>
+</div>
+
 
 <script>
 
