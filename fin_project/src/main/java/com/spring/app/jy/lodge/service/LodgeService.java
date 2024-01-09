@@ -27,27 +27,27 @@ public interface LodgeService {
 
 	List<Map<String, String>> getLg_img_list(Map<String, String> i_paraMap); // 숙박시설 사진 전체 혹은 카테고리별로 가져오기
 
-	List<Map<String, String>> getBath_opt_list(String rm_seq); // 객실 옵션 - 욕실 
+	List<Map<String, String>> getBath_opt_list(Map<String, String> op_paraMap); // 객실 옵션 - 욕실 
 
-	List<Map<String, String>> getSnk_opt_list(String rm_seq); // 객실 옵션 - 객실 내 다과
+	List<Map<String, String>> getSnk_opt_list(Map<String, String> op_paraMap); // 객실 옵션 - 객실 내 다과
 
-	List<Map<String, String>> getKt_opt_list(String rm_seq); // 객실 옵션 - 조리시설
+	List<Map<String, String>> getKt_opt_list(Map<String, String> op_paraMap); // 객실 옵션 - 조리시설
 
-	List<Map<String, String>> getEnt_opt_list(String rm_seq); // 객실 옵션 - 엔터테인먼트
+	List<Map<String, String>> getEnt_opt_list(Map<String, String> op_paraMap); // 객실 옵션 - 엔터테인먼트
 
-	List<Map<String, String>> getTmp_opt_list(String rm_seq); // 객실 옵션 - 온도조절
+	List<Map<String, String>> getTmp_opt_list(Map<String, String> op_paraMap); // 객실 옵션 - 온도조절
 
 	List<Map<String, String>> getRm_img_list(Map<String, String> paraMap); // 객실 사진 가져오기
 
-	List<Map<String, String>> getCom_bath_opt_list(String lodge_id); // 숙박 시설의 전체 객실이 가진 옵션 가져오기  - 욕실
+	List<Map<String, String>> getCom_bath_opt_list(Map<String, String> op_paraMap); // 숙박 시설의 전체 객실이 가진 옵션 가져오기  - 욕실
 
-	List<Map<String, String>> getCom_snk_opt_list(String lodge_id); // 숙박 시설의 전체 객실이 가진 옵션 가져오기  - 객실 내 다과
+	List<Map<String, String>> getCom_snk_opt_list(Map<String, String> op_paraMap); // 숙박 시설의 전체 객실이 가진 옵션 가져오기  - 객실 내 다과
 
-	List<Map<String, String>> getCom_kt_opt_list(String lodge_id); // 숙박 시설의 전체 객실이 가진 옵션 가져오기  - 조리시설
+	List<Map<String, String>> getCom_kt_opt_list(Map<String, String> op_paraMap); // 숙박 시설의 전체 객실이 가진 옵션 가져오기  - 조리시설
 
-	List<Map<String, String>> getCom_ent_opt_list(String lodge_id); // 숙박 시설의 전체 객실이 가진 옵션 가져오기  - 엔터테인먼트
+	List<Map<String, String>> getCom_ent_opt_list(Map<String, String> op_paraMap); // 숙박 시설의 전체 객실이 가진 옵션 가져오기  - 엔터테인먼트
 
-	List<Map<String, String>> getCom_tmp_opt_list(String lodge_id); // 숙박 시설의 전체 객실이 가진 옵션 가져오기  - 온도조절
+	List<Map<String, String>> getCom_tmp_opt_list(Map<String, String> op_paraMap); // 숙박 시설의 전체 객실이 가진 옵션 가져오기  - 온도조절
 
 	List<Map<String, String>> getAvbl_rm_list(Map<String, String> paraMap); // 날짜 검색 후, 남은 객실에 대한 정보 가져오기
 

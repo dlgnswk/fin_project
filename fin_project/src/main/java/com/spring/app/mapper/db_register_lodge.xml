@@ -580,7 +580,6 @@
 		<result property="fk_img_cano"		column="fk_img_cano"		javaType="String"/>
 	</resultMap>
 	
-	
 	<select id="getLodgeImgData" parameterType="String" resultMap="getLodgeImgData_Map">
 		select lg_img_seq, fk_lodge_id, lg_img_save_name, lg_img_name, fk_img_cano
 		from tbl_lg_img
@@ -846,10 +845,10 @@
 	
 	
 	<!-- 기존에 입력되어 있는 rm_type List 가져오기 -->
-	<select id="getRm_typeData" parameterType="String" resultType="String">
+	<select id="getRm_typeData" parameterType="HashMap" resultType="String">
 		select rm_type
 		from tbl_room
-		where fk_lodge_id = #{fk_lodge_id}
+		where fk_lodge_id = #{fk_lodge_id} and rm_seq != #{rm_seq}
 	</select>
 
 	

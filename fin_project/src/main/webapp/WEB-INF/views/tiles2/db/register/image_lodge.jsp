@@ -547,7 +547,7 @@
     			let mainImage_length = $("div#mainImage").find(".imageItem").length;
     			console.log(mainImage_length);
     			if( arr == mainImage_arr && mainImage_length > 4) {
-    				alert("메인 이미지는 5개의  사진을 등록해야 합니다.");
+    				alert("메인 이미지는 5개의 사진을 등록해야 합니다.");
     				return;
     			}
     			else {
@@ -573,8 +573,8 @@
 		          	if( fileFrontName.length > 7) {
 		          		console.log(fileFrontName);
 		          		console.log(fileTypeName);
-		          		console.log(fileFrontName.substr(0,6) + "···" + fileTypeName);
-		          		viewFileName = fileFrontName.substr(0,6) + "···" + fileTypeName;
+		          		console.log(fileFrontName.substr(0,6) + "··" + fileTypeName);
+		          		viewFileName = fileFrontName.substr(0,6) + "··" + fileTypeName;
 		          	}
                 	
     				fileReader.onload = function(){
@@ -621,7 +621,7 @@
    			let mainImage_length = $("div#mainImage").find(".imageItem").length;
    			console.log(mainImage_length);
    			if( arr == mainImage_arr && mainImage_length > 4) {
-   				alert("메인 이미지는 5개의  사진을 등록해야 합니다.");
+   				alert("메인 이미지는 5개의 사진을 등록해야 합니다.");
    				return;
 			}
 			else {
@@ -647,8 +647,8 @@
 	          	if( fileFrontName.length > 7) {
 	          		console.log(fileFrontName);
 	          		console.log(fileTypeName);
-	          		console.log(fileFrontName.substr(0,6) + "···" + fileTypeName);
-	          		viewFileName = fileFrontName.substr(0,6) + "···" + fileTypeName;
+	          		console.log(fileFrontName.substr(0,6) + "··" + fileTypeName);
+	          		viewFileName = fileFrontName.substr(0,6) + "··" + fileTypeName;
 	          	}
             	
 				fileReader.onload = function(){
@@ -679,108 +679,110 @@
 	// === 사진 등록 하기  === //
 	$(document).on("click", "button#image_register", function(){
 		
-		var formData = new FormData($("form[name='addFrm']").get(0));
-		
-		// 메인 이미지 
-		if(mainImage_arr.length > 0) {
+		if(confirm("사진을 등록하시겠습니까?")) {
 			
-			mainImage_arr.forEach(function(item){
-				// 첨부파일 추가하기 "file_arr" 이 키값이고  item 이 밸류값인데 file_arr 배열속에 저장되어진 배열요소인 파일첨부되어진 파일이 되어진다.
-				// 같은 key를 가진 값을 여러 개 넣을 수 있다.(덮어씌워지지 않고 추가가 된다.)
-	        	formData.append("mainImage_arr", item);  
+			var formData = new FormData($("form[name='addFrm']").get(0));
+			
+			// 메인 이미지 
+			if(mainImage_arr.length > 0) {
+				
+				mainImage_arr.forEach(function(item){
+					// 첨부파일 추가하기 "file_arr" 이 키값이고  item 이 밸류값인데 file_arr 배열속에 저장되어진 배열요소인 파일첨부되어진 파일이 되어진다.
+					// 같은 key를 가진 값을 여러 개 넣을 수 있다.(덮어씌워지지 않고 추가가 된다.)
+		        	formData.append("mainImage_arr", item);  
+		        });
+				
+			}// end of if(mainImage_arr.length > 0)
+			
+			// 시설외부
+			if(outImage_arr.length > 0) {
+				
+				outImage_arr.forEach(function(item){
+					// 첨부파일 추가하기 "file_arr" 이 키값이고  item 이 밸류값인데 file_arr 배열속에 저장되어진 배열요소인 파일첨부되어진 파일이 되어진다.
+					// 같은 key를 가진 값을 여러 개 넣을 수 있다.(덮어씌워지지 않고 추가가 된다.)
+		        	formData.append("outImage_arr", item);  
+		        });
+				
+			}// end of if(outImage_arr.length > 0)
+			
+			// 공용구역
+			if(publicImage_arr.length > 0) {
+				
+				publicImage_arr.forEach(function(item){
+					// 첨부파일 추가하기 "file_arr" 이 키값이고  item 이 밸류값인데 file_arr 배열속에 저장되어진 배열요소인 파일첨부되어진 파일이 되어진다.
+					// 같은 key를 가진 값을 여러 개 넣을 수 있다.(덮어씌워지지 않고 추가가 된다.)
+		        	formData.append("publicImage_arr", item);  
+		        });
+				
+			}// end of if(publicImage_arr.length > 0)
+				
+			// 수영장
+			if(poolImage_arr.length > 0) {
+				
+				poolImage_arr.forEach(function(item){
+					// 첨부파일 추가하기 "file_arr" 이 키값이고  item 이 밸류값인데 file_arr 배열속에 저장되어진 배열요소인 파일첨부되어진 파일이 되어진다.
+					// 같은 key를 가진 값을 여러 개 넣을 수 있다.(덮어씌워지지 않고 추가가 된다.)
+		        	formData.append("poolImage_arr", item);  
+		        });
+				
+			}// end of if(poolImage_arr.length > 0)
+				
+			// 다이닝
+			if(diningImage_arr.length > 0) {
+				
+				diningImage_arr.forEach(function(item){
+					// 첨부파일 추가하기 "file_arr" 이 키값이고  item 이 밸류값인데 file_arr 배열속에 저장되어진 배열요소인 파일첨부되어진 파일이 되어진다.
+					// 같은 key를 가진 값을 여러 개 넣을 수 있다.(덮어씌워지지 않고 추가가 된다.)
+		        	formData.append("diningImage_arr", item);  
+		        });
+				
+			}// end of if(diningImage_arr.length > 0)
+				
+			// 편의시설/서비스
+			if(serviceImage_arr.length > 0) {
+				
+				serviceImage_arr.forEach(function(item){
+					// 첨부파일 추가하기 "file_arr" 이 키값이고  item 이 밸류값인데 file_arr 배열속에 저장되어진 배열요소인 파일첨부되어진 파일이 되어진다.
+					// 같은 key를 가진 값을 여러 개 넣을 수 있다.(덮어씌워지지 않고 추가가 된다.)
+		        	formData.append("serviceImage_arr", item);  
+		        });
+				
+			}// end of if(serviceImage_arr.length > 0)
+				
+			// 전망
+			if(viewImage_arr.length > 0) {
+				
+				viewImage_arr.forEach(function(item){
+					// 첨부파일 추가하기 "file_arr" 이 키값이고  item 이 밸류값인데 file_arr 배열속에 저장되어진 배열요소인 파일첨부되어진 파일이 되어진다.
+					// 같은 key를 가진 값을 여러 개 넣을 수 있다.(덮어씌워지지 않고 추가가 된다.)
+		        	formData.append("viewImage_arr", item);  
+		        });
+				
+			}// end of if(viewImage_arr.length > 0)
+			
+			let mainImage_length = $("div#mainImage").find(".imageItem").length;
+			if( mainImage_length != 5) {
+				alert("메인 이미지는 5개의 사진을 등록해야 합니다.");
+				return false; 
+			}
+			
+			$.ajax({
+	            url : "<%= ctxPath%>/image_lodge.exp",
+	            type : "post",
+	            data : formData,
+	            processData:false,  // 파일 전송시 설정 -> query string(쿼리 스트링) 하지마라
+	            contentType:false,  // 파일 전송시 설정 
+	            dataType:"json",
+	            success:function(json){
+	          	  	
+	            	location.href="javascript:location.reload(true)";
+	          	  	
+	            },
+	            error: function(request, status, error){
+					alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			      }
 	        });
-			
-		}// end of if(mainImage_arr.length > 0)
-		
-		// 시설외부
-		if(outImage_arr.length > 0) {
-			
-			outImage_arr.forEach(function(item){
-				// 첨부파일 추가하기 "file_arr" 이 키값이고  item 이 밸류값인데 file_arr 배열속에 저장되어진 배열요소인 파일첨부되어진 파일이 되어진다.
-				// 같은 key를 가진 값을 여러 개 넣을 수 있다.(덮어씌워지지 않고 추가가 된다.)
-	        	formData.append("outImage_arr", item);  
-	        });
-			
-		}// end of if(outImage_arr.length > 0)
-		
-		// 공용구역
-		if(publicImage_arr.length > 0) {
-			
-			publicImage_arr.forEach(function(item){
-				// 첨부파일 추가하기 "file_arr" 이 키값이고  item 이 밸류값인데 file_arr 배열속에 저장되어진 배열요소인 파일첨부되어진 파일이 되어진다.
-				// 같은 key를 가진 값을 여러 개 넣을 수 있다.(덮어씌워지지 않고 추가가 된다.)
-	        	formData.append("publicImage_arr", item);  
-	        });
-			
-		}// end of if(publicImage_arr.length > 0)
-			
-		// 수영장
-		if(poolImage_arr.length > 0) {
-			
-			poolImage_arr.forEach(function(item){
-				// 첨부파일 추가하기 "file_arr" 이 키값이고  item 이 밸류값인데 file_arr 배열속에 저장되어진 배열요소인 파일첨부되어진 파일이 되어진다.
-				// 같은 key를 가진 값을 여러 개 넣을 수 있다.(덮어씌워지지 않고 추가가 된다.)
-	        	formData.append("poolImage_arr", item);  
-	        });
-			
-		}// end of if(poolImage_arr.length > 0)
-			
-		// 다이닝
-		if(diningImage_arr.length > 0) {
-			
-			diningImage_arr.forEach(function(item){
-				// 첨부파일 추가하기 "file_arr" 이 키값이고  item 이 밸류값인데 file_arr 배열속에 저장되어진 배열요소인 파일첨부되어진 파일이 되어진다.
-				// 같은 key를 가진 값을 여러 개 넣을 수 있다.(덮어씌워지지 않고 추가가 된다.)
-	        	formData.append("diningImage_arr", item);  
-	        });
-			
-		}// end of if(diningImage_arr.length > 0)
-			
-		// 편의시설/서비스
-		if(serviceImage_arr.length > 0) {
-			
-			serviceImage_arr.forEach(function(item){
-				// 첨부파일 추가하기 "file_arr" 이 키값이고  item 이 밸류값인데 file_arr 배열속에 저장되어진 배열요소인 파일첨부되어진 파일이 되어진다.
-				// 같은 key를 가진 값을 여러 개 넣을 수 있다.(덮어씌워지지 않고 추가가 된다.)
-	        	formData.append("serviceImage_arr", item);  
-	        });
-			
-		}// end of if(serviceImage_arr.length > 0)
-			
-		// 전망
-		if(viewImage_arr.length > 0) {
-			
-			viewImage_arr.forEach(function(item){
-				// 첨부파일 추가하기 "file_arr" 이 키값이고  item 이 밸류값인데 file_arr 배열속에 저장되어진 배열요소인 파일첨부되어진 파일이 되어진다.
-				// 같은 key를 가진 값을 여러 개 넣을 수 있다.(덮어씌워지지 않고 추가가 된다.)
-	        	formData.append("viewImage_arr", item);  
-	        });
-			
-		}// end of if(viewImage_arr.length > 0)
-		
-		let mainImage_length = $("div#mainImage").find(".imageItem").length;
-		if( mainImage_length != 5) {
-			alert("메인 이미지는 5개의  사진을 등록해야 합니다.");
-			return false; 
 		}
-		
-		$.ajax({
-            url : "<%= ctxPath%>/image_lodge.exp",
-            type : "post",
-            data : formData,
-            processData:false,  // 파일 전송시 설정 -> query string(쿼리 스트링) 하지마라
-            contentType:false,  // 파일 전송시 설정 
-            dataType:"json",
-            success:function(json){
-          	  	
-            	location.href="javascript:location.reload(true)";
-          	  	
-            },
-            error: function(request, status, error){
-				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-		      }
-        });
-		
 	}); // end of $("button#image_register").click(function()
 			
 			

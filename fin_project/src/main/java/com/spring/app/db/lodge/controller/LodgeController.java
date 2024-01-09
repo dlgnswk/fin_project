@@ -478,15 +478,42 @@ public class LodgeController {
 		String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
 		// ================= AOP 로그인한 사용자의 정보 -끝- ====================== //
 		
-		// DB에 등록된 이미지 파일명을 가지고 온다.
-		List<Map<String,String>> LodgeImgMapList = service.getLodgeImgData(fk_lodge_id);
+		System.out.println("fk_lodge_id => "+ fk_lodge_id);
 		
-		
-		request.setAttribute("LodgeImgMapList", LodgeImgMapList);
-		
-		return "db/register/image_lodge.tiles2";
-		// /WEB-INF/views/tiles2/db/register/register_lodge.jsp
-		// /WEB-INF/views/tiles2/{1}/{2}/{3}.jsp
+		if(fk_lodge_id == null) {
+			
+			request.setAttribute("message", "등록된 숙박시설이 없습니다.");
+			request.setAttribute("loc", request.getContextPath()+"/lodgeControl.exp");
+			return "msg";
+		}
+		else {
+			
+			// DB에 등록된 이미지 파일명을 가지고 온다.
+			List<Map<String,String>> LodgeImgMapList = service.getLodgeImgData(fk_lodge_id);
+			
+			
+			if(LodgeImgMapList.size() > 0 ) {
+			// 이미지 이름 "..." 표시 하기
+				for(int i=0; i<LodgeImgMapList.size(); i++) {
+					String lg_img_name = LodgeImgMapList.get(i).get("lg_img_name");
+					
+					if( lg_img_name.length() > 7 ) {
+						lg_img_name.lastIndexOf(".");
+						lg_img_name = lg_img_name.substring(0,6)+"··"+lg_img_name.substring(lg_img_name.lastIndexOf("."));
+						
+						LodgeImgMapList.get(i).put("lg_img_name",lg_img_name);
+					}
+					
+				} // end of for -----------------
+				
+			} // end of if(LodgeImgMapList.size() > 0 )
+			
+			request.setAttribute("LodgeImgMapList", LodgeImgMapList);
+			
+			return "db/register/image_lodge.tiles2";
+			// /WEB-INF/views/tiles2/db/register/register_lodge.jsp
+			// /WEB-INF/views/tiles2/{1}/{2}/{3}.jsp
+		}
 	}
 	
 	
@@ -875,24 +902,6 @@ public class LodgeController {
 	@GetMapping(value="/rm_register.exp")
 	public String requiredHostLogin_rm_register(HttpServletRequest request, HttpServletResponse response) {
 		
-		// == 욕실 옵션 종류 checkbox == //
-		List<Map<String,String>> bathOptMapList = service.getBathOpt();
-		
-		// == 주방(조리시설) 종류 checkbox == //
-		List<Map<String,String>> kitchenOptMapList = service.getKitchenOpt();
-		
-		// == 객실 내 다과 옵션 종류 checkbox == //
-		List<Map<String,String>> snackOptMapList = service.getSnackOpt();
-		
-		// == 객실 내 엔터테이먼트 옵션 종류 checkbox == //
-		List<Map<String,String>> entertainmentOptMapList = service.getEntertainmentOpt();
-		
-		// == 온도조절기 옵션 종류 checkbox == //
-		List<Map<String,String>> temperatureControllerOptMapList = service.getTemperatureControllerOpt();
-		
-		// == 전망 옵션 종류 select == // 
-		List<Map<String,String>> viewOptMapList = service.getViewOpt();
-		
 		// ================= AOP 로그인한 사용자의 정보 -시작- ==================== //
 		HttpSession session = request.getSession();
 		HostVO loginhost = (HostVO) session.getAttribute("loginhost");
@@ -901,24 +910,52 @@ public class LodgeController {
 		String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
 		// ================= AOP 로그인한 사용자의 정보 -끝- ==================== //
 		
-		// == ** 이미 입력된 room 정보가 있다면 수정과 추가를 하기위해서 체크 해야 된다 ** == //
-		List<Map<String,String>> updateRmInfoMapList = service.getRmInfo(fk_lodge_id); // rm_seq, rm_type
-
+		if(fk_lodge_id == null) {
+			
+			request.setAttribute("message", "등록된 숙박시설이 없습니다.");
+			request.setAttribute("loc", request.getContextPath()+"/lodgeControl.exp");
+			return "msg";
+		}
+		else {
 		
-		request.setAttribute("bathOptMapList", bathOptMapList);			// 욕실 옵션 종류 checkbox
-		request.setAttribute("kitchenOptMapList", kitchenOptMapList);			// 주방(조리시설) 종류 checkbox
-		request.setAttribute("snackOptMapList", snackOptMapList);				// 객실 내 다과 옵션 종류 checkbox
-		request.setAttribute("entertainmentOptMapList", entertainmentOptMapList);	// 객실 내 엔터테이먼트 옵션 종류 checkbox
-		request.setAttribute("temperatureControllerOptMapList", temperatureControllerOptMapList);	// 온도조절기 옵션 종류 checkbox
-		request.setAttribute("viewOptMapList", viewOptMapList);			// 전망 옵션 종류 select
-		
-		// 입력 외 정보
-		request.setAttribute("fk_lodge_id", fk_lodge_id);
-		request.setAttribute("updateRmInfoMapList", updateRmInfoMapList);
-		
-		return "db/register/rm_register.tiles2";
-		// /WEB-INF/views/tiles2/db/register/register_lodge.jsp
-		// /WEB-INF/views/tiles2/{1}/{2}/{3}.jsp
+			// == 욕실 옵션 종류 checkbox == //
+			List<Map<String,String>> bathOptMapList = service.getBathOpt();
+			
+			// == 주방(조리시설) 종류 checkbox == //
+			List<Map<String,String>> kitchenOptMapList = service.getKitchenOpt();
+			
+			// == 객실 내 다과 옵션 종류 checkbox == //
+			List<Map<String,String>> snackOptMapList = service.getSnackOpt();
+			
+			// == 객실 내 엔터테이먼트 옵션 종류 checkbox == //
+			List<Map<String,String>> entertainmentOptMapList = service.getEntertainmentOpt();
+			
+			// == 온도조절기 옵션 종류 checkbox == //
+			List<Map<String,String>> temperatureControllerOptMapList = service.getTemperatureControllerOpt();
+			
+			// == 전망 옵션 종류 select == // 
+			List<Map<String,String>> viewOptMapList = service.getViewOpt();
+			
+			
+			// == ** 이미 입력된 room 정보가 있다면 수정과 추가를 하기위해서 체크 해야 된다 ** == //
+			List<Map<String,String>> updateRmInfoMapList = service.getRmInfo(fk_lodge_id); // rm_seq, rm_type
+	
+			
+			request.setAttribute("bathOptMapList", bathOptMapList);			// 욕실 옵션 종류 checkbox
+			request.setAttribute("kitchenOptMapList", kitchenOptMapList);			// 주방(조리시설) 종류 checkbox
+			request.setAttribute("snackOptMapList", snackOptMapList);				// 객실 내 다과 옵션 종류 checkbox
+			request.setAttribute("entertainmentOptMapList", entertainmentOptMapList);	// 객실 내 엔터테이먼트 옵션 종류 checkbox
+			request.setAttribute("temperatureControllerOptMapList", temperatureControllerOptMapList);	// 온도조절기 옵션 종류 checkbox
+			request.setAttribute("viewOptMapList", viewOptMapList);			// 전망 옵션 종류 select
+			
+			// 입력 외 정보
+			request.setAttribute("fk_lodge_id", fk_lodge_id);
+			request.setAttribute("updateRmInfoMapList", updateRmInfoMapList);
+			
+			return "db/register/rm_register.tiles2";
+			// /WEB-INF/views/tiles2/db/register/register_lodge.jsp
+			// /WEB-INF/views/tiles2/{1}/{2}/{3}.jsp
+		}
 	}
 
 	// ==== 객실 등록 ==== //
@@ -1064,22 +1101,27 @@ public class LodgeController {
 	// 객실을 등록할 때 "추가" "수정"할지를 선택할 수 있는 select를 위한 정보이다.
 	@ResponseBody
 	@GetMapping(value = "/checkRm_type.exp", produces = "text/plain;charset=UTF-8") // GET 방식만 허락한 것이다.
-	public String checkRm_type(@RequestParam String fk_lodge_id) {
+	public String checkRm_type(@RequestParam String fk_lodge_id, @RequestParam String rm_seq) {
 		
 	//	System.out.println("fk_lodge_id => "+ fk_lodge_id);
+	//	System.out.println("rm_seq => " + rm_seq);
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("fk_lodge_id", fk_lodge_id);
+		paraMap.put("rm_seq", rm_seq);
 		
 		// 기존에 입력되어 있는 rm_type List 가져오기
-		List<String> rm_typeList = service.getRm_typeData(fk_lodge_id);
+		List<String> rm_typeList = service.getRm_typeData(paraMap);
 		
 		JsonArray jsonArr = new JsonArray();
 		
 		if(rm_typeList.size() > 0) {
 			
-			for(String rm_type : rm_typeList) {
+			for(String not_use_rm_type : rm_typeList) {
 			//	System.out.println("rm_type => "+ rm_type);
 				JsonObject jsonObj = new JsonObject();
 				
-				jsonObj.addProperty("rm_type", rm_type);
+				jsonObj.addProperty("rm_type", not_use_rm_type);
 				jsonArr.add(jsonObj);
 			}// end of for --------------------
 			
@@ -1101,23 +1143,37 @@ public class LodgeController {
 		HttpSession session = request.getSession();
 		HostVO loginhost = (HostVO) session.getAttribute("loginhost");
 		String fk_h_userid = loginhost.getH_userid();
-	//	System.out.println("fk_h_userid => " + fk_h_userid);
 		// 현재 로그인한 판매자의 ID로 숙박시설의 lodge_id를 가져온다.
 		String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
-	//	System.out.println("fk_lodge_id => " + fk_lodge_id);
 		// === 로그인한 사용자의 정보 -끝- === //
 		
-		
-		// == ** 이미 입력된 room 정보가 있다면 수정과 추가를 하기위해서 체크 해야 된다 ** == //
-		List<Map<String,String>> updateRmInfoMapList = service.getRmInfo(fk_lodge_id); // rm_seq, rm_type
+		if(fk_lodge_id == null) {
+		// 시설이 없는경우
+			request.setAttribute("message", "등록된 숙박시설이 없습니다.");
+			request.setAttribute("loc", request.getContextPath()+"/lodgeControl.exp");
+			return "msg";
+		}
+		else {
 
-		
-		request.setAttribute("fk_lodge_id", fk_lodge_id);
-		request.setAttribute("updateRmInfoMapList", updateRmInfoMapList);
-		
-		return "db/register/rm_image.tiles2";
-		// /WEB-INF/views/tiles2/db/register/register_lodge.jsp
-		// /WEB-INF/views/tiles2/{1}/{2}/{3}.jsp
+			// == ** 이미 입력된 room 정보가 있다면 수정과 추가를 하기위해서 체크 해야 된다 ** == //
+			List<Map<String,String>> updateRmInfoMapList = service.getRmInfo(fk_lodge_id); // rm_seq, rm_type
+			
+			if(updateRmInfoMapList == null) {
+			// 객실이 없는 경우
+				request.setAttribute("message", "등록된 객실이 없습니다.");
+				request.setAttribute("loc", request.getContextPath()+"/lodgeControl.exp");
+				return "msg";
+			}
+			else {
+			
+				request.setAttribute("fk_lodge_id", fk_lodge_id);
+				request.setAttribute("updateRmInfoMapList", updateRmInfoMapList);
+				
+				return "db/register/rm_image.tiles2";
+				// /WEB-INF/views/tiles2/db/register/register_lodge.jsp
+				// /WEB-INF/views/tiles2/{1}/{2}/{3}.jsp
+			}
+		}
 	}
 	
 	// 객실 사진 등록 버튼 클릭
@@ -1258,7 +1314,7 @@ public class LodgeController {
 				
 				if( rm_img_name.length() > 7 ) {
 					rm_img_name.lastIndexOf(".");
-					rm_img_name = rm_img_name.substring(0,6)+"···"+rm_img_name.substring(rm_img_name.lastIndexOf("."));
+					rm_img_name = rm_img_name.substring(0,6)+"··"+rm_img_name.substring(rm_img_name.lastIndexOf("."));
 					
 					roomImgDataMapList.get(i).put("rm_img_name",rm_img_name);
 				}

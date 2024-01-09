@@ -84,32 +84,32 @@ public class LodgeService_imple implements LodgeService {
 
 
 	@Override
-	public List<Map<String, String>> getCom_bath_opt_list(String lodge_id) {
-		List<Map<String, String>> Com_bath_opt_list = dao.getCom_bath_opt_list(lodge_id);
+	public List<Map<String, String>> getCom_bath_opt_list(Map<String, String> op_paraMap) {
+		List<Map<String, String>> Com_bath_opt_list = dao.getBath_opt_list(op_paraMap);
 		return Com_bath_opt_list;
 	}
 
 	@Override
-	public List<Map<String, String>> getCom_snk_opt_list(String lodge_id) {
-		List<Map<String, String>> Com_snk_opt_list = dao.getCom_snk_opt_list(lodge_id);
+	public List<Map<String, String>> getCom_snk_opt_list(Map<String, String> op_paraMap) {
+		List<Map<String, String>> Com_snk_opt_list = dao.getSnk_opt_list(op_paraMap);
 		return Com_snk_opt_list;
 	}
 
 	@Override
-	public List<Map<String, String>> getCom_kt_opt_list(String lodge_id) {
-		List<Map<String, String>> Com_kt_opt_list = dao.getCom_kt_opt_list(lodge_id);
+	public List<Map<String, String>> getCom_kt_opt_list(Map<String, String> op_paraMap) {
+		List<Map<String, String>> Com_kt_opt_list = dao.getKt_opt_list(op_paraMap);
 		return Com_kt_opt_list;
 	}
 
 	@Override
-	public List<Map<String, String>> getCom_ent_opt_list(String lodge_id) {
-		List<Map<String, String>> Com_ent_opt_list = dao.getCom_ent_opt_list(lodge_id);
+	public List<Map<String, String>> getCom_ent_opt_list(Map<String, String> op_paraMap) {
+		List<Map<String, String>> Com_ent_opt_list = dao.getEnt_opt_list(op_paraMap);
 		return Com_ent_opt_list;
 	}
 
 	@Override
-	public List<Map<String, String>> getCom_tmp_opt_list(String lodge_id) {
-		List<Map<String, String>> Com_tmp_opt_list = dao.getCom_tmp_opt_list(lodge_id);
+	public List<Map<String, String>> getCom_tmp_opt_list(Map<String, String> op_paraMap) {
+		List<Map<String, String>> Com_tmp_opt_list = dao.getTmp_opt_list(op_paraMap);
 		return Com_tmp_opt_list;
 	}
 
@@ -120,32 +120,32 @@ public class LodgeService_imple implements LodgeService {
 	}
 
 	@Override
-	public List<Map<String, String>> getBath_opt_list(String rm_seq) {
-		List<Map<String, String>> Bath_opt_list = dao.getBath_opt_list(rm_seq);
+	public List<Map<String, String>> getBath_opt_list(Map<String, String> op_paraMap) {
+		List<Map<String, String>> Bath_opt_list = dao.getBath_opt_list(op_paraMap);
 		return Bath_opt_list;
 	}
 
 	@Override
-	public List<Map<String, String>> getSnk_opt_list(String rm_seq) {
-		List<Map<String, String>> Snk_opt_list = dao.getSnk_opt_list(rm_seq);
+	public List<Map<String, String>> getSnk_opt_list(Map<String, String> op_paraMap) {
+		List<Map<String, String>> Snk_opt_list = dao.getSnk_opt_list(op_paraMap);
 		return Snk_opt_list;
 	}
 
 	@Override
-	public List<Map<String, String>> getKt_opt_list(String rm_seq) {
-		List<Map<String, String>> Kt_opt_list = dao.getKt_opt_list(rm_seq);
+	public List<Map<String, String>> getKt_opt_list(Map<String, String> op_paraMap) {
+		List<Map<String, String>> Kt_opt_list = dao.getKt_opt_list(op_paraMap);
 		return Kt_opt_list;
 	}
 
 	@Override
-	public List<Map<String, String>> getEnt_opt_list(String rm_seq) {
-		List<Map<String, String>> Ent_opt_list = dao.getEnt_opt_list(rm_seq);
+	public List<Map<String, String>> getEnt_opt_list(Map<String, String> op_paraMap) {
+		List<Map<String, String>> Ent_opt_list = dao.getEnt_opt_list(op_paraMap);
 		return Ent_opt_list;
 	}
 
 	@Override
-	public List<Map<String, String>> getTmp_opt_list(String rm_seq) {
-		List<Map<String, String>> Tmp_opt_list = dao.getTmp_opt_list(rm_seq);
+	public List<Map<String, String>> getTmp_opt_list(Map<String, String> op_paraMap) {
+		List<Map<String, String>> Tmp_opt_list = dao.getTmp_opt_list(op_paraMap);
 		return Tmp_opt_list;
 	}
 
