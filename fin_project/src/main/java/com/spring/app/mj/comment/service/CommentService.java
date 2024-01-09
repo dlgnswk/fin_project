@@ -89,7 +89,7 @@ public interface CommentService {
 	* @작성자   : 먕지 
 	* @변경이력  : 
 	* @Method 설명 : 삭제구현하기
-	* @param paraMap
+	* @param 
 	* @return 
 	*/
 	int goDelete(String c_seq);
@@ -105,4 +105,7 @@ public interface CommentService {
 	*/
 	List<String> getLodgeIdList(String userId);
 
+	
+	// 총 게시물 건수(totalCount) 구하기 - 검색이 있을 때와 검색이 없을때 로 나뉜다.
+	int getTotalCount(Map<String, Object> paraMap);
 }
