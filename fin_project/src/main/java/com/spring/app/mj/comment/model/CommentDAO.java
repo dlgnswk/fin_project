@@ -102,4 +102,15 @@ public interface CommentDAO {
 	*/
 	List<String> getLodgeIdList(String userId);
 
+	/** 
+	* @Method Name  : getTotalCount 
+	* @작성일   : 2024. 1. 9 
+	* @작성자   : 먕지 
+	* @변경이력  : 
+	* @Method 설명 : 
+	* @param paraMap
+	* @return 
+	*/
+	int getTotalCount(Map<String, Object> paraMap);
+
 }
