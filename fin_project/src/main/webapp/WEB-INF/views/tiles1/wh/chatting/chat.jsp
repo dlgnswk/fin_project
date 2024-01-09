@@ -23,13 +23,13 @@
 
 	$(document).ready(function(){
 		
-		goViewChat(1); // 페이징 처리한 댓글 읽어오기
 		
+		goViewChatList(1); // 페이징 처리한 댓글 읽어오기
 		
-		$("input:text[name='msg']").bind("keydown",function(e){
+		$("input:text[name='chat_comment']").bind("keydown",function(e){
 			if(e.keyCode == 13) {
-				goChatWrite();
-			}
+				goAddChat();
+			};
 		});
 		
 		
@@ -37,81 +37,57 @@
 
 // Function Declaration		
 // == 채팅쓰기 ==
-function goChatWrite() {
+function goAddChat() {
 	
-	const comment_msg = $("input:text[name='msg']").val().trim();
-	if(comment_msg == "") {
+	const chat_comment = $("input:text[name='chat_comment']").val().trim();
+	if(chat_comment == "") {
 		alert("채팅 내용을 입력하세요!!");
 		return;
 	}
 	
-
-	goChatWrite_noAttach();
-
-	
-	
-	
-	
-	
-	
+	else {
+		$.ajax({
+			url:"<%= ctxPath%>/addChat.exp",
+			data:{"chat_comment":$("input:text[name='chat_comment']").val()
+				 ,"chat_no":$("input:hidden[name='chat_no']").val()},
+			type:"post",
+			dataType:"json",
+			success:function(json){
+				 console.log(JSON.stringify(json));
+				// {"n":1, "name":"이순신"} {"n":0, "name":"최우현"}
+			
+				if(json.n == 1) {
+					goViewChatList(1); // 페이징 처리한 댓글 읽어오기			
+				
+				}
+				
+				$("input:text[name='chat_comment']").val("");
+			
+			},
+			error: function(request, status, error){
+	            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	        }
+		});
+	}
 	
 }// end of function goAddWrite(){}--------------------------------------------
 
 
-// 첨부파일이 없는 채팅쓰기인 경우
-function goChatWrite_noAttach() {
-	
-	<%--
-        // 보내야할 데이터를 선정하는 또 다른 방법
-        // jQuery에서 사용하는 것으로써,
-        // form태그의 선택자.serialize(); 을 해주면 form 태그내의 모든 값들을 name값을 키값으로 만들어서 보내준다. 
-           const queryString = $("form[name='addWriteFrm']").serialize();
-           
-           data:queryString,
-    --%>
-    // const queryString = $("form[name='chatWriteFrm']").serialize();
-    
-	$.ajax({
-		url:"<%= ctxPath%>/addChat.exp",
-		data:{"msg":$("input:text[name='msg']").val()
-			 ,"chat_no":$("input:hidden[name='chat_no']").val()},
-		dataType:"json",
-		success:function(json){
-			// console.log(JSON.stringify(json));
-			// {"n":1, "name":"이순신"} {"n":0, "name":"최우현"}
-		
-			if(json.n == 1) {
-				goViewChat(1); // 페이징 처리한 댓글 읽어오기			
-			
-			}
-			
-			$("input:text[name='msg']").val("");
-		
-		},
-		error: function(request, status, error){
-            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-        }
-	});
-	
-}// end of function goChatWrite_noAttach() ---------------------------------
-	
 
-
+	
+let lenChat = 10;
 
 
 //=== #127. Ajax 로 불러온 댓글 내용들을 페이징 처리 하기 === //
-function goViewChat(currentShowPageNo) {
+function goViewChatList(currentShowPageNo) {
 	
 	$.ajax({
-		url:"<%= ctxPath%>/msgList.exp",
+		url:"<%= ctxPath%>/viewChatList.exp",
 		data:{"chat_no":"${requestScope.chatvo.chat_no}",
-			  "currentShowPageNo":currentShowPageNo,
-			  "fk_lodge_id":"${requestScope.chatvo.fk_lodge_id}"},	  
+			  "currentShowPageNo":currentShowPageNo},	  
 		dataType:"json",
-	
 		success:function(json){
-			// == 첨부파일을 넣어준 것이 없을 시 == 
-			// console.log(JSON.stringify(json));
+			console.log(JSON.stringify(json));
 			
 			/* [{"name":"최우현","regdate":"2023-11-21- 16:41:31","content":"댓글입니다 200"},
 				{"name":"최우현","regdate":"2023-11-21- 16:41:31","content":"댓글입니다 199"},
@@ -126,9 +102,6 @@ function goViewChat(currentShowPageNo) {
 			// []
 			
 			
-			
-			
-			
 			let v_html = "";
 			if(json.length > 0) {
 			
@@ -139,17 +112,15 @@ function goViewChat(currentShowPageNo) {
 				   	v_html += item.reply_comment;
 				   	v_html += ' <span style="font-size:11px;color:#777;">' + item.reply_date + '</span>';
 				   	v_html += '</div>';
-				   	
-				   	
-				   	
-				   	
 				});
 			}
 			
 			
-			$("div#msgDisplay").html(v_html);
-			// 페이지바 함수 호출
-			makeMsgPageBar(currentShowPageNo);
+			$("div#chatDisplay").html(v_html);
+			
+			
+			// 스크롤바 함수 호출
+			makeChatScroll(currentShowPageNo);
 			
 			
 		},
@@ -162,11 +133,11 @@ function goViewChat(currentShowPageNo) {
 }// end of function goReadComment() ---------------------------------------------------
 
 // === 댓글내용 페이지바 Ajax 로 만들기 === //
-function makeMsgPageBar(currentShowPageNo) {
+function makeChatScroll(currentShowPageNo) {
 	
-	<%-- === 원글에 대한 댓글의 totalPage 수를 알아와야 한다. === --%>
+	<%-- === 채팅방 채팅의 totalCount 수를 알아와야 한다. === --%>
 	$.ajax({
-		url:"<%=ctxPath%>/getMsgTotalPage.exp",
+		url:"<%=ctxPath%>/getChatTotalCount.exp",
 		data:{"chat_no":"${requestScope.chatvo.chat_no}",
 			  "sizePerPage":"10"},
 		type:"get",
@@ -176,10 +147,10 @@ function makeMsgPageBar(currentShowPageNo) {
 			// {"totalPage":22}
 			// {"totalPage":0}
 			
-			if(json.totalPage > 0) {
-					// 댓글이 있는 경우
+			if(json.totalCount > 0) {
+					// 채팅이 있는 경우
 					
-					const totalPage = json.totalPage;
+					const totalCount = json.totalCount;
 					const blockSize = 10;
 					
 				 // blockSize 는 1개 블럭(토막)당 보여지는 페이지번호의 개수 이다.
@@ -335,7 +306,7 @@ function goView(chat_no) {
 <div style="display: flex;">
 	<div style="margin: auto; padding-left: 3%;">
 	
-	   <h2 style="margin-bottom: 30px;">1:1 문의 </h2>    
+	   <h2 style="margin-bottom: 30px;">1:1 문의(구매자) </h2>    
 	    
 	   <c:if test="${not empty requestScope.chatvo}">
 		   <form name="chatWriteFrm" id="chatWriteFrm" style="margin-top: 20px;">
@@ -344,11 +315,11 @@ function goView(chat_no) {
 						<td>${requestScope.chatvo.fk_lodge_id}</td>					
 					</tr>
 					<tr>
-						<td colspan="2"><div id="msgDisplay"></div></td>
+						<td colspan="2"><div id="chatDisplay"></div></td>
 					</tr>
 					<tr>
-						<td colspan="2"><input type="text" name="msg" id="msg" placeholder="대화 내용을 입력하세요." class="form-control" size="100" maxlength="1000">
-						<button type="button" class="btn btn-success btn-sm mr-3" onclick="goChatWrite()">전송</button></td>
+						<td colspan="2"><input type="text" name="chat_comment" id="chat_comment" placeholder="대화 내용을 입력하세요." class="form-control" size="100" maxlength="1000">
+						<button type="button" id="addChat" class="btn btn-success btn-sm mr-3" onclick="goAddChat()">전송</button></td>
 					</tr>
 				
 				
@@ -369,22 +340,9 @@ function goView(chat_no) {
 	   </c:if> 
 	   
 	
-	   	<%-- #136. 댓글 페이지바 === --%>
-	 		<div style="display: flex; margin-bottom: 50px;">
-	 		<div id="pageBar" style="margin:auto; text-align: center;"></div>
-		    </div>  
+	   
 	   	  
 	   	   	   	   
-	  	 
-	  	   
-	  	   <%-- === #83. 댓글쓰기 폼 추가(판매자만 남길 수 있게) === 
-	  	   <c:if test="${not empty sessionScope.loginuser}">
-	  	   
-	  	   --%>
-	  	   	 
-	 
-			
-			
 	
 			
 	
