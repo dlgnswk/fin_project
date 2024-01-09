@@ -265,39 +265,45 @@
 						});
 						
 						
-						/* 삭제 구현하기 */
-						$(document).on("click", "button.delete", function(e){
-							
-							alert("확인삼");
-							
-						    const index = $("button.delete").index($(e.target));
-						   //  console.log("index: ", index);	
-						   
-						   
-					
-								 const seq = $("#seq").next.val(seq);
-								 
-								 console.log(seq);
-								   
-								     
+						
+							/* 삭제 구현하기 */
+			                  $(document).on("click", "button.delete", function(e){
+			                     
+			                    // alert("확인삼");
+			                     
+			                      //const index = $("button.delete").index($(e.target));
+			                     //  console.log("index: ", index);   
+			                     
+			                        //      seq
+			               
+			                     //    const seq = $("#seq").next.val(seq);
+			                         
+			                     //    console.log(seq);
 
-								 
-								    alert(seq);
-								     
-								     
-								     
-								     
-								     
-								      
-								     
-									
-									const frm = document.forms["deleteFrm"];
-								   	 frm.method = "post";
-								   	 frm.action = "<%=ctxPath%>/deleteEnd.exp";
-									frm.submit();
+			                     //       alert(seq);
+			                     
+			                     const seq_inx = $(e.target).attr('class');
+			                     //alert(seq_inx);
+			                     const sub_str = seq_inx.substring(4,5);
+			                     //alert(sub_str);
+			                     //alert(`input.seq\${sub_str}`);
+			                     
+			                     
+			                     //alert($(e.target).parent().parent().parent().parent().parent().parent().find(`input.seq\${sub_str}`).val());
+			         
+			                     const finsal_seq = $(e.target).parent().parent().parent().parent().parent().parent().find(`input.seq\${sub_str}`).val();
+			                     
+			                     console.log(finsal_seq);
+			                     alert(finsal_seq);
+			                     
+			                           const frm = document.forms["deleteFrm"];
+			                               frm.method = "post";
+			                               frm.action = "<%=ctxPath%>/deleteEnd.exp";
+			                           frm.submit();
 
-								});
+			                        });
 
+								
 						$("input:text[name='searchWord']").bind("keyup",
 								function(e) {
 									if (e.keyCode == 13) { // 엔터를 했을 경우 
@@ -404,16 +410,16 @@
 								<c:set var="firstFourChars"
 									value="${fn:substring(comment.RV_CONTENT, 0, 4)}" />
 
-								<input type="text" id="lodge" value="${comment.FK_LODGE_ID}" />
-								<input type="text" id="regDate" value="${comment.RV_REGDATE}" />
-								<input type="text" id="fk_seq" value="${comment.RV_ORG_SEQ}" />
-								<input type="text" id="groupno" value="${comment.RV_GROUPNO}" />
-								<input type="text" id="rs_seq" value="${comment.FK_RS_SEQ}" />
-								<input type="text" id="userid" value="${comment.H_USERID}" />
-								<input type="text" id="depthno" value="${comment.RV_DEPTHNO}" />
-								<input type="text" id="seq" value="${comment.RV_SEQ}" />
-								<input type="text" id="testcontent" value="${comment.RV_CONTENT}" />
-								<input type="text" id="firstFourChars1" value="${firstFourChars}" />
+								<input type="text" id="lodge" class="lodge${status.index}" value="${comment.FK_LODGE_ID}" />
+		                        <input type="text" id="regDate" class="regDate${status.index}" value="${comment.RV_REGDATE}" />
+		                        <input type="text" id="fk_seq" class="fk_seq${status.index}" value="${comment.RV_ORG_SEQ}" />
+		                        <input type="text" id="groupno" class="groupno${status.index}" value="${comment.RV_GROUPNO}" />
+		                        <input type="text" id="rs_seq" class="rs_seq${status.index}" value="${comment.FK_RS_SEQ}" />
+		                        <input type="text" id="userid" class="userid${status.index}" value="${comment.H_USERID}" />
+		                        <input type="text" id="depthno" class="depthno${status.index}" value="${comment.RV_DEPTHNO}" />
+		                        <input type="text" id="seq" class="seq${status.index}" value="${comment.RV_SEQ}" />
+		                        <input type="text" id="testcontent" class="testcontent${status.index}" value="${comment.RV_CONTENT}" />
+		                        <input type="text" id="firstFourChars1" class="firstFourChars1${status.index}" value="${firstFourChars}" />
 
 
 								<div>
@@ -470,8 +476,8 @@
 														type="button" id="updateHere${status.count}"
 														class="update">수정</button>
 													<button
-														style="width: 10%; height: 30px; border: #fff; background-color: #1668e3; color: #fff; border-radius: 2500rem;"
-														type="button" class="delete">삭제</button>
+				                                          style="width: 10%; height: 30px; border: #fff; background-color: #1668e3; color: #fff; border-radius: 2500rem;"
+				                                          type="button" class="seq_${status.index} delete">삭제</button>
 													<br> <br>
 
 												</div>
