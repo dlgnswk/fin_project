@@ -20,6 +20,24 @@
 		// "예" "아니오" 버튼 태그 다음 div 숨김
 		$("div.y_btn_after").hide(); // 체크박스
 
+		// "객실 제거하기" 버튼 숨기기
+		$("div.delete_btn").hide();
+		
+		
+		// 정보가 바뀔때
+		let update_room_seq = $("select[name='update_room_seq']");
+		
+		update_room_seq.change(function(){
+
+			if(update_room_seq.val() == "0" || update_room_seq.val() == "") {
+				update_room_seq.closest(".__data").find("div.delete_btn").hide();
+			}
+			else {
+				
+			}
+		});
+		
+		
 		
 		// 객실 크기 입력 이벤트
 		let rm_size_meter = $("input[name='rm_size_meter']");
@@ -188,6 +206,21 @@
 	// == 숙박시설 정보 DB에 insert == //	
 	function room_register() {
 		
+		// 객실 등록 상태 확인
+		const update_room_seq = $("select[name='update_room_seq']");
+		let b1 = 0;
+		
+		if(update_room_seq.val() == "" ) {
+			update_room_seq.closest(".__data").find(".submit_check").show();
+			update_room_seq.closest(".__data").find(".error").text("객실추가를 선택해주세요.").show();
+		}
+		else {
+			update_room_seq.closest(".__data").find(".submit_check").hide();
+			update_room_seq.closest(".__data").find(".error").hide();
+			b1 = 1;
+		}
+		
+		
 		// 객실 이름 체크
 		const rm_type = $("input[name='rm_type']");
 		let n1 = 0;
@@ -205,7 +238,8 @@
 			// 기존에 입력된 객실이름을 가지고 와서 비교한다.
 			$.ajax({
 				url:"<%=ctxPath%>/checkRm_type.exp",
-				data: {"fk_lodge_id":$("input[name='fk_lodge_id']").val()},
+				data: {"fk_lodge_id":$("input[name='fk_lodge_id']").val(),
+					   "rm_seq":$("select[name='update_room_seq']").val()},
 				async: false,
 				dataType:"json",
 				success:function(json){
@@ -684,13 +718,13 @@
 			let a3 = n11*n12*n13*n14*n15;
 			let a4 = n16*n17;
 		
-			let pass = a1*a2*a3*a4;
+			let pass = a1*a2*a3*a4*b1;
 			
 			console.log(a1 ,a2, a3, a4);
 			console.log("a1 => ", n1, n2, n3, n4, n5);
 			console.log("a2 => ", n6, n7, n8, n9, n10);
 			console.log("a3 => ", n11, n12, n13, n14, n15);
-			console.log("a4 => ", n16, n17);
+			console.log("a4 => ", n16, n17, b1);
 			
 			if(pass == 1) {
 				const frm = document.room_info_Frm;
@@ -775,7 +809,7 @@
 					
 					<div class="__data">
 						<div class="div_sub">
-							<span>정보</span>
+							<span>정보</span><svg class="submit_check" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#a01313" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg><span class="error"></span>
 						</div>	
 						<div>
 							<select name="update_room_seq" >
@@ -787,6 +821,9 @@
 									<option value="${updateRmInfo.rm_seq}">${updateRmInfo.rm_type}</option>
 								</c:forEach>
 							</select>
+						</div>
+						<div class="delete_btn">
+							<button type="button" id="rm_delete_btn">객실 제거하기</button>
 						</div>
 					</div>
 					

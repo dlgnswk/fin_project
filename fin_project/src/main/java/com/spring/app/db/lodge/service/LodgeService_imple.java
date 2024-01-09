@@ -845,13 +845,6 @@ public class LodgeService_imple implements LodgeService {
 		return result;
 	}
 
-	// 기존에 입력되어 있는 rm_type List 가져오기
-	@Override
-	public List<String> getRm_typeData(String fk_lodge_id) {
-		List<String> rm_typeList = dao.getRm_typeData(fk_lodge_id);
-		return rm_typeList;
-	}
-
 	// === 객실 이미지 등록하기 === //
 	@Override
 	public void insertRoomImages(Map<String, String> paraMap) {
@@ -905,6 +898,37 @@ public class LodgeService_imple implements LodgeService {
 		List<Map<String,String>> LodgeImgMapList = dao.getLodgeImgData(fk_lodge_id);
 		return LodgeImgMapList;
 	}
+
+	// === DB에서 시설 사진 정보를 삭제한다. === //
+	@Override
+	public int delIdxLodgeImg(Map<String, String> paraMap) {
+		int result = dao.delIdxLodgeImg(paraMap);
+		return result;
+	}
+
+	// == 경로에서 숙박시설 이미지 이름 DB에서 가져오기 == //
+	@Override
+	public List<String> getPathDelLodgeImgSaveName(Map<String, String> paraMap) {
+		List<String> lg_img_save_name_List = dao.getPathDelLodgeImgSaveName(paraMap);
+		return lg_img_save_name_List;
+	}
+
+	
+	// === DB에서 숙박시설 사진 정보를 삭제한다. === //
+	@Override
+	public int delCateLodgeImg(Map<String, String> paraMap) {
+		int result = dao.delCateLodgeImg(paraMap);
+		return result;
+	}
+
+	
+	// 기존에 입력되어 있는 rm_type List 가져오기
+	@Override
+	public List<String> getRm_typeData(Map<String, String> paraMap) {
+		List<String> rm_typeList = dao.getRm_typeData(paraMap);
+		return rm_typeList;
+	}
+
 
 	
 	
