@@ -91,4 +91,12 @@ public class CommentService_imple implements CommentService {
 		return getLodgeIdList;
 	}
 
+	// === #115. 총 게시물 건수(Count) 구하기 - 검색이 있을 때와 검색이 없을때 로 나뉜다. === 
+		@Override
+		public int getTotalCount(Map<String, Object> paraMap) {
+			int n = dao.getTotalCount(paraMap);
+			return n;
+	}
+	
+	
 }

@@ -7,11 +7,7 @@
 <!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
 <mapper namespace="mj_comment">
 
-	<!-- 더보기 총갯수  -->
-	<select id="getTotalCount" resultType="int">
-		select count(*)
-		from tbl_review
-	</select>
+	
 
 	<!-- 더보기  
 	<select id="selectComment" parameterType="HashMap" resultType="com.spring.app.expedia.domain.CommentVO">
@@ -146,7 +142,7 @@
 	
 	<!-- 답변 달아주기  -->
  	<insert id="commentInsert" parameterType="HashMap">
-		insert into tbl_comment(C_SEQ, FK_LODGE_ID, FK_RS_SEQ, FK_H_USERID, C_CONTENT, C_REGDATE, C_STATUS,C_GROUPNO,C_ORG_SEQ,C_DEPTHNO,FK_C_RATING ) values('11',#{fk_lodge_id},#{fk_rs_seq}, #{fk_h_userid},'답변제공: '||#{c_content},  default,default,#{c_groupno} ,#{c_org_seq}, #{c_depthno}+1, default) 
+		insert into tbl_comment(C_SEQ, FK_LODGE_ID, FK_RS_SEQ, FK_H_USERID, C_CONTENT, C_REGDATE, C_STATUS,C_GROUPNO,C_ORG_SEQ,C_DEPTHNO,FK_C_RATING ) values('seq_.nextval',#{fk_lodge_id},#{fk_rs_seq}, #{fk_h_userid},'답변제공: '||#{c_content},  default,default,#{c_groupno} ,#{c_org_seq}, #{c_depthno}+1, default) 
 	</insert> 
 	
 	<!-- 답변 수정해주기 -->
@@ -159,7 +155,7 @@
 	<!-- 삭제하기  -->
 	<delete id="deleteComment" parameterType="String">
 		delete from tbl_comment
-		where  c_seq = #{c_seq}+1
+		 where c_seq = #{c_seq}
 	</delete>
 	
 	
@@ -173,6 +169,21 @@
 	</select>
 	
 
+
+
+	<select id="getTotalCount" parameterType="HashMap" resultType="int">
+	 select count(*)
+      from tbl_review
+      where RV_status = 1
+       	<choose>
+			<when test='searchWord != ""'>
+				and lower(RV_CONTENT) like '%'||lower(#{searchWord})||'%'
+			</when>
+			
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
 
 
 </mapper>
