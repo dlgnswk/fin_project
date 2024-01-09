@@ -112,7 +112,7 @@ public class AdminController {
 		
 		// === 페이지바 만들기 시작 === //
 		
-		int blockSize = 3;
+		int blockSize = 5;
 		int loop = 1;
 		int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
 		 
@@ -264,7 +264,7 @@ public class AdminController {
 		
 		
 		// === 페이지바 만들기 시작 === //
-		int blockSize = 3;
+		int blockSize = 5;
 		int loop = 1;
 		int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
 		 
@@ -406,7 +406,7 @@ public class AdminController {
 		//확인용
 		//System.out.println("searchType => " + searchType);
 		//System.out.println("searchWord => " + searchWord);
-		//System.out.println("lg_status => " + lg_status);
+		System.out.println("lg_status => " + lg_status);
 		//System.out.println("str_currentShowPageNo => " + str_currentShowPageNo);
 		
 		if(searchType == null) {
@@ -423,6 +423,7 @@ public class AdminController {
 		
 		if(lg_status == null) {
 		   lg_status = "";
+		   System.out.println("lg_status => " + lg_status);////////////
 		}
 		
 		Map<String,String> paraMap = new HashMap<>();
@@ -431,7 +432,7 @@ public class AdminController {
 		paraMap.put("lg_status",lg_status);
 	    
 		int lodgeCnt = 0;				// 총 숙소 수
-		int sizePerPage = 10;			// 한 페이지당 보여줄 회원수
+		int sizePerPage = 5;			// 한 페이지당 보여줄 숙소 수
 		int currentShowPageNo = 0;		// 현재 페이지번호
 		int totalPage = 0;				// 총 페이지 수
 		
@@ -451,6 +452,7 @@ public class AdminController {
     			   // 사용자가 str_currentShowPageNo 에 입력한 값이 0 또는 0이하의 값을 입력하여 장난친 경우
     			   // 사용자가 str_currentShowPageNo 에 입력한 값이 실제 데이터베이스에 존재하는 값보다 더 큰 값을 입력하여 장난친 경우
     			   currentShowPageNo = 1;
+    			   System.out.println("else2  currentShowPageNo => " + currentShowPageNo);
 				}
     		   
 			} catch (NumberFormatException e) {
@@ -472,11 +474,11 @@ public class AdminController {
            "total_address".equals(searchType) || "lg_status".equals(lg_status)) {
 			
            mav.addObject("paraMap", paraMap);
-        }
+        }		
 		
 		// === 페이지바 만들기 시작 === //
 		
-		int blockSize = 3;
+		int blockSize = 5;
 		int loop = 1;
 		int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
 		String pageBar = "<ul style='list-style:none;'>";

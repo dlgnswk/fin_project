@@ -53,7 +53,7 @@
 		)
 		
 		SELECT  lodge_id, fk_h_userid, lg_name, lg_en_name, lg_postcode, lg_address, lg_detailaddress, lg_extraaddress
-		       , lg_latitude, lg_longitude, lg_area, fk_lodge_type, lg_hotel_star, lg_qty, fk_cancel_opt
+		       , lg_latitude, lg_longitude, lg_area, lg_area_2, fk_lodge_type, lg_hotel_star, lg_qty, fk_cancel_opt
 		       , fd_status, fd_time, fk_s_checkin_type, lg_checkin_start_time, lg_checkin_end_time
 		       , lg_checkout_time, lg_age_limit, lg_internet_yn, lg_park_yn, lg_breakfast_yn
 		       , lg_dining_place_yn, lg_pool_yn, lg_pet_yn, lg_pet_fare, lg_fac_yn, lg_service_yn
@@ -302,23 +302,23 @@
 		<result property="bath_opt_no"       column="bath_opt_no"       javaType="String"></result>
 		<result property="bath_opt_desc"     column="bath_opt_desc"     javaType="String"></result>
 	</resultMap>		
-	<select id="getBath_opt_list" parameterType="String" resultMap="getBath_opt_list_Map">
+	<select id="getBath_opt_list" parameterType="HashMap" resultMap="getBath_opt_list_Map">
 		select fk_lodge_id, rm_seq, rm_type, rm_bathroom_cnt, bath_opt_no, bath_opt_desc
 	    from
 	    (
 	        select fk_lodge_id, rm_seq, rm_type, rm_bathroom_cnt, bath_opt_no, bath_opt_desc, ROW_NUMBER() over (partition by bath_opt_no
-	        																									<if test="lodge_id != ''">, fk_lodge_id</if>
-	        																				 				    <if test="rm_seq !=''">, rm_seq</if>
+	        																									<if test="lodge_id != null">, fk_lodge_id</if>
+	        																				 				    <if test="rm_seq != null">, rm_seq</if>
 	        																				 				    order by fk_lodge_id) as RN
 	        from tbl_room R
 	        join tbl_bath B on R.rm_seq = B.fk_rm_seq
 	        join tbl_bath_opt BO on B.fk_bath_opt_no = BO.bath_opt_no
 	    )v
 	    where rn=1
-	    <if test="lodge_id != ''">
+	    <if test="lodge_id!=null">
 	    	and fk_lodge_id=#{lodge_id}
 	    </if>
-	    <if test="rm_seq !=''">
+	    <if test="rm_seq !=null">
 	    	and rm_seq = #{rm_seq}
 	    </if>
 	</select>
@@ -335,18 +335,18 @@
 	    from
 	    (
 	        select fk_lodge_id, rm_seq, rm_type, rm_snack_yn, snk_opt_no, snk_opt_desc, ROW_NUMBER() over (partition by snk_opt_no
-        																									<if test="lodge_id != ''">, fk_lodge_id</if>
-        																				 				    <if test="rm_seq !=''">, rm_seq</if>
+        																									<if test="lodge_id != null">, fk_lodge_id</if>
+        																				 				    <if test="rm_seq != null">, rm_seq</if>
         																				 				    order by fk_lodge_id) as RN
 	        from tbl_room R
 	        join tbl_snack S on R.rm_seq = S.fk_rm_seq
 	        join tbl_snk_opt SO on S.fk_snk_opt_no = SO.snk_opt_no
 	    )v
 	    where rn=1
-	    <if test="lodge_id != ''">
+	    <if test="lodge_id != null">
 	    	and fk_lodge_id=#{lodge_id}
 	    </if>
-	    <if test="rm_seq !=''">
+	    <if test="rm_seq != null">
 	    	and rm_seq = #{rm_seq}
 	    </if>
 	</select>
@@ -363,18 +363,18 @@
 		from
 		(
 	        select fk_lodge_id, rm_seq, rm_type, rm_kitchen_yn, kt_opt_no, kt_opt_desc, ROW_NUMBER() over (partition by kt_opt_no
-	        																							   <if test="lodge_id != ''">, fk_lodge_id</if>
-        																				 				    <if test="rm_seq !=''">, rm_seq</if>
+	        																							   <if test="lodge_id != null">, fk_lodge_id</if>
+        																				 				    <if test="rm_seq != null">, rm_seq</if>
 	        																				 				order by fk_lodge_id) as RN
 	        from tbl_room R
 	        join tbl_kitchen K on R.rm_seq = K.fk_rm_seq
 	        join tbl_kt_opt KO on K.fk_kt_opt_no = KO.kt_opt_no
 	    )v
 		where rn=1
-		<if test="lodge_id != ''">
+		<if test="lodge_id != null">
 	    	and fk_lodge_id=#{lodge_id}
 	    </if>
-	    <if test="rm_seq !=''">
+	    <if test="rm_seq != null">
 	    	and rm_seq = #{rm_seq}
 	    </if>
 	</select>
@@ -391,18 +391,18 @@
 	    from
 	    (
 	        select fk_lodge_id, rm_seq, rm_type, rm_ent_yn, ent_opt_no, ent_opt_desc, ROW_NUMBER() over (partition by ent_opt_no
-	        																							 <if test="lodge_id != ''">, fk_lodge_id</if>
-	        																				 				    <if test="rm_seq !=''">, rm_seq</if>
+	        																							 <if test="lodge_id != null">, fk_lodge_id</if>
+	        																				 				    <if test="rm_seq != null">, rm_seq</if>
 	        																				 		     order by fk_lodge_id) as RN	        
 	        from tbl_room R
 	        join tbl_ent E on R.rm_seq = E.fk_rm_seq
 	        join tbl_ent_opt EO on E.fk_ent_opt_no = EO.ent_opt_no
 	    )v
 	    where rn=1
-	    <if test="lodge_id != ''">
+	    <if test="lodge_id != null">
 	    	and fk_lodge_id=#{lodge_id}
 	    </if>
-	    <if test="rm_seq !=''">
+	    <if test="rm_seq != null">
 	    	and rm_seq = #{rm_seq}
 	    </if>
 	</select>
@@ -419,30 +419,30 @@
     from
     (
         select fk_lodge_id, rm_seq, rm_type, rm_tmp_ctrl_yn, tmp_opt_no, tmp_opt_desc, ROW_NUMBER() over (partition by tmp_opt_no
-	        																							 <if test="lodge_id != ''">, fk_lodge_id</if>
-	        																				 				    <if test="rm_seq !=''">, rm_seq</if>
+	        																							 <if test="lodge_id != null">, fk_lodge_id</if>
+	        																				 				    <if test="rm_seq != null">, rm_seq</if>
 	        																				 		     order by fk_lodge_id) as RN	        
         from tbl_room R
         join tbl_tmp T on R.rm_seq = T.fk_rm_seq
         join tbl_tmp_opt TMO on T.fk_tmp_opt_no = TMO.tmp_opt_no
     )v
     where rn=1
-    <if test="lodge_id != ''">
+    <if test="lodge_id != null">
     	and fk_lodge_id=#{lodge_id}
     </if>
-    <if test="rm_seq !=''">
+    <if test="rm_seq != null">
     	and rm_seq = #{rm_seq}
     </if>
 	</select>
 	
 	<resultMap type="HashMap" id="getRm_img_list_Map">
 		<result property="rm_seq"            column="rm_seq"           javaType="String"></result>
-		<result property="fk_lodge_id"       column="fk_lodge_id"      javaType="String"></result>
 		<result property="rm_img_name"       column="rm_img_name"      javaType="String"></result>
 		<result property="rm_img_main"       column="rm_img_main"      javaType="String"></result>
 		<result property="rm_img_save_name"  column="rm_img_save_name" javaType="String"></result>
+		<result property="fk_lodge_id"       column="fk_lodge_id"      javaType="String"></result>
 	</resultMap>		
-	<select id="getRm_img_list" parameterType="HashMap" resultMap="getRm_img_list_Map">
+	<select id="getRm_img_list" parameterType="String" resultMap="getRm_img_list_Map">
 		with V
 		as 
 		(

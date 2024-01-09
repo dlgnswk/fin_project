@@ -611,6 +611,7 @@ public class UserController {
 		HttpSession session = request.getSession();
 		UserVO loginuser = (UserVO) session.getAttribute("loginuser");
 		String userid = loginuser.getUserid();
+		
 		List<Map<String, String>> user_point_list = service.get_user_point_list(userid);
 		int user_rs_cnt = service.get_user_rs_cnt(userid);
 		

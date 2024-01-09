@@ -40,10 +40,16 @@ public interface PartnerDAO {
 	int addChat(Map<String,String> paraMap);  
 
 	// 채팅들을 페이징 처리해서 조회해오기 
-	List<ReplyVO> getMsgList_Paging(Map<String, String> paraMap);
+	List<ReplyVO> getChatList(Map<String, String> paraMap);
 
-	// 채팅방 번호에 해당하는 채팅의 totalPage 수 알아오기
-	int getMsgTotalPage(Map<String, String> paraMap);	
+	// 채팅방 번호에 해당하는 채팅의 totalCount 수 알아오기
+	int getChatTotalCount(Map<String, String> paraMap);
+
+	// 현재 로그인되어있는 회원의 채팅방 목록 가져오기
+	List<ChatVO> getChatRoomList(Map<String, String> paraMap);
+
+	// 총 채팅방 갯수(totalChatRoomCount) 가져오기
+	int getTotalChatRoomCount(Map<String, String> paraMap);	
 	
 	
 }

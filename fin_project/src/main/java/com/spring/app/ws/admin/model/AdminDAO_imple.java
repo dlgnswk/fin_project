@@ -117,11 +117,10 @@ public class AdminDAO_imple implements AdminDAO {
 		for(int i = 0; i < lodgeIdMapList.size(); i++){
 			// System.out.println("lodgeIdMapList get(\"lodge_id\") :" + lodgeIdMapList.get(i).get("lodge_id"));
 			String lodge_id = lodgeIdMapList.get(i).get("lodge_id");
+			System.out.println(lodge_id);
 			List<Map<String, String>> lodgeList = sqlsession.selectList("ws_admin.onelodgeinfoSearchtype",lodge_id);
 			lodgeListListMap.add(lodgeList);
 		}
-		
-		
 		
 		/*
 		for(Map<String, String> map: lodgeIdMapList) {
@@ -137,8 +136,6 @@ public class AdminDAO_imple implements AdminDAO {
 			for(String aa:lodgeList) {
 				//System.out.println(aa);
 			}
-			
-			
 		}
 		*/
 		return lodgeListListMap;
