@@ -580,7 +580,6 @@
 		<result property="fk_img_cano"		column="fk_img_cano"		javaType="String"/>
 	</resultMap>
 	
-	
 	<select id="getLodgeImgData" parameterType="String" resultMap="getLodgeImgData_Map">
 		select lg_img_seq, fk_lodge_id, lg_img_save_name, lg_img_name, fk_img_cano
 		from tbl_lg_img

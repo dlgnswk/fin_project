@@ -547,7 +547,7 @@
     			let mainImage_length = $("div#mainImage").find(".imageItem").length;
     			console.log(mainImage_length);
     			if( arr == mainImage_arr && mainImage_length > 4) {
-    				alert("메인 이미지는 5개의  사진을 등록해야 합니다.");
+    				alert("메인 이미지는 5개의 사진을 등록해야 합니다.");
     				return;
     			}
     			else {
@@ -573,8 +573,8 @@
 		          	if( fileFrontName.length > 7) {
 		          		console.log(fileFrontName);
 		          		console.log(fileTypeName);
-		          		console.log(fileFrontName.substr(0,6) + "···" + fileTypeName);
-		          		viewFileName = fileFrontName.substr(0,6) + "···" + fileTypeName;
+		          		console.log(fileFrontName.substr(0,6) + "··" + fileTypeName);
+		          		viewFileName = fileFrontName.substr(0,6) + "··" + fileTypeName;
 		          	}
                 	
     				fileReader.onload = function(){
@@ -621,7 +621,7 @@
    			let mainImage_length = $("div#mainImage").find(".imageItem").length;
    			console.log(mainImage_length);
    			if( arr == mainImage_arr && mainImage_length > 4) {
-   				alert("메인 이미지는 5개의  사진을 등록해야 합니다.");
+   				alert("메인 이미지는 5개의 사진을 등록해야 합니다.");
    				return;
 			}
 			else {
@@ -647,8 +647,8 @@
 	          	if( fileFrontName.length > 7) {
 	          		console.log(fileFrontName);
 	          		console.log(fileTypeName);
-	          		console.log(fileFrontName.substr(0,6) + "···" + fileTypeName);
-	          		viewFileName = fileFrontName.substr(0,6) + "···" + fileTypeName;
+	          		console.log(fileFrontName.substr(0,6) + "··" + fileTypeName);
+	          		viewFileName = fileFrontName.substr(0,6) + "··" + fileTypeName;
 	          	}
             	
 				fileReader.onload = function(){
@@ -760,7 +760,7 @@
 		
 		let mainImage_length = $("div#mainImage").find(".imageItem").length;
 		if( mainImage_length != 5) {
-			alert("메인 이미지는 5개의  사진을 등록해야 합니다.");
+			alert("메인 이미지는 5개의 사진을 등록해야 합니다.");
 			return false; 
 		}
 		
