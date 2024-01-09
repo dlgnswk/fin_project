@@ -845,10 +845,10 @@
 	
 	
 	<!-- 기존에 입력되어 있는 rm_type List 가져오기 -->
-	<select id="getRm_typeData" parameterType="String" resultType="String">
+	<select id="getRm_typeData" parameterType="HashMap" resultType="String">
 		select rm_type
 		from tbl_room
-		where fk_lodge_id = #{fk_lodge_id}
+		where fk_lodge_id = #{fk_lodge_id} and rm_seq != #{rm_seq}
 	</select>
 
 	

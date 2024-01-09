@@ -87,17 +87,32 @@ public class PartnerDAO_imple implements PartnerDAO {
 
 	// 채팅들을 페이징 처리해서 조회해오기
 	@Override
-	public List<ReplyVO> getMsgList_Paging(Map<String, String> paraMap) {
-		List<ReplyVO> msgList = sqlsession.selectList("wh_partner.getMsgList_Paging",paraMap);
-		return msgList;
+	public List<ReplyVO> getChatList(Map<String, String> paraMap) {
+		List<ReplyVO> chatList = sqlsession.selectList("wh_partner.getChatList",paraMap);
+		return chatList;
 	}
 
 	
-	// 채팅방 번호에 해당하는 채팅의 totalPage 수 알아오기
+	// 채팅방 번호에 해당하는 채팅의 totalCount 수 알아오기
 	@Override
-	public int getMsgTotalPage(Map<String, String> paraMap) {
-		int totalPage = sqlsession.selectOne("wh_partner.getMsgTotalPage",paraMap);
-		return totalPage;
+	public int getChatTotalCount(Map<String, String> paraMap) {
+		int totalCount = sqlsession.selectOne("wh_partner.getChatTotalCount",paraMap);
+		return totalCount;
+	}
+
+	
+	// 현재 로그인되어있는 회원(구매자)의 채팅방 목록 가져오기
+	@Override
+	public List<ChatVO> getChatRoomList(Map<String, String> paraMap) {
+		List<ChatVO> chatRoomList = sqlsession.selectList("wh_partner.getChatRoomList", paraMap);
+		return chatRoomList;
+	}
+
+	// 총 채팅방 갯수(totalChatRoomCount) 가져오기
+	@Override
+	public int getTotalChatRoomCount(Map<String, String> paraMap) {
+		int getTotalChatRoomCount = sqlsession.selectOne("wh_partner.getTotalChatRoomCount", paraMap);
+		return getTotalChatRoomCount;
 	}
 	
 
