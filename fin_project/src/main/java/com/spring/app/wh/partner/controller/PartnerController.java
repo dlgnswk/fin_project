@@ -601,37 +601,146 @@ public class PartnerController {
 	}
 		  	
 	
+	// 구매자 입장에서 판매자와 채팅하기 시작
+	
+	@GetMapping("/chatList.exp")
+	public ModelAndView requiredLogin_chatList(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+  		
+		HttpSession session = request.getSession();
+		UserVO loginuser = (UserVO)session.getAttribute("loginuser");
+  		
+		String userid = loginuser.getUserid();
+		
+		System.out.println("컨트롤러 userid : "+userid);
+		
+		
+	    String str_currentShowPageNo = request.getParameter("currentShowPageNo");
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("userid", userid);
+		
+		int totalChatRoomCount = 0;	// 총 채팅방 개수
+	    int sizePerPage = 10;	// 한 페이지당 보여줄 게시물 건수
+	    int currentShowPageNo = 0; // 현재 보여주는 페이지 번호로서, 초기치로는 1페이지로 설정함.
+	    int totalPage = 0;
+		
+	    // 총 채팅방 갯수(totalChatRoomCount) 가져오기
+	    totalChatRoomCount = service.getTotalChatRoomCount(paraMap);
+		
+	    totalPage = (int) Math.ceil((double)totalChatRoomCount/sizePerPage);
+	    
+	    if(str_currentShowPageNo == null) {
+	    	  // 게시판에 보여지는 초기화면
+	    	  currentShowPageNo = 1;
+	    }
+	    
+	    else {
+	    	  
+			try {
+				currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
+	  
+				if (currentShowPageNo < 1 || currentShowPageNo > totalPage) {
+					// get 방식이므로 str_currentShowPageNo 에 입력한 값이 0 이하를 입력했을 경우 or 실제 데이터베이스에 존재하는 페이지 수 보다 큰 값을 입력한 경우. 
+					currentShowPageNo = 1;
+				}
+  
+			} catch (NumberFormatException e) {
+			// get 방식이므로 str_currentShowPageNo 에 입력한 값이 숫자가 아닌 문자를 입력했을 경우이다.
+			currentShowPageNo = 1;
+			}
+	  
+	    }
+	    
+	    int startRno = ((currentShowPageNo - 1) * sizePerPage) + 1; // 시작 행번호
+	    int endRno = startRno + sizePerPage - 1; // 끝 행번호
+		
+	    paraMap.put("startRno", String.valueOf(startRno));
+	    paraMap.put("endRno", String.valueOf(endRno));
+		
+	    
+	    // 현재 로그인되어있는 회원(구매자)의 채팅방 목록 가져오기
+	    List<ChatVO> chatRoomList = service.getChatRoomList(paraMap);
+	    
+	    mav.addObject("chatRoomList", chatRoomList);
+	    
+	    // ==== # 121. 페이지바 만들기 ==== //
+	    int blockSize = 10;
+	    
+	    int loop = 1;
+	    
+	    int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
+	    
+	    String pageBar = "<ul style='list-style:none;'>";
+	    String url = "chatList.exp";
+	    
+	    // === [처음][이전] 만들기 == //
+		if(pageNo != 1) {
+			  pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?currentShowPageNo=1'>[맨처음]</a></li>";
+			  pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+		}
+
+
+		while(!(loop > blockSize || pageNo > totalPage) ) {
+			  
+			  if(pageNo == currentShowPageNo ) {
+				  pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";
+			  }
+			  else {
+				  pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>";
+			  }
+			  
+			  loop++;
+			  pageNo++;
+		}// end of while----------------------------------------
+		
+		// === [다음][마지막] 만들기 == //
+		if(pageNo <= totalPage) {
+			  pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?currentShowPageNo="+pageNo+"'>[다음]</a></li>";
+			  pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?currentShowPageNo="+totalPage+"'>[마지막]</a></li>";
+		}
+		
+		
+		pageBar += "</ul>";
+		
+		mav.addObject("pageBar", pageBar);
+	    
+		mav.setViewName("wh/chatting/chatList.tiles1");
+	    
+  		return mav;
+  	}
+	
+	
+	
+	
 	// (구매자입장에서) 판매자와 채팅하기  
 	@GetMapping("/chat.exp")
-	public String requiredLogin_chat(HttpServletRequest request, HttpServletResponse response) {
+	public String requiredLogin__chat(HttpServletRequest request, HttpServletResponse response) {
 		
 		HttpSession session = request.getSession();
 		
 		UserVO loginuser = (UserVO)session.getAttribute("loginuser");
 		
-		String userid = loginuser.getUserid();
-		System.out.println("컨트롤러 확인용 userid : "+userid);
-		String lodge_id = request.getParameter("lodge_id");
-		System.out.println("컨트롤러 확인용 lodge_id : "+lodge_id);
+		String fk_userid = loginuser.getUserid();
+		String fk_lodge_id = request.getParameter("lodge_id");
 		
 		
 		Map<String,String> paraMap = new HashMap<>();
 		
-		paraMap.put("userid",userid);
-		paraMap.put("lodge_id",lodge_id);
+		paraMap.put("fk_userid",fk_userid);
+		paraMap.put("fk_lodge_id",fk_lodge_id);
 		
 		
 		// 채팅방 불러오기
 		ChatVO chatvo = service.selectChat(paraMap);
 		
-		System.out.println("컨트롤러 확인용 chatvo : "+chatvo);
+		// System.out.println("컨트롤러 확인용 chatvo : "+chatvo);
 		
 		// 기존 채팅방이 없는 경우 새로운 채팅방을 만들기
 		if(chatvo == null) {
 			
 			int n = service.createChat(paraMap);
 			
-			System.out.println("컨트롤러 확인용 n : "+n);
+			// System.out.println("컨트롤러 확인용 n : "+n);
 			
 			if(n == 1) {
 				
@@ -639,7 +748,7 @@ public class PartnerController {
 				
 				request.setAttribute("chatvo", chatvo);
 				
-				return "wh/partner/chat.tiles2";
+				return "wh/chatting/chat.tiles1";
 			}
 			
 		}
@@ -647,10 +756,10 @@ public class PartnerController {
 		
 		request.setAttribute("chatvo", chatvo);
 		
-		return "wh/partner/chat.tiles2";
+		return "wh/chatting/chat.tiles1";
 	}
 	
-	
+
 	
 	
 	
@@ -659,29 +768,29 @@ public class PartnerController {
 	// === 채팅쓰기 === //
  	@ResponseBody
  	@PostMapping(value="/addChat.exp", produces="text/plain;charset=UTF-8" )
-  	public String addComment(HttpServletRequest request) {
+  	public String addChat(HttpServletRequest request) {
  		
  		String chat_no = request.getParameter("chat_no");
- 		String msg = request.getParameter("msg");
+ 		String chat_comment = request.getParameter("chat_comment");
  		
  		Map<String,String> paraMap = new HashMap<>();
  		
  		paraMap.put("chat_no", chat_no);
- 		paraMap.put("msg", msg);
+ 		paraMap.put("chat_comment", chat_comment);
  		
 		int n = service.addChat(paraMap);
 			
  		JSONObject jsonObj = new JSONObject();
- 		jsonObj.put("n", n); // {"n":1} {"n":0}
+ 		jsonObj.put("n", n);
  		
- 		return jsonObj.toString();	// "{"n":1,"name":"이순신"}"	또는  "{"n":0,"name":}"
+ 		return jsonObj.toString();	
  	}
 	  	
 	  	
  	// === 채팅들을 페이징 처리해서 조회해오기  === //
   	@ResponseBody
-  	@GetMapping(value="/msgList.exp", produces="text/plain;charset=UTF-8" )
-  	public String msgList(HttpServletRequest request) {
+  	@GetMapping(value="/viewChatList.exp", produces="text/plain;charset=UTF-8" )
+  	public String viewChatList(HttpServletRequest request) {
   		
   		String fk_chat_no = request.getParameter("chat_no");
   		String currentShowPageNo = request.getParameter("currentShowPageNo");
@@ -695,7 +804,7 @@ public class PartnerController {
 	/*
         currentShowPageNo      startRno     endRno
         --------------------------------------------
-           1page        ==>       1           5
+           1page        ==>       1           10
            2page        ==>       6           10
            3page        ==>       11          15
            4page        ==>       16          20
@@ -710,12 +819,12 @@ public class PartnerController {
   		paraMap.put("startRno", String.valueOf(startRno));
   		paraMap.put("endRno", String.valueOf(endRno));
   		
-  		List<ReplyVO> msgList = service.getMsgList_Paging(paraMap);
+  		List<ReplyVO> chatList = service.getChatList(paraMap);
   		
 	    JSONArray jsonArr = new JSONArray();
 	    
-	    if(msgList != null) {
-	    	for(ReplyVO replyvo : msgList) {
+	    if(chatList != null) {
+	    	for(ReplyVO replyvo : chatList) {
 	    		JSONObject jsonObj = new JSONObject();
 	    		jsonObj.put("reply_no", replyvo.getReply_no());
 	    		jsonObj.put("fk_chat_no", replyvo.getFk_chat_no());
@@ -732,10 +841,10 @@ public class PartnerController {
   	}
 	  	
 	  	
-  	// === 채팅방 번호에 해당하는 채팅의 totalPage 수 알아오기 === //
+  	// === 채팅방 번호에 해당하는 채팅의 totalCount 수 알아오기 === //
   	@ResponseBody
-  	@GetMapping(value="getMsgTotalPage.exp")
-  	public String getMsgTotalPage(HttpServletRequest request) {
+  	@GetMapping(value="getChatTotalCount.exp")
+  	public String getChatTotalCount(HttpServletRequest request) {
   		
   		String fk_chat_no = request.getParameter("chat_no");
   		String sizePerPage = request.getParameter("sizePerPage");
@@ -744,17 +853,36 @@ public class PartnerController {
   		paraMap.put("fk_chat_no", fk_chat_no);
   		paraMap.put("sizePerPage", sizePerPage);
   		
-  		int totalPage = service.getMsgTotalPage(paraMap);
+  		int totalCount = service.getChatTotalCount(paraMap);
   		
   		JSONObject jsonObj = new JSONObject(); 
-  		jsonObj.put("totalPage", totalPage);  
+  		jsonObj.put("totalCount", totalCount);  
   		
   		
   		return jsonObj.toString();
   	}
   	
 
+	// 구매자 입장에서 판매자와 채팅하기 끝
   	
+  	
+	// 판매자 입장에서 판매자와 채팅하기 시작
+  	
+  	@PostMapping("/replylist.exp")
+	public ModelAndView requiredHostLogin_replylist(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+  		
+  		
+  		
+  		
+  		return mav;
+  	}
+  	
+  	
+  	
+  	
+  	
+  	
+  	// 판매자 입장에서 판매자와 채팅하기 끝
 
   		
 	// ==== CS업무 관리 끝 ==== // 
