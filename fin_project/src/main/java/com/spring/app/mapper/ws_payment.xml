@@ -54,9 +54,9 @@
 		 from
 		 (
 		    select fk_h_userid
-		          ,case when substr(lg_checkin_start_time,7,8) = 'PM' then substr(lg_checkin_start_time,1,2) + 12 || ':00:00' else substr(lg_checkin_start_time,1,2) + 0 ||':00:00' end as checkinTime
-		          ,case when substr(lg_checkin_start_time,7,8) = 'PM' then substr(lg_checkin_start_time,1,2) + 12 || ':00' else substr(lg_checkin_start_time,1,2) + 0 ||':00' end as checkin_time
-		          ,case when substr(lg_checkout_time,7,8) = 'PM' then substr(lg_checkout_time,1,2) + 12 || ':00' else substr(lg_checkout_time,1,2) + 0 ||':00' end as checkout_time
+		          ,case when lg_checkin_start_time = '정오' then '12:00:00' when lg_checkin_start_time = '자정' then '24:00:00' when substr(lg_checkin_start_time,7,8) = 'PM' then substr(lg_checkin_start_time,1,2) + 12 || ':00:00' else substr(lg_checkin_start_time,1,2) + 0 ||':00:00' end as checkinTime
+		          ,case when lg_checkin_start_time = '정오' then '12:00' when lg_checkin_start_time = '자정' then '24:00' when substr(lg_checkin_start_time,7,8) = 'PM' then substr(lg_checkin_start_time,1,2) + 12 || ':00' else substr(lg_checkin_start_time,1,2) + 0 ||':00' end as checkin_time
+		          ,case when lg_checkout_time = '정오' then '12:00' when lg_checkout_time = '자정' then '24:00' when substr(lg_checkout_time,7,8) = 'PM' then substr(lg_checkout_time,1,2) + 12 || ':00' else substr(lg_checkout_time,1,2) + 0 ||':00' end as checkout_time
 		    from tbl_lodge
 		 )    
 		    where 1=1
@@ -64,6 +64,7 @@
 	</select>
 	
 	
+	<!-- tbl_reservation 테이블에 예약한 내역 insert 하기 -->
 	<insert id="ws_goReservation" parameterType="HashMap">
 		insert into tbl_reservation(rs_seq, fk_userid, fK_h_userid, rs_date, RS_CHECKINDATE, RS_CHECKOUTDATE, rs_price, rs_payType, rs_name, rs_mobile, rs_email, rs_guest_cnt, fk_rm_seq)
 		values(SEQ_RESERVATION.nextval, #{userid}, #{h_userid}, sysdate, #{startDate}, #{endDate}, #{total__price}, #{paytype}, #{name}, #{mobile}, #{email}, #{guest_cnt}, #{rm_seq})
@@ -100,8 +101,33 @@
 	</select>
 	
 	
-	<!-- rs_seq를 가져와서 tbl_point에 insert 하기 -->
+	<!-- rs_seq를 가져와서 tbl_point에 insert 하기 
 	<insert id="ws_updateTblPoint" parameterType="HashMap">
+		insert into tbl_point(pt_seq, fk_userid, fk_rs_seq, pt_change_date, pt_amount)
+		values(SEQ_TBL_POINT.nextval, #{userid}, #{rs_seq}, sysdate, #{point})
+	</insert>-->
+	
+	
+	<!-- rs_seq를 가져와서 tbl_point에 insert 하기  (-사용한 point) -->
+	<insert id="ws_updateTblPointA1" parameterType="HashMap">
+		insert into tbl_point(pt_seq, fk_userid, fk_rs_seq, pt_change_date, pt_amount)
+		values(SEQ_TBL_POINT.nextval, #{userid}, #{rs_seq}, sysdate, -#{used_point})
+	</insert>
+	
+	<!-- rs_seq를 가져와서 tbl_point에 insert 하기  (0넣기) -->
+	<insert id="ws_updateTblPointA2">
+		insert into tbl_point(pt_seq, fk_userid, fk_rs_seq, pt_change_date, pt_amount)
+		values(SEQ_TBL_POINT.nextval, #{userid}, #{rs_seq}, sysdate, 0)
+	</insert>
+	
+	<!-- rs_seq를 가져와서 tbl_point에 insert 하기  (+point - 사용한 point) -->
+	<insert id="ws_updateTblPointB1" parameterType="HashMap">
+		insert into tbl_point(pt_seq, fk_userid, fk_rs_seq, pt_change_date, pt_amount)
+		values(SEQ_TBL_POINT.nextval, #{userid}, #{rs_seq}, sysdate, - to_number(#{used_point}) + to_number(#{point}))
+	</insert>
+	
+	<!-- rs_seq를 가져와서 tbl_point에 insert 하기  (+point만넣기) -->
+	<insert id="ws_updateTblPointB2" parameterType="HashMap">
 		insert into tbl_point(pt_seq, fk_userid, fk_rs_seq, pt_change_date, pt_amount)
 		values(SEQ_TBL_POINT.nextval, #{userid}, #{rs_seq}, sysdate, #{point})
 	</insert>
