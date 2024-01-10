@@ -301,4 +301,11 @@
 	</delete>
 	
 	
+	<!-- 이용후기 작성하기 -->
+	<insert id="reviewInsert" parameterType="HashMap">
+		insert into tbl_review(rv_seq, fk_lodge_id, fk_rs_seq, rv_subject, rv_content, rv_regdate, rv_status, fk_rv_rating, rv_groupno, rv_org_seq, rv_depthno, fk_userid)
+		values(seq_tbl_review.nextval, (select lodge_id from tbl_lodge where fk_h_userid = (select fk_h_userid from tbl_reservation where rs_seq = #{rs_seq})), #{rs_seq}, #{rv_subject}, #{rv_content}, default, '1', #{rv_rating}, (select last_number - 1 from user_sequences where sequence_name = 'SEQ_TBL_REVIEW'), 0, 0, #{userid})
+	</insert>
+	
+	
 </mapper>

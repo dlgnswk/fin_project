@@ -92,6 +92,14 @@ public class TripService_imple implements TripService {
 		return n;
 	}
 
+
+	// 이용후기 작성하기
+	@Override
+	public int reviewInsert(Map<String, String> paraMap) {
+		int n = dao.reviewInsert(paraMap);
+		return n;
+	}
+
 	
 
 	

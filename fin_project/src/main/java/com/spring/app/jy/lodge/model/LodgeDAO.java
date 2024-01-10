@@ -63,5 +63,15 @@ public interface LodgeDAO {
 
 	int add_wishList(Map<String, String> paraMap); // 위시리스트에 추가
 	
+	List<Map<String, String>> getReviewList(Map<String, String> r_paraMap); // 이용후기 list 가져 오기
+	
+	int likeAdd(Map<String, String> paraMap); // 좋아요 하기
+
+	int likeDelete(Map<String, String> paraMap); // 좋아요 취소
+
+	Map<String, Integer> getCnt(String rv_seq); // 좋아요 된 횟수 가져오기
+	
+	Map<String, String> getRvcntByRate(Map<String, String> r_paraMap); // 이용후기 평점 별 갯수 가져오기
+	
 	// List<Map<String, String>> getLg_ca_img_list(String lodge_id, String img_cano); // 숙박시설 사진 카테고리별로 가져오기
 }

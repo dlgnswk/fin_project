@@ -32,4 +32,7 @@ public interface UserDAO {
 
 	int get_user_rs_cnt(String userid); // 올해 유저의 예약 건수 가져오기
 
+	int getTotalCount(Map<String, String> paraMap); // 포인트 내역 페이징 처리를 위한 - 총 내역 건수 가져오기
+	
+	List<Map<String, String>> get_user_point_list_withPaging(Map<String, String> paraMap); // 유저의 포인트 적립,사용 내역 가져오기(w/ paging)
 }

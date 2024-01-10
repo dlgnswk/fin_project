@@ -73,6 +73,49 @@
 		});
 		
 		
+		// 채혁, 재훈 : 리뷰 작성하기
+		$(document).on("click", "button#btnWrite", function(){
+			console.log("안됨")
+			// 폼 (form)을 적용하자
+			const frm = document.reviewWriteForm;
+			frm.method = "post";
+			frm.action = "<%= ctxPath%>/reviewInsert.exp";
+			frm.submit();
+			
+		});
+		
+		
+		// 채혁 ==============================================================
+		$("input[type=radio]").change(function(){
+			console.log($(this).val());
+			console.log($(this).attr("id"));
+		})
+		
+		const ratingText = {
+			2: '너무 별로예요',
+			4: '별로예요',
+			6: '괜찮아요',
+			8: '좋아요',
+			10: '훌륭해요'
+		};
+		
+		$(document).on('mouseover', '.rateCircle label', function() {
+			const ratingValue = parseInt($(this).attr('for').split('_')[1]);
+			const ratingDescSpan = $('#rating_desc');
+			ratingDescSpan.text(`${ratingValue} - ${ratingText[ratingValue]}`);
+			console.log('Rating Value:', ratingValue);
+			console.log('ratingDescSpan', ratingDescSpan);
+			// 원하는 작업을 추가하세요.
+		});
+		
+		$(document).on('mouseout', '.rateCircle label', function() {
+			const ratingDescSpan = $('#rating_desc');
+			ratingDescSpan.text('');
+			// 마우스 아웃 시 수행할 작업을 추가하세요.
+		});
+		// 채혁 ==============================================================
+		
+		
 	});
 	
 	// Function Declaration
@@ -610,7 +653,7 @@
 							
 						<%-- 세번째 줄 정보 --%>
 						v_html += 			"<div class='third_content'>";
-						v_html += 				"<div class='lodge_price'>";console.log(item.min_price);
+						v_html += 				"<div class='lodge_price'>";
 						v_html += 					"&#8361; <span>" + Number(item.min_price).toLocaleString('en') +"</span>";
 						v_html += 				"</div>";
 						v_html += 			"</div>";
@@ -664,6 +707,122 @@
 	}
 	
 	
+	// 리뷰작성 버튼 클릭시
+	function reviewWrite(rs_seq) {
+	
+		$.ajax({
+			url: "<%= ctxPath%>/reviewWrite.exp",  
+			data: {"rs_seq": rs_seq},
+			dataType: "json",
+			success: function (json) {
+				console.log(JSON.stringify(json));
+				var v_html = 
+					"<div class='reviewWriteModal'>" +
+						"<div class='reviewWriteModal_header'>" +
+							"<span class='close'>&times;</span>" +
+							
+							"<div class='reviewWriteModal_content' style='padding-left: 10%; height: 570px; overflow-y: auto;'>" +
+								
+								"<h4>귀하의 경험에 대해 평가해주세요.</h4>" +
+								"<br>" +
+								
+				    			"<div class='rating'>" +
+					    			"<fieldset class='rateCircle'>" +
+					    				"<span style='display:flex'>" +
+							    			"<input type='radio' id='ratingpoint_2' name='fk_rv_rating' value='2'/>" +
+							    			"<label for='ratingpoint_2'></label>" +
+							    			"<input type='radio' id='ratingpoint_4' name='fk_rv_rating' value='4'/>" +
+							    			"<label for='ratingpoint_4'></label>" +
+							    			"<input type='radio' id='ratingpoint_6' name='fk_rv_rating' value='6'/>" +
+							    			"<label for='ratingpoint_6'></label>" +
+							    			"<input type='radio' id='ratingpoint_8' name='fk_rv_rating' value='8'/>" +
+							    			"<label for='ratingpoint_8'></label>" +
+							    			"<input type='radio' id='ratingpoint_10' name='fk_rv_rating' value='10'/>" +
+							    			"<label for='ratingpoint_10'></label>" +
+							    			"<span id='rating_desc'></span>" +
+						    			"</span>" +
+					    			"</fieldset>" +
+					    		"</div>" +
+					    		
+				    			"<input type='hidden' id='rs_seq_input' name='rs_seq' value='" + rs_seq +"'>" +
+				    			
+				    			"<input type='hidden' name='fk_lodge_id' size='33' readonly/>" +
+				    			
+				    			"<br>" +
+				    			
+				    			"<div class='rv_subject'>" +
+					    			"<h4>제목</h4>" +
+					    			"<input type='text' name='rv_subject' size='50' maxlength='200' placeholder='제목을 입력해주세요.' autocomplete='off'/>" +
+				    			"</div>" +
+				    			
+				    			"<div class='rv_content'>" +
+					    			"<h4>리뷰 쓰기</h4>" +
+					    			"<textarea name='rv_content' id='content' autocomplete='off'></textarea>" +
+				    			"</div>" +
+				    			
+				    			"<div>" +
+				    				"<button type='button' id='btnWrite'>글쓰기</button>" +
+				    			"</div>" +
+				    			
+			    			"</div>" +
+		    			"</div>" +
+	    			"</div>";
+				
+				
+				// 모달 영역에 새로운 내용 삽입
+				$("form[name='reviewWriteForm']").html(v_html);
+				
+				// 모달 표시
+				$(".reviewWriteModal").fadeIn();
+				$(".reviewWriteModal_header").show();
+				$("body").addClass("modal-open");
+	            
+				// 모달의 닫기 버튼 클릭 시 모달 닫기
+	    		$("span.close").click(function() {
+	    			$(".reviewWriteModal").fadeOut();
+	    			$("body").removeClass("modal-open"); // body에서 modal-open 클래스 제거
+	    		});
+	         	
+				const labels = document.querySelectorAll('.rateCircle label');
+
+	    	    function updateStars(index) {
+	    			for (let i = 0; i < labels.length; i++) {
+	    				if (i <= index) {
+	    					labels[i].style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-solid.png')`;
+	    				} else {
+	    					labels[i].style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-regular.png')`;
+	    				}
+	    			}
+	    		}
+
+	    		labels.forEach((label, index) => {
+	    			label.addEventListener('click', () => {
+	    				updateStars(index);
+	    			});
+
+	    			label.addEventListener('mouseover', () => {
+	    				updateStars(index);
+	    			});
+
+	    			label.addEventListener('mouseout', () => {
+	    				const checked = document.querySelector('.rateCircle input[type=radio]:checked');
+	    				if (!checked) {
+	    					labels.forEach((label) => {
+	    						label.style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-regular.png')`;
+	    					});
+	    				} else {
+	    					updateStars(Array.from(labels).indexOf(checked.nextElementSibling));
+	    				}
+	    			});
+	    		});
+	    	    
+	        } // end of success
+	        
+	    }); // end of ajax
+		
+	} // end of function reviewWrite()
+	
+	
 </script>
 
 <body  style="background-color: f3f3f5;">
@@ -699,7 +858,7 @@
 		
 		</div>	
 		
-		<div class="my_travel_title">
+		<div id="wishList" class="my_travel_title">
 			위시리스트
 		</div>
 		
@@ -711,5 +870,8 @@
 	</div>
 </body>
 
-
+<!-- 이용후기 모달 -->
+<form name="reviewWriteForm">
+	
+</form>
 
