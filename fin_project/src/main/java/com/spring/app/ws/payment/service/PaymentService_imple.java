@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.spring.app.expedia.domain.LodgeVO;
+import com.spring.app.expedia.domain.ReservationVO;
 import com.spring.app.expedia.domain.RoomVO;
 import com.spring.app.expedia.domain.UserVO;
 import com.spring.app.ws.payment.model.PaymentDAO;
@@ -88,6 +89,23 @@ public class PaymentService_imple implements PaymentService {
 	public List<Map<String, String>> getLodgeReview(String lodge_id) {
 		List<Map<String, String>> lodgeReviewList = dao.getLodgeReview(lodge_id);
 		return lodgeReviewList;
+	}
+
+
+	// reservation 테이블에서 방금 예약한 rs_seq 불러오기
+	@Override
+	public List<ReservationVO> getRsSeqNo() {
+		List<ReservationVO> getRsSeqNo = dao.getRsSeqNo();
+		return getRsSeqNo;
+	}
+
+
+
+	// rs_seq를 가져와서 tbl_point에 insert 하기
+	@Override
+	public int updateTblPoint(Map<String, String> paraMap) {
+		int s = dao.updateTblPoint(paraMap);
+		return s;
 	}
 
 	

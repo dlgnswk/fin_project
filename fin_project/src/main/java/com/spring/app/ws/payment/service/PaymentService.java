@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.spring.app.expedia.domain.LodgeVO;
+import com.spring.app.expedia.domain.ReservationVO;
 import com.spring.app.expedia.domain.RoomVO;
 import com.spring.app.expedia.domain.UserVO;
 
@@ -35,5 +36,11 @@ public interface PaymentService {
 
 	// 숙박업소 별 후기 가져오기
 	List<Map<String, String>> getLodgeReview(String lodge_id);
+
+	// reservation 테이블에서 방금 예약한 rs_seq 불러오기
+	List<ReservationVO> getRsSeqNo();
+
+	// rs_seq를 가져와서 tbl_point에 insert 하기
+	int updateTblPoint(Map<String, String> paraMap);
 
 }

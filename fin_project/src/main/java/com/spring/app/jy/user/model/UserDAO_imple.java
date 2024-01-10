@@ -78,4 +78,16 @@ public class UserDAO_imple implements UserDAO {
 		return user_rs_cnt;
 	}
 
+	@Override
+	public int getTotalCount(Map<String, String> paraMap) {
+		int getTotalCount = sqlsession.selectOne("jy_user.getTotalCount",paraMap);
+		return getTotalCount;
+	}
+
+	@Override
+	public List<Map<String, String>> get_user_point_list_withPaging(Map<String, String> paraMap) {
+		List<Map<String, String>> get_user_point_list_withPaging = sqlsession.selectList("jy_user.get_user_point_list_withPaging",paraMap);
+		return get_user_point_list_withPaging;
+	}
+
 }

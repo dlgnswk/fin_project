@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.app.expedia.domain.LodgeVO;
+import com.spring.app.expedia.domain.ReservationVO;
 import com.spring.app.expedia.domain.RoomVO;
 import com.spring.app.expedia.domain.UserVO;
 import com.spring.app.jy.user.controller.GoogleMail;
@@ -64,6 +65,7 @@ public class paymentController {
 		String guest_cnt = request.getParameter("ttl_guest_cnt");
 		String lodge_id = request.getParameter("lodge_id");
 		
+		System.out.println("payType" + payType);
 		
 		String str_inYear = startDate.substring(0, 4);
 		String str_inMonth = startDate.substring(5, 7);
@@ -243,6 +245,20 @@ public class paymentController {
 		String checkinTime = request.getParameter("checkinTime");
 		String checkoutTime = request.getParameter("checkoutTime");
 
+		double db_point = Double.parseDouble(point);
+		db_point = Math.ceil(db_point);
+		point = Double.toString(db_point);
+		
+		if(to_insert_point != "") {
+			double db_to_insert_point = Double.parseDouble(to_insert_point);
+			db_to_insert_point = Math.ceil(db_to_insert_point);
+			to_insert_point = Double.toString(db_to_insert_point);
+		}
+		
+		double db_totalPrice = Double.parseDouble(total__price);
+		db_totalPrice = Math.ceil(db_totalPrice);
+		total__price = Double.toString(db_totalPrice);
+		
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("userid", userid);
 		paraMap.put("h_userid", h_userid);
@@ -261,6 +277,11 @@ public class paymentController {
 		paraMap.put("to_insert_point", to_insert_point);
 
 		int p = 0;
+		
+		// System.out.println("point => " + point);
+		// System.out.println("to_insert_point => " + to_insert_point);
+		System.out.println("paytype" + paytype);
+		
 		if (point == "") {
 			// 선할인포인트를 사용한 경우 보유포인트만 변동
 			System.out.println("할인입니다.");
@@ -273,10 +294,10 @@ public class paymentController {
 			System.out.println("적립입니다.");
 
 			if (used_point != "") {
-				// 적립을 한 상태로 보유포인트 update하기
+				// 적립을 한 상태로 point,used_point update하기
 				p = service.updateMyPoint(paraMap);
 			} else {
-				// 포인트만 update하기
+				// 적립만 update하기
 				p = service.updateUsedPoint(paraMap);
 			}
 		}
@@ -287,6 +308,25 @@ public class paymentController {
 
 		// 결제 후, reservation 테이블에 insert 하기
 		int n = service.goReservation(paraMap);
+		
+		
+		// reservation 테이블에서 방금 예약한 rs_seq 불러오기
+		List<ReservationVO> getRsSeqNo = service.getRsSeqNo();
+		
+		String rs_seq = "";
+		
+		for(ReservationVO rvo:getRsSeqNo) {
+			rs_seq = rvo.getRs_seq();
+		}
+		
+		paraMap.put("rs_seq", rs_seq);
+				
+		// rs_seq를 가져와서 tbl_point에 insert 하기
+		int s = service.updateTblPoint(paraMap);
+		
+		
+		
+		
 		
 		
 		// 메일 보내기 시작=====================================================
@@ -306,6 +346,11 @@ public class paymentController {
 		DecimalFormat decFormat = new DecimalFormat("###,###");
 
 		String totalPrice = decFormat.format(total__price);
+		
+		db_totalPrice = Double.parseDouble(totalPrice);
+		db_totalPrice = Math.ceil(db_totalPrice);
+		totalPrice = Double.toString(db_totalPrice);
+		
 		System.out.println(totalPrice);
 		
 		

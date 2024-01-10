@@ -85,4 +85,45 @@
 		where rs_cancel = 0 and rs_checkindate-sysdate  <![CDATA[<]]> 0 and to_char(rs_checkindate,'yyyy')=to_char(sysdate, 'yyyy') and fk_userid=#{userid}
 	</select>
 	
+	<select id="getTotalCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_point
+		where fk_userid = #{userid}
+		<if test="searchType == 'get'">
+			and pt_amount <![CDATA[>=]]> 0
+		</if>
+		<if test="searchType == 'use'">
+			and pt_amount <![CDATA[<]]> 0
+		</if>		
+	</select>
+	
+	
+	<resultMap type="HashMap" id="get_user_point_list_withPaging_Map">
+		<result property="fk_userid"         column="fk_userid"       javaType="String"></result>
+		<result property="rs_seq"            column="rs_seq"          javaType="String"></result>
+		<result property="pt_change_date"    column="pt_change_date"  javaType="String"></result>
+		<result property="pt_amount"         column="pt_amount"       javaType="String"></result>
+		<result property="lg_name"           column="lg_name"         javaType="String"></result>
+	</resultMap>	
+	<select id="get_user_point_list_withPaging" parameterType="HashMap" resultMap="get_user_point_list_withPaging_Map">		
+		select pt_seq, fk_userid, rs_seq, pt_change_date, pt_amount, lg_name
+		from 
+		(  
+		    select to_number(pt_seq) as pt_seq, P.fk_userid as fk_userid, R.rs_seq as rs_seq, to_char(pt_change_date, 'yyyy-mm-dd') as pt_change_date, pt_amount
+		         , L.lg_name, row_number() over(order by to_char(P.pt_change_date, 'yyyy-mm-dd hh24:mi:ss') desc) as RNO
+		    from tbl_point P
+		    join tbl_reservation R on R.rs_seq = P.fk_rs_seq
+		    join tbl_room RM on RM.rm_seq = R.fk_rm_seq
+		    join tbl_lodge L on L.lodge_id = RM.fk_lodge_id
+		    where P.fk_userid = #{userid} and R.rs_cancel = 0
+		) V
+		where RNO between #{startRno} and #{endRno}
+		<if test="searchType == 'get'">
+			and pt_amount <![CDATA[>=]]> 0
+		</if>
+		<if test="searchType == 'use'">
+			and pt_amount <![CDATA[<]]> 0
+		</if>
+	</select>
+	
 </mapper>

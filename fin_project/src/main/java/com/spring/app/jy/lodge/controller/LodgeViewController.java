@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -179,8 +180,6 @@ public class LodgeViewController {
       
       // 해당 숙박 시설에 위시리스트 등록이 돼있는 지 확인
       boolean isExist_wish = service.isExist_wish(paraMap);
-      
-      
       mav.addObject("d_map",paraMap);
       mav.addObject("lodgeinfo",lodgeinfo_map);
       mav.addObject("park_opt_list",park_opt_list);
@@ -220,11 +219,11 @@ public class LodgeViewController {
             ttl_avbl_guest_cnt += Float.parseFloat(String.valueOf(rm.get("rm_guest_cnt"))) * Float.parseFloat(String.valueOf(rm.get("left_room_cnt")));
             ttl_left_room_cnt += Float.parseFloat(String.valueOf(rm.get("left_room_cnt")));
          }
-         // System.out.println(ttl_avbl_guest_cnt);
-         // System.out.println(Float.parseFloat(ttl_guest_cnt));
+          // System.out.println(ttl_avbl_guest_cnt);
+          // System.out.println(Float.parseFloat(ttl_guest_cnt));
          
          // 남은 rm의 총 갯수 > 입력된 객실 갯수 && 남은 방 수용 가능 게스트 인원 > 입력된 총 게스트 인원
-         if(ttl_left_room_cnt>Float.parseFloat(room_cnt) && ttl_avbl_guest_cnt>Float.parseFloat(ttl_guest_cnt)) {
+         if(ttl_left_room_cnt>=Float.parseFloat(room_cnt) && ttl_avbl_guest_cnt>=Float.parseFloat(ttl_guest_cnt)) {
             mav.addObject("avbl_rm_list",avbl_rm_list);
          }         
          else {
@@ -250,10 +249,33 @@ public class LodgeViewController {
       mav.addObject("com_tmp_opt_list",com_tmp_opt_list);
       // mav.addObject("rm_img_list",rm_img_list);
       mav.addObject("all_rm_img_list",all_rm_img_list);
-      mav.setViewName("jy/lodge/lodgeDetail_info.tiles1");
-            
+      
+      // ***** 리뷰 리스트 가져오기 시작 ***** //
+      Map<String, String> r_paraMap = new HashMap<>();
+      r_paraMap.put("lodge_id", lodge_id);
+      r_paraMap.put("orderType", ""); // 정렬조건이 없을 경우 ""을 준다 (기본 첫페이지 이므로 없음)
+      r_paraMap.put("searchWord", ""); // 검색어가 없을 경우 ""을 준다 (기본 첫페이지 이므로 없음)
+      // System.out.println(r_paraMap.get("lodge_id"));
+      
+      // 리뷰 리스트 가져오기
+      List<Map<String, String>> reviewList = service.getReviewList(r_paraMap);
+      // System.out.println(reviewList);
+      
+      // 평점 별 후기 갯수 가져오기
+      Map<String, String> rv_cnt_byRate = service.getRvcntByRate(r_paraMap);
+      // System.out.println(rv_cnt_byRate);
+      
+      mav.addObject("reviewList",reviewList);
+      mav.addObject("rv_cnt_byRate",rv_cnt_byRate);
+      
+      // ***** 리뷰 리스트 가져오기 끝 ***** //
+      
+      mav.setViewName("jy/lodge/lodgeDetail_info.tiles1");      
+      
       return mav;
-   }
+      
+   }// end of public ModelAndView lodgeDetail_info(ModelAndView mav, HttpServletRequest request) {}------------------
+   
 
    @ResponseBody
    @GetMapping(value="/rmDetail_info_json.exp", produces="text/plain;charset=UTF-8")
@@ -506,33 +528,154 @@ public class LodgeViewController {
       
    }
    
-   @ResponseBody
-   @GetMapping(value="/get_room_img_json.exp", produces="text/plain;charset=UTF-8")
-   public String get_room_img_json(HttpServletRequest request) {
-      
-      String rm_seq = request.getParameter("rm_seq");
-      Map<String, String> paraMap = new HashMap<>();
-      paraMap.put("rm_seq", rm_seq);
-      
-      List<Map<String, String>> rm_img_list = service.getRm_img_list(paraMap);
-      JsonObject jsonObj = new JsonObject();
-      if(rm_img_list != null && rm_img_list.size() > 0) {   
-         JsonArray jsonArr = new JsonArray(); 
-         for(Map<String, String> map : rm_img_list) {
-            JsonObject jsonObj2 = new JsonObject(); 
-            jsonObj2.addProperty("rm_seq", map.get("rm_seq"));
-            jsonObj2.addProperty("fk_lodge_id", map.get("fk_lodge_id"));
-            jsonObj2.addProperty("rm_img_save_name", map.get("rm_img_save_name"));
-            jsonObj2.addProperty("rm_img_main", map.get("rm_img_main"));
-               
-            jsonArr.add(jsonObj2);
-         }
-         jsonObj.add("rm_img_list", jsonArr);
+	@ResponseBody
+	@GetMapping(value = "/get_room_img_json.exp", produces = "text/plain;charset=UTF-8")
+	public String get_room_img_json(HttpServletRequest request) {
+
+		String rm_seq = request.getParameter("rm_seq");
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("rm_seq", rm_seq);
+
+		List<Map<String, String>> rm_img_list = service.getRm_img_list(paraMap);
+		JsonObject jsonObj = new JsonObject();
+		if (rm_img_list != null && rm_img_list.size() > 0) {
+			JsonArray jsonArr = new JsonArray();
+			for (Map<String, String> map : rm_img_list) {
+				JsonObject jsonObj2 = new JsonObject();
+				jsonObj2.addProperty("rm_seq", map.get("rm_seq"));
+				jsonObj2.addProperty("fk_lodge_id", map.get("fk_lodge_id"));
+				jsonObj2.addProperty("rm_img_save_name", map.get("rm_img_save_name"));
+				jsonObj2.addProperty("rm_img_main", map.get("rm_img_main"));
+
+				jsonArr.add(jsonObj2);
+			}
+			jsonObj.add("rm_img_list", jsonArr);
+		}
+
+		return jsonObj.toString();
+
+	}
+   
+	@ResponseBody
+	@GetMapping(value = "/showReviewList_search_json.exp", produces = "text/plain;charset=UTF-8")
+	public String showReviewList_search_json(HttpServletRequest request) {
+
+		String lodge_id = request.getParameter("lodge_id");
+		String orderType = request.getParameter("orderType");
+		if(orderType == null) {
+			orderType = "";
+		}
+		String searchWord = request.getParameter("searchWord");
+		if(searchWord == null) {
+			searchWord ="";
+		}
+
+		Map<String, String> r_paraMap = new HashMap<>();
+		r_paraMap.put("lodge_id", lodge_id);
+		r_paraMap.put("orderType", orderType);
+		r_paraMap.put("searchWord", searchWord);
+
+		List<Map<String, String>> reviewList = service.getReviewList(r_paraMap);
+		// System.out.println(reviewList.toString());
+
+		JsonObject jsonObj = new JsonObject();
+		if (reviewList != null && reviewList.size() > 0) {
+			JsonArray jsonArr = new JsonArray();
+			for (Map<String, String> map : reviewList) {
+				JsonObject jsonObj2 = new JsonObject();
+				jsonObj2.addProperty("RV_SEQ", map.get("RV_SEQ"));
+				jsonObj2.addProperty("RV_DEPTHNO", map.get("RV_DEPTHNO"));
+				jsonObj2.addProperty("FK_RV_RATING", map.get("FK_RV_RATING"));
+				jsonObj2.addProperty("RV_RATING_DESC", map.get("RV_RATING_DESC"));
+				jsonObj2.addProperty("RS_NAME", map.get("RS_NAME"));
+				jsonObj2.addProperty("RV_REGDATE", map.get("RV_REGDATE"));
+				jsonObj2.addProperty("RV_CONTENT", map.get("RV_CONTENT"));
+				jsonObj2.addProperty("RS_DATE", map.get("RS_DATE"));
+				jsonObj2.addProperty("LIVEDATE", map.get("LIVEDATE"));
+				jsonObj2.addProperty("LG_NAME", map.get("LG_NAME"));
+				jsonObj2.addProperty("RV_REGDATE", map.get("RV_REGDATE"));
+				jsonObj2.addProperty("FK_USERID", map.get("FK_USERID"));
+				jsonObj2.addProperty("RV_CONTENT", map.get("RV_CONTENT"));
+				jsonObj2.addProperty("LIKECNT", map.get("LIKECNT"));
+
+				jsonArr.add(jsonObj2);
+			}
+			jsonObj.add("reviewList", jsonArr);
+		}
+
+		return jsonObj.toString();
+	}
+	
+	// 좋아요 버튼 구현하기
+    @ResponseBody
+    @PostMapping(value="/likeAdd2.exp", produces="text/plain;charset=UTF-8")
+    public String likeAdd(HttpServletRequest request) {
+    
+       
+       String rv_seq =  request.getParameter("rv_seq");
+       String userid = request.getParameter("userid");
+       
+       
+       // System.out.println(rv_seq);
+       // System.out.println(userid);
+       
+       Map<String, String> paraMap = new HashMap<>();
+       
+       paraMap.put("rv_seq", rv_seq);
+       paraMap.put("userid", userid);
+       
+       int n = 0;
+       String msg = "";
+       JSONObject jsonObj = new JSONObject();
+       
+      try {
+         n = service.likeAdd(paraMap);
+            
+          if(n==1) {
+             msg = "좋아요 처리가 완료되었습니다.";
+             Map<String, Integer> map = service.getCnt(rv_seq);
+             jsonObj.put("likecnt", map.get("LIKECNT"));
+          }
+          
+      } catch (Exception e) {
+         // System.out.println("~~~~~~~~~ 좋아요를 두번 클릭한 경우~~~~~~~~~");
+         // 좋아요를 두번 클릭한 경우
+         // e.printStackTrace();
+    	  n = service.likeDelete(paraMap);
+          
+          if(n==1) {
+        	  msg= "좋아요 처리가 취소되었습니다.";
+        	  Map<String, Integer> map = service.getCnt(rv_seq);
+              jsonObj.put("likecnt", map.get("LIKECNT"));
+          }
       }
+        
+      jsonObj.put("msg", msg); // {"msg":"해당제품에\n 좋아요를 클릭하셨습니다."}   {"msg":"이미 좋아요를 클릭하셨기에\n 두번 이상 좋아요는 불가합니다."}
       
-      return jsonObj.toString();
-      
-   }
+      return jsonObj.toString();  
+   
+    }
+   
+    
+    @ResponseBody
+    @GetMapping(value="/likeCount2.exp")
+    public String likeCount(HttpServletRequest request){
+
+       String rv_seq = request.getParameter("rv_seq");
+       
+       Map<String, Integer> map = service.getCnt(rv_seq);
+       System.out.println("rv_seq => "+rv_seq);
+       System.out.println(map);
+       
+       JSONObject jsonObj = new JSONObject();
+       
+       jsonObj.put("likecnt", map.get("LIKECNT"));
+       
+       
+       return jsonObj.toString();
+    }
+
+   
    
 }   
 

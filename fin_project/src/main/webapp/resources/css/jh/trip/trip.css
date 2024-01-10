@@ -203,3 +203,129 @@ div.no_wishlist{
 	text-align: center;
 }
 
+.reviewshow > div {
+	color: rgba(0, 58, 255, 0.77);		
+}
+
+.reviewshow > div:hover {
+	text-decoration: underline;
+	cursor: pointer;
+}
+	
+/* 모달 css 시작 */
+.reviewWriteModal{ 
+	position:absolute;
+	width:100%; 
+	height:100%; 
+	background: rgba(0, 0, 0, 0.21); 
+	top:0; 
+	left:0; 
+	display:none;
+	z-index: 100;
+}
+	
+body.modal-open {
+	overflow: hidden; /* 페이지 스크롤 막기 */
+}
+	
+.reviewWriteModal_header{		
+	width: 720px; /* 500px를 16px 기준으로 나눈 값 */
+	height: 640px;        /* 300px를 16px 기준으로 나눈 값 */
+	background:#fff; 
+	border-radius:0.625rem; /* 10px를 16px 기준으로 나눈 값 */
+	position:relative; 
+	top:50%; 
+	left:50%;
+	margin-top:-320px; /* height의 절반 */
+	margin-left:-360px; /* width의 절반 */
+	text-align:left;
+	box-sizing:border-box; 
+	padding: 50px 0; /* 74px를 16px 기준으로 나눈 값 */
+	line-height:1.4375rem; /* 23px를 16px 기준으로 나눈 값 */
+	cursor:pointer;
+}
+	
+
+#mycontent > form > div > div.reviewWriteModal_header > span {
+	position: absolute; 
+	top: 6px; /* 15px를 16px 기준으로 나눈 값 */
+	left: 0.9375rem; /* 15px를 16px 기준으로 나눈 값 */
+	color: #0073ff;
+	font-size: 30px;
+	cursor: pointer;	    	    
+}
+	
+/* 별점 css 시작 */
+#mycontent > form > div > div.reviewWriteModal_header > div > div.rating {
+	width: 68%;
+}
+	
+.rateCircle fieldset{
+	display: inline-block; /* 하위 별점 이미지들이 있는 영역만 자리를 차지함.*/
+    border: 0; /* 필드셋 테두리 제거 */
+    width: 100%;
+    height: 100px;
+}
+	
+.rateCircle input[type=radio]{
+	display: none;
+}
+	
+.rateCircle label{
+	background-image: url(<%= ctxPath%>/resources/images/ch/circle-regular.png);
+	width: 30%;
+	height: 50.5px; 
+   	user-select: none;
+}
+	
+#mycontent > form > div > div.reviewWriteModal_header > div > div.rating > fieldset > span > span {
+	width: 100%;
+	margin: 3% 0 0 5%;		
+}
+	
+.rateCircle input[type=radio]:checked ~ label,
+.rateCircle label:hover {
+	background-image: url(<%= ctxPath%>/resources/images/ch/circle-solid.png);
+}
+	
+/* 별점 css 끝 */
+#mycontent > form > div > div > div > div.rv_subject > input[type=text] {
+	height: 2rem; /* 32px → 2rem 변환 */
+	font-size: 0.9375rem; /* 15px → 0.9375rem 변환 */
+	border: 0;
+	border-radius: 0.9375rem; /* 15px → 0.9375rem 변환 */
+	outline: none;
+	padding-left: 0.625rem; /* 10px → 0.625rem 변환 */
+	background-color: rgb(233, 233, 233);
+	margin: 2% 0 2% 0;
+}
+	
+#content {
+	width: 61.7%;
+	height: 200px;	
+	font-size: 0.9375rem; /* 15px → 0.9375rem 변환 */
+	border: 0;
+	border-radius: 0.9375rem; /* 15px → 0.9375rem 변환 */
+	outline: none;
+	margin: 2% 0 2% 0;
+	padding: 0.625rem; /* 내부 여백을 주어 삐져나가는 현상을 방지합니다. */
+	box-sizing: border-box; /* 패딩, 보더 등을 포함한 크기 조절을 위해 box-sizing 설정 */
+	resize: none; /* 사용자가 텍스트 영역의 크기를 조절하지 못하게 합니다. */
+	background-color: rgb(233, 233, 233);	
+}
+	
+#btnWrite {
+	background-color: #0073ff;
+	height: 2.5rem; /* 40px를 16px 기준으로 나눈 값 */
+	color: white;
+	width: 61.3%;; /* 70px를 16px 기준으로 나눈 값 */
+	border: 0px solid #555555;
+	border-radius: 1.0625rem; /* 17px를 16px 기준으로 나눈 값 */
+	font-size: 0.875rem; /* 14px를 16px 기준으로 나눈 값 */
+}
+	
+#btnWrite:hover {
+	background-color:rgba(0, 80, 190, 0.97);
+	box-shadow: 0 0.25rem 0.375rem -0.0625rem rgba(0, 0, 0, 0.1), 0 0.125rem 0.25rem -0.0625rem rgba(0, 0, 0, 0.08);
+}
+

@@ -9,6 +9,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.spring.app.expedia.domain.LodgeVO;
+import com.spring.app.expedia.domain.ReservationVO;
 import com.spring.app.expedia.domain.RoomVO;
 import com.spring.app.expedia.domain.UserVO;
 
@@ -88,6 +89,23 @@ public class PaymentDAO_imple implements PaymentDAO {
 	public List<Map<String, String>> getLodgeReview(String lodge_id) {
 		List<Map<String, String>> lodgeReviewList = sqlsession.selectList("ws_payment.ws_getLodgeReview",lodge_id);
 		return lodgeReviewList;
+	}
+
+
+	// reservation 테이블에서 방금 예약한 rs_seq 불러오기
+	@Override
+	public List<ReservationVO> getRsSeqNo() {
+		List<ReservationVO> getRsSeqNo = sqlsession.selectList("ws_payment.ws_getRsSeqNo");
+		return getRsSeqNo;
+	}
+
+
+
+	// rs_seq를 가져와서 tbl_point에 insert 하기
+	@Override
+	public int updateTblPoint(Map<String, String> paraMap) {
+		int s = sqlsession.insert("ws_payment.ws_updateTblPoint",paraMap);
+		return s;
 	}
 
 }

@@ -1165,20 +1165,20 @@
 										<div style="color:white;margin:auto;font-weight:bold;">${review.rating}</div>
 									</div>
 									<div style="position:relative; bottom:10px;left:10px;">
-										<c:if test="${review.rating lt 6.0}">
-											<span style="font-weight:bold;">괜찮을까요?</span><br>
+										<c:if test="${review.rating ge 7.0 && review.rating le 7.9}">
+											<span style="font-weight:bold;">좋아요</span><br>
 										</c:if>
-										<c:if test="${review.rating ge 7.0 && review.rating lt 8.0}">
-											<span style="font-weight:bold;">나쁘지않아요!</span><br>
+										<c:if test="${review.rating ge 8.0 && review.rating le 8.4}">
+											<span style="font-weight:bold;">매우 좋아요</span><br>
 										</c:if>
-										<c:if test="${review.rating ge 8.0 && review.rating lt 9.0}">
-											<span style="font-weight:bold;">좋아요!</span><br>
+										<c:if test="${review.rating ge 8.5 && review.rating le 8.9}">
+											<span style="font-weight:bold;">훌륭해요</span><br>
 										</c:if>
-										<c:if test="${review.rating ge 9.0 && review.rating lt 10.0}">
-											<span style="font-weight:bold;">훌륭해요!</span><br>
+										<c:if test="${review.rating ge 9.0 && review.rating le 9.4}">
+											<span style="font-weight:bold;">매우 훌륭해요</span><br>
 										</c:if>
-										<c:if test="${review.rating == 10.0}">
-											<span style="font-weight:bold;">완벽해요!</span><br>
+										<c:if test="${review.rating ge 9.5 && review.rating le 10.0}">
+											<span style="font-weight:bold;">최고에요</span><br>
 										</c:if>
 										
 										<span style="font-size:13px;position:relative; bottom:4px;">(이용 후기 <span><fmt:formatNumber pattern="#,###">${review.rv_cnt}</fmt:formatNumber></span> 개)</span>
