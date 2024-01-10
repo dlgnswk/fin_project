@@ -40,37 +40,70 @@
 		
 		
 		// 객실 크기 입력 이벤트
-		let rm_size_meter = $("input[name='rm_size_meter']");
-		let rm_size_pyug = $("input[name='rm_size_pyug']");
-		
-		rm_size_meter.keyup(function(){
-			let meter = $(this).val();
-			
-			if(Number(meter) <= 0 ) {
+		$("input[name='rm_size_meter']").keyup(function(){
+			let rm_size_meter = $("input[name='rm_size_meter']");
+			let rm_size_pyug = $("input[name='rm_size_pyug']");
+
+			if(rm_size_meter.val() <= 0 ) {
 				rm_size_meter.val("");
 				rm_size_pyug.val("");
-				
 			}
+			
+			if(rm_size_meter.val().indexOf("0") == 0){
+				rm_size_meter.val(rm_size_meter.val().substr(1));
+			}
+
+			if(rm_size_meter.val().length > 11) {
+				rm_size_meter.val(rm_size_meter.val().substr(0,11));	
+			}
+			
+			let num = rm_size_meter.val().split(".");
+			
+			if(rm_size_meter.val().indexOf(".") > 0) {
+				let num = rm_size_meter.val().split(".");
+				
+				if(num[1].length > 2) {
+					num[1] = num[1].substr(0,2);
+					rm_size_meter.val(num.join("."));
+				}
+			}
+			
 			rm_size_meter.parent().parent().parent().parent().find(".submit_check").hide();
 			rm_size_meter.parent().parent().parent().parent().find(".error").hide().text("");
-			rm_size_pyug.val(Math.round(Number(meter)*0.3025*100)/100); 
+			rm_size_pyug.val(Math.round(rm_size_meter.val()*0.3025*100)/100); 
 			// 제곱 미터  평 으로 계산
-			
 		}); // end of rm_size_meter.keydown(function(){
 		
-		rm_size_pyug.keyup(function(){
-			let pyug = Number($(this).val());
+		$("input[name='rm_size_pyug']").keyup(function(){
+			let rm_size_meter = $("input[name='rm_size_meter']");
+			let rm_size_pyug = $("input[name='rm_size_pyug']");
 			
-			if(Number(pyug) <= 0 ) {
+			if(rm_size_pyug.val() <= 0 ) {
 				rm_size_meter.val("");
 				rm_size_pyug.val("");
-				
 			}
+			
+			if(rm_size_pyug.val().indexOf("0") == 0){
+				rm_size_pyug.val(rm_size_pyug.val().substr(1));
+			}
+
+			if(rm_size_pyug.val().length > 11) {
+				rm_size_pyug.val(rm_size_pyug.val().substr(0,11));	
+			}
+			
+			if(rm_size_pyug.val().indexOf(".") > 0) {
+				let num = rm_size_pyug.val().split(".");
+				
+				if(num[1].length > 2) {
+					num[1] = num[1].substr(0,2);
+					rm_size_pyug.val(num.join("."));
+				}
+			}
+			
 			rm_size_pyug.parent().parent().parent().parent().find(".submit_check").hide();
 			rm_size_pyug.parent().parent().parent().parent().find(".error").hide().text("");
-			rm_size_meter.val(Math.round(Number(pyug)*3.3058*100)/100); 
+			rm_size_meter.val(Math.round(rm_size_pyug.val()*3.3058*100)/100); 
 			// 평 제곱미터로 계산
-			
 		}); // end of rm_size_pyug.keydown(function()
 		
 				
