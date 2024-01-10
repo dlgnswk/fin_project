@@ -112,7 +112,7 @@ public class AdminDAO_imple implements AdminDAO {
 		
 		List<List<Map<String, String>>> lodgeListListMap = new ArrayList<>();
 		
-		
+		System.out.println("lodgeIdMapList.size() => " + lodgeIdMapList.size());
 		
 		for(int i = 0; i < lodgeIdMapList.size(); i++){
 			// System.out.println("lodgeIdMapList get(\"lodge_id\") :" + lodgeIdMapList.get(i).get("lodge_id"));

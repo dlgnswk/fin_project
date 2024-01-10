@@ -65,6 +65,7 @@ public class paymentController {
 		String guest_cnt = request.getParameter("ttl_guest_cnt");
 		String lodge_id = request.getParameter("lodge_id");
 		
+		System.out.println("payType" + payType);
 		
 		String str_inYear = startDate.substring(0, 4);
 		String str_inMonth = startDate.substring(5, 7);
@@ -248,6 +249,16 @@ public class paymentController {
 		db_point = Math.ceil(db_point);
 		point = Double.toString(db_point);
 		
+		if(to_insert_point != "") {
+			double db_to_insert_point = Double.parseDouble(to_insert_point);
+			db_to_insert_point = Math.ceil(db_to_insert_point);
+			to_insert_point = Double.toString(db_to_insert_point);
+		}
+		
+		double db_totalPrice = Double.parseDouble(total__price);
+		db_totalPrice = Math.ceil(db_totalPrice);
+		total__price = Double.toString(db_totalPrice);
+		
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("userid", userid);
 		paraMap.put("h_userid", h_userid);
@@ -267,8 +278,9 @@ public class paymentController {
 
 		int p = 0;
 		
-		System.out.println("point => " + point);
-		System.out.println("to_insert_point => " + to_insert_point);
+		// System.out.println("point => " + point);
+		// System.out.println("to_insert_point => " + to_insert_point);
+		System.out.println("paytype" + paytype);
 		
 		if (point == "") {
 			// 선할인포인트를 사용한 경우 보유포인트만 변동
@@ -306,9 +318,11 @@ public class paymentController {
 		for(ReservationVO rvo:getRsSeqNo) {
 			rs_seq = rvo.getRs_seq();
 		}
+		
+		paraMap.put("rs_seq", rs_seq);
 				
 		// rs_seq를 가져와서 tbl_point에 insert 하기
-		int s = service.updateTblPoint(rs_seq);
+		int s = service.updateTblPoint(paraMap);
 		
 		
 		
@@ -333,7 +347,7 @@ public class paymentController {
 
 		String totalPrice = decFormat.format(total__price);
 		
-		double db_totalPrice = Double.parseDouble(totalPrice);
+		db_totalPrice = Double.parseDouble(totalPrice);
 		db_totalPrice = Math.ceil(db_totalPrice);
 		totalPrice = Double.toString(db_totalPrice);
 		

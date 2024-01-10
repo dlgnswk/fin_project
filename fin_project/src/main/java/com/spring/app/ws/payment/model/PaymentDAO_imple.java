@@ -100,10 +100,11 @@ public class PaymentDAO_imple implements PaymentDAO {
 	}
 
 
+
 	// rs_seq를 가져와서 tbl_point에 insert 하기
 	@Override
-	public int updateTblPoint(String rs_seq) {
-		int s = sqlsession.insert("ws_payment.ws_updateTblPoint",rs_seq);
+	public int updateTblPoint(Map<String, String> paraMap) {
+		int s = sqlsession.insert("ws_payment.ws_updateTblPoint",paraMap);
 		return s;
 	}
 

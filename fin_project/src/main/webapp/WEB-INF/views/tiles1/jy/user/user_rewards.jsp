@@ -68,7 +68,8 @@
 				console.log(json);
 				if(json.pointList != null){
 					let html = "";
-					$.each(json.pointList, function(index, item){						
+					$.each(json.pointList, function(index, item){
+						const pt_amount = Number(item.pt_amount).toLocaleString('en');
 						html += '<tr>'
 							  + '<td>' +item.pt_change_date+'</td>'
 							  + '<td style="line-height: 1.5rem; height: 100%; padding-top:0.5rem;">'
@@ -77,7 +78,7 @@
 							  +			'<div><a class="c_text_link_m">일정 #'+item.rs_seq+'</a></div>'
 							  +		'</div>'
 							  +	'</td>'
-							  +	'<td>'+item.pt_amount+'</td>';
+							  +	'<td>'+pt_amount+'</td>';
 
 						if(item.pt_amount < 0){
 							html += '<td>사용</td>';
@@ -100,53 +101,66 @@
 		
 	}
 	
-	// === 댓글내용 페이지바 Ajax 로 만들기 === //
+	// === pointList 페이지바 Ajax 로 만들기 === //
     function makePageBar(currentShowPageNo){
-      
-		const totalPage = ${requestScope.paraMap.totalPage};
- 	  	if(totalPage > 0){
- 	  		
-	        const blockSize = 10;
-	        // blockSize 는 1개 블럭(토막)당 보여지는 페이지번호의 개수 이다.
-          
-   	  		let loop = 1;
-         	if(typeof currentShowPageNo == "string"){
-       	  		currentShowPageNo = Number(currentShowPageNo);
-          	}
-		  	// *** !! 다음은 currentShowPageNo 를 얻어와서 pageNo 를 구하는 공식이다. !! *** //
-          	let pageNo = Math.floor( (currentShowPageNo - 1)/blockSize ) * blockSize + 1;
-		  	console.log("pageNo",pageNo);
-          
-        	let pageBarHTML = "<ul style='list-style: none;'>";
-        
-     		// === [맨처음] [이전] 만들기 === //
-        	if(pageNo <= totalPage){
-       			pageBarHTML += "<li style='display: inline-block; width: 70px; font-size:12pt;'><a href='javascript:goViewPointList(\"1\")'>[맨처음]</a></li>";
-       			pageBarHTML += "<li style='display: inline-block; width: 50px; font-size:12pt;'><a href='javascript:goViewPointList(\""+(pageNo-1)+"\")'>[이전]</a></li>";
-        	}
-        
-        	while(!(loop>blockSize || pageNo > totalPage)) {
-        	
-        		if(pageNo == currentShowPageNo){
-        			pageBarHTML += "<li style='display: inline-block; width: 70px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";
-        		}
-        		else {
-        			pageBarHTML += "<li style='display: inline-block; width: 50px; font-size:12pt;'><a href='javascript:goViewPointList(\""+pageNo+"\")'>"+pageNo+"</a></li>";
-        		}
-        		loop++;
-        		pageNo++;	            	
-        	}// end of while--------------------------------------
-        
-        
-    		// === [다음] [마지막] 만들기 === //
-        	if(pageNo <= totalPage){
-       			pageBarHTML += "<li style='display: inline-block; width: 50px; font-size:12pt;'><a href='javascript:goViewPointList(\""+pageNo+"\")'>[다음]</a></li>";
-       			pageBarHTML += "<li style='display: inline-block; width: 70px; font-size:12pt;'><a href='javascript:goViewPointList(\""+totalPage+"\")'>[마지막]</a></li>";
-        	}
-        	pageBarHTML += "</ul>";
-    	
-        	$("div#pageBar").html(pageBarHTML);
-      	 }// end of if------------
+		const searchType = $("select[name='searchType']").val();
+		$.ajax({
+			url:"getPageBar_json.exp",
+			data:{"searchType":searchType,
+				  "userid":"${sessionScope.loginuser.userid}"},
+			dataType:"json",
+			success:function(json){
+				const totalPage = json.totalPage;
+		 	  	if(totalPage > 0){
+		 	  		console.log(totalPage);
+			        const blockSize = 10;
+			        // blockSize 는 1개 블럭(토막)당 보여지는 페이지번호의 개수 이다.
+		          
+		   	  		let loop = 1;
+		         	if(typeof currentShowPageNo == "string"){
+		       	  		currentShowPageNo = Number(currentShowPageNo);
+		          	}
+				  	// *** !! 다음은 currentShowPageNo 를 얻어와서 pageNo 를 구하는 공식이다. !! *** //
+		          	let pageNo = Math.floor( (currentShowPageNo - 1)/blockSize ) * blockSize + 1;
+				  	console.log("pageNo",pageNo);
+		          
+		        	let pageBarHTML = "<ul style='list-style: none;'>";
+		        
+		     		// === [맨처음] [이전] 만들기 === //
+		        	if(pageNo <= totalPage){
+		       			pageBarHTML += "<li style='display: inline-block; width: 70px; font-size:12pt;'><a href='javascript:goViewPointList(\"1\")'>[맨처음]</a></li>";
+		       			pageBarHTML += "<li style='display: inline-block; width: 50px; font-size:12pt;'><a href='javascript:goViewPointList(\""+(pageNo-1)+"\")'>[이전]</a></li>";
+		        	}
+		        
+		        	while(!(loop>blockSize || pageNo > totalPage)) {
+		        	
+		        		if(pageNo == currentShowPageNo){
+		        			pageBarHTML += "<li style='display: inline-block; width: 70px; font-size:12pt; font-weight:600; color:black; padding:2px 4px;'>"+pageNo+"</li>";
+		        		}
+		        		else {
+		        			pageBarHTML += "<li style='display: inline-block; width: 50px; font-size:12pt;'><a href='javascript:goViewPointList(\""+pageNo+"\")'>"+pageNo+"</a></li>";
+		        		}
+		        		loop++;
+		        		pageNo++;	            	
+		        	}// end of while--------------------------------------
+		        
+		        
+		    		// === [다음] [마지막] 만들기 === //
+		        	if(pageNo <= totalPage){
+		       			pageBarHTML += "<li style='display: inline-block; width: 50px; font-size:12pt;'><a href='javascript:goViewPointList(\""+pageNo+"\")'>[다음]</a></li>";
+		       			pageBarHTML += "<li style='display: inline-block; width: 70px; font-size:12pt;'><a href='javascript:goViewPointList(\""+totalPage+"\")'>[마지막]</a></li>";
+		        	}
+		        	pageBarHTML += "</ul>";
+		    	
+		        	$("div#pageBar").html(pageBarHTML);
+		      	 }// end of if------------
+			},
+			error: function(request, status, error){
+				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		 	}
+			
+		})
+		
           
        
        
@@ -154,6 +168,7 @@
 	
 	
 </script>
+<title>Expedia 포인트 리워드</title>
 <body>
 	<div id="activity_page_wrap" class="site-content-wrap">
 		<div class="site-content cols-row" role="main">

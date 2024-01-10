@@ -15,7 +15,8 @@
 
 	a {text-decoration: none !important;}
 
-	div#chatDisplay {
+	div#hostChatDisplay {
+					 
                      max-height: 350px;
                      overflow: auto;
 					
@@ -29,13 +30,13 @@
 	$(document).ready(function(){
 		
 		
-		goViewChatList(); // 페이징 처리한 댓글 읽어오기
+		goViewHostChatList(); // 페이징 처리한 댓글 읽어오기
 		
 		
-		$("#chat_comment").bind("keyup",function(e){
+		$("#hostChat_comment").bind("keyup",function(e){
 			
 			if(e.keyCode == 13) {
-				goAddChat();
+				goAddHostChat();
 				
 			};
 		});
@@ -45,18 +46,18 @@
 
 // Function Declaration		
 // == 채팅쓰기 ==
-function goAddChat() {
+function goAddHostChat() {
 	
-	const chat_comment = $("input:text[name='chat_comment']").val().trim();
-	if(chat_comment == "") {
+	const hostChat_comment = $("input:text[name='hostChat_comment']").val().trim();
+	if(hostChat_comment == "") {
 		alert("채팅 내용을 입력하세요!!");
 		return;
 	}
 	
 	else {
 		$.ajax({
-			url:"<%= ctxPath%>/addChat.exp",
-			data:{"chat_comment":$("input:text[name='chat_comment']").val()
+			url:"<%= ctxPath%>/addHostChat.exp",
+			data:{"hostChat_comment":$("input:text[name='hostChat_comment']").val()
 				 ,"chat_no":$("input:hidden[name='chat_no']").val()},
 			type:"post",
 			dataType:"json",
@@ -65,13 +66,13 @@ function goAddChat() {
 				// {"n":1, "name":"이순신"} {"n":0, "name":"최우현"}
 			
 				if(json.n == 1) {
-					goViewChatList(); // 페이징 처리한 댓글 읽어오기			
+					goViewHostChatList(); // 페이징 처리한 댓글 읽어오기			
 					
 				}
 				
-				$("input:text[name='chat_comment']").val("");
+				$("input:text[name='hostChat_comment']").val("");
 				
-				 $("div#chatDisplay").scrollTop(9999999999999);
+				 $("div#hostChatDisplay").scrollTop(9999999999999);
 				
 				
 				
@@ -87,43 +88,45 @@ function goAddChat() {
 
 
 	
-let lenChat = 10;
 
 
 //=== #127. Ajax 로 불러온 댓글 내용들을 페이징 처리 하기 === //
-function goViewChatList() {
+function goViewHostChatList() {
 	
 	$.ajax({
-		url:"<%= ctxPath%>/viewChatList.exp",
+		url:"<%= ctxPath%>/viewHostChatList.exp",
 		data:{"chat_no":"${requestScope.chatvo.chat_no}"},	  
 		dataType:"json",
 		success:function(json){
 			
 			let v_html = "";
 			if(json.length > 0) {
-			
+				
 				$.each(json, function(index, item){
-			
-					if(item.r_status == 1) {
-						v_html += '<div style="margin-bottom:3px; text-align:left;">';
-						v_html += '[${requestScope.h_name}] ';
-						v_html += item.reply_comment;
-					   	v_html += ' <span style="font-size:11px;color:#777;">' + item.reply_date + '</span>';
-					   	v_html += '</div>';
-					}
 					
-					else {
+					if(item.r_status == 1) {
 						v_html += '<div style="margin-bottom:3px; text-align:right;">';
 					   	v_html += item.reply_comment;
 					   	v_html += ' <span style="font-size:11px;color:#777;">' + item.reply_date + '</span>';
 					   	v_html += '</div>';
 					}
 					
+					else {
+						v_html += '<div style="margin-bottom:3px; text-align:left;">';
+					   	v_html += '[${requestScope.name}] ';
+					   	v_html += item.reply_comment;
+					   	v_html += ' <span style="font-size:11px;color:#777;">' + item.reply_date + '</span>';
+					   	v_html += '</div>';
+					}
+				   
 				});
+					
+				
+				
 			}
 			
 			
-			$("div#chatDisplay").html(v_html+"<br>");
+			$("div#hostChatDisplay").html(v_html+"<br>");
 			
 			
 			
@@ -146,21 +149,23 @@ function goViewChatList() {
 <div style="display: flex;">
 	<div style="margin: auto; padding-left: 3%;">
 	
-	   <h2 style="margin-bottom: 30px;">1:1 문의(구매자) </h2>    
+	   <h2 style="margin-bottom: 30px;">1:1 문의(판매자) </h2>    
 	    
 	   <c:if test="${not empty requestScope.chatvo}">
 		   <form name="chatWriteFrm" id="chatWriteFrm" style="margin-top: 20px;">
 			   <table class="table table-bordered">
 					<tr>
-						<td>${requestScope.chatvo.fk_lodge_id}</td>					
+						<td>${requestScope.chatvo.fk_userid}</td>					
 					</tr>
+					
 					<tr>
-						<td colspan="2"><div id="chatDisplay"></div></td>
+						<td colspan="2"><div id="hostChatDisplay"></div></td>
 					</tr>
+					
 					<tr>
-						<td colspan="2"><input type="text" name="chat_comment" id="chat_comment" placeholder="대화 내용을 입력하세요." class="form-control" size="100" maxlength="1000" autocomplete="off">
+						<td colspan="2"><input type="text" name="hostChat_comment" id="hostChat_comment" placeholder="대화 내용을 입력하세요." class="form-control" size="100" maxlength="1000" autocomplete="off">
 						<input type="text" style="display: none" > 
-						<button type="button" id="addChat" class="btn btn-success btn-sm mr-3" onclick="goAddChat()">전송</button></td>
+						<button type="button" id="addHostChat" class="btn btn-success btn-sm mr-3" onclick="goAddHostChat()">전송</button></td>
 					</tr>
 				
 				
@@ -188,7 +193,7 @@ function goViewChatList() {
 			
 	
 	
-	 	<button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%=ctxPath%>/chatList.exp'">전체목록보기</button> 
+	 	<button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%=ctxPath%>/hostChatList.exp'">전체목록보기</button> 
 	 
 	 
 	 
