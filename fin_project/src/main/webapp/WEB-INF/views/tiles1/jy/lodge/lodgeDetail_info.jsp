@@ -25,7 +25,7 @@
 		grid-template-rows: repeat(2, minmax(0, 1fr));
 	}
 	
-	img{
+	#mycontent img{
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
@@ -133,8 +133,8 @@
     /* 헤더 로고 크기 안맞음 수정 */
     #headerOfheader > div > section > div > div > a > img {
    		width: 126px;
-   		aspect-ratio: auto;
     }
+    
     
     /* ======== 숙소 상세보기 CSS 끝 - 지연 ========  */
     
