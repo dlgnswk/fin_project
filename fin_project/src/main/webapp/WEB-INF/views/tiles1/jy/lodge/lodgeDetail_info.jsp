@@ -11,7 +11,6 @@
 	
 %>
 <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/css/jy/common.css"/>
-<link rel="icon" href="/png파일 경로">
 <style>
 	
 	/* ======== 숙소 상세보기 CSS 시작 - 지연 ======== */
@@ -26,7 +25,7 @@
 		grid-template-rows: repeat(2, minmax(0, 1fr));
 	}
 	
-	img{
+	#mycontent img{
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
@@ -134,8 +133,8 @@
     /* 헤더 로고 크기 안맞음 수정 */
     #headerOfheader > div > section > div > div > a > img {
    		width: 126px;
-   		aspect-ratio: auto;
     }
+    
     
     /* ======== 숙소 상세보기 CSS 끝 - 지연 ========  */
     
@@ -342,6 +341,7 @@
 }
 	
 </style>
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
@@ -1045,7 +1045,7 @@
 	
 	
 </script>
-
+<title>Expedia ${requestScope.lodgeinfo.LG_NAME}</title>
 <div id="main" style="inline-size: 100%; margin: auto; max-inline-size: 75rem;">
 	<div id="top_bar_img_container">
 		<div id="top_bar_container" class="" style="background-color: white; height: 4rem;">

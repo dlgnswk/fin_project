@@ -28,10 +28,10 @@
    }
       
    
-   function goReplyList() {
+   function goHostChatList() {
       const frm = document.useridSendFrm;
-      frm.action  = "<%= ctxPath%>/replyList.exp";
-      frm.method = "post";
+      frm.action  = "<%= ctxPath%>/hostChatList.exp";
+      frm.method = "get";
       frm.submit();
    }
    
@@ -73,7 +73,7 @@
             </div>
             
          
-            <div onclick="goReplyList()" style="margin:5% auto; border: 2px solid #5252ff;  height: 200px; border-radius: 1rem; width:40%; margin-bottom: 25px; cursor:pointer;">
+            <div onclick="goHostChatList()" style="margin:5% auto; border: 2px solid #5252ff;  height: 200px; border-radius: 1rem; width:40%; margin-bottom: 25px; cursor:pointer;">
                <div style="width:50%; margin:10% auto;">
                   <img src="<%=ctxPath%>/resources/images/wh/goChat.png" style="width:80px; height:80px;"/>
                </div>
