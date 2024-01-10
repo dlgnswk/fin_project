@@ -76,4 +76,16 @@ public class UserService_imple implements UserService {
 		return user_rs_cnt;
 	}
 
+	@Override
+	public int getTotalCount(Map<String, String> paraMap) {
+		int getTotalCount = dao.getTotalCount(paraMap);
+		return getTotalCount;
+	}
+
+	@Override
+	public List<Map<String, String>> get_user_point_list_withPaging(Map<String, String> paraMap) {
+		List<Map<String, String>> get_user_point_list_withPaging = dao.get_user_point_list_withPaging(paraMap);
+		return get_user_point_list_withPaging;
+	}
+
 }
