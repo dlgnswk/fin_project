@@ -259,6 +259,10 @@ public class paymentController {
 		db_totalPrice = Math.ceil(db_totalPrice);
 		total__price = Double.toString(db_totalPrice);
 		
+		
+		
+		
+		
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("userid", userid);
 		paraMap.put("h_userid", h_userid);
@@ -278,35 +282,8 @@ public class paymentController {
 
 		int p = 0;
 		
-		// System.out.println("point => " + point);
-		// System.out.println("to_insert_point => " + to_insert_point);
-		System.out.println("paytype" + paytype);
 		
-		if (point == "") {
-			// 선할인포인트를 사용한 경우 보유포인트만 변동
-			System.out.println("할인입니다.");
-			if (used_point != "") {
-				// 선할인을 받은 상태로 보유포인트만 update하기
-				p = service.updateSaleMyPoint(paraMap);
-			}
-		} else {
-			// 선할인포인트를 사용하지 않은 경우 포인트 적립 + 보유 포인트 변동
-			System.out.println("적립입니다.");
-
-			if (used_point != "") {
-				// 적립을 한 상태로 point,used_point update하기
-				p = service.updateMyPoint(paraMap);
-			} else {
-				// 적립만 update하기
-				p = service.updateUsedPoint(paraMap);
-			}
-		}
-
-		if (p == 0) {
-			System.out.println("적립에 실패했습니다.");
-		}
-
-		// 결제 후, reservation 테이블에 insert 하기
+		// reservation 테이블에 insert 하기
 		int n = service.goReservation(paraMap);
 		
 		
@@ -321,13 +298,52 @@ public class paymentController {
 		
 		paraMap.put("rs_seq", rs_seq);
 				
-		// rs_seq를 가져와서 tbl_point에 insert 하기
-		int s = service.updateTblPoint(paraMap);
+		int s = 0;
 		
+		if(n==1) {
 		
+			if (point == "") {
+				// 선할인포인트를 사용한 경우 보유포인트만 변동
+				System.out.println("할인입니다.");
+				if (used_point != "") {
+					// 선할인을 받은 상태로 보유포인트만 update하기
+					p = service.updateSaleMyPoint(paraMap);
+					
+					// rs_seq를 가져와서 tbl_point에 insert 하기  (-사용한 point)
+					s = service.updateTblPointA1(paraMap);
+				} else {
+					// rs_seq를 가져와서 tbl_point에 insert 하기  (0넣기)
+					s = service.updateTblPointA2();
+				}
+			} else {
+				// 선할인포인트를 사용하지 않은 경우 포인트 적립 + 보유 포인트 변동
+				System.out.println("적립입니다.");
+	
+				if (used_point != "") {
+					// 적립을 한 상태로 point,used_point update하기
+					p = service.updateMyPoint(paraMap);
+					
+					// rs_seq를 가져와서 tbl_point에 insert 하기  (+point - 사용한 point)
+					s = service.updateTblPointB1(paraMap);
+					
+				} else {
+					// 적립만 update하기
+					p = service.updateUsedPoint(paraMap);
+					
+					// rs_seq를 가져와서 tbl_point에 insert 하기  (+point만넣기)
+					s = service.updateTblPointB2(paraMap);
+				}
+			}
+	
+			if (p == 0) {
+				System.out.println("적립에 실패했습니다.");
+			}
 		
-		
-		
+		}
+		else {
+			System.out.println("예약에 실패했습니다.");
+		}
+
 		
 		// 메일 보내기 시작=====================================================
 		

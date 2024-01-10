@@ -1242,18 +1242,18 @@
 								<span style="font-size:12pt; font-weight:600;">포인트 선할인</span>
 								<span style="float:right; font-size:11pt;"><input name="inp_myPoint" type="checkbox"/>
 									<c:if test="${myUser.user_lvl == '블루'}">
-										<input type="hidden" class="myPoint" value="${roomInfo.rm_price * 0.01}" />
-										<fmt:formatNumber pattern="#,###">${roomInfo.rm_price * 0.01}</fmt:formatNumber>
+										<input type="hidden" class="myPoint" value="${roomInfo.rm_price * requestScope.daysGap * 0.9 * 0.01}" />
+										<fmt:formatNumber pattern="#,###">${roomInfo.rm_price * requestScope.daysGap * 0.9 * 0.01}</fmt:formatNumber>
 									</c:if>
 									
 									<c:if test="${myUser.user_lvl == '실버'}">
-										<input type="hidden" class="myPoint" value="${roomInfo.rm_price * 0.02}" />
-										<fmt:formatNumber pattern="#,###">${roomInfo.rm_price * 0.02}</fmt:formatNumber>
+										<input type="hidden" class="myPoint" value="${roomInfo.rm_price * requestScope.daysGap * 0.9 * 0.02}" />
+										<fmt:formatNumber pattern="#,###">${roomInfo.rm_price * requestScope.daysGap * 0.9 * 0.02}</fmt:formatNumber>
 									</c:if>
 									
 									<c:if test="${myUser.user_lvl == '골드'}">
-										<input type="hidden" class="myPoint" value="${roomInfo.rm_price * 0.03}" />
-										<fmt:formatNumber pattern="#,###">${roomInfo.rm_price * 0.03}</fmt:formatNumber>
+										<input type="hidden" class="myPoint" value="${roomInfo.rm_price * requestScope.daysGap * 0.9 * 0.03}" />
+										<fmt:formatNumber pattern="#,###">${roomInfo.rm_price * requestScope.daysGap * 0.9 * 0.03}</fmt:formatNumber>
 									</c:if> 원 <span id="change_span">적립</span>
 								</span>
 							</div>
@@ -1310,18 +1310,18 @@
 								<span style="font-size:12pt; font-weight:600;">포인트 선할인</span>
 								<span style="float:right; font-size:11pt;"><input name="inp_myPoint" type="checkbox"/>
 									<c:if test="${myUser.user_lvl == '블루'}">
-										<input type="hidden" class="myPoint" value="${roomInfo.rm_price * 0.01}" />
-										<fmt:formatNumber pattern="#,###">${roomInfo.rm_price * 0.01}</fmt:formatNumber>
+										<input type="hidden" class="myPoint" value="${roomInfo.rm_price * requestScope.daysGap * 0.85 * 0.01}" />
+										<fmt:formatNumber pattern="#,###">${roomInfo.rm_price * requestScope.daysGap * 0.85 * 0.01}</fmt:formatNumber>
 									</c:if>
 									
 									<c:if test="${myUser.user_lvl == '실버'}">
-										<input type="hidden" class="myPoint" value="${roomInfo.rm_price * 0.02}" />
-										<fmt:formatNumber pattern="#,###">${roomInfo.rm_price * 0.02}</fmt:formatNumber>
+										<input type="hidden" class="myPoint" value="${roomInfo.rm_price * requestScope.daysGap * 0.85 * 0.02}" />
+										<fmt:formatNumber pattern="#,###">${roomInfo.rm_price * requestScope.daysGap * 0.85 * 0.02}</fmt:formatNumber>
 									</c:if>
 									
 									<c:if test="${myUser.user_lvl == '골드'}">
-										<input type="hidden" class="myPoint" value="${roomInfo.rm_price * 0.03}" />
-										<fmt:formatNumber pattern="#,###">${roomInfo.rm_price * 0.03}</fmt:formatNumber>
+										<input type="hidden" class="myPoint" value="${roomInfo.rm_price * requestScope.daysGap * 0.85 * 0.03}" />
+										<fmt:formatNumber pattern="#,###">${roomInfo.rm_price * requestScope.daysGap * 0.85 * 0.03}</fmt:formatNumber>
 									</c:if> 원 <span id="change_span">적립</span>
 								</span>
 							</div>
@@ -1335,7 +1335,7 @@
 		
 							<div>
 								<span style="font-size:12pt; font-weight:600;">세금</span>
-								<span style="float:right; font-size:12pt;">₩ <fmt:formatNumber pattern="#,###">${roomInfo.rm_price * requestScope.daysGap * 0.9 * 0.1}</fmt:formatNumber></span>
+								<span style="float:right; font-size:12pt;">₩ <fmt:formatNumber pattern="#,###">${roomInfo.rm_price * requestScope.daysGap * 0.85 * 0.1}</fmt:formatNumber></span>
 							</div>
 							
 							<hr>
@@ -1377,18 +1377,18 @@
 								<span style="font-size:12pt; font-weight:600;">포인트 선할인</span>
 								<span style="float:right; font-size:11pt;"><input name="inp_myPoint" type="checkbox"/>
 									<c:if test="${myUser.user_lvl == '블루'}">
-										<input type="hidden" class="myPoint" value="${roomInfo.rm_price * 0.01}" />
-										<fmt:formatNumber pattern="#,###">${roomInfo.rm_price * 0.01}</fmt:formatNumber>
+										<input type="hidden" class="myPoint" value="${roomInfo.rm_price * requestScope.daysGap * 0.8 * 0.01}" />
+										<fmt:formatNumber pattern="#,###">${roomInfo.rm_price * requestScope.daysGap * 0.8 * 0.01}</fmt:formatNumber>
 									</c:if>
 									
 									<c:if test="${myUser.user_lvl == '실버'}">
 										<input type="hidden" class="myPoint" value="${roomInfo.rm_price * 0.02}" />
-										<fmt:formatNumber pattern="#,###">${roomInfo.rm_price * 0.02}</fmt:formatNumber>
+										<fmt:formatNumber pattern="#,###">${roomInfo.rm_price * requestScope.daysGap * 0.8 * 0.02}</fmt:formatNumber>
 									</c:if>
 									
 									<c:if test="${myUser.user_lvl == '골드'}">
-										<input type="hidden" class="myPoint" value="${roomInfo.rm_price * 0.03}" />
-										<fmt:formatNumber pattern="#,###">${roomInfo.rm_price * 0.03}</fmt:formatNumber>
+										<input type="hidden" class="myPoint" value="${roomInfo.rm_price * requestScope.daysGap * 0.8 * 0.03}" />
+										<fmt:formatNumber pattern="#,###">${roomInfo.rm_price * requestScope.daysGap * 0.8 * 0.03}</fmt:formatNumber>
 									</c:if> 원 <span id="change_span">적립</span>
 								</span>
 							</div>
@@ -1402,7 +1402,7 @@
 		
 							<div>
 								<span style="font-size:12pt; font-weight:600;">세금</span>
-								<span style="float:right; font-size:12pt;">₩ <fmt:formatNumber pattern="#,###">${roomInfo.rm_price * requestScope.daysGap * 0.9 * 0.1}</fmt:formatNumber></span>
+								<span style="float:right; font-size:12pt;">₩ <fmt:formatNumber pattern="#,###">${roomInfo.rm_price * requestScope.daysGap * 0.8 * 0.1}</fmt:formatNumber></span>
 							</div>
 							
 							<hr>
