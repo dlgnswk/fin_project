@@ -28,6 +28,9 @@ public interface TripDAO {
 
 	// 숙소번호를 받아와서 테이블에서 delete 해주기
 	int deleteWishlist(Map<String, String> paraMap);
+
+	// // 이용후기 작성하기
+	int reviewInsert(Map<String, String> paraMap);
 	
 	
 	

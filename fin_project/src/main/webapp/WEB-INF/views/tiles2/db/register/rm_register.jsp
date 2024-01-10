@@ -865,11 +865,11 @@
 						<div class="rm_size">
 							<div>
 								<div class="size_unit_type">크기(제곱미터)</div>
-								<div><input type="text" name="rm_size_meter" id="rm_size_meter" size="10" maxlength="7" /></div>
+								<div><input type="number" class="size_unit" name="rm_size_meter" id="rm_size_meter" /></div>
 							</div>
 							<div>
 								<div class="size_unit_type">크기(평)</div>
-								<div><input type="text" name="rm_size_pyug" id="rm_size_pyug" size="10" maxlength="7" /></div>
+								<div><input type="number" class="size_unit" name="rm_size_pyug" id="rm_size_pyug" /></div>
 							</div>
 						</div>
 					</div>

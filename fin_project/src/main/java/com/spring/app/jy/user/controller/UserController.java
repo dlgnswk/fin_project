@@ -779,6 +779,29 @@ public class UserController {
 		return jsonObj.toString();
 	}	
 		
+	@ResponseBody 
+	@GetMapping(value="/getPageBar_json.exp",produces="text/plain;charset=UTF-8")
+	public String getPageBar_json(HttpServletRequest request) {
+		
+		String userid = request.getParameter("userid");
+		String searchType = request.getParameter("searchType");
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("userid", userid);
+		paraMap.put("searchType", searchType);
+		
+		int sizePerPage = 5;
+		
+		int totalCount = service.getTotalCount(paraMap);
+		int totalPage = (int)Math.ceil((double)totalCount/sizePerPage); 
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("totalPage", totalPage);
+		
+		return jsonObj.toString();
+	}
+	
+	
 	@GetMapping("/account/setting.exp")
 	public ModelAndView setting(ModelAndView mav, HttpServletRequest request) {
 		

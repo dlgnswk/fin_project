@@ -59,7 +59,7 @@ div.dragText {
 	font-size:11pt;
 }
 
-div.images_div > span {
+div.images_div > span:nth-child(1) {
 	padding-left:15px;
 /* border:solid 1px #000; */
     display:inline-block;
@@ -68,6 +68,14 @@ div.images_div > span {
     font-size:14pt;
     font-weight:bold;
 }
+
+div.images_div > span.register_cution {
+	width:370px;
+	float:right;
+	color:#8c8c8c;
+	font-size:12pt;
+}
+
 
 div.image_drop {
     border:solid 1px #c7c7c7;
@@ -117,7 +125,6 @@ span.delete:hover {
 span.fileName {
 	color:#fff;
 }
-
 
 
 /* 이미지 아래 버튼 */

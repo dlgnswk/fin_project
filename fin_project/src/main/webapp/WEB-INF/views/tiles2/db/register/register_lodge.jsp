@@ -1365,7 +1365,7 @@
 				const frm = document.lodge_info_Frm;
 				frm.method = "post";
 				frm.action = "<%=ctxPath%>/lodge_register.exp";
-				frm.submit();	
+				frm.submit();
 			} else {
 				alert("입력한 정보를 다시 확인해 주세요.");
 			}
@@ -1611,8 +1611,8 @@
 			 				<span>위도경도</span>
 			 			</div>
 						<div>
-							<input type="hidden" name="lg_latitude" id="latitude" size="40" maxlength="200" placeholder="지역위도" /><br>
-							<input type="hidden" name="lg_longitude" id="longitude" size="40" maxlength="200" placeholder="지역경도" />&nbsp;
+							<input type="text" name="lg_latitude" id="latitude" size="40" maxlength="200" placeholder="지역위도" /><br>
+							<input type="text" name="lg_longitude" id="longitude" size="40" maxlength="200" placeholder="지역경도" />&nbsp;
 						</div>
 					</div>
 		<%-- ,lg_area                Nvarchar2(10)       not null            -- 지역명 / 서울   --%>

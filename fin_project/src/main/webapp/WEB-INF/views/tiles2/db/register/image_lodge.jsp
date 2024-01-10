@@ -775,7 +775,8 @@
 	            dataType:"json",
 	            success:function(json){
 	          	  	
-	            	location.href="javascript:location.reload(true)";
+	            	alert("사진이 등록되었습니다.");
+	            	location.href = <%=ctxPath%>/+"/lodgeControl.exp"; //자바에서 페이지 이동
 	          	  	
 	            },
 	            error: function(request, status, error){
@@ -985,7 +986,7 @@
 
 		
 		<div class="images_div">
-			<span>메인이미지</span>
+			<span>메인이미지</span><span class="register_cution">*메인이미지는 반드시 5개를 등록해주셔야 합니다</span>
 			<div class="image_drop __flex" id="mainImage">
 				<div class="infoDiv __flex">
 					<div class="verticalMiddle __flex">
