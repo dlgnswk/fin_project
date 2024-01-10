@@ -18,6 +18,7 @@
 <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/css/jy/user_rewards_2.css" />
 <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/css/jy/user_rewards_1.css" />
 <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/css/jy/com_expedia.css" />
+<link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/css/jy/common.css" />
 <style>
 	
 	td {
@@ -28,6 +29,7 @@
 </style>	
 <script>
 	$(document).ready(function(){
+		makePageBar(1);
 		$("a.tooltip1").bind("click",function(){
 			$("div.tooltip1").show();
 		});
@@ -47,7 +49,108 @@
 		    	$("div.tooltip1").hide();
 		    }
 		}
+		
+		$("select[name='searchType']").bind("change",function(e){
+			goViewPointList(1);
+		});
 	})
+	
+	// 해당 페이지의 포인트 내역을 가져오는 함수 
+	function goViewPointList(currentShowPageNo) {
+		const searchType = $("select[name='searchType']").val();
+		$.ajax({
+			url:"goViewPointList_json.exp",
+			data:{"currentShowPageNo": currentShowPageNo,
+				  "searchType":searchType,
+				  "userid":"${sessionScope.loginuser.userid}"},
+			dataType:"json",
+			success:function(json){
+				console.log(json);
+				if(json.pointList != null){
+					let html = "";
+					$.each(json.pointList, function(index, item){						
+						html += '<tr>'
+							  + '<td>' +item.pt_change_date+'</td>'
+							  + '<td style="line-height: 1.5rem; height: 100%; padding-top:0.5rem;">'
+							  +		'<div class="c_flex" style="flex-direction: column;">'
+							  +			'<div>'+item.lg_name+'</div>'
+							  +			'<div><a class="c_text_link_m">일정 #'+item.rs_seq+'</a></div>'
+							  +		'</div>'
+							  +	'</td>'
+							  +	'<td>'+item.pt_amount+'</td>';
+
+						if(item.pt_amount < 0){
+							html += '<td>사용</td>';
+						}
+						if(item.pt_amount >= 0){
+							html += '<td>적립</td>';
+						}
+						html += '</tr>';
+					})
+					$("tbody").html(html);
+					makePageBar(currentShowPageNo);
+					//console.log($("tbody").html());
+				}
+			},
+			error: function(request, status, error){
+				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		 	}
+			
+		});
+		
+	}
+	
+	// === 댓글내용 페이지바 Ajax 로 만들기 === //
+    function makePageBar(currentShowPageNo){
+      
+		const totalPage = ${requestScope.paraMap.totalPage};
+ 	  	if(totalPage > 0){
+ 	  		
+	        const blockSize = 10;
+	        // blockSize 는 1개 블럭(토막)당 보여지는 페이지번호의 개수 이다.
+          
+   	  		let loop = 1;
+         	if(typeof currentShowPageNo == "string"){
+       	  		currentShowPageNo = Number(currentShowPageNo);
+          	}
+		  	// *** !! 다음은 currentShowPageNo 를 얻어와서 pageNo 를 구하는 공식이다. !! *** //
+          	let pageNo = Math.floor( (currentShowPageNo - 1)/blockSize ) * blockSize + 1;
+		  	console.log("pageNo",pageNo);
+          
+        	let pageBarHTML = "<ul style='list-style: none;'>";
+        
+     		// === [맨처음] [이전] 만들기 === //
+        	if(pageNo <= totalPage){
+       			pageBarHTML += "<li style='display: inline-block; width: 70px; font-size:12pt;'><a href='javascript:goViewPointList(\"1\")'>[맨처음]</a></li>";
+       			pageBarHTML += "<li style='display: inline-block; width: 50px; font-size:12pt;'><a href='javascript:goViewPointList(\""+(pageNo-1)+"\")'>[이전]</a></li>";
+        	}
+        
+        	while(!(loop>blockSize || pageNo > totalPage)) {
+        	
+        		if(pageNo == currentShowPageNo){
+        			pageBarHTML += "<li style='display: inline-block; width: 70px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";
+        		}
+        		else {
+        			pageBarHTML += "<li style='display: inline-block; width: 50px; font-size:12pt;'><a href='javascript:goViewPointList(\""+pageNo+"\")'>"+pageNo+"</a></li>";
+        		}
+        		loop++;
+        		pageNo++;	            	
+        	}// end of while--------------------------------------
+        
+        
+    		// === [다음] [마지막] 만들기 === //
+        	if(pageNo <= totalPage){
+       			pageBarHTML += "<li style='display: inline-block; width: 50px; font-size:12pt;'><a href='javascript:goViewPointList(\""+pageNo+"\")'>[다음]</a></li>";
+       			pageBarHTML += "<li style='display: inline-block; width: 70px; font-size:12pt;'><a href='javascript:goViewPointList(\""+totalPage+"\")'>[마지막]</a></li>";
+        	}
+        	pageBarHTML += "</ul>";
+    	
+        	$("div#pageBar").html(pageBarHTML);
+      	 }// end of if------------
+          
+       
+       
+    } // end of function makeCommentPageBar(currentShowPageNo)-------------
 	
 	
 </script>
@@ -169,8 +272,15 @@
 					<%-- user 의 tbl_point 데이터가 없을 때  끝 --%>
 					
 					<%-- user 의 tbl_point 데이터가 있을 때 시작  --%>
-					<c:if test="${not empty requestScope.user_point_list}">
+					<c:if test="${not empty requestScope.pointList}">
 					<div class="box">
+						<div class="c_flex" style="justify-content: end; padding: 0 2rem 1rem 0;">
+							<select name="searchType" style="padding: 0.3rem 1rem;">
+								<option value="all">전체</option>
+								<option value="get">적립</option>
+								<option value="use">사용</option>
+							</select>
+						</div>						
 						<table style="width: 100%; line-height: 3rem;">
 							<thead>
 								<tr>
@@ -181,7 +291,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<c:forEach var="p_list" items="${requestScope.user_point_list}">
+								<c:forEach var="p_list" items="${requestScope.pointList}">
 									<tr>
 										<td>${p_list.pt_change_date}</td>
 										<td style="line-height: 1.5rem; height: 100%; padding-top:0.5rem;">
@@ -198,10 +308,12 @@
 											<td>적립</td>
 										</c:if>
 									</tr>
-								</c:forEach> 
-								
+								</c:forEach> 								
 							</tbody>
 						</table>
+					   <div id="pageBar" align="center" style="border: solid 0px gray; width:80%; margin: 30px auto;">
+					    	<%-- ${requestScope.pageBar} --%>
+					   </div>
 					</div>
 					</c:if>
 					<%-- user 의 tbl_point 데이터가 있을 때 끝  --%>

@@ -581,4 +581,104 @@
 		insert into tbl_wishlist (wishlist_seq, fk_lodge_id, fk_userid) values (seq_tbl_wishlist.nextval, #{lodge_id}, #{userid})
 	</insert>
 	
+	<resultMap type="HashMap" id="getReviewList_Map">
+		<result property="RV_SEQ"         column="RV_SEQ"         javaType="String"></result>
+		<result property="FK_LODGE_ID"    column="FK_LODGE_ID"    javaType="String"></result>
+		<result property="LG_NAME"        column="LG_NAME"        javaType="String"></result>
+		<result property="FK_RS_SEQ"      column="FK_RS_SEQ"      javaType="String"></result>
+		<result property="FK_USERID"      column="FK_USERID"      javaType="String"></result>
+		<result property="RS_NAME"        column="RS_NAME"        javaType="String"></result>
+		<result property="RV_SUBJECT"     column="RV_SUBJECT"     javaType="String"></result>
+		<result property="RV_CONTENT"     column="RV_CONTENT"     javaType="String"></result>
+		<result property="RV_REGDATE"     column="RV_REGDATE"     javaType="String"></result>
+		<result property="RV_STATUS"      column="RV_STATUS"      javaType="String"></result>
+		<result property="RV_ORG_SEQ"     column="RV_ORG_SEQ"     javaType="String"></result>
+		<result property="RV_DEPTHNO"     column="RV_DEPTHNO"     javaType="String"></result>
+		<result property="FK_RV_RATING"   column="FK_RV_RATING"   javaType="String"></result>
+		<result property="RV_RATING_DESC" column="RV_RATING_DESC" javaType="String"></result>		
+		<result property="LIVEDATE"       column="LIVEDATE"       javaType="String"></result>		
+		<result property="RS_DATE"        column="RS_DATE"        javaType="String"></result>		
+		<result property="LIKECNT"        column="LIKECNT"        javaType="String"></result>		
+	</resultMap>	
+	<select id="getReviewList" parameterType="HashMap" resultMap="getReviewList_Map">
+		WITH F AS (
+		   SELECT V.RV_SEQ, V.FK_LODGE_ID, L.LG_NAME, V.FK_RS_SEQ, V.FK_USERID, U.NAME as RS_NAME, V.RV_SUBJECT, V.RV_CONTENT
+		         , TO_CHAR(V.rv_regdate, 'yyyy"년" mm"월" dd"일"') AS RV_REGDATE, V.RV_STATUS, V.RV_GROUPNO, V.RV_ORG_SEQ, V.RV_DEPTHNO
+		         , V.FK_RV_RATING, T.RV_RATING_DESC
+		         , (TO_DATE(R.rs_checkoutdate, 'YYYY-MM-DD') - TO_DATE(R.rs_checkindate, 'YYYY-MM-DD')) || '박' AS livedate
+		         , to_char(R.RS_DATE, 'YYYY"년"MM"월"') as RS_DATE
+		   FROM (
+		        SELECT RV_SEQ, FK_LODGE_ID, FK_RS_SEQ, FK_USERID, RV_SUBJECT, RV_CONTENT, RV_REGDATE, RV_STATUS, RV_GROUPNO, RV_ORG_SEQ, RV_DEPTHNO, FK_RV_RATING
+		        FROM tbl_review
+		        UNION ALL 
+		        SELECT C_SEQ, FK_LODGE_ID, FK_RS_SEQ, FK_H_USERID, C_SUBJECT, C_CONTENT, C_REGDATE, C_STATUS, C_GROUPNO, C_ORG_SEQ, C_DEPTHNO, FK_C_RATING
+		        FROM tbl_comment
+		   ) V
+		   LEFT JOIN tbl_reservation R ON R.RS_SEQ = V.FK_RS_SEQ
+		   LEFT JOIN tbl_lodge L ON L.LODGE_ID = V.FK_LODGE_ID
+		   LEFT JOIN tbl_rating T ON T.RV_RATING = V.FK_RV_RATING
+		   LEFT JOIN tbl_user U ON U.USERID = V.FK_USERID
+		   WHERE V.RV_STATUS = 1 and V.FK_LODGE_ID = #{lodge_id} 
+		   <if test="searchWord != ''">
+		   		AND RV_CONTENT LIKE '%${searchWord}%'
+		   </if>
+		   <!-- AND RV_CONTENT LIKE %% -->
+		)
+		,
+		R as
+		(
+		    select fk_rv_seq, count(*) as likecnt
+		    from tbl_review_like
+		    group by fk_rv_seq
+		)
+		SELECT RV_SEQ, FK_LODGE_ID, LG_NAME, FK_RS_SEQ, FK_USERID, RS_NAME, RV_SUBJECT, RV_CONTENT,
+       		   RV_REGDATE, RV_STATUS, RV_GROUPNO, RV_ORG_SEQ, RV_DEPTHNO, FK_RV_RATING, RV_RATING_DESC, LIVEDATE, RS_DATE,
+       		   NVL(LIKECNT, 0) AS LIKECNT
+		FROM  F
+		left join R on F.RV_SEQ = R.FK_RV_SEQ
+		START WITH RV_ORG_SEQ = 0 
+		CONNECT BY PRIOR RV_SEQ = RV_ORG_SEQ 
+		ORDER SIBLINGS BY 
+		<if test="orderType == 'h_rate_rv'">
+			to_number(FK_RV_RATING) DESC, rv_regdate desc
+		</if>
+		<if test="orderType == 'l_rate_rv'">
+			to_number(FK_RV_RATING) ASC, rv_regdate desc
+		</if>		
+		<if test="orderType == 'recent_rv' or orderType == ''">
+			rv_regdate desc, to_number(FK_RV_RATING) DESC
+		</if>
+		
+	</select>
+			
+	<select id="getRvcntByRate" parameterType="HashMap" resultType="HashMap">
+		select two, four, six, eight, ten
+		from
+		(
+		    select fk_lodge_id, fk_rv_rating
+		    from tbl_review
+		    where fk_lodge_id=#{lodge_id}
+		)
+		pivot(
+		    count(fk_rv_rating) for fk_rv_rating in(2 as two, 4 as four, 6 as six , 8 as eight, 10 as ten)
+		)
+	</select>
+	
+	<!-- 좋아요 버튼을 눌렀을 때 insert 해주는 것  -->	
+	<insert id="likeAdd" parameterType="HashMap">
+		 insert into tbl_review_like(FK_USERID, FK_RV_SEQ) values(#{userid}, #{rv_seq})
+	</insert>
+	 
+ 	<!-- 좋아요 두번 누르면 취소하기 버튼 -->
+	<delete id="likeDelete" parameterType="HashMap">
+		delete from tbl_review_like
+    	where fk_userid = #{userid} and FK_RV_SEQ = #{rv_seq}	
+	</delete>
+	
+	<!-- 좋아요 개수 -->
+   	<select id="getCnt" parameterType="String" resultType="HashMap">
+      	select count(*) as likecnt
+   		from tbl_review_like
+   		where fk_rv_seq = #{rv_seq}
+   	</select>
 </mapper>

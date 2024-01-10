@@ -637,7 +637,7 @@ public class LodgeService_imple implements LodgeService {
 	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor= {Throwable.class})
 	@Override
 	public int register_rm(HashMap<String, String> paraMap, HttpServletRequest request) throws Throwable {
-		
+																						
 		int n1=0,n2=0,n3=0,n4=0,n5=0,n6=0,result=0;
 		
 		String update_room_seq = paraMap.get("update_room_seq");
