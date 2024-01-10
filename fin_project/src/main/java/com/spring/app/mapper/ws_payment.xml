@@ -114,12 +114,6 @@
 		values(SEQ_TBL_POINT.nextval, #{userid}, #{rs_seq}, sysdate, -#{used_point})
 	</insert>
 	
-	<!-- rs_seq를 가져와서 tbl_point에 insert 하기  (0넣기) -->
-	<insert id="ws_updateTblPointA2">
-		insert into tbl_point(pt_seq, fk_userid, fk_rs_seq, pt_change_date, pt_amount)
-		values(SEQ_TBL_POINT.nextval, #{userid}, #{rs_seq}, sysdate, 0)
-	</insert>
-	
 	<!-- rs_seq를 가져와서 tbl_point에 insert 하기  (+point - 사용한 point) -->
 	<insert id="ws_updateTblPointB1" parameterType="HashMap">
 		insert into tbl_point(pt_seq, fk_userid, fk_rs_seq, pt_change_date, pt_amount)
@@ -145,6 +139,22 @@
               ,count(*) as rv_cnt
 		from tbl_review
 		where fk_lodge_id = #{lodge_id}
+	</select>
+	
+	
+	<!-- 룸 이미지 이름 불러오기 -->
+	<resultMap type="HashMap" id="ws_getRm_saveImg_Map"><!-- 한 컬럼씩 써야한다. (property는 컬럼에 대한 키값)-->
+		<result property="rm_img_save_name" column="rm_img_save_name" 	javaType="String" />
+		<result property="fk_lodge_id" 		column="fk_lodge_id" 		javaType="String" />
+	</resultMap>
+	
+	<select id="ws_getRm_saveImg" parameterType="String" resultMap="ws_getRm_saveImg_Map">
+		select rm_img_save_name, fk_lodge_id
+		from tbl_rm_img I
+		join tbl_room R
+		on R.rm_seq = I.fk_rm_seq
+		where fk_rm_seq = #{rm_seq}
+		and rm_img_main = 1
 	</select>
 	
 	
