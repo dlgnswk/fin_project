@@ -41,6 +41,6 @@ public interface PaymentService {
 	List<ReservationVO> getRsSeqNo();
 
 	// rs_seq를 가져와서 tbl_point에 insert 하기
-	int updateTblPoint(String rs_seq);
+	int updateTblPoint(Map<String, String> paraMap);
 
 }

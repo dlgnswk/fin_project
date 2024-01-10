@@ -89,6 +89,12 @@
 		select count(*)
 		from tbl_point
 		where fk_userid = #{userid}
+		<if test="searchType == 'get'">
+			and pt_amount <![CDATA[>=]]> 0
+		</if>
+		<if test="searchType == 'use'">
+			and pt_amount <![CDATA[<]]> 0
+		</if>		
 	</select>
 	
 	

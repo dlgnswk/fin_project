@@ -265,31 +265,39 @@
 	<!-- 총 숙소 수를 알아오는 메소드 -->
 	<select id="getLodgeCnt" resultType="int" parameterType="HashMap">
 		select count(*)
-		from tbl_lodge
-		where 1=1
-		<if test='lg_status != ""'>
-	      and lg_status = #{lg_status}
-	    </if>
-		<choose>
-			<when test='searchType == "fk_h_userid" and searchWord != ""'>
-				and lower(fk_h_userid) like '%'||lower(#{searchWord})||'%'
-			</when>
-			
-			<when test='searchType == "fk_lodge_type" and searchWord != ""'>
-				and lower(fk_lodge_type) like '%'||lower(#{searchWord})||'%'
-			</when>
-			
-			<when test='total_address == "email" and searchWord != ""'>
-				and lower(total_address) like '%'||lower(#{searchWord})||'%'
-			</when>
-			
-			<when test='fk_lodge_type == "email" and searchWord != ""'>
-				and lower(fk_lodge_type) like '%'||lower(#{searchWord})||'%'
-			</when>
-			
-			<otherwise>
-			</otherwise>
-		</choose>
+		from
+		    (
+		    select lodge_id, total_address, lg_status, fk_h_userid, lg_name, row_number() over (order by lodge_id asc) as rno
+		    from
+		        (
+		        select distinct lodge_id, lg_address as total_address
+		              ,lg_status, fk_h_userid, lg_name
+		              from tbl_lodge L
+		              join tbl_lg_img I
+		              on L.lodge_id = I.fk_lodge_id
+		              where 1=1
+		              <if test='lg_status != ""'>
+					    and lg_status = #{lg_status}
+					  </if>
+		              and fk_img_cano = '0'
+		              <choose>
+						<when test='searchType == "fk_h_userid" and searchWord != ""'>
+							and lower(fk_h_userid) like '%'||lower(#{searchWord})||'%'
+						</when>
+						
+						<when test='searchType == "lg_name" and searchWord != ""'>
+							and lower(lg_name) like '%'||lower(#{searchWord})||'%'
+						</when>
+						
+						<when test='searchType == "total_address" and searchWord != ""'>
+							and lower(lg_address) like '%'||lower(#{searchWord})||'%'
+						</when>
+						
+						<otherwise>
+						</otherwise>
+					</choose>
+		        )
+		    ) 
 	</select>
 
 
@@ -299,36 +307,42 @@
 	</resultMap>
 	
 	<select id="getLodgeIdMapList" parameterType="HashMap" resultMap="getLodgeIdMapList_Map" >
-		select lodge_id, total_address, lg_status, fk_h_userid, lg_name
+		select lodge_id, total_address, lg_status, fk_h_userid, lg_name, rno
 		from
-		(
-		select lodge_id, lg_address as total_address
-		      ,lg_status, fk_h_userid, lg_name
-		      ,row_number() over (order by lodge_id asc) as rno
-		from tbl_lodge
-		where 1=1
-		<if test='lg_status != ""'>
-	      and lg_status = #{lg_status}
-	    </if>
-		)
-		where 1=1
-		<choose>
-			<when test='searchType == "fk_h_userid" and searchWord != ""'>
-				and lower(fk_h_userid) like '%'||lower(#{searchWord})||'%'
-			</when>
-			
-			<when test='searchType == "lg_name" and searchWord != ""'>
-				and lower(lg_name) like '%'||lower(#{searchWord})||'%'
-			</when>
-			
-			<when test='searchType == "total_address" and searchWord != ""'>
-				and lower(total_address) like '%'||lower(#{searchWord})||'%'
-			</when>
-			<otherwise>
-			</otherwise>
-		</choose>
-		and rno between #{startRno} and #{endRno}
+		    (
+		    select lodge_id, total_address, lg_status, fk_h_userid, lg_name, row_number() over (order by lodge_id asc) as rno
+		    from
+		        (
+		        select distinct lodge_id, lg_address as total_address
+		              ,lg_status, fk_h_userid, lg_name
+		              from tbl_lodge L
+		              join tbl_lg_img I
+		              on L.lodge_id = I.fk_lodge_id
+		              where 1=1
+		              <if test='lg_status != ""'>
+					    and lg_status = #{lg_status}
+					  </if>
+		              and fk_img_cano = '0'
+		              <choose>
+						<when test='searchType == "fk_h_userid" and searchWord != ""'>
+							and lower(fk_h_userid) like '%'||lower(#{searchWord})||'%'
+						</when>
+						
+						<when test='searchType == "lg_name" and searchWord != ""'>
+							and lower(lg_name) like '%'||lower(#{searchWord})||'%'
+						</when>
+						
+						<when test='searchType == "total_address" and searchWord != ""'>
+							and lower(lg_address) like '%'||lower(#{searchWord})||'%'
+						</when>
+						<otherwise>
+						</otherwise>
+					</choose> 
+		        )
+		    )
+		where rno between #{startRno} and #{endRno}
 	</select>
+	
 	
 	
 	
