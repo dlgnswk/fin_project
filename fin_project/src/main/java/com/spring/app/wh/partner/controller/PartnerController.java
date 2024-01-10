@@ -612,11 +612,10 @@ public class PartnerController {
 		
 		Map<String, String> paraMap = new HashMap<>();
 		
-		
-		
-		
 		// 로그인한 유저의 예약한 lodge_id 리스트 가져오기 
 		List<String> lodgeIdList = service.selectLodgeIdList(userid);
+		
+		System.out.println("컨트롤러 lodgeIdList : "+lodgeIdList);
 		
 		for(String lodgeId :lodgeIdList) {
 			
