@@ -80,16 +80,32 @@
 	
 	<!-- 적립을 한 상태로 보유포인트 update하기 -->
 	<update id="ws_updateMyPoint" parameterType="HashMap">
-		update tbl_user set point = point - to_number(#{used_point}) + to_number(#{to_insert_point})
+		update tbl_user set point = point - to_number(#{used_point}) + to_number(#{point})
 		where userid = #{userid}
 	</update>
 	
 	
 	<!-- 포인트만 update하기 -->
 	<update id="ws_updateUsedPoint" parameterType="HashMap">
-		update tbl_user set point = point + to_number(#{to_insert_point})
+		update tbl_user set point = point + to_number(#{point})
 		where userid = #{userid}
 	</update>
+	
+	
+	
+	<!-- reservation 테이블에서 방금 예약한 rs_seq 불러오기 -->
+	<select id="ws_getRsSeqNo" resultType="com.spring.app.expedia.domain.ReservationVO">
+		select max(to_number(rs_seq)) as rs_seq
+		from tbl_reservation
+	</select>
+	
+	
+	<!-- rs_seq를 가져와서 tbl_point에 insert 하기 -->
+	<insert id="ws_updateTblPoint" parameterType="String">
+		insert into tbl_point(pt_seq, fk_userid, fk_rs_seq, pt_change_date, pt_amount, pt_sale)
+		values(SEQ_TBL_POINT.nextval, 'sswonstone@gmail.com', rs_seq, sysdate, point, used_point)
+	</insert>
+	
 	
 	
 	<!-- 숙박업소 별 후기 가져오기 -->
