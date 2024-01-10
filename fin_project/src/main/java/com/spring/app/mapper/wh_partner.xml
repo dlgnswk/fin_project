@@ -96,18 +96,32 @@
 	
 	
 	<!-- 현재 로그인되어있는 회원(구매자)의 채팅방 목록 가져오기  -->
+	
 	<select id="getChatRoomList" parameterType="HashMap" resultType="com.spring.app.expedia.domain.ChatVO"> 
-		SELECT chat_no, fk_userid, fk_lodge_id ,chat_date
-		FROM 
-		(
-		 select row_number() over(order by chat_date desc) AS rno 
-		      , chat_no, fk_userid, fk_lodge_id
-		 	  , to_char(chat_date, 'yyyy-mm-dd hh24:mi:ss') AS chat_date
-		 from tbl_chat
-		 where fk_userid = #{userid}
-		) V 
-		WHERE rno between #{startRno} and #{endRno}
+	select A.chat_no, A.fk_userid, A.fk_lodge_id, A.chat_date, V.lg_img_name
+	from
+	(select * from tbl_chat where fk_userid = #{userid}) A
+	join 
+	(select fk_lodge_id, lg_img_name from tbl_lg_img where lg_img_seq = 
+	    (select min(lg_img_seq) as lg_img_seq 
+	     from 
+	        (select lg_img_seq, fk_lodge_id, lg_img_save_name, lg_img_name 
+	        from tbl_lg_img 
+	        where fk_lodge_id = #{lodgeId}) 
+	        group by fk_lodge_id )
+	    ) V
+	on A.fk_lodge_id = V.fk_lodge_id
+
 	</select>
+	
+	<!-- 로그인한 유저의 예약한 lodge_id 리스트 가져오기 -->
+	<select id="selectLodgeIdList" parameterType="String" resultType="String">
+	select fk_lodge_id 
+	from tbl_chat 
+	where fk_userid = #{userid}
+	</select>
+	
+	
 	
 	
 	<!-- 총 채팅방 갯수(totalChatRoomCount) 가져오기  -->
@@ -118,15 +132,21 @@
 	</select> 
 	
 	
-	
-	
-	
-	<!-- 채팅방 불러오기 -->
+	<!-- 채팅방 불러오기(구매자) -->
 	<select id="selectChat" parameterType="HashMap" resultType="com.spring.app.expedia.domain.ChatVO">
 		select chat_no, fk_userid, fk_lodge_id ,chat_date
 		from tbl_chat
 		where fk_lodge_id = #{fk_lodge_id} and fk_userid = #{fk_userid}
 	</select>  
+	
+	<!-- 사업장명 을 알아오기(구매자 입장의 채팅방에서 사업장명 쓰기 위함) -->
+	<select id="selectH_name" parameterType="String" resultType="String">
+		select H.h_lodgename
+	    from tbl_host H
+	    join tbl_lodge L
+	    on H.h_userid = L.fk_h_userid
+	    where L.lodge_id = #{fk_lodge_id}
+	</select>
 	
 	
 	<!-- 기존 채팅방이 없는 경우 새로운 채팅방을 만들기 -->
@@ -139,30 +159,82 @@
 	<!-- 채팅쓰기(tbl_reply 테이블에 insert) -->
 	<insert id="addChat" parameterType="HashMap" >
 	     insert into tbl_reply(reply_no, reply_comment, reply_date, fk_chat_no, r_status)
-	     values(seq_tbl_reply.nextval, #{msg}, default, #{chat_no}, 0)
+	     values(seq_tbl_reply.nextval, #{chat_comment}, default, #{chat_no}, 0)
 	</insert>
 	
 	<!-- 채팅들을 페이징 처리해서 조회해오기 -->
 	<select id="getChatList" parameterType="HashMap" resultType="com.spring.app.expedia.domain.ReplyVO"> 
-		SELECT reply_no, reply_comment, reply_date, r_status, reply_date
-		FROM 
-		(
 		select row_number() over(order by reply_date asc) AS rno
-		     , reply_no, reply_comment, to_char(reply_date, 'yyyy-mm-dd hh24:mi:ss') AS reply_date
+		     , reply_no, reply_comment, to_char(reply_date, 'yyyy-mm-dd hh24:mi') AS reply_date
 		     , fk_chat_no, r_status 
 		from tbl_reply
-		where r_status = 0 and fk_chat_no = #{fk_chat_no}
-		) V
-		WHERE rno BETWEEN #{startRno} AND #{endRno}
+		where fk_chat_no = #{fk_chat_no}
 	</select>
 	
 	
-	<!-- 채팅방 번호에 해당하는 채팅의 totalPage 수 알아오기 -->
-	<select id="getChatTotalCount" parameterType="HashMap" resultType="int">
-		select ceil(count(*)/#{sizePerPage})
+	
+	
+	<!-- 판매자의 lodge_id 알아오기 -->
+	<select id="selectLodgeID" parameterType="String" resultType="String">
+		select lodge_id
+	    from tbl_lodge
+	    where fk_h_userid = #{h_userid}	
+	</select>
+	
+	
+	<!-- 판매자 총 채팅방 갯수(totalHostChatRoomCount) 가져오기  -->
+	<select id="getTotalHostChatRoomCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_chat
+		where fk_lodge_id = #{lodge_id}
+	</select> 
+	
+	
+	<!-- 현재 로그인되어있는 사업자(판매자)의 채팅방 목록 가져오기  -->	
+	<select id="getHostChatRoomList" parameterType="HashMap" resultType="com.spring.app.expedia.domain.ChatVO"> 
+		SELECT chat_no, fk_userid, fk_lodge_id ,chat_date
+		FROM 
+		(
+		 select row_number() over(order by chat_date desc) AS rno 
+		      , chat_no, fk_userid, fk_lodge_id
+		 	  , to_char(chat_date, 'yyyy-mm-dd hh24:mi') AS chat_date
+		 from tbl_chat
+		 where fk_lodge_id = #{lodge_id}
+		) V 
+		WHERE rno between #{startRno} and #{endRno}
+	</select>
+	
+	
+	<!-- 채팅방 불러오기(판매자) --> 
+	<select id="selectHostChat" parameterType="HashMap" resultType="com.spring.app.expedia.domain.ChatVO">
+		select chat_no, fk_userid, fk_lodge_id ,chat_date
+		from tbl_chat
+		where fk_lodge_id = #{lodge_id} and fk_userid = #{fk_userid}
+	</select>
+	
+	<!-- 채팅쓰기(판매자) -->
+	<insert id="addHostChat" parameterType="HashMap" >
+	     insert into tbl_reply(reply_no, reply_comment, reply_date, fk_chat_no, r_status)
+	     values(seq_tbl_reply.nextval, #{hostChat_comment}, default, #{chat_no}, 1)
+	</insert>
+	
+	<!-- 채팅들을 페이징 처리해서 조회해오기 (판매자) -->
+	<select id="getHostChatList" parameterType="HashMap" resultType="com.spring.app.expedia.domain.ReplyVO"> 
+		select row_number() over(order by reply_date asc) AS rno
+		     , reply_no, reply_comment, to_char(reply_date, 'yyyy-mm-dd hh24:mi') AS reply_date
+		     , fk_chat_no, r_status 
 		from tbl_reply
 		where fk_chat_no = #{fk_chat_no}
-	</select> 
+	</select>
+	
+	<!-- 예약자 이름을 알아오기(판매자 입장의 채팅방에서 예약자명 쓰기 위함) -->
+	<select id="selectName" parameterType="String" resultType="String">
+		select name
+	    from tbl_user
+	    where userid = #{fk_userid}	
+	</select>
+	
+	
 	
 	
 </mapper>

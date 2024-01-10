@@ -33,6 +33,9 @@ public interface PartnerDAO {
 	// 채팅방 불러오기
 	ChatVO selectChat(Map<String,String> paraMap);
 
+	// 사업장명 을 알아오기(구매자 입장의 채팅방에서 사업장명 쓰기 위함)
+	String selectH_name(String fk_lodge_id);	
+	
 	// 기존 채팅방이 없는 경우 새로운 채팅방을 만들기
 	int createChat(Map<String, String> paraMap);
 
@@ -42,14 +45,37 @@ public interface PartnerDAO {
 	// 채팅들을 페이징 처리해서 조회해오기 
 	List<ReplyVO> getChatList(Map<String, String> paraMap);
 
-	// 채팅방 번호에 해당하는 채팅의 totalCount 수 알아오기
-	int getChatTotalCount(Map<String, String> paraMap);
-
 	// 현재 로그인되어있는 회원의 채팅방 목록 가져오기
 	List<ChatVO> getChatRoomList(Map<String, String> paraMap);
 
 	// 총 채팅방 갯수(totalChatRoomCount) 가져오기
-	int getTotalChatRoomCount(Map<String, String> paraMap);	
+	int getTotalChatRoomCount(Map<String, String> paraMap);
+
+	// 판매자의 lodge_id 알아오기
+	String selectLodgeID(String h_userid);
+
+	// 판매자 총 채팅방 갯수(totalHostChatRoomCount) 가져오기
+	int getTotalHostChatRoomCount(Map<String, String> paraMap);
+
+	// 현재 로그인되어있는 사업자(판매자)의 채팅방 목록 가져오기
+	List<ChatVO> getHostChatRoomList(Map<String, String> paraMap);
+
+	// 채팅쓰기(판매자)
+	int addHostChat(Map<String, String> paraMap);
+
+	// 채팅들을 페이징 처리해서 조회해오기 (판매자)
+	List<ReplyVO> getHostChatList(Map<String, String> paraMap);
+
+	// 채팅방 불러오기(판매자)
+	ChatVO selectHostChat(Map<String, String> paraMap);
+
+	// 예약자 이름을 알아오기(판매자 입장의 채팅방에서 예약자명 쓰기 위함)
+	String selectName(String fk_userid);
+
+	// 로그인한 유저의 예약한 lodge_id 리스트 가져오기 
+	List<String> selectLodgeIdList(String userid);
+
+	
 	
 	
 }

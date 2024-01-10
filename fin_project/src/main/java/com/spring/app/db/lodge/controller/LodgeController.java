@@ -1064,10 +1064,6 @@ public class LodgeController {
 
 		System.out.println("rm_breakfast_yn => " + rm_breakfast_yn); // 25
 		
-		String[] arr_fk_snk_opt_no = request.getParameterValues("fk_snk_opt_no");
-		for(int i=0; i<arr_fk_snk_opt_no.length ; i++) {
-			System.out.println(arr_fk_snk_opt_no[i]);
-		} // end of for ----------
 		
 		int n = 0;
 		try {

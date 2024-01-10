@@ -69,6 +69,14 @@ public class PartnerDAO_imple implements PartnerDAO {
 		return chatvo;
 	}
 
+	// 사업장명 을 알아오기(구매자 입장의 채팅방에서 사업장명 쓰기 위함)
+	@Override
+	public String selectH_name(String fk_lodge_id) {
+		String h_name = sqlsession.selectOne("wh_partner.selectH_name",fk_lodge_id);
+		return h_name;
+	}
+
+	
 	// 기존 채팅방이 없는 경우 새로운 채팅방을 만들기
 	@Override
 	public int createChat(Map<String, String> paraMap) {
@@ -84,7 +92,14 @@ public class PartnerDAO_imple implements PartnerDAO {
 		return n;
 	}
 	
-
+	// 로그인한 유저의 예약한 lodge_id 리스트 가져오기 
+	@Override
+	public List<String> selectLodgeIdList(String userid) {
+		List<String> lodgeIdList = sqlsession.selectList("wh_partner.selectLodgeIdList",userid);
+		return lodgeIdList;
+	}
+	
+	
 	// 채팅들을 페이징 처리해서 조회해오기
 	@Override
 	public List<ReplyVO> getChatList(Map<String, String> paraMap) {
@@ -92,13 +107,6 @@ public class PartnerDAO_imple implements PartnerDAO {
 		return chatList;
 	}
 
-	
-	// 채팅방 번호에 해당하는 채팅의 totalCount 수 알아오기
-	@Override
-	public int getChatTotalCount(Map<String, String> paraMap) {
-		int totalCount = sqlsession.selectOne("wh_partner.getChatTotalCount",paraMap);
-		return totalCount;
-	}
 
 	
 	// 현재 로그인되어있는 회원(구매자)의 채팅방 목록 가져오기
@@ -111,9 +119,62 @@ public class PartnerDAO_imple implements PartnerDAO {
 	// 총 채팅방 갯수(totalChatRoomCount) 가져오기
 	@Override
 	public int getTotalChatRoomCount(Map<String, String> paraMap) {
-		int getTotalChatRoomCount = sqlsession.selectOne("wh_partner.getTotalChatRoomCount", paraMap);
-		return getTotalChatRoomCount;
+		int totalChatRoomCount = sqlsession.selectOne("wh_partner.getTotalChatRoomCount", paraMap);
+		return totalChatRoomCount;
 	}
+
+	// 판매자의 lodge_id 알아오기
+	@Override
+	public String selectLodgeID(String h_userid) {
+		String lodge_id = sqlsession.selectOne("wh_partner.selectLodgeID", h_userid);
+		return lodge_id;
+	}
+
+	// 판매자 총 채팅방 갯수(totalHostChatRoomCount) 가져오기
+	@Override
+	public int getTotalHostChatRoomCount(Map<String, String> paraMap) {
+		int totalHostChatRoomCount = sqlsession.selectOne("wh_partner.getTotalHostChatRoomCount", paraMap);
+		return totalHostChatRoomCount;
+	}
+
+	// 현재 로그인되어있는 사업자(판매자)의 채팅방 목록 가져오기
+	@Override
+	public List<ChatVO> getHostChatRoomList(Map<String, String> paraMap) {
+		List<ChatVO> hostChatRoomList = sqlsession.selectList("wh_partner.getHostChatRoomList", paraMap);
+		return hostChatRoomList;
+	}
+
+	// 채팅쓰기(판매자)
+	@Override
+	public int addHostChat(Map<String, String> paraMap) {
+		int n = sqlsession.insert("wh_partner.addHostChat",paraMap);
+		return n;
+	}
+
+	// 채팅들을 페이징 처리해서 조회해오기 (판매자)
+	@Override
+	public List<ReplyVO> getHostChatList(Map<String, String> paraMap) {
+		List<ReplyVO> hostChatList = sqlsession.selectList("wh_partner.getHostChatList",paraMap);
+		return hostChatList;
+	}
+
+	// 채팅방 불러오기(판매자)
+	@Override
+	public ChatVO selectHostChat(Map<String, String> paraMap) {
+		ChatVO chatvo = sqlsession.selectOne("wh_partner.selectHostChat", paraMap);
+		return chatvo;
+	}
+
+	// 예약자 이름을 알아오기(판매자 입장의 채팅방에서 예약자명 쓰기 위함)
+	@Override
+	public String selectName(String fk_userid) {
+		String name = sqlsession.selectOne("wh_partner.selectName", fk_userid);
+		return name;
+	}
+
+	
+
+	
 	
 
 }
