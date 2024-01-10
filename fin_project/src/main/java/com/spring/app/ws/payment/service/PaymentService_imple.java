@@ -100,10 +100,11 @@ public class PaymentService_imple implements PaymentService {
 	}
 
 
+
 	// rs_seq를 가져와서 tbl_point에 insert 하기
 	@Override
-	public int updateTblPoint(String rs_seq) {
-		int s = dao.updateTblPoint(rs_seq);
+	public int updateTblPoint(Map<String, String> paraMap) {
+		int s = dao.updateTblPoint(paraMap);
 		return s;
 	}
 
