@@ -168,6 +168,7 @@
 	
 	
 </script>
+<title>Expedia 포인트 리워드</title>
 <body>
 	<div id="activity_page_wrap" class="site-content-wrap">
 		<div class="site-content cols-row" role="main">
