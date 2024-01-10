@@ -41,6 +41,18 @@ public interface PaymentDAO {
 	List<ReservationVO> getRsSeqNo();
 
 	// rs_seq를 가져와서 tbl_point에 insert 하기
-	int updateTblPoint(Map<String, String> paraMap);
+	// int updateTblPoint(Map<String, String> paraMap);
+
+	// rs_seq를 가져와서 tbl_point에 insert 하기  (-사용한 point)
+	int updateTblPointA1(Map<String, String> paraMap);
+
+	// rs_seq를 가져와서 tbl_point에 insert 하기  (0넣기)
+	int updateTblPointA2();
+
+	// rs_seq를 가져와서 tbl_point에 insert 하기  (+point - 사용한 point)
+	int updateTblPointB1(Map<String, String> paraMap);
+
+	// rs_seq를 가져와서 tbl_point에 insert 하기  (+point만넣기)
+	int updateTblPointB2(Map<String, String> paraMap);
 
 }

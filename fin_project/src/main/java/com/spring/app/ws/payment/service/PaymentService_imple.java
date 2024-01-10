@@ -102,9 +102,41 @@ public class PaymentService_imple implements PaymentService {
 
 
 	// rs_seq를 가져와서 tbl_point에 insert 하기
+	//@Override
+	//public int updateTblPoint(Map<String, String> paraMap) {
+	//	int s = dao.updateTblPoint(paraMap);
+	//	return s;
+	//}
+
+
+	// rs_seq를 가져와서 tbl_point에 insert 하기  (-사용한 point)
 	@Override
-	public int updateTblPoint(Map<String, String> paraMap) {
-		int s = dao.updateTblPoint(paraMap);
+	public int updateTblPointA1(Map<String, String> paraMap) {
+		int s = dao.updateTblPointA1(paraMap);
+		return s;
+	}
+
+
+	// rs_seq를 가져와서 tbl_point에 insert 하기  (0넣기)
+	@Override
+	public int updateTblPointA2() {
+		int s = dao.updateTblPointA2();
+		return s;
+	}
+
+
+	// rs_seq를 가져와서 tbl_point에 insert 하기  (+point - 사용한 point)
+	@Override
+	public int updateTblPointB1(Map<String, String> paraMap) {
+		int s = dao.updateTblPointB1(paraMap);
+		return s;
+	}
+
+
+	// rs_seq를 가져와서 tbl_point에 insert 하기  (+point만넣기)
+	@Override
+	public int updateTblPointB2(Map<String, String> paraMap) {
+		int s = dao.updateTblPointB2(paraMap);
 		return s;
 	}
 
