@@ -858,7 +858,7 @@
 		
 		</div>	
 		
-		<div class="my_travel_title">
+		<div id="wishList" class="my_travel_title">
 			위시리스트
 		</div>
 		
