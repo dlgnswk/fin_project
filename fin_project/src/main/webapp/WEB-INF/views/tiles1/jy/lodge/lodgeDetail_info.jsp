@@ -11,6 +11,7 @@
 	
 %>
 <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/css/jy/common.css"/>
+<link rel="icon" href="/png파일 경로">
 <style>
 	
 	/* ======== 숙소 상세보기 CSS 시작 - 지연 ======== */
@@ -29,7 +30,7 @@
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
-		aspect-ratio: 16:9;
+		aspect-ratio: 4/3;
 	} 
 	#main_img_0{
 		height: inherit;
@@ -133,6 +134,7 @@
     /* 헤더 로고 크기 안맞음 수정 */
     #headerOfheader > div > section > div > div > a > img {
    		width: 126px;
+   		aspect-ratio: auto;
     }
     
     /* ======== 숙소 상세보기 CSS 끝 - 지연 ========  */
@@ -606,10 +608,13 @@
 							}
 							if(item.RV_DEPTHNO > 0){
 								html += '<input type="hidden" name="rv_seq" size="38" value="'+item.RV_SEQ+'" autocomplete="off" readonly />'
-									  +	'<div>답변 제공: '+item.LG_NAME+'&nbsp;님 , '+item.RV_REGDATE+'</div>'
-									  + '<div>'+item.FK_USERID+'</div>'
-									  + '<div>'+item.RV_CONTENT+'</div>'
-									  + '<br>';				
+								  + '<div class="c_grid" style="gap: 0.875rem; padding: 0.5rem 0 1rem 1rem;">'
+							      + 	'<div class="c_flex" style="flex-direction: column; gap: 0.3rem;">'
+								  +			'<div class="c_txt_sm" style="font-weight:600">└ '+item.LG_NAME+' 님</div>'
+								  + 		'<div class="c_txt_sm" style="padding-left:1rem;">'+item.RV_REGDATE+'</div>'
+								  + 	'</div>'
+								  + 	'<div class="c_txt_sm" style="padding-left:1rem;">'+item.RV_CONTENT+'</div>'
+								  +	'</div>';			
 							}							
 							html += '</div>';
 						});
@@ -930,7 +935,7 @@
 		const ttl_guest_cnt = Number($("input:hidden[name='adults']").val()) + Number($("input:hidden[name='childs']").val());
 		$("input:hidden[name='rm_seq']").val(rm_seq);
 		$("input:hidden[name='h_userid']").val("${requestScope.lodgeinfo.FK_H_USERID}");
-		$("input:hidden[name='pay_type']").val("1");
+		$("input:hidden[name='payType']").val("1");
 		$("input:hidden[name='ttl_guest_cnt']").val(ttl_guest_cnt);
 		
 		const frm = document.rmSearchFrm;
@@ -977,17 +982,19 @@
 									  + 	'</div>'
 									  + 	'<div class="reviewfindBtn">'
 									  +			'<button type="button" onclick="golikeAdd(\''+item.RV_SEQ+'\',this)"><svg xmlns="http://www.w3.org/2000/svg" style="margin-right: 5px;" height="16" width="16" fill="rgba(35, 121, 255, 0.89)" viewBox="0 0 512 512"> <path d="M313.4 32.9c26 5.2 42.9 30.5 37.7 56.5l-2.3 11.4c-5.3 26.7-15.1 52.1-28.8 75.2H464c26.5 0 48 21.5 48 48c0 18.5-10.5 34.6-25.9 42.6C497 275.4 504 288.9 504 304c0 23.4-16.8 42.9-38.9 47.1c4.4 7.3 6.9 15.8 6.9 24.9c0 21.3-13.9 39.4-33.1 45.6c.7 3.3 1.1 6.8 1.1 10.4c0 26.5-21.5 48-48 48H294.5c-19 0-37.5-5.6-53.3-16.1l-38.5-25.7C176 420.4 160 390.4 160 358.3V320 272 247.1c0-29.2 13.3-56.7 36-75l7.4-5.9c26.5-21.2 44.6-51 51.2-84.2l2.3-11.4c5.2-26 30.5-42.9 56.5-37.7zM32 192H96c17.7 0 32 14.3 32 32V448c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32V224c0-17.7 14.3-32 32-32z" /></svg><button>'
-									  +			'<svg xmlns="http://www.w3.org/2000/svg" style="margin-right: 5px;" height="16" width="16" fill="rgba(35, 121, 255, 0.89)" viewBox="0 0 512 512" onclick="golikeAdd('+item.RV_SEQ+')"> <path d="M313.4 32.9c26 5.2 42.9 30.5 37.7 56.5l-2.3 11.4c-5.3 26.7-15.1 52.1-28.8 75.2H464c26.5 0 48 21.5 48 48c0 18.5-10.5 34.6-25.9 42.6C497 275.4 504 288.9 504 304c0 23.4-16.8 42.9-38.9 47.1c4.4 7.3 6.9 15.8 6.9 24.9c0 21.3-13.9 39.4-33.1 45.6c.7 3.3 1.1 6.8 1.1 10.4c0 26.5-21.5 48-48 48H294.5c-19 0-37.5-5.6-53.3-16.1l-38.5-25.7C176 420.4 160 390.4 160 358.3V320 272 247.1c0-29.2 13.3-56.7 36-75l7.4-5.9c26.5-21.2 44.6-51 51.2-84.2l2.3-11.4c5.2-26 30.5-42.9 56.5-37.7zM32 192H96c17.7 0 32 14.3 32 32V448c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32V224c0-17.7 14.3-32 32-32z" /></svg>'
 									  +			'<span class="likeCnt">'+item.LIKECNT+'</span>'
 									  + 	'</div>'
 									  + '</div>';
 							}
 							if(item.RV_DEPTHNO > 0){
 								html += '<input type="hidden" name="rv_seq" size="38" value="'+item.RV_SEQ+'" autocomplete="off" readonly />'
-									  +	'<div>답변 제공: '+item.LG_NAME+'&nbsp;님 , '+item.RV_REGDATE+'</div>'
-									  + '<div>'+item.FK_USERID+'</div>'
-									  + '<div>'+item.RV_CONTENT+'</div>'
-									  + '<br>';				
+									  + '<div class="c_grid" style="gap: 0.875rem; padding: 0.5rem 0 1rem 1rem;">'
+								      + 	'<div class="c_flex" style="flex-direction: column; gap: 0.3rem;">'
+									  +			'<div class="c_txt_sm" style="font-weight:600">└ '+item.LG_NAME+' 님</div>'
+									  + 		'<div class="c_txt_sm" style="padding-left:1rem;">'+item.RV_REGDATE+'</div>'
+									  + 	'</div>'
+									  + 	'<div class="c_txt_sm" style="padding-left:1rem;">'+item.RV_CONTENT+'</div>'
+									  +	'</div>';		
 							}							
 							html += '</div>';
 						});
@@ -1072,7 +1079,7 @@
 		</div>
 		<div id="top_main_img_container">
 			<c:if test="${not empty requestScope.lg_img_list}">	
-				<div id="top_main_img_wrap" class="c_grid" style="gap: 2px; height: 25rem;">							
+				<div id="top_main_img_wrap" class="c_grid" style="gap: 4px; height: 25rem;">							
 					<c:forEach items="${requestScope.lg_img_list}" var="img_list" varStatus="status">
 						<c:if test="${not status.last}">
 							<div id="main_img_${status.index}" onclick="goMoreImg()"><img src="<%= ctxPath%>/resources/images/${lodgeinfo.LODGE_ID}/lodge_img/${img_list.lg_img_save_name}" style="aspect-ratio:16/9;"></div>
@@ -1179,7 +1186,7 @@
 						<h3 class="c_h3_head5" style="padding-left: 0.5rem;">
 							<c:if test="${rv_rate>=7.0 and rv_rate<=7.9}">좋아요</c:if>
 							<c:if test="${rv_rate>=8.0 and rv_rate<=8.4}">매우 좋아요</c:if>
-							<c:if test="${rv_rate>=8.5 and rv_rate<=7.9}">훌륭해요</c:if>
+							<c:if test="${rv_rate>=8.5 and rv_rate<=8.9}">훌륭해요</c:if>
 							<c:if test="${rv_rate>=9.0 and rv_rate<=9.4}">매우 훌륭해요</c:if>
 							<c:if test="${rv_rate>=9.5 and rv_rate<=10.0}">최고에요</c:if>
 						</h3>
@@ -2668,7 +2675,7 @@
 				</button>
 				고객 이용 후기
 			</div>			
-			<div class="reviewModal_content" style="height: 525px; overflow-y: auto;  overflow-x: hidden; padding: 0 2rem;">
+			<div class="reviewModal_content" style="height: 77vh; overflow-y: auto;  overflow-x: hidden; padding: 0 2rem;">
 				<br>
 				<h4 class="rating_avg" style=" font-size: 1.25rem; font-weight: 600;"><fmt:formatNumber value="${requestScope.lodgeinfo.RV_RATING_AVG}" pattern=".0"/>/10.0 - 
 					<span>
@@ -2762,10 +2769,13 @@
 							</c:if>
 		                    <c:if test="${reviewList.RV_DEPTHNO > 0}">
 		                    	<input type="hidden" name="rv_seq" size="38" value="${reviewList.RV_SEQ}" autocomplete="off" readonly />
-								<div>답변 제공: ${reviewList.LG_NAME}님 , ${reviewList.RV_REGDATE}</div>
-								<div>${reviewList.FK_USERID}</div>
-								<div>${reviewList.RV_CONTENT}</div>
-								<br>
+								<div class="c_grid" style="gap: 0.875rem; padding: 0.5rem 0 1rem 1rem;">	
+									<div class="c_flex" style="flex-direction: column; gap: 0.3rem;">
+										<div class="c_txt_sm" style="font-weight:600">└ ${reviewList.LG_NAME} 님 </div>
+										<div class="c_txt_sm" style="padding-left:1rem;">${reviewList.RV_REGDATE}</div>
+									</div>
+									<div class="c_txt_sm" style="padding-left:1rem;">${reviewList.RV_CONTENT}</div>
+								</div>
 		                    </c:if>
 	                    </div>    
 					</c:forEach>                   
