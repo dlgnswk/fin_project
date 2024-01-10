@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -238,5 +239,68 @@ public class TripController {
 
 		return jsonObj.toString();
 	}
+	
+	// 채혁, 재훈 : 이용후기 입력 모달 창 띄우기
+	@ResponseBody
+	@GetMapping(value = "/reviewWrite.exp", produces="text/plain;charset=UTF-8")
+		public String reviewWriteModal(HttpServletRequest request) {
 		
+		String rs_seq = request.getParameter("rs_seq");
+		
+		System.out.println("rs_seq => " + rs_seq);
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("rs_seq", rs_seq);
+		
+		JSONObject jsonObj = new JSONObject();
+		
+		
+		return jsonObj.toString();
+	}
+	
+	
+	// 재훈 : 이용후기 입력하기
+	@PostMapping("/reviewInsert.exp")
+	public String reviewInsert(HttpServletRequest request) {
+
+		HttpSession session = request.getSession();
+		UserVO loginuser = (UserVO) session.getAttribute("loginuser");
+
+		String rs_seq = request.getParameter("rs_seq");
+		String fk_rv_rating = request.getParameter("fk_rv_rating");
+		String rv_subject = request.getParameter("rv_subject");
+		String rv_content = request.getParameter("rv_content");
+		
+		int n = 0;
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("userid", loginuser.getUserid());
+		paraMap.put("rs_seq", rs_seq);
+		paraMap.put("rv_rating", fk_rv_rating);
+		paraMap.put("rv_subject", rv_subject);
+		paraMap.put("rv_content", rv_content);
+		
+		n = service.reviewInsert(paraMap);
+		
+		if(n == 1) {
+			// 리뷰작성 성공
+			String message = "리뷰가 작성되었습니다.";
+			String loc = request.getContextPath()+"/trip.exp";
+			
+			request.setAttribute("message", message);
+			request.setAttribute("loc", loc);
+		}
+		else {
+			// 리뷰작성 실패
+			String message = "리뷰 작성에 실패했습니다.";
+			String loc = request.getContextPath()+"/trip.exp";
+			
+			request.setAttribute("message", message);
+			request.setAttribute("loc", loc);
+		}
+		
+		return "msg";
+		
+	}
+	
 }

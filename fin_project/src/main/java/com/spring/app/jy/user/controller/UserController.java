@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.spring.app.common.AES256;
+import com.spring.app.common.MyUtil;
 import com.spring.app.common.Sha256;
 import com.spring.app.expedia.domain.UserVO;
 import com.spring.app.jy.user.service.UserService;
@@ -120,6 +122,7 @@ public class UserController {
 					// "먼저 로그인을 하세요!!" 라는 메시지를 받고서 사용자가 로그인을 성공했다라면
 					// 화면에 보여주는 페이지는 시작페이지로 가는 것이 아니라
 					// 조금전 사용자가 시도하였던 로그인을 해야만 접근할 수 있는 페이지로 가기 위한 것이다.
+					/*
 					String goBackURL = (String) session.getAttribute("goBackURL");
 
 					if (goBackURL != null) {
@@ -128,6 +131,8 @@ public class UserController {
 					} else {
 						mav.setViewName("redirect:/index.exp"); // 시작페이지로 이동
 					}
+					*/
+					mav.setViewName("redirect:/index.exp");
 				}
 			}
 
@@ -554,7 +559,7 @@ public class UserController {
 	}
 	
 	// @PostMapping("/user_EditContactEnd.exp")
-	@RequestMapping("/user_EditContactEnd.exp")
+	@PostMapping("/user_EditContactEnd.exp")
 	public ModelAndView user_EditContactEnd(ModelAndView mav, HttpServletRequest request) {
 		
 		HttpSession session = request.getSession();
@@ -607,23 +612,173 @@ public class UserController {
 	public ModelAndView requiredLogin_user_rewards(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		// 넘어가야할 정보 - 올해 예약 건수(체크인 날짜 지난 것만), 예약된 내역에서 포인트 
 		// 1. 포인트 테이블에서 로그인유저에 대한 내역 전부 가져오기  2. 올해 예약끝난 건수 (체크인 날짜 지난 것만)
-		
+				
 		HttpSession session = request.getSession();
 		UserVO loginuser = (UserVO) session.getAttribute("loginuser");
 		String userid = loginuser.getUserid();
+	
+		if(request.getParameter("userid")!=null && !request.getParameter("userid").equals(userid)) {
+			String message = "잘못된 접근입니다.";
+			String loc =request.getContextPath() + "/index.exp";
+			
+			mav.addObject("message",message);
+			mav.addObject("loc",loc);
+			
+			mav.setViewName("msg");
+			return mav;
+		}
 		
 		List<Map<String, String>> user_point_list = service.get_user_point_list(userid);
 		int user_rs_cnt = service.get_user_rs_cnt(userid);
 		
 		mav.addObject("user_point_list",user_point_list);
-		
 		mav.addObject("user_rs_cnt",user_rs_cnt);
+		
+		
+		/* 댓글 페이징 처리 */
+		
+		String searchType = request.getParameter("searchType");
+		String str_currentShowPageNo = request.getParameter("currentShowPageNo");
+		String str_sizePerPage = "5"; // 한페이지당 보여줄 데이터 수
+		
+		if(searchType==null || (!"use".equals(searchType) && !"get".equals(searchType)  && !"all".equals(searchType))) {  
+			searchType="";
+		}
+			
+		if(str_sizePerPage == null || "".equals(str_sizePerPage) || 
+		   !("10".equals(str_sizePerPage) || "15".equals(str_sizePerPage) || "20".equals(str_sizePerPage))) {
+				str_sizePerPage ="5";
+		}
+		
+		Map<String, String> paraMap = new HashMap<String, String>();
+		paraMap.put("searchType", searchType);
+		paraMap.put("userid", userid);
+		paraMap.put("str_sizePerPage", str_sizePerPage);
+
+		int totalCount=0;          // 총 게시물 건수		
+		int currentShowPageNo=0;   // 현재 보여주는 페이지 번호로서, 초기치로는 1페이지로 설정함.
+		int totalPage=0;           // 총 페이지수(웹브라우저상에서 보여줄 총 페이지 개수, 페이지바)  
+		int sizePerPage = Integer.parseInt(str_sizePerPage);  // 한 페이지당 보여줄 행의 개수
+		int startRno=0;            // 시작 행번호
+	    int endRno=0;              // 끝 행번호 
+	    
+	    // 총 포인트 내역 건수(totalCount)
+	    totalCount = service.getTotalCount(paraMap);
+	    System.out.println("~~~ 총 포인트 내역 건수 totalCount : " + totalCount);
+      
+	    totalPage = (int)Math.ceil((double)totalCount/sizePerPage); 
+	    paraMap.put("totalPage",String.valueOf(totalPage));
+	    
+		if(str_currentShowPageNo == null) {
+			currentShowPageNo = 1;
+		}
+		else {
+			try {
+				currentShowPageNo = Integer.parseInt(str_currentShowPageNo);
+				if(currentShowPageNo < 1 || currentShowPageNo > totalPage) {
+					currentShowPageNo = 1;
+				}
+			} catch (NumberFormatException e) {
+				currentShowPageNo=1;
+			}
+		}
+		
+		startRno = ((currentShowPageNo - 1 ) * sizePerPage) + 1;
+	    endRno = startRno + sizePerPage - 1;
+	      
+	    paraMap.put("startRno", String.valueOf(startRno));
+	    paraMap.put("endRno", String.valueOf(endRno));
+	    	   
+	    List<Map<String, String>> pointList = service.get_user_point_list_withPaging(paraMap);
+	    
+		mav.addObject("paraMap", paraMap);
+		// 검색대상 컬럼과 검색어를 유지시키기 위한 것임.
+		
+		// === 페이지바 만들기 === //
+		int blockSize= 5;
+		
+		int loop = 1;
+		
+		int pageNo = ((currentShowPageNo - 1)/blockSize) * blockSize + 1;
+	   
+		String pageBar = "<ul style='list-style:none;'>";
+		
+		String url = "user_rewards.exp";
+		
+		// === [맨처음][이전] 만들기 ===
+		if(pageNo!=1) {
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"&searchType="+searchType+"&userid="+userid+"&sizePerPage="+sizePerPage+"&currentShowPageNo=1'>[맨처음]</a></li>";
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"&searchType="+searchType+"&userid="+userid+"&sizePerPage="+sizePerPage+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+		}
+		while(!(loop>blockSize || pageNo>totalPage)) {
+			
+			if(pageNo==currentShowPageNo) {
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";
+			}
+			else {
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&userid="+userid+"&sizePerPage="+sizePerPage+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>";
+			}
+			
+			loop++;
+			pageNo++;
+		}// end of while--------------------
+		
+		// === [다음][마지막] 만들기 === //
+		if(pageNo <= totalPage) {
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&userid="+userid+"&sizePerPage="+sizePerPage+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchType="+searchType+"&userid="+userid+"&sizePerPage="+sizePerPage+"&currentShowPageNo="+totalPage+"'>[마지막]</a></li>";
+		}
+		pageBar += "</ul>";
+		
+		mav.addObject("pageBar",pageBar);
+		
+		String listgobackURL_pt = MyUtil.getCurrentURL(request);
+	//	System.out.println("~~~ 확인용 검색 listgobackURL_schedule : " + listgobackURL_schedule);
+		
+		mav.addObject("listgobackURL_pt",listgobackURL_pt);
+		mav.addObject("pointList", pointList);
 		
 		mav.setViewName("jy/user/user_rewards.tiles1");
 		
 		return mav;
 	}
-	
+
+	@ResponseBody 
+	@GetMapping(value="/goViewPointList_json.exp",produces="text/plain;charset=UTF-8")
+	public String goViewPointList_json(HttpServletRequest request) {
+		
+		String currentShowPageNo = request.getParameter("currentShowPageNo");
+		String searchType = request.getParameter("searchType");
+		String userid = request.getParameter("userid");
+		int sizePerPage = 5;
+		
+		int startRno = ((Integer.parseInt(currentShowPageNo) - 1 ) * sizePerPage) + 1;
+	    int endRno = startRno + sizePerPage - 1;
+	    Map<String, String> paraMap = new HashMap<>();
+	    paraMap.put("userid", userid);
+	    paraMap.put("searchType", searchType);
+	    paraMap.put("startRno", String.valueOf(startRno));
+	    paraMap.put("endRno", String.valueOf(endRno));
+		
+	    List<Map<String, String>> pointList = service.get_user_point_list_withPaging(paraMap);
+	    JsonObject jsonObj = new JsonObject();
+	    if(pointList != null && pointList.size() > 0) {
+		JsonArray jsonArr = new JsonArray(); 
+			for(Map<String, String> map : pointList) {            
+	            JsonObject jsonObj2 = new JsonObject(); 
+	            jsonObj2.addProperty("fk_userid", map.get("fk_userid"));
+	            jsonObj2.addProperty("rs_seq", map.get("rs_seq"));
+	            jsonObj2.addProperty("pt_change_date", map.get("pt_change_date"));
+	            jsonObj2.addProperty("pt_amount", map.get("pt_amount"));
+	            jsonObj2.addProperty("lg_name", map.get("lg_name"));
+               
+	            jsonArr.add(jsonObj2);            
+			}
+			jsonObj.add("pointList", jsonArr);
+	    }
+		return jsonObj.toString();
+	}	
+		
 	@GetMapping("/account/setting.exp")
 	public ModelAndView setting(ModelAndView mav, HttpServletRequest request) {
 		

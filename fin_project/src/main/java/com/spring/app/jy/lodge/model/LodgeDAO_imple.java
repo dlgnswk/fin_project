@@ -190,4 +190,35 @@ public class LodgeDAO_imple implements LodgeDAO {
 		return add_wishList;
 	}
 
+	@Override
+	public List<Map<String, String>> getReviewList(Map<String, String> r_paraMap) {
+		List<Map<String, String>> getReviewList = sqlsession.selectList("jy_lodge.getReviewList", r_paraMap);
+		return getReviewList;
+	}
+
+	@Override
+	public Map<String, String> getRvcntByRate(Map<String, String> r_paraMap) {
+		Map<String, String> getRvcntByRate = sqlsession.selectOne("jy_lodge.getRvcntByRate", r_paraMap);
+		return getRvcntByRate;
+	}
+
+	@Override
+	public int likeAdd(Map<String, String> paraMap) {
+		int likeAdd = sqlsession.insert("jy_lodge.likeAdd", paraMap);
+		return likeAdd;
+	}
+
+	@Override
+	public int likeDelete(Map<String, String> paraMap) {
+		int likeDelete = sqlsession.delete("jy_lodge.likeDelete", paraMap);
+		return likeDelete;
+	}
+
+	@Override
+	public Map<String, Integer> getCnt(String rv_seq) {
+		Map<String, Integer> getCnt = sqlsession.selectOne("jy_lodge.getCnt", rv_seq);
+		return getCnt;
+	}
+
+
 }

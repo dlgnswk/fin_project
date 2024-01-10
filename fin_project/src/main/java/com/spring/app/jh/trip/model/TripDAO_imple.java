@@ -82,6 +82,14 @@ public class TripDAO_imple implements TripDAO {
 		int n = sqlsession.delete("jh_trip.deleteWishlist", paraMap);
 		return n;
 	}
+
+
+	// 이용후기 작성하기
+	@Override
+	public int reviewInsert(Map<String, String> paraMap) {
+		int n = sqlsession.insert("jh_trip.reviewInsert", paraMap);
+		return n;
+	}
 	
 	
 
