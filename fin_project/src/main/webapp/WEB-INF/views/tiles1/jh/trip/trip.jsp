@@ -92,27 +92,27 @@
 		})
 		
 		const ratingText = {
-			2: '너무 별로예요',
-			4: '별로예요',
-			6: '괜찮아요',
-			8: '좋아요',
-			10: '훌륭해요'
-		};
-		
-		$(document).on('mouseover', '.rateCircle label', function() {
+		    2: '너무 별로예요',
+		    4: '별로예요',
+		    6: '괜찮아요',
+		    8: '좋아요',
+		    10: '훌륭해요'
+		  };
+			
+		  $(document).on('click', '.rateCircle label', function() {
+			// 클릭한 별점의 값을 가져와서 정수형으로 변환하여 ratingValue에 저장
 			const ratingValue = parseInt($(this).attr('for').split('_')[1]);
+			
+			// 별점 설명이 표시될 span 요소를 찾아 ratingDescSpan에 저장
 			const ratingDescSpan = $('#rating_desc');
-			ratingDescSpan.text(`${ratingValue} - ${ratingText[ratingValue]}`);
-			console.log('Rating Value:', ratingValue);
-			console.log('ratingDescSpan', ratingDescSpan);
-			// 원하는 작업을 추가하세요.
-		});
-		
-		$(document).on('mouseout', '.rateCircle label', function() {
-			const ratingDescSpan = $('#rating_desc');
-			ratingDescSpan.text('');
-			// 마우스 아웃 시 수행할 작업을 추가하세요.
-		});
+		    
+			// ratingDescSpan에 선택한 별점과 해당하는 설명을 표시
+			ratingDescSpan.text(`\${ratingValue} - \${ratingText[ratingValue]}`);
+		   // console.log('Rating Value:', ratingValue);
+		   //  console.log('ratingDescSpan', ratingDescSpan);
+		    // 원하는 작업을 추가하세요. <span id='rating_desc'></span>
+		    
+		  });
 		// 채혁 ==============================================================
 		
 		
@@ -721,7 +721,7 @@
 						"<div class='reviewWriteModal_header'>" +
 							"<span class='close'>&times;</span>" +
 							
-							"<div class='reviewWriteModal_content' style='padding-left: 10%; height: 570px; overflow-y: auto;'>" +
+							"<div class='reviewWriteModal_content' style='padding-left: 22%; height: 570px; overflow-y: auto;'>" +
 								
 								"<h4>귀하의 경험에 대해 평가해주세요.</h4>" +
 								"<br>" +
@@ -768,7 +768,8 @@
 		    			"</div>" +
 	    			"</div>";
 				
-				
+	    			$("div.more_info_content").hide();
+	    			
 				// 모달 영역에 새로운 내용 삽입
 				$("form[name='reviewWriteForm']").html(v_html);
 				
@@ -776,53 +777,103 @@
 				$(".reviewWriteModal").fadeIn();
 				$(".reviewWriteModal_header").show();
 				$("body").addClass("modal-open");
-	            
+				
+				
+				// 모달창 뜰 때 배경색 변경
+				$('#headerOfheader > div > section').css('background-color', 'background: rgba(0, 0, 0, 0.4);');
+				$('#mycontent > div').css('background-color', 'rgba(0, 0, 0, 0.0)');				
+				$('#beforeTravel > div').css('background-color', 'rgba(0, 0, 0, 0.0)');
+				$('#afterTravel > div').css('background-color', 'rgba(0, 0, 0, 0.0)');
+				$('#afterTravel > div').css('background-color', 'rgba(0, 0, 0, 0.0)');
+				$('div.my_wish_travel_list.my_travel_content > div > div').css('background-color', 'rgba(0, 0, 0, 0.0)');
+				
+				// 모달창 뜰 때 이미지 밝기 변경
+				$('#beforeTravel > div > div.my_travel_img > img').css('filter', 'brightness(70%)');
+				$('#afterTravel > div > div.my_travel_img').css('filter', 'brightness(70%)');
+				$('#mycontent > div > div.my_wish_travel_list.my_travel_content > div > div > div.my_wish_travel_img > img').css('filter', 'brightness(70%)');
+
+				
+				
+				
 				// 모달의 닫기 버튼 클릭 시 모달 닫기
 	    		$("span.close").click(function() {
 	    			$(".reviewWriteModal").fadeOut();
 	    			$("body").removeClass("modal-open"); // body에서 modal-open 클래스 제거
+	    			
+	    			// 배경색 없애기
+	    			$('#headerOfheader > div > section').css('background-color', '');
+	    			$('#mycontent > div').css('background-color', '');
+					$('#beforeTravel > div').css('background-color', '');
+					$('#beforeTravel > div > div.my_travel_img').css('background-color', '');
+					$('#beforeTravel > div > div.my_travel_text').css('background-color', '');
+					$('#afterTravel > div').css('background-color', '');
+					$('div.my_wish_travel_list.my_travel_content > div > div').css('background-color', '');
+					// 밝기 제거
+					$('#beforeTravel > div > div.my_travel_img > img').css('filter', '');
+					$('#afterTravel > div > div.my_travel_img').css('filter', '');
+					$('#mycontent > div > div.my_wish_travel_list.my_travel_content > div > div > div.my_wish_travel_img > img').css('filter', '');
 	    		});
 	         	
-				const labels = document.querySelectorAll('.rateCircle label');
-
-	    	    function updateStars(index) {
-	    			for (let i = 0; i < labels.length; i++) {
-	    				if (i <= index) {
-	    					labels[i].style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-solid.png')`;
-	    				} else {
-	    					labels[i].style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-regular.png')`;
-	    				}
-	    			}
-	    		}
-
-	    		labels.forEach((label, index) => {
-	    			label.addEventListener('click', () => {
-	    				updateStars(index);
-	    			});
-
-	    			label.addEventListener('mouseover', () => {
-	    				updateStars(index);
-	    			});
-
-	    			label.addEventListener('mouseout', () => {
-	    				const checked = document.querySelector('.rateCircle input[type=radio]:checked');
-	    				if (!checked) {
-	    					labels.forEach((label) => {
-	    						label.style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-regular.png')`;
-	    					});
-	    				} else {
-	    					updateStars(Array.from(labels).indexOf(checked.nextElementSibling));
-	    				}
-	    			});
-	    		});
+	    		// 모달이 열릴 때 초기 상태 설정 함수 호출
+	            setInitialRating();
+	    		 	   
 	    	    
-	        } // end of success
+	        },// end of success
+	        error: function(request, status, error){
+				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
 	        
 	    }); // end of ajax
 		
 	} // end of function reviewWrite()
 	
-	
+	// 모달이 열릴 때 초기 상태를 설정하는 함수
+	// 이 함수는 별점 이미지를 초기 상태로 설정하고, 마우스 이벤트에 따라 이미지를 변경
+
+function setInitialRating() {
+    // 'rateCircle label' 클래스를 가진 모든 label 요소를 가져옵니다.
+    const labels = document.querySelectorAll('.rateCircle label');
+
+    // 각 label의 배경 이미지를 'circle-regular.png'로 초기화합니다.
+    labels.forEach((label) => {
+        label.style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-regular.png')`;
+    });
+
+    // 각 label에 마우스 이벤트를 추가
+    labels.forEach((label, index) => {
+        // label에 마우스를 올렸을 때의 동작
+        label.addEventListener('mouseover', () => {
+            // 현재 label을 기준으로 그 이하의 label들은 'circle-solid.png' 이미지로 변경하고,
+            // 그 이상의 label들은 'circle-regular.png' 이미지로 변경
+            for (let i = 0; i <= index; i++) {
+                labels[i].style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-solid.png')`;
+            }
+            for (let i = index + 1; i < labels.length; i++) {
+                labels[i].style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-regular.png')`;
+            }
+        });
+
+        // label에서 마우스가 빠져나갔을 때의 동작을 정의합니다.
+        label.addEventListener('mouseout', () => {
+            // 선택된 별이 없다면 모든 label을 'circle-regular.png' 이미지로 변경
+            const checked = document.querySelector('.rateCircle input[type=radio]:checked');
+            if (!checked) {
+                labels.forEach((label) => {
+                    label.style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-regular.png')`;
+                });
+            } else {
+                // 선택된 별 이후의 별은 'circle-regular.png' 이미지로, 그 이하는 'circle-solid.png' 이미지로 변경
+                const checkedIndex = Array.from(labels).indexOf(checked.nextElementSibling);
+                for (let i = 0; i <= checkedIndex; i++) {
+                    labels[i].style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-solid.png')`;
+                }
+                for (let i = checkedIndex + 1; i < labels.length; i++) {
+                    labels[i].style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-regular.png')`;
+                }
+            }
+        });
+    });
+}
 </script>
 
 <body  style="background-color: f3f3f5;">

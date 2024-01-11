@@ -165,12 +165,12 @@
 	/* 검색창 css 끝 */
 	
 	/* 셀렉트 창 css 시작 */	
-	#mycontent > div.reviewModal > div > div.reviewModal_content > div.search_filter > form > select:focus {
+	#sort_select:focus {
 	    border: 2px solid #0073ff;
 	    outline: none;
 	}
 	
-	#mycontent > div.reviewModal > div > div.reviewModal_content > div.search_filter > form > select {
+	#sort_select {
 	    height: 50px; /* 32px → 2rem 변환 */
 	    font-size: 0.9375rem; /* 15px → 0.9375rem 변환 */
 	    border: 1px solid rgba(0, 0, 0, 0.21);
@@ -220,6 +220,8 @@
 	
 	$(document).ready(function(){
 		
+		goLikeCount();
+		
 		$(".reviewmodalshow").click(function() {
 	        $(".reviewModal").fadeIn();
 	        $(".reviewModal_header").show(); // 삭제 버튼 클릭 시 헤더 영역 보이기
@@ -235,9 +237,175 @@
 		
 	    const inputBox = document.getElementById('search-input-box');
 	    const inputLabel = document.getElementById('search-input-label');
+	    
+	 // =========== 정렬순서 form 보내기 시작 =========== //
+		// select 변경시 보내주기
+		$(document).on("change", "select[name='sort']", function(){
+			sort_search();
+		})
+		/* 
+		// 보낸 평점이 있는 경우 해당 radio에  checked
+		for(var i=0; i<$("option.sort_item").length; i++){
+			if($("option.sort_item").eq(i).val() == "${requestScope.map.sort}"){
+				$("option.sort_item").eq(i).prop("selected", true);
+			}
+			else{
+				$("option.sort_item").eq(i).prop("selected", false);
+			}
+		}
+		 */
+	 // =========== 정렬순서 form 보내기    끝 =========== //
 
 		
 	});
+	
+	function golikeAdd(rv_seq) {
+
+		  if(${empty sessionScope.loginuser}){
+		     alert("좋아요를 하시려면 먼저 로그인 하셔야 합니다.");
+		     
+		     window.location.href = "<%= ctxPath%>/login.exp"; // 로그인 페이지 URL로 변경해주세요
+		     
+		  }
+
+		      $.ajax({
+		           url:"<%= ctxPath%>/likeAdd2.exp",
+		           type:"post",
+		           data:{"rv_seq":rv_seq,
+		                "userid":"${sessionScope.loginuser.userid}"},
+		           dataType:"json", 
+		           success:function(json) {
+		              console.log(JSON.stringify(json));
+		               // {"msg":"해당제품에\n 좋아요를 클릭하셨습니다."}
+		                 // 또는
+		                 // {"msg":"이미 좋아요를 클릭하셨기에\n 두번 이상 좋아요는 불가합니다."}
+		                 
+		            // alert(json.msg);
+		              goLikeCount();
+		            //swal(json.msg);
+		            // goLikeCount();
+		           },
+		           error: function(request, status, error){
+		              alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		           }
+		        });
+		  
+
+
+		}// end of golikeAdd(pnum)---------------------------
+
+
+
+		// **** 게시판 좋아요 갯수를 보여주기 **** //
+		function goLikeCount() {
+
+			
+		   $.ajax({
+		         url:"<%= ctxPath%>/likeCount2.exp",
+		         data:{"rv_seq":"${requestScope.reviewvo.rv_seq}"},
+		         dataType:"JSON", 
+		         success:function(json) {
+		            console.log(JSON.stringify(json));
+		             // {"likecnt":1, "dislikecnt":0}
+		             //alert("하하하");
+		            $("span#likeCnt").html(json.likecnt);
+		         },
+		         error: function(request, status, error){
+		            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		         }
+		      });    
+		   
+		}// end of function goLikeCount()-------------------
+	
+	
+	function reviewshowModal() {
+		
+		$.ajax({
+			url:"<%= ctxPath%>/reviewshowModal.exp",
+			data:{"lodge_id": 1},
+			dataType:"json",
+			success : function(json){
+				
+				
+			},
+			error: function(request, status, error){
+				alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+			
+		});
+		
+	}
+	
+	
+	
+	function sort_search() {
+	    const selectedSort = document.getElementById('sort_select').value;
+	    $.ajax({
+	        url: "<%= ctxPath%>/reviewSearchAjax.exp",
+	        type: "post",
+	        data: { "sort":"${requestScope.map.sort}" },
+	        dataType: "json",
+	        success: function (json) {
+	            console.log(JSON.stringify(json));
+	            let v_html = "";
+	            if (json.length > 0) {
+	                $.each(json, function(index, review) {
+	                    v_html += "<div style='border-bottom: 1px solid black'>";
+	                    v_html += "<input type='hidden' name='fk_lodge_id' size='38' value='${reviewList.FK_LODGE_ID}' autocomplete='off' readonly /> " +
+	                    if (review.RV_DEPTHNO == 0) {
+	                        v_html += "<br>" +
+	                        v_html += "<div>"+
+	                        v_html += "   <div>${reviewList.FK_RV_RATING}/10 - ${reviewList.RV_RATING_DESC}</div>
+	                        v_html += "</div>"+
+	                        v_html += "<br> "+
+	                        v_html += "<div>  "+
+	                        v_html += "   <div>${reviewList.RS_NAME}</div>  "+
+	                        v_html += "</div> "+
+	                        v_html += "<div>   "+
+	                        v_html += "    <div>${reviewList.RV_REGDATE}</div>  "+
+	                        v_html += " </div>"+
+	                        v_html += "  <br>  "+
+	                        v_html += "  <div>   "+
+	                        v_html += "     <div>${reviewList.RV_CONTENT}</div> "+
+	                        v_html += "  </div>         "+
+	                        v_html += "    <span> ${reviewList.RS_DATE}에 ${reviewList.livedate} 숙박함 </span>"+
+	                        v_html += "   <br>  "+
+
+	                        v_html += "<div class='reviewfindBtn'> " +
+	                        v_html += "   <%-- <button type="button" class="btn_like" id="btnLike">좋아요</button>&nbsp;&nbsp; --%>" +
+	                        v_html += "   <svg xmlns='http://www.w3.org/2000/svg' " +
+	                        v_html += "      style='margin-right: 5px;' height='16' width='16'
+	                        v_html += "      fill='rgba(35, 121, 255, 0.89)' viewBox='0 0 512 512' " +
+	                        v_html += "     onclick='golikeAdd('${requestScope.reviewvo.rv_seq}')'>" +
+	                        v_html += "      <path" +
+	                        v_html += "        d='M313.4 32.9c26 5.2 42.9 30.5 37.7 56.5l-2.3 11.4c-5.3 26.7-15.1 52.1-28.8 75.2H464c26.5 0 48 21.5 48 48c0 18.5-10.5 34.6-25.9 42.6C497 275.4 504 288.9 504 304c0 23.4-16.8 42.9-38.9 47.1c4.4 7.3 6.9 15.8 6.9 24.9c0 21.3-13.9 39.4-33.1 45.6c.7 3.3 1.1 6.8 1.1 10.4c0 26.5-21.5 48-48 48H294.5c-19 0-37.5-5.6-53.3-16.1l-38.5-25.7C176 420.4 160 390.4 160 358.3V320 272 247.1c0-29.2 13.3-56.7 36-75l7.4-5.9c26.5-21.2 44.6-51 51.2-84.2l2.3-11.4c5.2-26 30.5-42.9 56.5-37.7zM32 192H96c17.7 0 32 14.3 32 32V448c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32V224c0-17.7 14.3-32 32-32z' /></svg>" +
+	                        v_html += "   <span id='likeCnt'>0</span> " +
+	                        v_html += "</div>" +
+	                        v_html += "<br>  ";
+	                    } 
+	                    else {
+	                        // Handling for RV_DEPTHNO > 0
+	                        v_html += "<input type='hidden' name='rv_seq' size='38' " +
+	                        v_html += "	value='${reviewList.RV_SEQ}' autocomplete="off" readonly /> " +
+	                        v_html += "<div>답변 제공: ${reviewList.H_LODGENAME}님 , ${reviewList.RV_REGDATE}</div> " +
+	                        v_html += "<div>${reviewList.FK_USERID}</div> " +
+	                        v_html += "<div>${reviewList.RV_CONTENT}</div> " +
+	                        v_html += "<br> ";
+	                    }
+	                    v_html += "<div style='display: flex; justify-content: center;'>" +
+	                    v_html += "<button type='button' style='width: 30%; height: 30px; border: 1px solid black; margin-bottom: 5%; background-color: #fff; color: #1668e3; border-radius: 2500rem;'>이용 후기 더보기</button> " +
+	                    v_html += "</div>" +
+	                    v_html += "</div>";
+	                });
+	                $(".review").html(v_html);
+	            }
+	        },
+	        error: function (request, status, error) {
+	            alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
+	        }
+	    });
+	}
+	
 	
 </script>
 
@@ -258,6 +426,7 @@
 </div>
 
 <!-- 이용후기 모달 -->
+<form ></form>
 <div class="reviewModal">
 	<div class="reviewModal_header">
 		<span>고객 이용 후기</span> <span class="close">&times;</span>
@@ -315,17 +484,19 @@
             			</svg></span>
 						</button>
 					</div>
-					<select name="searchType" style="width: 40%;">
-						<option value="relation">관련성</option>
-						<option value="recent_review">최근 이용 후기</option>
-						<option value="best_review">최고 고객 평점</option>
-						<option value="bad_review">최저 고객 평점</option>
-					</select>
+					<div id="search_sort_form">
+						<select id="sort_select" name="sort" style="width: 40%;">
+							<option class="sort_item" value="relative">관련성</option>
+							<option class="sort_item" value="recent_review">최근 이용 후기</option>
+							<option class="sort_item" value="highrating">최고 고객 평점</option>
+							<option class="sort_item" value="lowrating">최저 고객 평점</option>
+						</select>
+					</div>
 				</form>
 			</div>
 							
 			<div class="review">
-				   <c:forEach var="reviewList" items="${requestScope.reviewList}">		
+				   <c:forEach var="reviewList" items="${requestScope.getreviewList}">		
 					<div style="border-bottom: 1px solid black">
 					<c:if test="${reviewList.RV_DEPTHNO == 0}">                        
                         <br>

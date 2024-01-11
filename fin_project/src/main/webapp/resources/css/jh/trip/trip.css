@@ -216,8 +216,7 @@ div.no_wishlist{
 .reviewWriteModal{ 
 	position:absolute;
 	width:100%; 
-	height:100%; 
-	background: rgba(0, 0, 0, 0.21); 
+	height:100%;  
 	top:0; 
 	left:0; 
 	display:none;
@@ -226,23 +225,23 @@ div.no_wishlist{
 	
 body.modal-open {
 	overflow: hidden; /* 페이지 스크롤 막기 */
+	background: rgba(0, 0, 0, 0.4);
 }
 	
 .reviewWriteModal_header{		
 	width: 720px; /* 500px를 16px 기준으로 나눈 값 */
 	height: 640px;        /* 300px를 16px 기준으로 나눈 값 */
 	background:#fff; 
-	border-radius:0.625rem; /* 10px를 16px 기준으로 나눈 값 */
-	position:relative; 
-	top:50%; 
-	left:50%;
-	margin-top:-320px; /* height의 절반 */
-	margin-left:-360px; /* width의 절반 */
+	border-radius:0.625rem; /* 10px를 16px 기준으로 나눈 값 */	
 	text-align:left;
 	box-sizing:border-box; 
 	padding: 50px 0; /* 74px를 16px 기준으로 나눈 값 */
 	line-height:1.4375rem; /* 23px를 16px 기준으로 나눈 값 */
 	cursor:pointer;
+	position: fixed; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%);
 }
 	
 
@@ -273,7 +272,7 @@ body.modal-open {
 	
 .rateCircle label{
 	background-image: url(<%= ctxPath%>/resources/images/ch/circle-regular.png);
-	width: 30%;
+	width: 43%;	
 	height: 50.5px; 
    	user-select: none;
 }
@@ -289,6 +288,8 @@ body.modal-open {
 }
 	
 /* 별점 css 끝 */
+
+/* textarea css 시작  */
 #mycontent > form > div > div > div > div.rv_subject > input[type=text] {
 	height: 2rem; /* 32px → 2rem 변환 */
 	font-size: 0.9375rem; /* 15px → 0.9375rem 변환 */
@@ -301,7 +302,7 @@ body.modal-open {
 }
 	
 #content {
-	width: 61.7%;
+	width: 71%;
 	height: 200px;	
 	font-size: 0.9375rem; /* 15px → 0.9375rem 변환 */
 	border: 0;
@@ -313,12 +314,14 @@ body.modal-open {
 	resize: none; /* 사용자가 텍스트 영역의 크기를 조절하지 못하게 합니다. */
 	background-color: rgb(233, 233, 233);	
 }
-	
+/* textarea css 끝 */	
+
+/* 작성 버튼 css 시작  */
 #btnWrite {
 	background-color: #0073ff;
 	height: 2.5rem; /* 40px를 16px 기준으로 나눈 값 */
 	color: white;
-	width: 61.3%;; /* 70px를 16px 기준으로 나눈 값 */
+	width: 71%; /* 70px를 16px 기준으로 나눈 값 */
 	border: 0px solid #555555;
 	border-radius: 1.0625rem; /* 17px를 16px 기준으로 나눈 값 */
 	font-size: 0.875rem; /* 14px를 16px 기준으로 나눈 값 */
@@ -328,4 +331,5 @@ body.modal-open {
 	background-color:rgba(0, 80, 190, 0.97);
 	box-shadow: 0 0.25rem 0.375rem -0.0625rem rgba(0, 0, 0, 0.1), 0 0.125rem 0.25rem -0.0625rem rgba(0, 0, 0, 0.08);
 }
+/* 작성 버튼 css 끝  */
 
