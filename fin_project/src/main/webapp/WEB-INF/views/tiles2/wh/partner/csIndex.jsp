@@ -29,10 +29,8 @@
       
    
    function goHostChatList() {
-      const frm = document.useridSendFrm;
-      frm.action  = "<%= ctxPath%>/hostChatList.exp";
-      frm.method = "get";
-      frm.submit();
+	   location.href="<%= ctxPath%>/hostChatList.exp"
+      
    }
    
    
@@ -43,10 +41,6 @@
 
 <div id="container" style="inline-size: 100%; margin: auto; max-inline-size: 75rem; padding: 50px 0; background-img : url('https://headless.expediagroup.com/content/dam/marketing/headless/images/home-page/Content-page-image-hero-LG2.jpg')">
    <div id="select_box" style="width:40%; margin: 0 auto;">
-      
-      <form name="useridSendFrm" >
-         <input type="hidden" name="userid" value="${sessionScope.loginhost.h_userid}"/>
-      </form>
       
       <div>
          <img src="https://apps.expediapartnercentral.com/list/static/images/logo-expedia-2023.svg" style="width:180px; height:40px;"/>
