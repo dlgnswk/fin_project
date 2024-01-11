@@ -178,3 +178,13 @@ input::-webkit-inner-spin-button {
 	-webkit-appearance: none;
 }
 
+input {
+	border:solid 1px ;
+	border-color: -internal-light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
+	border: 1px solid rgb(118, 118, 118);
+}
+
+input.checkbox_text {
+	margin: 10px 0;
+	margin-left:7px;
+}
