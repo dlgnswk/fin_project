@@ -1115,7 +1115,7 @@
 							</li>
 						</c:if>
 						<li class="pad_x_1r">
-							<a class="c_flex" href="#local_info"><span>위치</span></a>
+							<a class="c_flex" href="#lg_map"><span>위치</span></a>
 						</li>
 						<c:if test="${not empty requestScope.rmsvc_opt_list or not empty requestScope.cs_opt_list}">
 							<li class="pad_x_1r">
@@ -1576,7 +1576,6 @@
 						</form>
 						<form name="lodgeSearchFrm">
 							<input type="text" name="lg_area" readonly value="${requestScope.lodgeinfo.LG_AREA}" style="display: none;">
-							<input type="text" name="lg_area_2" readonly value="${requestScope.lodgeinfo.LG_AREA_2}" style="display: none;">
 							<input type="text" name="lg_name" readonly value="" style="display: none;">
 							<input type="hidden" name="check_in" readonly value="">
 							<input type="hidden" name="check_out" readonly value="">
@@ -2020,7 +2019,7 @@
 							  등을 이용하실 수 있습니다.
 						</c:if>
 						</div>					
-						<div class="c_content_txt">이 호텔에서는 다음과 같은 편의 시설 및 서비스를 함께 이용하실 수 있습니다.</div>
+						<div class="c_content_txt">이 숙박 시설에서는 다음과 같은 편의 시설 및 서비스를 함께 이용하실 수 있습니다.</div>
 					</div>
 					<div id="full_info" class="c_hide" style="row-gap: 1rem;">
 						<div class="c_content_txt">
@@ -2866,7 +2865,7 @@ function show_rm_detail(e) {
 											+'<div class="carousel-inner c_border_r1">'
 			if(img_list != null){				
 				$.each(img_list, function(index, item){
-					if(index==1){
+					if(item.rm_img_main ==1){
 						html += '<div class="carousel-item active" style="height: 23rem;">'
 									+'<img src="<%=ctxPath%>/resources/images/'+lodge_id+'/room_img/'+item.rm_img_save_name+'" class="d-block w-100 image_thumnail"style="object-fit: cover; aspect-ratio: 16/9;">'
 								+'</div>';

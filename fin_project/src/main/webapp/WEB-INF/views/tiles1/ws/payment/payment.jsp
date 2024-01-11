@@ -1142,11 +1142,13 @@
 				
 				
 <%-- right side--%>
+		<c:if test="${not empty requestScope.Rm_saveImg}">	
+		<c:forEach var="rm_sv_img" items="${requestScope.Rm_saveImg}">
 			<div style="width:33.5%; margin-left:1%">
 				<div style=" background-color:#ffffff; height:412px; padding-bottom:17px;" >
 					<div style="position:relative;">
 						<div>
-							<image src="<%=ctxPath%>/resources/images/${lodgeInfo.lodge_id}/lodge_img/lodge01.png" style="width:100%; height:160px;  filter: brightness(70%)"></image>
+							<image src="<%=ctxPath%>/resources/images/${rm_sv_img.fk_lodge_id}/room_img/${rm_sv_img.rm_img_save_name}" style="width:100%; height:160px;  filter: brightness(70%)"></image>
 						</div>
 						<div style="position:absolute;left:2.2%;bottom:6%;">
 							<span style="color:white; font-size:12pt; font-weight:bold;">${lodgeInfo.lg_name}</span>
@@ -1408,7 +1410,7 @@
 							<hr>
 							
 							<span style="font-weight:bold;">합계</span>
-							<span style="float:right; font-weight:bold;">₩ <span class="sum_priceEnd"></span></span>
+							<span style="float:right; font-weight:bold;">₩ <fmt:formatNumber type="number" pattern="0"><span class="sum_priceEnd"></span></fmt:formatNumber></span>
 							
 							<c:if test="${requestScope.paraMap.payType eq '1'}">
 								<div>
@@ -1427,12 +1429,9 @@
 					</div>
 					
 				</div>
-				
-				
-				
-				
-				
 			</div>
+			</c:forEach>
+			</c:if>
 			
 		
 			
