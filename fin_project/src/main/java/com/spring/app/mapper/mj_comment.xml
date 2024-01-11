@@ -207,6 +207,14 @@
 		   
    
    </select>
+   
+   
+   <!-- lodge_id를 가져는 메소드 -->
+   <select id="get__lodge_Id" parameterType="String" resultType="com.spring.app.expedia.domain.LodgeVO" >
+   		select lodge_id
+		from tbl_lodge
+		where fk_h_userid = #{userId}
+   </select>
 	
 
 

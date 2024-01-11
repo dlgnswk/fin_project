@@ -136,14 +136,16 @@
 	}
 	
 	.rateCircle input[type=radio]{
-	    display: none;
+	     display: none; 
 	}
 	
 	.rateCircle label{
 	   background-image: url(<%= ctxPath%>/resources/images/ch/circle-regular.png);
-	   width: 8.9%;
-       height: 50.5px; 
+	   width: 36px;
+       height: 35.9px;
+       margin-right: 5px; 
    	   user-select: none;
+   	   background-size:cover;
 	}
 	
 	#mycontent > form > div > div.reviewWriteModal_header > div > div.rating > fieldset > span > span {
@@ -159,14 +161,14 @@
 	/* 별점 css 끝 */
 	
 	#myrvlist > form > div > div > div > div.rv_subject > input[type=text] {
-	  height: 2rem; /* 32px → 2rem 변환 */
-	  font-size: 0.9375rem; /* 15px → 0.9375rem 변환 */
-	  border: 0;
-	  border-radius: 0.9375rem; /* 15px → 0.9375rem 변환 */
-	  outline: none;
-	  padding-left: 0.625rem; /* 10px → 0.625rem 변환 */
-	  background-color: rgb(233, 233, 233);
-	  margin: 2% 0 2% 0;
+	  	height: 2rem;
+	    font-size: 0.9375rem;
+	    border: 0;
+	    border-radius: 0.9375rem;
+	    outline: none;
+	    background-color: rgb(233, 233, 233);
+	    margin: 2% 0 2% 0;
+	    padding-inline: 0.6rem;
 	}
 	
 	#content {
@@ -228,6 +230,12 @@
 	    top: 50%; 
 	    left: 50%; 
 	    transform: translate(-50%, -50%);
+	}
+	
+	.reviewEditModal_content {
+		padding-left: 22%; 
+		height: 570px; 
+		overflow-y: auto;
 	}
 	
 	#mycontent > form:nth-child(9) > div > div.reviewDeleteModal_header > span {
@@ -394,13 +402,12 @@ $(document).ready(function() {
 	            	"<div class='reviewEditModal' id='reviewEditModal'>" +
 	                "<div class='reviewEditModal_header'>" +
 	                "<span class='close'>&times;</span>" +
-	                "<div class='reviewEditModal_content' style='padding-left: 22%; height: 570px; overflow-y: auto;'>" +
+	                "<div class='reviewEditModal_content' style='display:grid; gap: 0.6rem; height: 570px; overflow-y: auto;'>" +
 	                "<h4>귀하의 경험에 대해 평가해주세요.</h4>" +
 	                "<input type='hidden' id='rv_seq_input' name='rv_seq' value='" + rv_seq +"'>" +
-	                "<br>" +
 	                "<div class='rating'>" +
 	                "<fieldset class='rateCircle'>" +
-	                "<span style='display:flex'>" +
+	                "<span style='display:flex; align-items: center;'>" +
 	                "<input type='radio' id='ratingpoint_2' name='fk_rv_rating' value='2'/>" +
 	                "<label for='ratingpoint_2'></label>" +
 	                "<input type='radio' id='ratingpoint_4' name='fk_rv_rating' value='4'/>" +
@@ -411,11 +418,10 @@ $(document).ready(function() {
 	                "<label for='ratingpoint_8'></label>" +
 	                "<input type='radio' id='ratingpoint_10' name='fk_rv_rating' value='10'/>" +
 	                "<label for='ratingpoint_10'></label>" +
-	                "<span id='rating_desc' style='margin: 2% 0 0 5%;'></span>" +
+	                "<div id='rating_desc' style='margin: 0 0 0 5%;'></div>" +
 	                "</span>" +
 	                "</fieldset>" +
 	                "</div>" +
-	                "<br>" +
 	                "<div class='rv_subject'>" +
 	                "<h4>제목</h4>" +
 	                "<input type='text' name='rv_subject' size='50' maxlength='200' value='" + json.rv_subject +"' placeholder='제목을 입력해주세요.' autocomplete='off'/>" +
@@ -438,6 +444,39 @@ $(document).ready(function() {
 	            // 모달 영역에 새로운 내용 삽입
 	            $("form[name='reviewEditForm']").html(v_html);
 	            // alert($("form[name='reviewEditForm']"));
+	            
+	            const rv_radio = document.querySelectorAll("input[name='fk_rv_rating']");
+	            rv_radio.forEach((item, index) => {
+	            	// console.log(item.value);
+	            	// console.log(json.fk_rv_rating);
+	            	// console.log(item.checked);
+	            	if(item.value == json.fk_rv_rating) {
+	            		item.checked = true;
+	            	}
+	            });
+	            
+	            
+	            const labels = document.querySelectorAll('.rateCircle label');
+	            
+	            const checked = document.querySelector('.rateCircle input[type=radio]:checked');
+	            if (!checked) {
+	                labels.forEach((label) => {
+	                    label.style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-regular.png')`;
+	                });
+	            } else {
+	                // 선택된 별 이후의 별은 'circle-regular.png' 이미지로, 그 이하는 'circle-solid.png' 이미지로 변경
+	                const checkedIndex = Array.from(labels).indexOf(checked.nextElementSibling);
+	                console.log(checkedIndex);
+	                for (let i = 0; i <= checkedIndex; i++) {
+	                    labels[i].style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-solid.png')`;
+	                }
+	                for (let i = checkedIndex + 1; i < labels.length; i++) {
+	                	
+	                    labels[i].style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-regular.png')`;
+	                }
+	            }
+	            
+	            
 	            // 모달 표시
 	            $(".reviewEditModal").fadeIn();
 	            $(".reviewEditModal_header").show();
@@ -514,6 +553,7 @@ $(document).ready(function() {
 	        label.addEventListener('mouseout', () => {
 	            // 선택된 별이 없다면 모든 label을 'circle-regular.png' 이미지로 변경
 	            const checked = document.querySelector('.rateCircle input[type=radio]:checked');
+	            
 	            if (!checked) {
 	                labels.forEach((label) => {
 	                    label.style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-regular.png')`;

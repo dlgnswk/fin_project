@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.app.common.MyUtil;
 import com.spring.app.expedia.domain.CommentVO;
+import com.spring.app.expedia.domain.LodgeVO;
 import com.spring.app.mj.comment.service.CommentService;
 
 /**
@@ -44,14 +45,17 @@ public class CommentController {
 		String searchWord = request.getParameter("searchWord");
 		String userId = request.getParameter("userid");
 		
-		//System.out.println(userId);
+		
+		// lodge_id를 가져는 메소드
+		// List<LodgeVO> get__lodge_Id = service.get__lodge_Id(userId);
+		
 		
 		
 		if(userId == null) {
 			
 			
 			
-			mav.setViewName("redirect:/partner.exp");
+			mav.setViewName("redirect:reviewlist.exp?userid="+ userId);
 			
 		
 			return mav;
