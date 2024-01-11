@@ -741,6 +741,7 @@ public class PartnerController {
 		
 		String fk_userid = loginuser.getUserid();
 		String fk_lodge_id = request.getParameter("lodge_id");
+		String lg_img_save_name = request.getParameter("lg_img_save_name");
 		
 		// 사업장명 을 알아오기(구매자 입장의 채팅방에서 사업장명 쓰기 위함)
 		String h_name = service.selectH_name(fk_lodge_id);
@@ -770,6 +771,8 @@ public class PartnerController {
 				
 				request.setAttribute("chatvo", chatvo);
 				request.setAttribute("h_name", h_name);
+				request.setAttribute("lg_img_save_name", lg_img_save_name);
+				request.setAttribute("fk_lodge_id", fk_lodge_id);
 				
 				return "wh/chatting/chat.tiles1";
 			}
@@ -779,6 +782,8 @@ public class PartnerController {
 		
 		request.setAttribute("chatvo", chatvo);
 		request.setAttribute("h_name", h_name);
+		request.setAttribute("lg_img_save_name", lg_img_save_name);
+		request.setAttribute("fk_lodge_id", fk_lodge_id);
 		
 		return "wh/chatting/chat.tiles1";
 	}

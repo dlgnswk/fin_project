@@ -54,6 +54,9 @@ function goViewHostChat(fk_userid) {
 		location.href=`<%= ctxPath%>/view.action?seq=\${seq}`;
 	--%>
 	
+	const name = $("span.name").val();
+	
+	
 	const goBackURL = "${requestScope.goBackURL}";
 	// 	  goBackURL = "/list.action?searchType=name&searchWord=최우현&currentShowPageNo=9"
 	<%--	
@@ -70,6 +73,7 @@ function goViewHostChat(fk_userid) {
     const frm = document.goViewHostChatFrm;
     frm.fk_userid.value = fk_userid;
     frm.goBackURL.value = goBackURL;
+    frm.name.value = name;
     
     
     frm.action = "<%=ctxPath%>/hostChat.exp";
@@ -136,5 +140,6 @@ function goViewHostChat(fk_userid) {
 	<form name="goViewHostChatFrm">
 		<input type="hidden" name="fk_userid"/>
 		<input type="hidden" name="goBackURL" />
+		<input type="hidden" name="name" />
 	</form>
 </body>

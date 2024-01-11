@@ -20,10 +20,13 @@
    });// end of $(document).ready(function(){}--------------------------------------
 
    function goComment() {
-      const frm = document.useridSendFrm;
-         frm.action  = "<%= ctxPath%>/reviewlist.exp";
-         frm.method = "get";
-         frm.submit();
+      
+	  let h_userid =  $("input:text[name='h_userid']").val();
+	   
+	   const frm = document.useridSendFrm;
+       frm.action = "<%= ctxPath %>/reviewlist.exp?h_userid=" + h_userid;
+       frm.method = "get";
+       frm.submit();
       
    }
       
@@ -79,5 +82,11 @@
          </div>
       </div>
    </div>
+   
+   <form name="useridSendFrm">
+   	<input type="text" name="h_userid" value="${requestScope.h_userid}" style="display:none;" />
+   	<input type="text" name="h_userid" value="${requestScope.h_userid}" style="display:none;" />
+   </form>   
+   
    
 </div>
