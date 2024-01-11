@@ -26,7 +26,7 @@
 				<div>모든 처리가 완료되었습니다. 숙소가 예약되었으며, 이제 신나게 떠나실 일만 남았어요!</div>
 				
 				<div>
-					<span>${sessionScope.loginuser.email}</span>
+					<span>${requestScope.email}</span>
 					 주소로 예약 내용을 보내드렸습니다.
 				</div>
 			
