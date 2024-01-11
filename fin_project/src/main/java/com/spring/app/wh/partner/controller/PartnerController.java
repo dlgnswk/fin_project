@@ -10,6 +10,7 @@ import java.net.URLEncoder;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -611,23 +612,29 @@ public class PartnerController {
 		// System.out.println("컨트롤러 userid : "+userid);
 		
 		Map<String, String> paraMap = new HashMap<>();
-		
+		paraMap.put("userid", userid);
 		// 로그인한 유저의 예약한 lodge_id 리스트 가져오기 
 		List<String> lodgeIdList = service.selectLodgeIdList(userid);
 		
-		System.out.println("컨트롤러 lodgeIdList : "+lodgeIdList);
+		// System.out.println("컨트롤러 lodgeIdList : "+lodgeIdList);
+		
+		List<ChatVO> chatRoomList = new ArrayList<>();
 		
 		for(String lodgeId :lodgeIdList) {
 			
-			paraMap.put("lodgeId", lodgeId);
-			paraMap.put("userid", userid);
+			Map<String, Object> map = new HashMap<>();
+			map.put("userid", userid);
+			map.put("lodgeId", lodgeId);
+			
 			
 			// 현재 로그인되어있는 회원(구매자)의 채팅방 목록 가져오기
-		    List<ChatVO> chatRoomList = service.getChatRoomList(paraMap);
+		    List<ChatVO> roomList = service.getChatRoomList(map);
+		    chatRoomList.addAll(roomList);
 		    
 		    mav.addObject("chatRoomList", chatRoomList);
-			
 		}
+		
+		
 		
 		
 	    String str_currentShowPageNo = request.getParameter("currentShowPageNo");
@@ -849,18 +856,18 @@ public class PartnerController {
   		HostVO loginhost = (HostVO)session.getAttribute("loginhost");
   		
 		String h_userid = loginhost.getH_userid();
+		// System.out.println("컨트롤러 h_userid :"+h_userid);
 		
 		// 판매자의 lodge_id 알아오기
 		String lodge_id = service.selectLodgeID(h_userid);
-		
-		
+		// System.out.println("컨트롤러 lodge_id :"+lodge_id);
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("h_userid", h_userid);
+		paraMap.put("lodge_id", lodge_id);
 		
 		
 	    String str_currentShowPageNo = request.getParameter("currentShowPageNo");
 		
-		Map<String, String> paraMap = new HashMap<>();
-		paraMap.put("h_userid", h_userid);
-		paraMap.put("lodge_id", lodge_id);
 		
 		int totalHostChatRoomCount = 0;	// 판매자 총 채팅방 개수
 	    int sizePerPage = 10;	// 한 페이지당 보여줄 게시물 건수
@@ -900,11 +907,19 @@ public class PartnerController {
 	    paraMap.put("startRno", String.valueOf(startRno));
 	    paraMap.put("endRno", String.valueOf(endRno));
 		
-	    
 	    // 현재 로그인되어있는 사업자(판매자)의 채팅방 목록 가져오기
-	    List<ChatVO> chatHostRoomList = service.getHostChatRoomList(paraMap);
+	    List<ChatVO> hostRoomList = service.getHostChatRoomList(paraMap);
 	    
-	    mav.addObject("chatHostRoomList", chatHostRoomList);
+	    
+	    List<ChatVO> chatHostRoomList = new ArrayList<>();
+		
+		for(ChatVO chatvo :hostRoomList) {
+			
+		    chatHostRoomList.add(chatvo);
+		    
+		}
+		mav.addObject("chatHostRoomList", chatHostRoomList);
+	   
 	    
 	    // ==== # 121. 페이지바 만들기 ==== //
 	    int blockSize = 10;

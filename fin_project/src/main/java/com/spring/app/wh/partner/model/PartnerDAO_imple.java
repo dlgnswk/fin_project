@@ -111,9 +111,9 @@ public class PartnerDAO_imple implements PartnerDAO {
 	
 	// 현재 로그인되어있는 회원(구매자)의 채팅방 목록 가져오기
 	@Override
-	public List<ChatVO> getChatRoomList(Map<String, String> paraMap) {
-		List<ChatVO> chatRoomList = sqlsession.selectList("wh_partner.getChatRoomList", paraMap);
-		return chatRoomList;
+	public List<ChatVO> getChatRoomList(Map<String, Object> map) {
+		List<ChatVO> roomList = sqlsession.selectList("wh_partner.getChatRoomList", map);
+		return roomList;
 	}
 
 	// 총 채팅방 갯수(totalChatRoomCount) 가져오기
@@ -140,8 +140,8 @@ public class PartnerDAO_imple implements PartnerDAO {
 	// 현재 로그인되어있는 사업자(판매자)의 채팅방 목록 가져오기
 	@Override
 	public List<ChatVO> getHostChatRoomList(Map<String, String> paraMap) {
-		List<ChatVO> hostChatRoomList = sqlsession.selectList("wh_partner.getHostChatRoomList", paraMap);
-		return hostChatRoomList;
+		List<ChatVO> hostRoomList = sqlsession.selectList("wh_partner.getHostChatRoomList", paraMap);
+		return hostRoomList;
 	}
 
 	// 채팅쓰기(판매자)

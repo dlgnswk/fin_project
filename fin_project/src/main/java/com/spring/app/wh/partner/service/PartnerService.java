@@ -54,7 +54,7 @@ public interface PartnerService {
 	List<String> selectLodgeIdList(String userid);
 	
 	// 현재 로그인되어있는 회원(구매자)의 채팅방 목록 가져오기
-	List<ChatVO> getChatRoomList(Map<String, String> paraMap);
+	List<ChatVO> getChatRoomList(Map<String, Object> map);
 
 	// 총 채팅방 갯수(totalChatRoomCount) 가져오기
 	int getTotalChatRoomCount(Map<String, String> paraMap);

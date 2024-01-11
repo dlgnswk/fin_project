@@ -124,9 +124,9 @@ public class PartnerService_imple implements PartnerService {
 
 	// 현재 로그인되어있는 회원의 채팅방 목록 가져오기
 	@Override
-	public List<ChatVO> getChatRoomList(Map<String, String> paraMap) {
-		List<ChatVO> chatRoomList = dao.getChatRoomList(paraMap);
-		return chatRoomList;
+	public List<ChatVO> getChatRoomList(Map<String, Object> map) {
+		List<ChatVO> roomList = dao.getChatRoomList(map);
+		return roomList;
 	}
 
 	
@@ -154,8 +154,8 @@ public class PartnerService_imple implements PartnerService {
 	// 현재 로그인되어있는 사업자(판매자)의 채팅방 목록 가져오기
 	@Override
 	public List<ChatVO> getHostChatRoomList(Map<String, String> paraMap) {
-		List<ChatVO> hostChatRoomList = dao.getHostChatRoomList(paraMap);
-		return hostChatRoomList;
+		List<ChatVO> hostRoomList = dao.getHostChatRoomList(paraMap);
+		return hostRoomList;
 	}
 
 	

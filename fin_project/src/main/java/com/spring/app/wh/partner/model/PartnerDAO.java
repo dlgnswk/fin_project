@@ -46,7 +46,7 @@ public interface PartnerDAO {
 	List<ReplyVO> getChatList(Map<String, String> paraMap);
 
 	// 현재 로그인되어있는 회원의 채팅방 목록 가져오기
-	List<ChatVO> getChatRoomList(Map<String, String> paraMap);
+	List<ChatVO> getChatRoomList(Map<String, Object> map);
 
 	// 총 채팅방 갯수(totalChatRoomCount) 가져오기
 	int getTotalChatRoomCount(Map<String, String> paraMap);
