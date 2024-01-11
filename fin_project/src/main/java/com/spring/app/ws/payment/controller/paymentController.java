@@ -282,7 +282,7 @@ public class paymentController {
 		
 		
 		// reservation 테이블에 insert 하기
-		int n = service.goReservation(paraMap);
+		int a = service.goReservation(paraMap);
 		
 		
 		// reservation 테이블에서 방금 예약한 rs_seq 불러오기
@@ -301,7 +301,7 @@ public class paymentController {
 		System.out.println("rs_seq => " + rs_seq);
 		System.out.println("userid => " + userid);
 		
-		if(n==1) {
+		if(a==1) {
 		
 			if ("".equals(point)) {
 				// 선할인포인트를 사용한 경우 보유포인트만 변동
@@ -414,7 +414,8 @@ public class paymentController {
 			mav.setViewName("msg");
 		}
 		
-
+		int n = 1;
+		
 		JSONObject jsonObj = new JSONObject();
 		jsonObj.put("n", n);
 
