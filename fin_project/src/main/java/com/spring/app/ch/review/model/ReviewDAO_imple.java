@@ -106,6 +106,12 @@ public class ReviewDAO_imple implements ReviewDAO {
 		int n = sqlsession.update("ch_review.edit", paraMap);
 		return n;
 	}
+
+	@Override
+	public int reviewDelete(Map<String, String> paraMap) {
+		int n = sqlsession.update("ch_review.delete", paraMap);
+		return n;
+	}
 	
 
 }

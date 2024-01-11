@@ -192,7 +192,11 @@
       	where rv_seq = #{rv_seq}
  	</update>
  	
- 	
+ 	<!-- 글 삭제하기 -->
+ 	<delete id="delete" parameterType="HashMap">
+ 		delete from tbl_review
+        where rv_seq = #{rv_seq}
+ 	</delete>
  	
  	
 

@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -289,7 +290,7 @@ public class ReviewController {
 		return "msg";
 	}
 	
-	// 이용후기 삭제 하기
+	// 이용후기 삭제하는 모달 창 띄우기
 	@ResponseBody
     @GetMapping(value = "/reviewDeleteModal.exp", produces="text/plain;charset=UTF-8")
 	public String reviewDeleteModal(HttpServletRequest request) {
@@ -309,17 +310,52 @@ public class ReviewController {
 		return gson.toJson(jsonObj);
 	}
 	
-	// 이용후기 수정하기
+	// 이용삭제 수정하기
+	@Transactional
 	@PostMapping("/rvdeleteEnd.exp")
 	public String reviewDelete(HttpServletRequest request) {
 		
 		String rv_seq = request.getParameter("rv_seq");
 		System.out.println("rv_seq => " + rv_seq);
 		
+		HttpSession session = request.getSession();
+		UserVO loginuser = (UserVO) session.getAttribute("loginuser");
+		
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("rv_seq", rv_seq);
 		
-		return "";
+		String message = "";
+		
+		if(loginuser != null) {
+			
+			int n = service.reviewDelete(paraMap);
+				
+			if(n == 1) {
+				
+				message = "리뷰가 삭제되었습니다!";
+				String loc = request.getContextPath()+"/myrvlist.exp";
+				
+				request.setAttribute("message", message);
+				request.setAttribute("loc", loc);
+				
+				return "msg";
+			}
+			
+			else {
+				message = "리뷰 삭제에 실패했습니다!";
+				String loc = request.getContextPath()+"/myrvlist.exp";
+				
+				request.setAttribute("message", message);
+				request.setAttribute("loc", loc);
+			
+				return "msg";
+			}
+		
+		}
+		JSONObject jsonObj = new JSONObject();
+				
+		
+		return jsonObj.toString();
 	}
 	
 }

@@ -739,7 +739,7 @@
 							    			"<label for='ratingpoint_8'></label>" +
 							    			"<input type='radio' id='ratingpoint_10' name='fk_rv_rating' value='10'/>" +
 							    			"<label for='ratingpoint_10'></label>" +
-							    			"<span id='rating_desc'></span>" +
+							    			"<span id='rating_desc' style='margin: 2% 0 0 5%;'></span>" +
 						    			"</span>" +
 					    			"</fieldset>" +
 					    		"</div>" +
@@ -814,6 +814,28 @@
 					$('#mycontent > div > div.my_wish_travel_list.my_travel_content > div > div > div.my_wish_travel_img > img').css('filter', '');
 	    		});
 	         	
+	    		const reviewEditModal = document.getElementById('reviewEditModal');
+	    	    window.addEventListener('click', function (e) { // 모달 외의 body 클릭 시 모달창 display:none
+	    	        if (e.target === reviewEditModal) {
+	    	        	$(".reviewWriteModal").fadeOut();
+		    			$("body").removeClass("modal-open"); // body에서 modal-open 클래스 제거
+		    			
+		    			// 배경색 없애기
+		    			$('#headerOfheader > div > section').css('background-color', '');
+		    			$('#mycontent > div').css('background-color', '');
+						$('#beforeTravel > div').css('background-color', '');
+						$('#beforeTravel > div > div.my_travel_img').css('background-color', '');
+						$('#beforeTravel > div > div.my_travel_text').css('background-color', '');
+						$('#afterTravel > div').css('background-color', '');
+						$('div.my_wish_travel_list.my_travel_content > div > div').css('background-color', '');
+						// 밝기 제거
+						$('#beforeTravel > div > div.my_travel_img > img').css('filter', '');
+						$('#afterTravel > div > div.my_travel_img').css('filter', '');
+						$('#mycontent > div > div.my_wish_travel_list.my_travel_content > div > div > div.my_wish_travel_img > img').css('filter', '');
+	    	        }
+	    	        
+	    	     });  
+				
 	    		// 모달이 열릴 때 초기 상태 설정 함수 호출
 	            setInitialRating();
 	    		 	   
