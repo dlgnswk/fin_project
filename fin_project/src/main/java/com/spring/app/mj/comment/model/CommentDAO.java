@@ -113,16 +113,6 @@ public interface CommentDAO {
 	*/
 	int getTotalCount(Map<String, Object> paraMap);
 
-	/** 
-	* @Method Name  : getRvcntByRate 
-	* @작성일   : 2024. 1. 10 
-	* @작성자   : 손명진
-	* @변경이력  : 
-	* @Method 설명 :  평점 별 후기 갯수 가져오기
-	* @param paraMap
-	* @return 
-	*/
-	Map<String, String> getRvcntByRate(Map<String, Object> paraMap);
 
 	/** 
 	* @Method Name  : gettotalByRate 
@@ -133,7 +123,7 @@ public interface CommentDAO {
 	* @param paraMap
 	* @return 
 	*/
-	int gettotalByRate(Map<String, Object> paraMap);
+	int gettotalByRate(Map<String, Object> r_paraMap);
 
 	/** 
 	* @Method Name  : gettotalComment 
@@ -144,6 +134,17 @@ public interface CommentDAO {
 	* @param paraMap
 	* @return 
 	*/
-	int gettotalComment(Map<String, Object> paraMap);
+	int gettotalComment(Map<String, Object> r_paraMap);
+
+	/** 
+	* @Method Name  : getRvcntByRate2 
+	* @작성일   : 2024. 1. 11 
+	* @작성자   : 먕지 
+	* @변경이력  : 
+	* @Method 설명 : 
+	* @param r_paraMap
+	* @return 
+	*/
+	Map<String, String> getRvcntByRate2(Map<String, Object> r_paraMap);
 
 }

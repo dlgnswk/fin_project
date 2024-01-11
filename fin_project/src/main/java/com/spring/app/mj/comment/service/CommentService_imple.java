@@ -99,24 +99,34 @@ public class CommentService_imple implements CommentService {
 	}
 
 		
-	// 평점 별 후기 갯수 가져오기	
+	
+	
+
+	
+
+
+	
+
+		// 평점 별 후기 갯수 가져오기	
 		@Override
-		public Map<String, String> getRvcntByRate(Map<String, Object> paraMap) {
-			Map<String, String> getRvcntByRate = dao.getRvcntByRate(paraMap);
-			return getRvcntByRate;
+		public Map<String, String> getRvcntByRate2(Map<String, Object> r_paraMap) {
+			 Map<String, String> getRvcntByRate2 = dao.getRvcntByRate2(r_paraMap);
+			return getRvcntByRate2;
+		}
+
+
+
+
+		@Override
+		public int gettotalByRate(Map<String, Object> r_paraMap) {
+			 int gettotalByRate = dao.gettotalByRate(r_paraMap);
+			 return gettotalByRate;
 		}
 
 
 		@Override
-		public int gettotalByRate(Map<String, Object> paraMap) {
-			int gettotalByRate = dao.gettotalByRate(paraMap);
-			return gettotalByRate;
-		}
-
-
-		@Override
-		public int gettotalComment(Map<String, Object> paraMap) {
-			int gettotalComment = dao.gettotalComment(paraMap);
+		public int gettotalComment(Map<String, Object> r_paraMap) {
+			int gettotalComment =dao.gettotalComment(r_paraMap);
 			return gettotalComment;
 		}
 	

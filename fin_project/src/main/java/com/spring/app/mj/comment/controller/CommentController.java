@@ -167,32 +167,47 @@ public class CommentController {
 		 List<Map<String, Object>> commentList = service.getSearchList(paraMap);
 		 // 페이징 처리한 글목록 가져오기(검색이 있든지, 검색이 없든지 모두 다 포함 한 것) 
 
-			if (commentList != null) {
-			    for (Map<String, Object> comment : commentList) {
-			        String lodge_id = (String) comment.get("FK_LODGE_ID");
-			        paraMap.put("lodge_id", lodge_id);
-			        //System.out.println("lodge_id");
-			    }
-			}
-			
+		 
+		 Map<String, Object> r_paraMap = new HashMap<>();
+		 
+		 
+		 if (commentList != null) {
+		     for (Map<String, Object> comment : commentList) {
+		            String lodge_id = (String) comment.get("FK_LODGE_ID");
+		            r_paraMap.put("lodge_id", lodge_id);
+		        //System.out.println("lodge_id");
+		    }
+		 }
+			/*
+			 * else { // 검색되어진 결과물이 존재하지 않을 경우 paraMap.put("lodge_id", "ICDU5968"); }
+			 */
+		
 			
 		// 평점 별 후기 갯수 가져오기
-	      Map<String, String> rv_cnt_byRate = service.getRvcntByRate(paraMap);
-	    // 평점 총 후기 갯수구하기
-	      int gettotalByRate = service.gettotalByRate(paraMap);
+
+				 
+		 if(commentList != null) {	
+			 Map<String, String> rv_cnt_byRate = service.getRvcntByRate2(r_paraMap);
+			 
+			 //System.out.println(rv_cnt_byRate);
+			 //System.out.println(rv_cnt_byRate.get("six"));
+	    
+	      // 평점 총 후기 갯수구하기
+	         int gettotalByRate = service.gettotalByRate(r_paraMap);
 
 	    // 차트를 위한 판매자 총 갯수구하기  
-	      int gettotalComment = service.gettotalComment(paraMap);
-	      
-	      
-	     // System.out.println(gettotalComment);
-	      
-		 mav.addObject("rv_cnt_byRate",rv_cnt_byRate);
+	         int gettotalComment = service.gettotalComment(r_paraMap);
 		 
-		 mav.addObject("gettotalComment",gettotalComment);
-		 
-		 mav.addObject("gettotalByRate",gettotalByRate);
-			
+		 	      
+	      //System.out.println(rv_cnt_byRate);
+	      //System.out.println(gettotalByRate);
+	      //System.out.println(gettotalComment);
+	
+			 mav.addObject("gettotalComment",gettotalComment);
+			 mav.addObject("rv_cnt_byRate",rv_cnt_byRate);
+			 
+			 mav.addObject("gettotalByRate",gettotalByRate);
+		 }	
 			
 	  
 		 mav.addObject("commentList", commentList);

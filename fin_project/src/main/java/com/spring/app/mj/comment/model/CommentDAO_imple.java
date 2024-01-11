@@ -100,25 +100,27 @@ public class CommentDAO_imple implements CommentDAO {
 		return n;
 	}
 
-	//  평점 별 후기 갯수 가져오기
-	@Override
-	public Map<String, String> getRvcntByRate(Map<String, Object> paraMap) {
-		Map<String, String> getRvcntByRate = sqlsession.selectOne("mj_comment.getRvcntByRate",paraMap);
-		return getRvcntByRate;
-	}
 
 
 	@Override
-	public int gettotalByRate(Map<String, Object> paraMap) {
-		int gettotalByRate =  sqlsession.selectOne("mj_comment.gettotalByRate",paraMap);
+	public int gettotalByRate(Map<String, Object> r_paraMap) {
+		int gettotalByRate =  sqlsession.selectOne("mj_comment.gettotalByRate",r_paraMap);
 		return gettotalByRate;
 	}
 
 
 	@Override
-	public int gettotalComment(Map<String, Object> paraMap) {
-		int gettotalComment = sqlsession.selectOne("mj_comment.gettotalComment",paraMap);
+	public int gettotalComment(Map<String, Object> r_paraMap) {
+		int gettotalComment = sqlsession.selectOne("mj_comment.gettotalComment",r_paraMap);
 		return gettotalComment;
+	}
+
+	//  평점 별 후기 갯수 가져오기
+
+	@Override
+	public Map<String, String> getRvcntByRate2(Map<String, Object> r_paraMap) {
+		Map<String, String> getRvcntByRate2 = sqlsession.selectOne("mj_comment.getRvcntByRate2", r_paraMap);
+		return getRvcntByRate2;
 	}
 
 
