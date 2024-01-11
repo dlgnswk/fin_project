@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.spring.app.common.FileManager;
 import com.spring.app.db.lodge.service.LodgeService;
 import com.spring.app.expedia.domain.HostVO;
@@ -1138,17 +1139,94 @@ public class LodgeController {
 	@GetMapping(value = "/changeGetRoomInfo.exp", produces = "text/plain;charset=UTF-8") // GET 방식만 허락한 것이다.
 	public String changeGetRoomInfo(@RequestParam String rm_seq) {
 		
+		Gson gson = new Gson(); // json 객체를 문자열로 변환하기 위한 gson 
+		// JsonParser.parseString(json 형태의 문자열) 를 사용하면 json 형태의 문자열을 JsonObject 형태로 바꿀 수 있다.
+		
 		// rm_seq에 해당하는 객실의 정보를 가져오기
 		RoomVO rmvo = service.changeGetRoomInfo(rm_seq);
 		
-	//	RoomVO rmvo = service.changeGetkitchenOpt(rm_seq);
+		JsonObject jsonObj = (JsonObject) JsonParser.parseString(gson.toJson(rmvo)); // 문자열을 json 객체 변환
 		
-		Gson gson = new Gson();
-		JsonObject jsonObj = new JsonObject();
+		int rm_bathroom_cnt = 0;
+		try {
+			rm_bathroom_cnt = Integer.parseInt(rmvo.getRm_bathroom_cnt());
+		} catch (Exception e) {
+			
+		}
+		// rm_bathroom_cnt
+		// 전용욕실개수 체크
+		if( rm_bathroom_cnt > 0 ) {
+		// 욕실 옵션이 있다면
+			// 입력된 욕실 옵션 가져오기
+			List<String> opt_str_List = service.changeGetfk_bath_opt_no(rm_seq);
+			
+			JsonArray jsonArr = new JsonArray();
+			for(String opt :opt_str_List) {
+				jsonArr.add(opt);
+			}
+			jsonObj.add("bethOpt", jsonArr);
+		} // end of if( "1".equals(rmvo.getRm_kitchen_yn()) ---------------------
 		
-		String rmvo_str = gson.toJson(rmvo);
-		// ["***_arr":"{0,1,2,3,4}"]
-		// {"rm_seq":"rm-268","fk_lodge_id":"BYMB2023","rm_type":"스탠다드 킹","rm_cnt":"29","rm_bedrm_cnt":"1","rm_smoke_yn":"0","rm_size_meter":"25","rm_size_pyug":"7.56","rm_extra_bed_yn":"0","rm_single_bed":"0","rm_ss_bed":"0","rm_double_bed":"1","rm_queen_bed":"0","rm_king_bed":"0","rm_wheelchair_yn":"0","rm_bathroom_cnt":"1","rm_p_bathroom_yn":"0","rm_kitchen_yn":"0","fk_view_no":"4","rm_snack_yn":"1","rm_ent_yn":"1","rm_tmp_ctrl_yn":"1","rm_guest_cnt":"2","rm_price":"112000","rm_breakfast_yn":"0"}
+		
+		// 주방 옵션 체크
+		if( "1".equals(rmvo.getRm_kitchen_yn()) ) {
+		// 주방 옵션이 있다면
+			List<String> opt_str_List = service.changeGetkitchenOpt(rm_seq); // 입력된 주방 옵션 가져오기
+			
+			JsonArray jsonArr = new JsonArray();
+			for(String opt :opt_str_List) {
+				jsonArr.add(opt);
+			}
+			jsonObj.add("kitchenOpt", jsonArr);
+		} // end of if( "1".equals(rmvo.getRm_kitchen_yn()) ---------------------
+		
+		
+		// 객실 다과 옵션 체크
+		if( "1".equals(rmvo.getRm_snack_yn()) ) {
+		// 객실 다과 옵션이 있다면
+			// 입력된 객실 다과 옵션 가져오기
+			List<String> opt_str_List = service.changeGetfk_snk_opt_no(rm_seq); 
+			
+			JsonArray jsonArr = new JsonArray();
+			for(String opt :opt_str_List) {
+				jsonArr.add(opt);
+			}
+			jsonObj.add("snackOpt", jsonArr);
+		} // end of if( "1".equals(rmvo.getRm_snack_yn()) ) { ---------------------
+		
+		
+		// 객실 엔터테인먼트 옵션 체크
+		if( "1".equals(rmvo.getRm_ent_yn()) ) {
+		// 객실 엔터테인먼트 옵션이 있다면
+			// 입력된 객실 엔터테인먼트 옵션 가져오기
+			List<String> opt_str_List = service.changeGetfk_ent_opt_no(rm_seq); 
+			
+			JsonArray jsonArr = new JsonArray();
+			for(String opt :opt_str_List) {
+				jsonArr.add(opt);
+			}
+			jsonObj.add("entOpt", jsonArr);
+		} // end of if( "1".equals(rmvo.getRm_ent_yn()) ) {
+		
+		
+		// 온도조절기 옵션 체크
+		if( "1".equals(rmvo.getRm_tmp_ctrl_yn()) ) {
+		// 객실 엔터테인먼트 옵션이 있다면
+			// 입력된 온도조절기 옵션 가져오기
+			List<String> opt_str_List = service.changeGetfk_tmp_opt_no(rm_seq);
+			
+			JsonArray jsonArr = new JsonArray();
+			for(String opt :opt_str_List) {
+				jsonArr.add(opt);
+			}
+			jsonObj.add("tempOpt", jsonArr);
+		} // end of if( "1".equals(rmvo.getRm_tmp_ctrl_yn()) ) {
+		
+		
+		String rmvo_str= gson.toJson(jsonObj);
+	//	System.out.println(rmvo_str);
+		//	{"rm_seq":"rm-135","fk_lodge_id":"CNTP0003","rm_type":"스탠다드 더블","rm_cnt":"5","rm_bedrm_cnt":"1","rm_smoke_yn":"0","rm_size_meter":"24.8","rm_size_pyug":"7.5","rm_extra_bed_yn":"0","rm_single_bed":"0","rm_ss_bed":"0","rm_double_bed":"0","rm_queen_bed":"0","rm_king_bed":"1","rm_wheelchair_yn":"0","rm_bathroom_cnt":"1","rm_p_bathroom_yn":"0","rm_kitchen_yn":"1","fk_view_no":"0","rm_snack_yn":"1","rm_ent_yn":"0","rm_tmp_ctrl_yn":"1","rm_guest_cnt":"2","rm_price":"60000","rm_breakfast_yn":"0",
+		//	 "bethOpt":["3","4","0"],"kitchenOpt":["3","4","0"],"snackOpt":["0"],"tempOpt":["0","2"]}
 		
 		return rmvo_str;
 	} // end of public String ajax_select() ---------

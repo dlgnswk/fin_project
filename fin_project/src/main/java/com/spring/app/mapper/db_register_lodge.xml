@@ -918,5 +918,40 @@
 		where rm_seq = #{rm_seq}
 	</select>
 
-		
+
+	<!-- 입력된 주방 옵션 가져오기 -->
+	<select id="changeGetkitchenOpt" parameterType="String" resultType="String">
+		select fk_bath_opt_no
+		from tbl_bath
+		where fk_rm_seq = #{rm_seq}
+	</select>
+	
+	<!-- 입력된 객실 다과 옵션 가져오기 -->
+	<select id="changeGetfk_snk_opt_no" parameterType="String" resultType="String">
+		select fk_snk_opt_no
+		from tbl_snack
+		where fk_rm_seq = #{rm_seq}
+	</select>
+	
+	<!-- 입력된 객실 엔터테인먼트 옵션 가져오기 -->
+	<select id="changeGetfk_ent_opt_no" parameterType="String" resultType="String">
+		select fk_ent_opt_no
+		from tbl_ent
+		where fk_rm_seq = #{rm_seq}
+	</select>
+	
+	<!-- 입력된 온도조절기 옵션 가져오기 -->
+	<select id="changeGetfk_tmp_opt_no" parameterType="String" resultType="String">
+		select fk_tmp_opt_no
+		from tbl_tmp
+		where fk_rm_seq = #{rm_seq}
+	</select>
+	
+	<!-- 입력된 욕실 옵션 가져오기 -->
+	<select id="changeGetfk_bath_opt_no" parameterType="String" resultType="String">
+		select fk_bath_opt_no
+		from tbl_bath
+		where fk_rm_seq = #{rm_seq}
+	</select>
+	
 </mapper>

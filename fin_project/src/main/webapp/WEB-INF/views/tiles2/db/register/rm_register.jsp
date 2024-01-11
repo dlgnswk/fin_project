@@ -25,19 +25,18 @@
 		
 		
 		// 정보가 바뀔때
-		let update_room_seq = $("select[name='update_room_seq']");
-		
-		update_room_seq.change(function(){
-
+		$(document).on("change", "select[name='update_room_seq']", function(){
+			let update_room_seq = $(this);
+			
 			if(update_room_seq.val() == "0" || update_room_seq.val() == "") {
 				update_room_seq.closest(".__data").find("div.delete_btn").hide();
+				location.href="javascript:location.reload(true)";
 			}
 			else {
 			// 성공시 바뀐 객실의 정보를 표시해 주어야 한다.
 				$.ajax({
 					url:"<%=ctxPath%>/changeGetRoomInfo.exp",
 					data: {"rm_seq":update_room_seq.val()},
-					async: false,
 					dataType:"json",
 					success:function(json){
 					//	console.log(JSON.stringify(json));
@@ -61,6 +60,36 @@
 						$("select[name='rm_queen_bed']").val(json.rm_queen_bed);
 						
 						$("select[name='rm_king_bed']").val(json.rm_king_bed);
+						
+						// 욕실 옵션 체크 -시작-
+						let rm_bathroom_cnt = $("input[name='rm_bathroom_cnt']");
+						rm_bathroom_cnt.val(json.rm_bathroom_cnt);
+						if(json.rm_bathroom_cnt >= 1) {
+							rm_bathroom_cnt.closest(".__data").next(".y_btn_after").show();
+							let checkbox =rm_bathroom_cnt.closest(".__data").next(".y_btn_after").find(".checkbox_text");
+							
+							checkbox.prop("checked",false); // 체크 전체를 풀어준다.
+							
+							$.each(json.bethOpt, function(index, item){
+							// DB에서 가져온 주방 옵션 번호들을 반복시킨다.
+								$.each(checkbox, function(idx, elmt){
+								// 체크 박스의 수만큼 반복 시킨다
+									if($(elmt).val() == item) {
+									// DB에서 가져온 주방 옵션들과 체크박스의 value()값이 같으면 check 한다.									
+										$(elmt).prop("checked", true);
+										return false;
+									}
+									
+								}); // end of $.eacg(checkbox, function()
+								
+							}); // end of $.each(json.kitchenOpt, function(index, item) ------							
+						}
+						else {
+							rm_bathroom_cnt.closest(".__data").next(".y_btn_after").hide();
+						}
+						// 욕식 옵션 체크 -끝-
+						
+						
 						$("input[name='rm_bathroom_cnt']").val(json.rm_bathroom_cnt);
 						
 						let rm_p_bathroom_yn = $("input[name='rm_p_bathroom_yn']");
@@ -70,34 +99,118 @@
 							rm_p_bathroom_yn.parent().find(".n_btn").click();							
 						}
 						
+						// 주방 옵션 체크하기 -시작-
 						let rm_kitchen_yn = $("input[name='rm_kitchen_yn']");
 						if(json.rm_kitchen_yn == "1") {
 							rm_kitchen_yn.parent().find(".y_btn").click();
+							let checkbox =rm_kitchen_yn.closest(".__data").next(".y_btn_after").find(".checkbox_text");
+							
+							checkbox.prop("checked",false); // 체크 전체를 풀어준다.
+							
+							$.each(json.kitchenOpt, function(index, item){
+							// DB에서 가져온 주방 옵션 번호들을 반복시킨다.
+								$.each(checkbox, function(idx, elmt){
+								// 체크 박스의 수만큼 반복 시킨다
+							//	console.log("item => "+item + "  " + "$(elmt).val() => " + $(elmt).val());
+									if($(elmt).val() == item) {
+									// DB에서 가져온 주방 옵션들과 체크박스의 value()값이 같으면 check 한다.									
+										$(elmt).prop("checked", true);
+										return false;
+									}
+									
+								}); // end of $.eacg(checkbox, function()
+								
+							}); // end of $.each(json.kitchenOpt, function(index, item) ------
+							
 						} else {
 							rm_kitchen_yn.parent().find(".n_btn").click();							
 						}
+						// 주방 옵션 체크하기 -끝-
 						
 						
+						// 다과 옵션 체크하기 -시작-
 						let rm_snack_yn = $("input[name='rm_snack_yn']");
 						if(json.rm_snack_yn == "1") {
 							rm_snack_yn.parent().find(".y_btn").click();
+							let checkbox =rm_snack_yn.closest(".__data").next(".y_btn_after").find(".checkbox_text");
+							
+							checkbox.prop("checked",false); // 체크 전체를 풀어준다.
+							
+							$.each(json.snackOpt, function(index, item){
+							// DB에서 가져온 다과 옵션 번호들을 반복시킨다.
+								$.each(checkbox, function(idx, elmt){
+								// 체크 박스의 수만큼 반복 시킨다
+									if($(elmt).val() == item) {
+									// DB에서 가져온 다과 옵션들과 체크박스의 value()값이 같으면 check 한다.									
+										$(elmt).prop("checked", true);
+										return false;
+									}
+									
+								}); // end of $.eacg(checkbox, function()
+								
+							}); // end of $.each(json.kitchenOpt, function(index, item) ------
+							
 						} else {
 							rm_snack_yn.parent().find(".n_btn").click();							
 						}
+						// 다과 옵션 체크하기 -끝-
 						
+
+						// 엔터테인먼트 옵션 체크하기 -시작-
 						let rm_ent_yn = $("input[name='rm_ent_yn']");
 						if(json.rm_ent_yn == "1") {
 							rm_ent_yn.parent().find(".y_btn").click();
+							let checkbox =rm_ent_yn.closest(".__data").next(".y_btn_after").find(".checkbox_text");
+							
+							checkbox.prop("checked",false); // 체크 전체를 풀어준다.
+							
+							$.each(json.entOpt, function(index, item){
+							// DB에서 가져온 엔터 옵션 번호들을 반복시킨다.
+								$.each(checkbox, function(idx, elmt){
+								// 체크 박스의 수만큼 반복 시킨다
+									if($(elmt).val() == item) {
+									// DB에서 가져온 엔터 옵션들과 체크박스의 value()값이 같으면 check 한다.									
+										$(elmt).prop("checked", true);
+										return false;
+									}
+									
+								}); // end of $.eacg(checkbox, function()
+								
+							}); // end of $.each(json.kitchenOpt, function(index, item) ------
+							
 						} else {
-							rm_ent_yn.parent().find(".n_btn").click();							
-						}						
+							rm_ent_yn.parent().find(".n_btn").click();
+						}
+						// 엔터테인먼트 옵션 체크하기 -끝-
 						
+
+						// 온도조절 옵션 체크하기 -시작-
 						let rm_tmp_ctrl_yn = $("input[name='rm_tmp_ctrl_yn']");
 						if(json.rm_tmp_ctrl_yn == "1") {
 							rm_tmp_ctrl_yn.parent().find(".y_btn").click();
+							let checkbox =rm_tmp_ctrl_yn.closest(".__data").next(".y_btn_after").find(".checkbox_text");
+							
+							checkbox.prop("checked",false); // 체크 전체를 풀어준다.
+							
+							$.each(json.tempOpt, function(index, item){
+							// DB에서 가져온 온도조절 옵션 번호들을 반복시킨다.
+								$.each(checkbox, function(idx, elmt){
+								// 체크 박스의 수만큼 반복 시킨다
+									if($(elmt).val() == item) {
+									// DB에서 가져온 온도조절 옵션들과 체크박스의 value()값이 같으면 check 한다.									
+										$(elmt).prop("checked", true);
+										return false;
+									}
+									
+								}); // end of $.eacg(checkbox, function()
+								
+							}); // end of $.each(json.kitchenOpt, function(index, item) ------
+							
 						} else {
 							rm_tmp_ctrl_yn.parent().find(".n_btn").click();							
-						}						
+						}
+						// 온도조절 옵션 체크하기 -끝-
+						
 						
 						let rm_smoke_yn = $("input[name='rm_smoke_yn']");
 						if(json.rm_smoke_yn == "1") {
@@ -910,7 +1023,6 @@
 		// "아니오" 
 			e_par.parent().next("div.y_btn_after").hide();
 			e_par.parent().next("div.y_btn_after").find("input").prop("disabled",true);
-			e_par.parent().next("div.y_btn_after").find("input").val("");
 			e_par.parent().next("div.y_btn_after").find("select").prop("disabled",true);
 			e_par.parent().next("div.y_btn_after").find("input:checkbox").prop("checked",false);
 		}
@@ -1363,4 +1475,4 @@
 		</div>
 	</div> <%-- register_body end --%>
 
-</div> 
+</div>

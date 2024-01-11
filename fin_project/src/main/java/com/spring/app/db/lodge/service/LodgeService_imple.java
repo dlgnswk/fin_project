@@ -938,6 +938,42 @@ public class LodgeService_imple implements LodgeService {
 	}
 
 
+	// 입력된 주방 옵션 가져오기
+	@Override
+	public List<String> changeGetkitchenOpt(String rm_seq) {
+		List<String> opt_str_List = dao.changeGetkitchenOpt(rm_seq);
+		return opt_str_List;
+	}
+
+	// 입력된 객실 다과 옵션 가져오기
+	@Override
+	public List<String> changeGetfk_snk_opt_no(String rm_seq) {
+		List<String> opt_str_List = dao.changeGetfk_snk_opt_no(rm_seq); 
+		return opt_str_List;
+	}
+
+	// 입력된 객실 엔터테인먼트 옵션 가져오기
+	@Override
+	public List<String> changeGetfk_ent_opt_no(String rm_seq) {
+		List<String> opt_str_List = dao.changeGetfk_ent_opt_no(rm_seq); 
+		return opt_str_List;
+	}
+
+	// 입력된 온도조절기 옵션 가져오기
+	@Override
+	public List<String> changeGetfk_tmp_opt_no(String rm_seq) {
+		List<String> opt_str_List = dao.changeGetfk_tmp_opt_no(rm_seq);
+		return opt_str_List;
+	}
+
+	// 입력된 욕실 옵션 가져오기
+	@Override
+	public List<String> changeGetfk_bath_opt_no(String rm_seq) {
+		List<String> opt_str_List = dao.changeGetfk_bath_opt_no(rm_seq);
+		return opt_str_List;
+	}
+
+
 	
 	
 }
