@@ -27,6 +27,7 @@ import com.google.gson.JsonObject;
 import com.spring.app.common.FileManager;
 import com.spring.app.db.lodge.service.LodgeService;
 import com.spring.app.expedia.domain.HostVO;
+import com.spring.app.expedia.domain.RoomVO;
 
 @Controller
 public class LodgeController {
@@ -1130,6 +1131,23 @@ public class LodgeController {
 		return new Gson().toJson(jsonArr);
 	} // end of public String ajax_select() ---------
 	
+	
+	
+	// 객실을 등록할 때 "추가" "수정"할지를 선택할 수 있는 select를 위한 정보이다.
+	@ResponseBody
+	@GetMapping(value = "/changeGetRoomInfo.exp", produces = "text/plain;charset=UTF-8") // GET 방식만 허락한 것이다.
+	public String changeGetRoomInfo(@RequestParam String rm_seq) {
+		
+		// rm_seq에 해당하는 객실의 정보를 가져오기
+		RoomVO rmvo = service.changeGetRoomInfo(rm_seq);
+		
+		Gson gson = new Gson();
+		
+		String rmvo_str = gson.toJson(rmvo);
+		
+		
+		return rmvo_str;
+	} // end of public String ajax_select() ---------
 	
 	
 	

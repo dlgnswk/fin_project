@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.spring.app.expedia.domain.RoomVO;
+
 public interface LodgeService {
 
 	// == 숙박시설 유형 테이블에서 select == //
@@ -121,5 +123,8 @@ public interface LodgeService {
 
 	// 기존에 입력되어 있는 rm_type List 가져오기
 	List<String> getRm_typeData(Map<String, String> paraMap);
+
+	// rm_seq에 해당하는 객실의 정보를 가져오기
+	RoomVO changeGetRoomInfo(String rm_seq);
 
 }

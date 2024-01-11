@@ -33,9 +33,108 @@
 				update_room_seq.closest(".__data").find("div.delete_btn").hide();
 			}
 			else {
-				
+			// 성공시 바뀐 객실의 정보를 표시해 주어야 한다.
+				$.ajax({
+					url:"<%=ctxPath%>/changeGetRoomInfo.exp",
+					data: {"rm_seq":update_room_seq.val()},
+					async: false,
+					dataType:"json",
+					success:function(json){
+					//	console.log(JSON.stringify(json));
+						
+						$("input[name='rm_type']").val(json.rm_type);
+						$("input[name='rm_cnt']").val(json.rm_cnt);
+						$("input[name='rm_size_meter']").val(json.rm_size_meter);
+						$("input[name='rm_size_pyug']").val(json.rm_size_pyug);
+						$("input[name='rm_bedrm_cnt']").val(json.rm_bedrm_cnt);
+						
+						let rm_extra_bed_yn= $("input[name='rm_extra_bed_yn']");
+						if(json.rm_extra_bed_yn == "1") {
+							rm_extra_bed_yn.parent().find(".y_btn").click();
+						} else {
+							rm_extra_bed_yn.parent().find(".n_btn").click();							
+						}
+						
+						$("select[name='rm_single_bed']").val(json.rm_single_bed);
+						$("select[name='rm_ss_bed']").val(json.rm_ss_bed);
+						$("select[name='rm_double_bed']").val(json.rm_double_bed);
+						$("select[name='rm_queen_bed']").val(json.rm_queen_bed);
+						
+						$("select[name='rm_king_bed']").val(json.rm_king_bed);
+						$("input[name='rm_bathroom_cnt']").val(json.rm_bathroom_cnt);
+						
+						let rm_p_bathroom_yn = $("input[name='rm_p_bathroom_yn']");
+						if(json.rm_p_bathroom_yn == "1") {
+							rm_p_bathroom_yn.parent().find(".y_btn").click();
+						} else {
+							rm_p_bathroom_yn.parent().find(".n_btn").click();							
+						}
+						
+						let rm_kitchen_yn = $("input[name='rm_kitchen_yn']");
+						if(json.rm_kitchen_yn == "1") {
+							rm_kitchen_yn.parent().find(".y_btn").click();
+						} else {
+							rm_kitchen_yn.parent().find(".n_btn").click();							
+						}
+						
+						
+						let rm_snack_yn = $("input[name='rm_snack_yn']");
+						if(json.rm_snack_yn == "1") {
+							rm_snack_yn.parent().find(".y_btn").click();
+						} else {
+							rm_snack_yn.parent().find(".n_btn").click();							
+						}
+						
+						let rm_ent_yn = $("input[name='rm_ent_yn']");
+						if(json.rm_ent_yn == "1") {
+							rm_ent_yn.parent().find(".y_btn").click();
+						} else {
+							rm_ent_yn.parent().find(".n_btn").click();							
+						}						
+						
+						let rm_tmp_ctrl_yn = $("input[name='rm_tmp_ctrl_yn']");
+						if(json.rm_tmp_ctrl_yn == "1") {
+							rm_tmp_ctrl_yn.parent().find(".y_btn").click();
+						} else {
+							rm_tmp_ctrl_yn.parent().find(".n_btn").click();							
+						}						
+						
+						let rm_smoke_yn = $("input[name='rm_smoke_yn']");
+						if(json.rm_smoke_yn == "1") {
+							rm_smoke_yn.parent().find(".y_btn").click();
+						} else {
+							rm_smoke_yn.parent().find(".n_btn").click();							
+						}
+						
+						$("select[name='fk_view_no']").val(json.fk_view_no);
+
+						
+						let rm_wheelchair_yn = $("input[name='rm_wheelchair_yn']");
+						if(json.rm_wheelchair_yn == "1") {
+							rm_wheelchair_yn.parent().find(".y_btn").click();
+						} else {
+							rm_wheelchair_yn.parent().find(".n_btn").click();							
+						}
+						
+						$("input[name='rm_guest_cnt']").val(json.rm_guest_cnt);
+						$("input[name='rm_price']").val(json.rm_price);
+						
+						let rm_breakfast_yn = $("input[name='rm_breakfast_yn']");
+						if(json.rm_breakfast_yn == "1") {
+							rm_breakfast_yn.parent().find(".y_btn").click();
+						} else {
+							rm_breakfast_yn.parent().find(".n_btn").click();							
+						}
+						
+					},
+					error: function(request, status, error){
+	               		alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	              	}
+					
+				}); // end of $.ajax -------------
 			}
-		});
+			
+		}); // update_room_seq.change(function() 
 		
 		
 		
@@ -276,7 +375,7 @@
 				async: false,
 				dataType:"json",
 				success:function(json){
-					console.log(JSON.stringify(json));
+				//	console.log(JSON.stringify(json));
 					
 					if(JSON.stringify(json) != "[]") {
 						
