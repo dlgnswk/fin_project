@@ -32,6 +32,13 @@
 		
 	}
 
+	img.lg_img_save_name {
+		margin-right:3%; 
+		margin-top:1%; 
+			
+	}
+
+
 
 </style>
 
@@ -39,7 +46,6 @@
 
 	$(document).ready(function(){
 		
-		console.log(${requestScope.chatRoomList});
 				
 				
 	});// end of $(document).ready(function(){}----------------------------------------
@@ -92,17 +98,22 @@ function goViewChat(fk_lodge_id) {
 
 	  
 	  <c:if test="${not empty requestScope.chatRoomList}">
-	  <c:forEach var="chatvo" items="${requestScope.chatRoomList}">
-		<div style="height:350px; max-height: 350px; overflow: auto;">
-		   <div class="list" onclick="goViewChat('${chatvo.fk_lodge_id}')">
-			   <div style="margin-left:0;">
-				   <span class="lg_name">${chatvo.lg_name}</span>
-				   <span class="lg_en_name">${chatvo.lg_en_name}</span>
+	  <div style="height:350px; max-height: 350px; overflow: auto;">
+		  <c:forEach var="chatvo" items="${requestScope.chatRoomList}">
+			
+			   <div class="list" onclick="goViewChat('${chatvo.fk_lodge_id}')">
+				   <img class=lg_img_save_name src="<%=ctxPath %>/resources/images/${chatvo.fk_lodge_id}/lodge_img/${chatvo.lg_img_save_name}" width="36" height="36" style="border-radius:0.7rem;"/>
+				   
+				   <div style="margin-left:0;">
+					   
+					   <span class="lg_name">${chatvo.lg_name}</span>
+					   <span class="lg_en_name">${chatvo.lg_en_name}</span>
+				   </div>
+				   <svg class="uitk-icon navigate_next uitk-icon-directional uitk-icon-medium" style="margin-left:auto; margin-top:3%;" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" focusable="false"><path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6-6-6z"></path></svg>
 			   </div>
-			   <svg class="uitk-icon navigate_next uitk-icon-directional uitk-icon-medium" style="margin-left:auto; margin-top:3%;" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" focusable="false"><path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6-6-6z"></path></svg>
-		   </div>
-		</div>
-	  </c:forEach>
+			
+		  </c:forEach>
+	  </div>
 	  </c:if>
 	  
 	  <c:if test="${empty requestScope.chatRoomList}">
