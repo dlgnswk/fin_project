@@ -1141,10 +1141,14 @@ public class LodgeController {
 		// rm_seq에 해당하는 객실의 정보를 가져오기
 		RoomVO rmvo = service.changeGetRoomInfo(rm_seq);
 		
+	//	RoomVO rmvo = service.changeGetkitchenOpt(rm_seq);
+		
 		Gson gson = new Gson();
+		JsonObject jsonObj = new JsonObject();
 		
 		String rmvo_str = gson.toJson(rmvo);
-		
+		// ["***_arr":"{0,1,2,3,4}"]
+		// {"rm_seq":"rm-268","fk_lodge_id":"BYMB2023","rm_type":"스탠다드 킹","rm_cnt":"29","rm_bedrm_cnt":"1","rm_smoke_yn":"0","rm_size_meter":"25","rm_size_pyug":"7.56","rm_extra_bed_yn":"0","rm_single_bed":"0","rm_ss_bed":"0","rm_double_bed":"1","rm_queen_bed":"0","rm_king_bed":"0","rm_wheelchair_yn":"0","rm_bathroom_cnt":"1","rm_p_bathroom_yn":"0","rm_kitchen_yn":"0","fk_view_no":"4","rm_snack_yn":"1","rm_ent_yn":"1","rm_tmp_ctrl_yn":"1","rm_guest_cnt":"2","rm_price":"112000","rm_breakfast_yn":"0"}
 		
 		return rmvo_str;
 	} // end of public String ajax_select() ---------

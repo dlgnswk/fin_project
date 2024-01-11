@@ -1159,7 +1159,7 @@
 						<div class="fk_kt_opt_no">
 							<c:forEach var="kitchenOpt" items="${requestScope.kitchenOptMapList}">
 							<div class="checkbox_div">
-								<input class="checkbox_text" name=fk_kt_opt_no id="fk_kt_opt_no_${kitchenOpt.kt_opt_no}" type="checkbox" value="${kitchenOpt.kt_opt_no}" ></input>
+								<input class="checkbox_text" name="fk_kt_opt_no" id="fk_kt_opt_no_${kitchenOpt.kt_opt_no}" type="checkbox" value="${kitchenOpt.kt_opt_no}" ></input>
 								<label class="checkbox_input_box" for="fk_kt_opt_no_${kitchenOpt.kt_opt_no}">${kitchenOpt.kt_opt_desc}</label>
 							</div>
 							</c:forEach>
