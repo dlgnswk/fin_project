@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spring.app.expedia.domain.CommentVO;
+import com.spring.app.expedia.domain.LodgeVO;
 import com.spring.app.mj.comment.model.CommentDAO;
 
 /** 
@@ -128,6 +129,14 @@ public class CommentService_imple implements CommentService {
 		public int gettotalComment(Map<String, Object> paraMap) {
 			int gettotalComment =dao.gettotalComment(paraMap);
 			return gettotalComment;
+		}
+
+
+		// lodge_id를 가져는 메소드
+		@Override
+		public List<LodgeVO> get__lodge_Id(String userId) {
+			List<LodgeVO> get__lodge_Id = dao.get__lodge_Id(userId);
+			return get__lodge_Id;
 		}
 	
 	
