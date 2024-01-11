@@ -875,25 +875,7 @@ function setInitialRating() {
             }
         });
 
-        // label에서 마우스가 빠져나갔을 때의 동작을 정의합니다.
-        label.addEventListener('mouseout', () => {
-            // 선택된 별이 없다면 모든 label을 'circle-regular.png' 이미지로 변경
-            const checked = document.querySelector('.rateCircle input[type=radio]:checked');
-            if (!checked) {
-                labels.forEach((label) => {
-                    label.style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-regular.png')`;
-                });
-            } else {
-                // 선택된 별 이후의 별은 'circle-regular.png' 이미지로, 그 이하는 'circle-solid.png' 이미지로 변경
-                const checkedIndex = Array.from(labels).indexOf(checked.nextElementSibling);
-                for (let i = 0; i <= checkedIndex; i++) {
-                    labels[i].style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-solid.png')`;
-                }
-                for (let i = checkedIndex + 1; i < labels.length; i++) {
-                    labels[i].style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-regular.png')`;
-                }
-            }
-        });
+       
     });
 }
 </script>

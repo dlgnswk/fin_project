@@ -272,9 +272,12 @@ body.modal-open {
 	
 .rateCircle label{
 	background-image: url(<%= ctxPath%>/resources/images/ch/circle-regular.png);
-	width: 43%;	
-	height: 50.5px; 
+	width: 82.2px;	
+	height: 35.2px; 
    	user-select: none;
+	margin-right:5px;
+	
+	background-size:cover;
 }
 	
 #mycontent > form > div > div.reviewWriteModal_header > div > div.rating > fieldset > span > span {
@@ -332,4 +335,3 @@ body.modal-open {
 	box-shadow: 0 0.25rem 0.375rem -0.0625rem rgba(0, 0, 0, 0.1), 0 0.125rem 0.25rem -0.0625rem rgba(0, 0, 0, 0.08);
 }
 /* 작성 버튼 css 끝  */
-
