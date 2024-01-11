@@ -107,10 +107,43 @@ public interface CommentDAO {
 	* @작성일   : 2024. 1. 9 
 	* @작성자   : 먕지 
 	* @변경이력  : 
-	* @Method 설명 : 
+	* @Method 설명 : 페이징처리를 위한 총 갯수 구하기
 	* @param paraMap
 	* @return 
 	*/
 	int getTotalCount(Map<String, Object> paraMap);
+
+	/** 
+	* @Method Name  : getRvcntByRate 
+	* @작성일   : 2024. 1. 10 
+	* @작성자   : 손명진
+	* @변경이력  : 
+	* @Method 설명 :  평점 별 후기 갯수 가져오기
+	* @param paraMap
+	* @return 
+	*/
+	Map<String, String> getRvcntByRate(Map<String, Object> paraMap);
+
+	/** 
+	* @Method Name  : gettotalByRate 
+	* @작성일   : 2024. 1. 10 
+	* @작성자   : 먕지 
+	* @변경이력  : 
+	* @Method 설명 : 구매자 리뷰 총갯수
+	* @param paraMap
+	* @return 
+	*/
+	int gettotalByRate(Map<String, Object> paraMap);
+
+	/** 
+	* @Method Name  : gettotalComment 
+	* @작성일   : 2024. 1. 10 
+	* @작성자   : 먕지 
+	* @변경이력  : 
+	* @Method 설명 : 판매자 리뷰 총갯수
+	* @param paraMap
+	* @return 
+	*/
+	int gettotalComment(Map<String, Object> paraMap);
 
 }

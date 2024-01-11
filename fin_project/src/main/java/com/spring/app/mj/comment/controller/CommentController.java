@@ -44,7 +44,19 @@ public class CommentController {
 		String searchWord = request.getParameter("searchWord");
 		String userId = request.getParameter("userid");
 		
-		System.out.println(userId);
+		//System.out.println(userId);
+		
+		
+		if(userId == null) {
+			
+			
+			
+			mav.setViewName("redirect:/partner.exp");
+			
+		
+			return mav;
+		}
+		
 		
 		
 		 if(searchWord == null) {
@@ -60,13 +72,13 @@ public class CommentController {
 		String reviewContent = request.getParameter("reviewContent");
 		// System.out.println(reviewContent);
 	
+		
 
 		
-		
-		
+//		아이디와 사업자아이디 비교하기
 		List<String> lodgeIdList = service.getLodgeIdList(userId);
 		
-		System.out.println(lodgeIdList);
+		//System.out.println(lodgeIdList);
 		
 		HttpSession session = request.getSession();
 		session.setAttribute("lodgeIdList", lodgeIdList);
@@ -76,37 +88,14 @@ public class CommentController {
 		Map<String, Object> paraMap = new HashMap<>();
 		paraMap.put("searchWord", searchWord); 
 		paraMap.put("lodgeIdList", lodgeIdList);
-		paraMap.put("start",1);
-		paraMap.put("end",2);
+		
+		
+		
 		
 		
 		
 		String str_currentShowPageNo = request.getParameter("currentShowPageNo");
-		
-		 //	System.out.println("~~ 확인용 searchType : " + searchType);
-			// ~~ 확인용 searchType : null
-			// ~~ 확인용 searchType : subject
-			// ~~ 확인용 searchType : content
-			// ~~ 확인용 searchType : subject_content
-			// ~~ 확인용 searchType : name
-			
-		 //	System.out.println("~~ 확인용 searchWord : " + searchWord);
-			// ~~ 확인용 searchWord : null
-			// ~~ 확인용 searchWord : 입니다
-			// ~~ 확인용 searchWord : java
-			// ~~ 확인용 searchWord : java
-			// ~~ 확인용 searchWord : 문새한
-		
-		// System.out.println("~~ 확인용 str_currentShowPageNo : " + str_currentShowPageNo);
-		 // ~~ 확인용 str_currentShowPageNo : null 
-		 // ~~ 확인용 str_currentShowPageNo : 3
-		 // ~~ 확인용 str_currentShowPageNo : dsfsdfdsfdsfㄴㄹㄴㅇㄹㄴ
-		 // ~~ 확인용 str_currentShowPageNo : -3412
-		 // ~~ 확인용 str_currentShowPageNo : 0
-		 // ~~ 확인용 str_currentShowPageNo : 32546
-		 // ~~ 확인용 str_currentShowPageNo : 35325234534623463454354534
-		 	
-	
+
 			
 
 		 
@@ -116,7 +105,7 @@ public class CommentController {
 		 // 먼저, 총 게시물 건수(totalCount)를 구해와야 한다.
 		 // 총 게시물 건수(totalCount)는 검색조건이 있을 때와 없을때로 나뉘어진다. 
 		 int totalCount = 0;    // 총 게시물 건수 
-		 int sizePerPage = 10;  // 한 페이지당 보여줄 게시물 건수 
+		 int sizePerPage = 5;  // 한 페이지당 보여줄 게시물 건수 
 		 int currentShowPageNo = 0; // 현재 보여주는 페이지 번호로서, 초기치로는 1페이지로 설정함. 
 		 int totalPage = 0;         // 총 페이지수(웹브라우저상에서 보여줄 총 페이지 개수, 페이지바)
 		 
@@ -177,6 +166,33 @@ public class CommentController {
 		 
 		 List<Map<String, Object>> commentList = service.getSearchList(paraMap);
 		 // 페이징 처리한 글목록 가져오기(검색이 있든지, 검색이 없든지 모두 다 포함 한 것) 
+
+			if (commentList != null) {
+			    for (Map<String, Object> comment : commentList) {
+			        String lodge_id = (String) comment.get("FK_LODGE_ID");
+			        paraMap.put("lodge_id", lodge_id);
+			        //System.out.println("lodge_id");
+			    }
+			}
+			
+			
+		// 평점 별 후기 갯수 가져오기
+	      Map<String, String> rv_cnt_byRate = service.getRvcntByRate(paraMap);
+	    // 평점 총 후기 갯수구하기
+	      int gettotalByRate = service.gettotalByRate(paraMap);
+
+	    // 차트를 위한 판매자 총 갯수구하기  
+	      int gettotalComment = service.gettotalComment(paraMap);
+	      
+	      
+	     // System.out.println(gettotalComment);
+	      
+		 mav.addObject("rv_cnt_byRate",rv_cnt_byRate);
+		 
+		 mav.addObject("gettotalComment",gettotalComment);
+		 
+		 mav.addObject("gettotalByRate",gettotalByRate);
+			
 			
 	  
 		 mav.addObject("commentList", commentList);
@@ -243,17 +259,17 @@ public class CommentController {
 		if(searchWord != null) {
 		
 		if(pageNo != 1) {
-			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchWord="+searchWord+"&currentShowPageNo=1'>[맨처음]</a></li>";
-			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?userid="+userId+"&searchWord="+searchWord+"&currentShowPageNo=1'>[맨처음]</a></li>";
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?userid="+userId+"&searchWord="+searchWord+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
 		}
 		
 		while( !(loop > blockSize || pageNo > totalPage) ) {
 			
 			if(pageNo == currentShowPageNo) {
-				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:blue; padding:2px 4px;'>"+pageNo+"</li>";
 			}
 			else {
-				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>"; 
+				pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?userid="+userId+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>"; 
 			}
 			
 			loop++;
@@ -263,8 +279,8 @@ public class CommentController {
 		
 		// === [다음][마지막] 만들기 === //
 		if(pageNo <= totalPage) {
-			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
-			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?searchWord="+searchWord+"&currentShowPageNo="+totalPage+"'>[마지막]</a></li>";
+			pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?userid="+userId+"&searchWord="+searchWord+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
+			pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?userid="+userId+"&searchWord="+searchWord+"&currentShowPageNo="+totalPage+"'>[마지막]</a></li>";
 		}
 		
 		pageBar += "</ul>";
@@ -274,8 +290,8 @@ public class CommentController {
 			
 			
 			if(pageNo != 1) {
-				pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?currentShowPageNo=1'>[맨처음]</a></li>";
-				pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
+				pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?userid="+userId+"&currentShowPageNo=1'>[맨처음]</a></li>";
+				pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?userid="+userId+"&currentShowPageNo="+(pageNo-1)+"'>[이전]</a></li>";
 			}
 			
 			while( !(loop > blockSize || pageNo > totalPage) ) {
@@ -284,7 +300,7 @@ public class CommentController {
 					pageBar += "<li style='display:inline-block; width:30px; font-size:12pt; border:solid 1px gray; color:red; padding:2px 4px;'>"+pageNo+"</li>";
 				}
 				else {
-					pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>"; 
+					pageBar += "<li style='display:inline-block; width:30px; font-size:12pt;'><a href='"+url+"?userid="+userId+"&currentShowPageNo="+pageNo+"'>"+pageNo+"</a></li>"; 
 				}
 				
 				loop++;
@@ -294,8 +310,8 @@ public class CommentController {
 			
 			// === [다음][마지막] 만들기 === //
 			if(pageNo <= totalPage) {
-				pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?currentShowPageNo="+pageNo+"'>[다음]</a></li>";
-				pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?currentShowPageNo="+totalPage+"'>[마지막]</a></li>";
+				pageBar += "<li style='display:inline-block; width:50px; font-size:12pt;'><a href='"+url+"?userid="+userId+"&currentShowPageNo="+pageNo+"'>[다음]</a></li>";
+				pageBar += "<li style='display:inline-block; width:70px; font-size:12pt;'><a href='"+url+"?userid="+userId+"&currentShowPageNo="+totalPage+"'>[마지막]</a></li>";
 			}
 			
 			pageBar += "</ul>";
@@ -336,6 +352,10 @@ public class CommentController {
 	//			System.out.println(comment.get("H_LODGENAME"));
 	//		}
 	//		
+			
+			
+			
+			
 			mav.setViewName("mj/sellerReview/reviewList.tiles2");
 	
 			return mav;
@@ -453,6 +473,8 @@ public class CommentController {
 		String c_regDate = request.getParameter("c_regDate");
 		String c_seq = request.getParameter("c_seq");
 		
+		System.out.println(c_seq);
+		
 		
 		
 		c_content = c_content.replaceAll("<", "&lt;");
@@ -500,13 +522,12 @@ public class CommentController {
 		
 		int n = service.goDelete(c_seq);
 		
-		System.out.println(c_seq);
-		System.out.println(n);
+		//System.out.println(c_seq);
+		// System.out.println(n);
 		
 		
 		HttpSession session = request.getSession();
 		String userId = (String) session.getAttribute("userId");
-		
 		
 		
 		

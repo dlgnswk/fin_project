@@ -7,26 +7,7 @@
 <!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
 <mapper namespace="mj_comment">
 
-	
-
-	<!-- 더보기  
-	<select id="selectComment" parameterType="HashMap" resultType="com.spring.app.expedia.domain.CommentVO">
-		SELECT h_name, c_regDate, c_content
-		FROM (
-		SELECT
-		ROW_NUMBER() OVER (ORDER BY C.c_seq DESC) AS RNO,
-		H.h_name,
-		TO_CHAR(C.c_regDate, 'yyyy"년" mm"월" dd"일"') AS c_regDate,
-		C.c_content
-		FROM
-		tbl_comment C
-		JOIN
-		tbl_host H ON H.h_userid = C.fk_h_userid
-		)
-		WHERE RNO BETWEEN #{start} AND #{end}
-	</select>-->
-	
-	
+	<!-- 글목록  -->	
 		<resultMap type="HashMap" id="getList_Map">
 	   <result property="H_LODGENAME" 		column="H_LODGENAME" 			javaType="String" />
 	   <result property="RV_CONTENT" 		column="RV_CONTENT" 			    javaType="String" />
@@ -80,8 +61,8 @@
 		</choose>
 		start with RV_ORG_SEQ = 0 
 		connect by prior RV_SEQ = RV_ORG_SEQ 
-		order siblings by RV_GROUPNO desc, RV_SEQ asc
- ) WHERE RNO BETWEEN #{start} and #{end}
+		order siblings by RV_GROUPNO desc
+ ) WHERE RNO BETWEEN #{startRno} and #{endRno}
 </select>
 	
 	
@@ -135,19 +116,19 @@
 		where RV_STATUS = 1
 		start with RV_ORG_SEQ = 0 
 		connect by prior RV_SEQ = RV_ORG_SEQ 
-		order siblings by RV_GROUPNO desc, RV_SEQ asc
+		order siblings by RV_GROUPNO desc
     
 </select>
 	
 	
 	<!-- 답변 달아주기  -->
  	<insert id="commentInsert" parameterType="HashMap">
-		insert into tbl_comment(C_SEQ, FK_LODGE_ID, FK_RS_SEQ, FK_H_USERID, C_CONTENT, C_REGDATE, C_STATUS,C_GROUPNO,C_ORG_SEQ,C_DEPTHNO,FK_C_RATING ) values('seq_.nextval',#{fk_lodge_id},#{fk_rs_seq}, #{fk_h_userid},'답변제공: '||#{c_content},  default,default,#{c_groupno} ,#{c_org_seq}, #{c_depthno}+1, default) 
+		insert into tbl_comment(C_SEQ, FK_LODGE_ID, FK_RS_SEQ, FK_H_USERID, C_CONTENT, C_REGDATE, C_STATUS,C_GROUPNO,C_ORG_SEQ,C_DEPTHNO,FK_C_RATING ) values(seq_tbl_review.nextval,#{fk_lodge_id},#{fk_rs_seq}, #{fk_h_userid},'답변: '||#{c_content},  default,default,#{c_groupno} ,#{c_org_seq}, #{c_depthno}+1, default) 
 	</insert> 
 	
 	<!-- 답변 수정해주기 -->
 	<update id="changeComment">
-		   update tbl_comment set c_content = '답변제공: '||#{c_content}
+		   update tbl_comment set c_content = '답변: '||#{c_content}
                           ,c_regdate = default
                        where c_seq = #{c_seq}
 	</update>
@@ -184,6 +165,39 @@
 			</otherwise>
 		</choose>
 	</select>
+	
+	<!--  평점 별 후기 갯수 가져오기  -->
+	<select id="getRvcntByRate" parameterType="HashMap" resultType="HashMap">
+      select two, four, six, eight, ten
+      from
+      (
+          select fk_lodge_id, fk_rv_rating
+          from tbl_review
+          where fk_lodge_id=#{lodge_id}
+      )
+      pivot(
+          count(fk_rv_rating) for fk_rv_rating in(2 as two, 4 as four, 6 as six , 8 as eight, 10 as ten)
+      )
+   </select>
+   
+   <!-- 구매자 총 갯수  -->
+   <select id="gettotalByRate" parameterType="HashMap" resultType="int">
+				select count(*) as cnt
+				from tbl_review
+				where  fk_lodge_id = #{lodge_id}
+		   
+   
+   </select>
+	
+   <!-- 판매자 총 갯수  -->
+   <select id="gettotalComment" parameterType="HashMap" resultType="int">
+				select count(*) as commentcnt
+				from tbl_comment
+				where  fk_lodge_id = #{lodge_id}
+		   
+   
+   </select>
+	
 
 
 </mapper>
