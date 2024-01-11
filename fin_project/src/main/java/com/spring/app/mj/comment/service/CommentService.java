@@ -120,7 +120,7 @@ public interface CommentService {
 	* @param paraMap
 	* @return 
 	*/
-	int gettotalComment(Map<String, Object> r_paraMap);
+	int gettotalComment(Map<String, Object> paraMap);
 
 
 	/** 
@@ -132,7 +132,7 @@ public interface CommentService {
 	* @param r_paraMap
 	* @return 
 	*/
-	Map<String, String> getRvcntByRate2(Map<String, Object> r_paraMap);
+	Map<String, String> getRvcntByRate2(Map<String, Object> paraMap);
 
 	/** 
 	* @Method Name  : gettotalByRate 
@@ -143,7 +143,7 @@ public interface CommentService {
 	* @param paraMap
 	* @return 
 	*/
-	int gettotalByRate(Map<String, Object> r_paraMap);
+	int gettotalByRate(Map<String, Object> paraMap);
 
 	
 

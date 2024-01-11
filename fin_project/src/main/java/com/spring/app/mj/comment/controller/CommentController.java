@@ -168,13 +168,12 @@ public class CommentController {
 		 // 페이징 처리한 글목록 가져오기(검색이 있든지, 검색이 없든지 모두 다 포함 한 것) 
 
 		 
-		 Map<String, Object> r_paraMap = new HashMap<>();
 		 
 		 
 		 if (commentList != null) {
 		     for (Map<String, Object> comment : commentList) {
 		            String lodge_id = (String) comment.get("FK_LODGE_ID");
-		            r_paraMap.put("lodge_id", lodge_id);
+		            paraMap.put("lodge_id", lodge_id);
 		        //System.out.println("lodge_id");
 		    }
 		 }
@@ -187,16 +186,16 @@ public class CommentController {
 
 				 
 		 if(commentList != null) {	
-			 Map<String, String> rv_cnt_byRate = service.getRvcntByRate2(r_paraMap);
+			 Map<String, String> rv_cnt_byRate = service.getRvcntByRate2(paraMap);
 			 
 			 //System.out.println(rv_cnt_byRate);
 			 //System.out.println(rv_cnt_byRate.get("six"));
 	    
 	      // 평점 총 후기 갯수구하기
-	         int gettotalByRate = service.gettotalByRate(r_paraMap);
+	         int gettotalByRate = service.gettotalByRate(paraMap);
 
 	    // 차트를 위한 판매자 총 갯수구하기  
-	         int gettotalComment = service.gettotalComment(r_paraMap);
+	         int gettotalComment = service.gettotalComment(paraMap);
 		 
 		 	      
 	      //System.out.println(rv_cnt_byRate);
@@ -204,6 +203,7 @@ public class CommentController {
 	      //System.out.println(gettotalComment);
 	
 			 mav.addObject("gettotalComment",gettotalComment);
+			
 			 mav.addObject("rv_cnt_byRate",rv_cnt_byRate);
 			 
 			 mav.addObject("gettotalByRate",gettotalByRate);
