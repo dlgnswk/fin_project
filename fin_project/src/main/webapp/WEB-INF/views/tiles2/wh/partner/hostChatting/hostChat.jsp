@@ -17,7 +17,7 @@
 
 	div#hostChatDisplay {
 					 
-                     max-height: 400px;
+                     height: 400px;
                      overflow: auto;
 					
 	}
@@ -59,6 +59,71 @@
 
 	div#chatRoom_bottom:hover {
 						background-color: #F0F8FF;
+	}
+
+	div.chat_cmt_me {
+		display: flex;
+	    margin-bottom: 4%;
+	    text-align: right;
+	    max-width: 70%;
+	    margin-left: auto;
+	    align-items: flex-end;
+	    justify-content: end;
+	
+	}
+	
+	div.chat_cmt_you {
+		display: flex;
+	    align-items: flex-end;
+	    justify-content: flex-start;
+	    max-width: 70%;	
+	    margin-bottom: 2%;
+	}
+
+	span.name {
+		display:block; 
+		font-size:13px; 
+		margin: 1% 0;
+	
+	}
+
+	span.date_me {
+		font-size:10px;
+		color:#777;  
+		margin-right:1%;
+	}
+
+	span.date_you {
+		font-size:10px; 
+		color:#777; 
+		margin-left:1%;
+	}
+
+	div.cmt_me {
+		border-radius:0.4rem; 
+		background-color:#191e3b; 
+		word-break: break-word; 
+		font-size:14px; 
+		padding: 3%; 
+		color:white;
+	}
+	
+	div.cmt_you {
+		border-radius:0.4rem;
+		background-color:#f3f3f5; 
+		word-break: break-word; 
+		font-size:14px; 
+		padding: 3%; 
+		color:#191e3b; 
+	}
+
+	div#chatTop {
+		border-bottom: 1px solid #dfe0e4; 
+		height:80px; 
+		padding:3%; 
+		text-align:center; 
+		font-weight:600;
+	
 	}
 
 
@@ -163,17 +228,17 @@ function goViewHostChatList() {
 				$.each(json, function(index, item){
 					
 					if(item.r_status == 1) {
-						v_html += '<div style="margin-bottom:4%; text-align:right; width:70%; margin-left:auto;"  >';
-						v_html += '<span style="font-size:10px;color:#777;  margin-right:1%;">' + item.reply_date.substr(11) + '</span>';
-						v_html += '<span style="border-radius:0.4rem; background-color:#191e3b; word-break: break-word; font-size:14px; padding: 2%; color:white; ">'+item.reply_comment+'</span>';
+						v_html += '<div class="chat_cmt_me">';
+						v_html += '<span class="date_me">' + item.reply_date.substr(11) + '</span>';
+						v_html += '<div class="cmt_me">'+item.reply_comment+'</div>';
 					   	v_html += '</div>';
 					}
 					
 					else {
-						v_html += '<div style="margin-bottom:3%; text-align:left; width:70%;" >';
-					   	v_html += '<span style="display:block; font-size:13px; margin-bottom:1%; padding-left:1%;">${requestScope.name}</span> ';
-					   	v_html += '<span style="border-radius:0.4rem; background-color:#f3f3f5; word-break: break-word; font-size:14px; padding: 2%; color:#191e3b; width:70%;">'+item.reply_comment+'</span>';
-					   	v_html += '<span style="font-size:10px; color:#777; margin-left:1%;">' + item.reply_date.substr(11) + '</span>';
+					   	v_html += '<span class="name" >${requestScope.name}</span> ';
+					   	v_html += '<div class="chat_cmt_you">';
+					   	v_html += '<div class="cmt_you">'+item.reply_comment+'</div>';
+					   	v_html += '<span class="date_you">' + item.reply_date.substr(11) + '</span>';
 					   	v_html += '</div>';
 					}
 				   
@@ -210,9 +275,13 @@ function goViewHostChatList() {
 	
 	   <c:if test="${not empty requestScope.chatvo}">
 		   <form name="chatWriteFrm" id="chatWriteFrm">
-		   
+		  
 			   <div style="border-radius:0.5rem; border:1px solid #dee2e6;">
-					<div style="border-bottom: 1px solid #dfe0e4; height:50px; padding:2%; text-align:center; font-weight:600;">${requestScope.chatvo.fk_userid}</div>					
+					
+					<div id="chatTop">
+						<img id=lg_img_save_name src="<%=ctxPath %>/resources/images/${requestScope.fk_lodge_id}/lodge_img/${requestScope.lg_img_save_name}" width="36" height="36" style="border-radius:0.7rem;"/>
+						<div id="h_name">${requestScope.name}</div>					
+					</div>
 				
 					<div id="hostChatDisplay" style="padding:3%; "></div>
 				

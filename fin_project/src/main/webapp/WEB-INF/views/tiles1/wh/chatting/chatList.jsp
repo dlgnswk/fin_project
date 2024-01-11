@@ -51,7 +51,7 @@
 	});// end of $(document).ready(function(){}----------------------------------------
 
 //Function Declaration		
-function goViewChat(fk_lodge_id) {
+function goViewChat(lodge_id, lg_img_save_name) {
 		 // alert(`숙소 ID \${fk_lodge_id}번을 봅니다.`);
 	<%--
 		location.href=`<%= ctxPath%>/view.action?seq=\${seq}`;
@@ -71,9 +71,10 @@ function goViewChat(fk_lodge_id) {
     
 	
     const frm = document.goViewChatFrm;
-    frm.lodge_id.value = fk_lodge_id;
     frm.goBackURL.value = goBackURL;
-    
+    frm.lodge_id.value = lodge_id;
+    frm.lg_img_save_name.value = lg_img_save_name;
+   
     
     frm.action = "<%=ctxPath%>/chat.exp";
     frm.submit();
@@ -97,7 +98,7 @@ function goViewChat(fk_lodge_id) {
 	  <div style="height:350px; max-height: 350px; overflow: auto;">
 		  <c:forEach var="chatvo" items="${requestScope.chatRoomList}">
 			
-			   <div class="list" onclick="goViewChat('${chatvo.fk_lodge_id}')">
+			   <div class="list" onclick="goViewChat('${chatvo.fk_lodge_id}','${chatvo.lg_img_save_name}')">
 				   <img class=lg_img_save_name src="<%=ctxPath %>/resources/images/${chatvo.fk_lodge_id}/lodge_img/${chatvo.lg_img_save_name}" width="36" height="36" style="border-radius:0.7rem;"/>
 				   
 				   <div style="margin-left:0;">
@@ -135,5 +136,6 @@ function goViewChat(fk_lodge_id) {
 	<form name="goViewChatFrm">
 		<input type="hidden" name="lodge_id"/>
 		<input type="hidden" name="goBackURL" />
+		<input type="hidden" name="lg_img_save_name" />
 	</form>
 </body>
