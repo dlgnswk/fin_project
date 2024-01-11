@@ -8,14 +8,78 @@
 	String ctxPath = request.getContextPath();
 %>
 
+<script src="<%= ctxPath%>/resources/Highcharts-10.3.3/code/highcharts.js"></script>
+<script src="<%= ctxPath%>/resources/Highcharts-10.3.3/code/modules/exporting.js"></script>
+<script src="<%= ctxPath%>/resources/Highcharts-10.3.3/code/modules/export-data.js"></script>
+<script src="<%= ctxPath%>/resources/Highcharts-10.3.3/code/modules/accessibility.js"></script>
 
 
 <script type="text/javascript">
 	$(document).ready(function() {
 				
 		
+		
+		
+						/*치트시작  */
+						const review = parseInt($("input[id='review']").val());
+						//console.log(review);
+						
+						
+						const comment = parseInt($("input[id='comment']").val());
+						// console.log(comment);
+
+						
+						
+						
+						
+						
+						Highcharts.chart('chart', {
+						    chart: {
+						        plotBackgroundColor: null,
+						        plotBorderWidth: null,
+						        plotShadow: false,
+						        type: 'pie'
+						    },
+						    title: {
+						        text: '판매자 답변 비율',
+						        align: 'left'
+						    },
+						    tooltip: {
+						        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+						    },
+						    accessibility: {
+						        point: {
+						            valueSuffix: '%'
+						        }
+						    },
+						    plotOptions: {
+						        pie: {
+						            allowPointSelect: true,
+						            cursor: 'pointer',
+						            dataLabels: {
+						                enabled: true,
+						                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+						            }
+						        }
+						    },
+						    series: [{
+						        name: '비율',
+						        colorByPoint: true,
+						        data: [{
+						            name: '답변',
+						            y: (comment / review) * 100,
+						            sliced: true,
+						            selected: true
+						        }, {
+						            name: '미답변',
+						            y: ((review - comment) / review) * 100
+						        }]
+						    }]
+						});
 						
 		
+					/* 차트 끝  */
+						
 						
 					// 여기부터 ajax 시작
 					//$("button.btn_answer").click(function(e) {
@@ -88,10 +152,13 @@
 					
 						$(document).on("click", "button.send", function(e){
 							
+							
+
+						
 						
 							
 							 const index = $("button.send").index($(e.target));
-							 console.log(index);
+							 //console.log(index);
 								
 							/* 답글쓰기 유효성검사  */
 							const reviewContent2 = $("textarea[name='reviewContent']").eq(index).val().trim();
@@ -100,6 +167,16 @@
 								alert("답변을 입력하세요!!");
 								return; // 종료
 							}
+							
+							
+							const seq_inx = $(e.target).attr('class');
+							//console.log(seq_inx);
+							
+							const sub_str = seq_inx.substring(7,9);
+							//console.log(sub_str);
+							
+							//alert($(e.target).parent().parent().parent().parent().parent().find(`input.seq\${sub_str}`).val());
+							const fk_seq2 = ($(e.target).parent().parent().parent().parent().parent().find(`input.seq\${sub_str}`).val());
 							
 								
 							    let reviewContent = $("textarea[name='reviewContent']").eq(index).val();
@@ -125,12 +202,11 @@
 							    
 							     
 							   
-							   const fk_seq = $("input[id='fk_seq']").eq(index).val();
 							   
 							     let c_org_seq = $("input[name='c_org_seq']");
 
 							 
-							     c_org_seq.val(fk_seq);
+							     c_org_seq.val(fk_seq2);
 							    
 							
 								   
@@ -213,7 +289,19 @@
 						$(document).on("click", "button.updateBtn", function(e){
 
 							
-							alert("확인완료");
+							const seq_inx = $(e.target).attr('id');
+							//console.log(seq_inx);
+							
+							const sub_str = seq_inx.substring(7);
+							//console.log(sub_str);
+							
+							const seq2 = ($(e.target).parent().parent().parent().parent().parent().find(`input.seq\${sub_str}`).val());
+							// alert($(e.target).parent().parent().parent().parent().parent().find(`input.seq\${sub_str}`).val());
+							
+							
+							
+							
+							//alert("확인완료");
 							
 						    const index = $("button.updateBtn").index($(e.target));
 						    console.log("index: ", index);
@@ -255,6 +343,8 @@
 								     c_seq.val(seq);
 								    
 								     
+								     
+								     
 								
 							const frm = document.forms["updateFrm"];
 						   	 frm.method = "post";
@@ -284,17 +374,21 @@
 			                     
 			                     const seq_inx = $(e.target).attr('class');
 			                     //alert(seq_inx);
-			                     const sub_str = seq_inx.substring(4,5);
+			                     const sub_str = seq_inx.substring(4,6);
 			                     //alert(sub_str);
 			                     //alert(`input.seq\${sub_str}`);
 			                     
 			                     
 			                     //alert($(e.target).parent().parent().parent().parent().parent().parent().find(`input.seq\${sub_str}`).val());
 			         
-			                     const finsal_seq = $(e.target).parent().parent().parent().parent().parent().parent().find(`input.seq\${sub_str}`).val();
+			                     const seq2 = $(e.target).parent().parent().parent().parent().parent().parent().find(`input.seq\${sub_str}`).val();
 			                     
-			                     console.log(finsal_seq);
-			                     alert(finsal_seq);
+			                    
+			                     
+								   
+							     let c_seq = $("input[name='c_seq']");
+							     c_seq.val(seq2);
+								    
 			                     
 			                           const frm = document.forms["deleteFrm"];
 			                               frm.method = "post";
@@ -323,7 +417,7 @@
 		style="border: 0px solid blue; width: 60%; margin: auto; background-color: #fff; border-radius: 0.8rem; height: 180px;">
 		<div>
 			<div>
-				<div>이용후기 관리</div>
+				<div style="font-weight:bold;">이용후기 관리</div>
 			</div>
 			<!-- <div id="word" style="width: 12%; margin-left: 22%;">
 				<div style="font-size: 13pt;">후기 검색</div>
@@ -333,13 +427,13 @@
 			<div id="searchBar"
 				style="display: flex; border: 0px solid red; margin-bottom: 25px;">
 				<input type="hidden" name="userid" value="${requestScope.userid}" />
-
+	
 				<input type="text" name="searchWord" placeholder="내용을 입력하세요."
 					size="60"
-					style="border-radius: 60px; border: 2px solid #e0e0e0; height: 50px; margin-right: 1%;" value="${searchWord} "/>
+					style="border-radius: 60px; border: 2px solid #e0e0e0; height: 50px; margin-right: 1%;" value="${searchWord}"/>
 				<button id="searchIcon" style="background-color: #1668e3;">
 					<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16"
-						style="min-inline-size: 1.5rem;" ;
+						style="min-inline-size: 1.5rem;  transform: translate(-4px);"
 					viewBox="0 0 512 512">
 				<path fill="#fff"
 							d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" /></svg>
@@ -355,46 +449,49 @@
 			<div>
 				<div style="display: flex;">
 					<%-- left side --%>
-					<div style="border: solid 0px red; width: 35%;">
-						<br>
-						<h4 class="rating_avg" style="margin-left: 8%;">
-							9.0/10.0 - <span style="font-size: 1rem;">매우 훌륭해요</span>
-						</h4>
-						<span style="margin-left: 50%;">개 실제 이용 고객 후기</span>
-						<div class="rating"
-							style="margin-top: 2%; padding-left: 7%; padding-right: 5.5%;">
-							<div class="progressbar_1">
-								<h5 style="font-size: 14px;">
-									10 - 훌륭해요 <span style="float: right;">216</span>
-								</h5>
-								<progress id="progress" value="50" min="0" max="100"></progress>
-							</div>
-							<div class="progressbar_2">
-								<h5 style="font-size: 14px;">
-									8 - 좋아요 <span style="float: right;">216</span>
-								</h5>
-								<progress id="progress" value="50" min="0" max="100"></progress>
-							</div>
-							<div class="progressbar_3">
-								<h5 style="font-size: 14px;">
-									6 - 괜찮아요 <span style="float: right;">216</span>
-								</h5>
-								<progress id="progress" value="50" min="0" max="100"></progress>
-							</div>
-							<div class="progressbar_4">
-								<h5 style="font-size: 14px;">
-									4 - 별로에요 <span style="float: right;">216</span>
-								</h5>
-								<progress id="progress" value="50" min="0" max="100"></progress>
-							</div>
-							<div class="progressbar_5">
-								<h5 style="font-size: 14px;">
-									2 - 너무 별로에요<span style="float: right;">216</span>
-								</h5>
-								<progress id="progress" value="50" min="0" max="100"></progress>
-							</div>
-						</div>
-
+							<div style="border: solid 0px red; width: 35%;">
+								<div style="margin-top:10%;"><span style="font-size: 0.875rem;  margin-left:50%;">${requestScope.gettotalByRate}개 실제 이용 고객 후기</span></div>
+					            <div class="rating" style="margin-top: 3%; width:40%; margin-left:10%;">
+					               <div class="progressbar_1 progress_wrap">                   
+					                  <h5 class="c_txt_sm">
+					                  10 - 훌륭해요 <span style="float: right;">${requestScope.rv_cnt_byRate.TEN}</span>
+					                 </h5>
+					                   <progress id="progress" value="${requestScope.rv_cnt_byRate.TEN}" min="0" max="${requestScope.gettotalByRate}"></progress>         
+					               </div>
+					               <div class="progressbar_2 progress_wrap">
+					                  <h5 class="c_txt_sm">
+					                     8 - 좋아요 <span style="float: right;">${requestScope.rv_cnt_byRate.EIGHT}</span>
+					                  </h5>
+					                  <progress id="progress" value="${requestScope.rv_cnt_byRate.EIGHT}" min="0" max="${requestScope.gettotalByRate}"></progress>
+					               </div>
+					               <div class="progressbar_3 progress_wrap">
+					                  <h5 class="c_txt_sm">
+					                     6 - 괜찮아요 <span style="float: right;">${requestScope.rv_cnt_byRate.SIX}</span>
+					                  </h5>
+					                  <progress id="progress" value="${requestScope.rv_cnt_byRate.SIX}" min="0" max="${requestScope.gettotalByRate}"></progress>
+					               </div>
+					               <div class="progressbar_4 progress_wrap">
+					                  <h5 class="c_txt_sm">
+					                     4 - 별로에요 <span style="float: right;">${requestScope.rv_cnt_byRate.FOUR}</span>
+					                  </h5>
+					                  <progress id="progress" value="${requestScope.rv_cnt_byRate.FOUR}" min="0" max="${requestScope.gettotalByRate}"></progress>
+					               </div>
+					               <div class="progressbar_5 progress_wrap">
+					                  <h5 class="c_txt_sm">
+					                     2 - 너무 별로에요<span style="float: right;">${requestScope.rv_cnt_byRate.TWO}</span>
+					                  </h5>
+					                  <progress id="progress" value="${requestScope.rv_cnt_byRate.TWO}" min="0" max="${requestScope.gettotalByRate}"></progress>
+					               
+					               <input type="hidden" id="review" value="${requestScope.gettotalByRate}" >
+					               <input type="hidden" id="comment" value="${requestScope.gettotalComment}" >
+					               
+					               
+					               </div>
+					               
+					               
+					               <div style="margin-top:40%; width:190%;" id="chart"></div>
+					               
+					            </div>
 					</div>
 
 
@@ -402,32 +499,30 @@
 					<c:if test="${not empty requestScope.commentList}">
 						<div style="border: solid 0px blue; width: 65%;">
 
-							<div id="showResult"></div>
-
 							<c:forEach var="comment" items="${requestScope.commentList}"
 								varStatus="status">
 
 								<c:set var="firstFourChars"
-									value="${fn:substring(comment.RV_CONTENT, 0, 4)}" />
+									value="${fn:substring(comment.RV_CONTENT, 0, 2)}" />
 
-								<input type="text" id="lodge" class="lodge${status.index}" value="${comment.FK_LODGE_ID}" />
-		                        <input type="text" id="regDate" class="regDate${status.index}" value="${comment.RV_REGDATE}" />
-		                        <input type="text" id="fk_seq" class="fk_seq${status.index}" value="${comment.RV_ORG_SEQ}" />
-		                        <input type="text" id="groupno" class="groupno${status.index}" value="${comment.RV_GROUPNO}" />
-		                        <input type="text" id="rs_seq" class="rs_seq${status.index}" value="${comment.FK_RS_SEQ}" />
-		                        <input type="text" id="userid" class="userid${status.index}" value="${comment.H_USERID}" />
-		                        <input type="text" id="depthno" class="depthno${status.index}" value="${comment.RV_DEPTHNO}" />
-		                        <input type="text" id="seq" class="seq${status.index}" value="${comment.RV_SEQ}" />
-		                        <input type="text" id="testcontent" class="testcontent${status.index}" value="${comment.RV_CONTENT}" />
-		                        <input type="text" id="firstFourChars1" class="firstFourChars1${status.index}" value="${firstFourChars}" />
+								<input type="hidden" id="lodge" class="lodge${status.index}" value="${comment.FK_LODGE_ID}" />
+		                        <input type="hidden" id="regDate" class="regDate${status.index}" value="${comment.RV_REGDATE}" />
+		                        <input type="hidden" id="fk_seq" class="fk_seq${status.index}" value="${comment.RV_ORG_SEQ}" />
+		                        <input type="hidden" id="groupno" class="groupno${status.index}" value="${comment.RV_GROUPNO}" />
+		                        <input type="hidden" id="rs_seq" class="rs_seq${status.index}" value="${comment.FK_RS_SEQ}" />
+		                        <input type="hidden" id="userid" class="userid${status.index}" value="${comment.H_USERID}" />
+		                        <input type="hidden" id="depthno" class="depthno${status.index}" value="${comment.RV_DEPTHNO}" />
+		                        <input type="hidden" id="seq" class="seq${status.index}" value="${comment.RV_SEQ}" />
+		                        <input type="hidden" id="testcontent" class="testcontent${status.index}" value="${comment.RV_CONTENT}" />
+		                        <input type="hidden" id="firstFourChars1" class="firstFourChars1${status.index}" value="${firstFourChars}" />
 
 
-								<div>
+								<div style="margin-top: 5.5%;">
 									<div>
 										<c:if test="${comment.RV_DEPTHNO == 0}">
 
 											<div>
-												<div>${comment.FK_RV_RATING}/10-
+												<div style="font-size:15pt; font-weight:bold;">${comment.FK_RV_RATING}/10-
 													${comment.RV_RATING_DESC}</div>
 												<br> <br>
 												<div>${comment.FK_USERID}</div>
@@ -439,11 +534,7 @@
 
 											</div>
 
-											<br>
-
-											<br>
-
-											<div style="border-bottom: 1px solid #dfe0e4;">
+											<div style="margin-top:3%; border-bottom: 1px solid #dfe0e4;">
 
 												<button
 													style="width: 15%; height: 30px; border: #fff; background-color: #1668e3; color: #fff; border-radius: 2500rem;"
@@ -485,7 +576,7 @@
 											</c:if>
 
 
-											<c:if test='${firstFourChars == "답변제공" }'>
+											<c:if test='${firstFourChars == "답변" }'>
 												<script type="text/javascript">
 													$(document)
 															.ready(
@@ -530,7 +621,7 @@
 											<div style="display: flex; margin-top: 3%;">
 												<button type="button"
 													style="width: 10%; height: 30px; border: #fff; margin-right: 3%; background-color: #1668e3; color: #fff; border-radius: 2500rem;"
-													class="send">전송</button>
+													class="answer_${status.index} send">전송</button>
 												<button class="cansel" type="reset"
 													style="width: 10%; height: 30px; border: #fff; background-color: #1668e3; color: #fff; border-radius: 2500rem;">
 													취소</button>
@@ -572,7 +663,7 @@
 											<div style="display: flex; margin-top: 3%;">
 												<button type="button"
 													style="width: 10%; height: 30px; border: #fff; margin-right: 3%; background-color: #1668e3; color: #fff; border-radius: 2500rem;"
-													class="updateBtn">수정</button>
+													id="change_${status.index}"  class="updateBtn">수정</button>
 												<button type="button"
 													style="width: 10%; height: 30px; border: #fff; background-color: #1668e3; color: #fff; border-radius: 2500rem;"
 													class="closecansel">취소</button>

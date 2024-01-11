@@ -98,11 +98,13 @@
 	<!-- 현재 로그인되어있는 회원(구매자)의 채팅방 목록 가져오기  -->
 	
 	<select id="getChatRoomList" parameterType="HashMap" resultType="com.spring.app.expedia.domain.ChatVO"> 
-	select A.chat_no, A.fk_userid, A.fk_lodge_id, A.chat_date, V.lg_img_name
+	select A.chat_no, A.fk_userid, A.fk_lodge_id, A.chat_date, A.lg_name, A.lg_en_name, V.lg_img_save_name
 	from
-	(select * from tbl_chat where fk_userid = #{userid}) A
+	(select * from tbl_chat C join tbl_lodge L
+	 on C.fk_lodge_id = L.lodge_id
+	 where fk_userid = #{userid}) A
 	join 
-	(select fk_lodge_id, lg_img_name from tbl_lg_img where lg_img_seq = 
+	(select fk_lodge_id, lg_img_save_name from tbl_lg_img where lg_img_seq = 
 	    (select min(lg_img_seq) as lg_img_seq 
 	     from 
 	        (select lg_img_seq, fk_lodge_id, lg_img_save_name, lg_img_name 
@@ -111,7 +113,6 @@
 	        group by fk_lodge_id )
 	    ) V
 	on A.fk_lodge_id = V.fk_lodge_id
-
 	</select>
 	
 	<!-- 로그인한 유저의 예약한 lodge_id 리스트 가져오기 -->
@@ -152,7 +153,7 @@
 	<!-- 기존 채팅방이 없는 경우 새로운 채팅방을 만들기 -->
 	<insert id="createChat" parameterType="HashMap">
 		insert into tbl_chat(chat_no, fk_userid, fk_lodge_id, chat_date)
-		values (seq_tbl_chat, #{fk_userid}, #{fk_lodge_id}, default)
+		values (seq_tbl_chat.nextval, #{fk_userid}, #{fk_lodge_id}, default)
 	</insert>
 	
 	
