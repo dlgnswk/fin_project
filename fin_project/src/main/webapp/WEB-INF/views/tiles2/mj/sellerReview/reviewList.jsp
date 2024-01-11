@@ -450,33 +450,33 @@
 					            <div class="rating" style="margin-top: 3%; width:80%; margin-left:10%;">
 					               <div class="progressbar_1 progress_wrap">                   
 					                  <h5 class="c_txt_sm" style="font-size:11pt;">
-					                  10 - 훌륭해요 <span style="float: right;">${requestScope.rv_cnt_byRate.TEN}</span>
+					                  10 - 훌륭해요 <span style="float: right;">${requestScope.rv_cnt_byRate.ten}</span>
 					                 </h5>
-					                   <progress id="progress" style="width:100%;" value="${requestScope.rv_cnt_byRate.TEN}" min="0" max="${requestScope.gettotalByRate}"></progress>         
+					                   <progress id="progress" style="width:100%;" value="${requestScope.rv_cnt_byRate.ten}" min="0" max="${requestScope.gettotalByRate}"></progress>         
 					               </div>
 					               <div class="progressbar_2 progress_wrap">
 					                  <h5 class="c_txt_sm"  style="font-size:11pt;">
-					                     8 - 좋아요 <span style="float: right;">${requestScope.rv_cnt_byRate.EIGHT}</span>
+					                     8 - 좋아요 <span style="float: right;">${requestScope.rv_cnt_byRate.eight}</span>
 					                  </h5>
-					                  <progress id="progress" style="width:100%;" value="${requestScope.rv_cnt_byRate.EIGHT}" min="0" max="${requestScope.gettotalByRate}"></progress>
+					                  <progress id="progress" style="width:100%;" value="${requestScope.rv_cnt_byRate.eight}" min="0" max="${requestScope.gettotalByRate}"></progress>
 					               </div>
 					               <div class="progressbar_3 progress_wrap">
 					                  <h5 class="c_txt_sm"  style="font-size:11pt;">
-					                     6 - 괜찮아요 <span style="float: right;">${requestScope.rv_cnt_byRate.SIX}</span>
+					                     6 - 괜찮아요 <span style="float: right;">${requestScope.rv_cnt_byRate.six}</span>
 					                  </h5>
-					                  <progress id="progress" style="width:100%;" value="${requestScope.rv_cnt_byRate.SIX}" min="0" max="${requestScope.gettotalByRate}"></progress>
+					                  <progress id="progress" style="width:100%;" value="${requestScope.rv_cnt_byRate.six}" min="0" max="${requestScope.gettotalByRate}"></progress>
 					               </div>
 					               <div class="progressbar_4 progress_wrap">
 					                  <h5 class="c_txt_sm"  style="font-size:11pt;">
-					                     4 - 별로에요 <span style="float: right;">${requestScope.rv_cnt_byRate.FOUR}</span>
+					                     4 - 별로에요 <span style="float: right;">${requestScope.rv_cnt_byRate.four}</span>
 					                  </h5>
-					                  <progress id="progress" style="width:100%;" value="${requestScope.rv_cnt_byRate.FOUR}" min="0" max="${requestScope.gettotalByRate}"></progress>
+					                  <progress id="progress" style="width:100%;" value="${requestScope.rv_cnt_byRate.four}" min="0" max="${requestScope.gettotalByRate}"></progress>
 					               </div>
 					               <div class="progressbar_5 progress_wrap">
 					                  <h5 class="c_txt_sm"  style="font-size:11pt;">
-					                     2 - 너무 별로에요<span style="float: right;">${requestScope.rv_cnt_byRate.TWO}</span>
+					                     2 - 너무 별로에요<span style="float: right;">${requestScope.rv_cnt_byRate.two}</span>
 					                  </h5>
-					                  <progress id="progress" style="width:100%;" value="${requestScope.rv_cnt_byRate.TWO}" min="0" max="${requestScope.gettotalByRate}"></progress>
+					                  <progress id="progress" style="width:100%;" value="${requestScope.rv_cnt_byRate.two}" min="0" max="${requestScope.gettotalByRate}"></progress>
 					               
 					               <input type="hidden" id="review" value="${requestScope.gettotalByRate}" >
 					               <input type="hidden" id="comment" value="${requestScope.gettotalComment}" >
@@ -487,7 +487,7 @@
 					             
 					               
 					            </div>
-					            
+					             
 					            
 					  <div style="width:54%; padding-left:10%;">
 					               <div style="margin-top:40%; width:190%;" id="chart"></div>
