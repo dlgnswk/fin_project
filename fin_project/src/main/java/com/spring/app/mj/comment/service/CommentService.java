@@ -108,4 +108,37 @@ public interface CommentService {
 	
 	// 총 게시물 건수(totalCount) 구하기 - 검색이 있을 때와 검색이 없을때 로 나뉜다.
 	int getTotalCount(Map<String, Object> paraMap);
+
+	/** 
+	* @Method Name  : getRvcntByRate 
+	* @작성일   : 2024. 1. 10 
+	* @작성자   : 손명진
+	* @변경이력  : 
+	* @Method 설명 : 그래프 만들기
+	* @param paraMap
+	* @return 
+	*/
+	Map<String, String> getRvcntByRate(Map<String, Object> paraMap);
+
+	/** 
+	* @Method Name  : gettotalByRate 
+	* @작성일   : 2024. 1. 10 
+	* @작성자   : 먕지 
+	* @변경이력  : 
+	* @Method 설명 : 구매자 총 리뷰갯수
+	* @param paraMap
+	* @return 
+	*/
+	int gettotalByRate(Map<String, Object> paraMap);
+
+	/** 
+	* @Method Name  : gettotalComment 
+	* @작성일   : 2024. 1. 10 
+	* @작성자   : 먕지 
+	* @변경이력  : 
+	* @Method 설명 :  판매자 총 리뷰갯수
+	* @param paraMap
+	* @return 
+	*/
+	int gettotalComment(Map<String, Object> paraMap);
 }

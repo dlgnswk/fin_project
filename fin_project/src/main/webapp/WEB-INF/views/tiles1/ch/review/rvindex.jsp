@@ -89,7 +89,7 @@
 	
 	.rateCircle label{
 	   background-image: url(<%= ctxPath%>/resources/images/ch/circle-regular.png);
-	   width: 26%;
+	   width: 30%;
        height: 50.5px; 
    	   user-select: none;
 	}
@@ -106,68 +106,164 @@
 	
 	/* 별점 css 끝 */
 	
+	#mycontent > form > div > div > div > div.rv_subject > input[type=text] {
+	  height: 2rem; /* 32px → 2rem 변환 */
+	  font-size: 0.9375rem; /* 15px → 0.9375rem 변환 */
+	  border: 0;
+	  border-radius: 0.9375rem; /* 15px → 0.9375rem 변환 */
+	  outline: none;
+	  padding-left: 0.625rem; /* 10px → 0.625rem 변환 */
+	  background-color: rgb(233, 233, 233);
+	  margin: 2% 0 2% 0;
+	}
 	
+	#content {
+	  width: 61.7%;
+	  height: 200px;	
+	  font-size: 0.9375rem; /* 15px → 0.9375rem 변환 */
+	  border: 0;
+	  border-radius: 0.9375rem; /* 15px → 0.9375rem 변환 */
+	  outline: none;
+	  margin: 2% 0 2% 0;
+	  padding: 0.625rem; /* 내부 여백을 주어 삐져나가는 현상을 방지합니다. */
+	  box-sizing: border-box; /* 패딩, 보더 등을 포함한 크기 조절을 위해 box-sizing 설정 */
+	  resize: none; /* 사용자가 텍스트 영역의 크기를 조절하지 못하게 합니다. */
+	  background-color: rgb(233, 233, 233);	
+	}
 	
+	#btnWrite {
+		background-color: #0073ff;
+	    height: 2.5rem; /* 40px를 16px 기준으로 나눈 값 */
+	    color: white;
+	    width: 61.3%;; /* 70px를 16px 기준으로 나눈 값 */
+	    border: 0px solid #555555;
+	    border-radius: 1.0625rem; /* 17px를 16px 기준으로 나눈 값 */
+	    font-size: 0.875rem; /* 14px를 16px 기준으로 나눈 값 */
+	}
 	
-	
+	#btnWrite:hover {
+		background-color:rgba(0, 80, 190, 0.97);
+	    box-shadow: 0 0.25rem 0.375rem -0.0625rem rgba(0, 0, 0, 0.1), 0 0.125rem 0.25rem -0.0625rem rgba(0, 0, 0, 0.08);
+	}
 </style>
 
 <script type="text/javascript">
 	
 	$(document).ready(function(){
 		
+		$("button#btnWrite").click(function(){
+			
+			const rv_subject = $("input:text[name='rv_subject']").val();
+			if(rv_subject == "") {
+				alert("제목을 입력하세요!!");
+				return; // 종료
+			}
+			
+			
+			// 폼 (form)을 적용하자
+			const frm = document.reviewWriteForm;
+			frm.method = "post";
+			frm.action = "<%= ctxPath%>/rvaddEnd.exp";
+			frm.submit();
+			
+		});
 		
+		$("input[type=radio]").change(function(){
+			console.log($(this).val());
+			console.log($(this).attr("id"));
+		})
 		
+		const ratingText = {
+		    2: '너무 별로예요',
+		    4: '별로예요',
+		    6: '괜찮아요',
+		    8: '좋아요',
+		    10: '훌륭해요'
+		  };
+			
+		  $(document).on('click', '.rateCircle label', function() {
+		    const ratingValue = parseInt($(this).attr('for').split('_')[1]);
+		    const ratingDescSpan = $('#rating_desc');
+		    ratingDescSpan.text(`\${ratingValue} - \${ratingText[ratingValue]}`);
+		    console.log('Rating Value:', ratingValue);
+		    console.log('ratingDescSpan', ratingDescSpan);
+		    // 원하는 작업을 추가하세요. <span id='rating_desc'></span>
+		    
+		  });
+
+		  $('input[type="radio"]').change(function() {
+			    // 선택된 라디오 버튼 값 가져오기
+			    let selectedValue = $('input[type="radio"]:checked').val();
+			    console.log(selectedValue);
+			    
+			    // 선택된 값에 따라 다른 라디오 버튼 비활성화
+			    $('input[type="radio"]').not(':checked').prop('disabled', true);
+			    
+			    // 선택된 값에 해당하는 라디오 버튼 활성화
+			    $(`input[type="radio"][value="${selectedValue}"]`).prop('disabled', false);
+		  });
+		  
 		
 	}); 
+	
+	
 	
 	
 	// Function Declaration
 	// 리뷰작성 버튼 클릭시
 		function reviewWrite() {			
 			
+			let rs_seq = "18";
+			// alert(rs_seq);
+		
 			if ("리뷰 작성하기" == $(".rvadd").text()) {
 				alert("dsafasfdsafdsa");
 			    $.ajax({
-			        url: "<%= ctxPath%>/reviewWriteModal.exp",
-			        data: { "rs_seq": "1"  },
+			        url: "<%= ctxPath%>/reviewWriteModal.exp",  
+			        data: {"rs_seq": rs_seq},
 			        dataType: "json",
 			        success: function (json) {
-			        	// console.log(JSON.stringify(json));
+			        	   console.log(JSON.stringify(json));
 			        	// alert("2222");
 			            // 모달 내용을 변수에 저장
 			            var v_html = 
 			            	"<div class='reviewWriteModal'>" +
 			                "<div class='reviewWriteModal_header'>" +
 			                "<span class='close'>&times;</span>" +
-			                "<div class='reviewWriteModal_content' style='padding-left: 5%; height: 570px; overflow-y: auto;'>" +
+			                "<div class='reviewWriteModal_content' style='padding-left: 10%; height: 570px; overflow-y: auto;'>" +
 			                "<h4>귀하의 경험에 대해 평가해주세요.</h4>" +
+			                "<br>" +
 			                "<div class='rating'>" +
 			                "<fieldset class='rateCircle'>" +
 			                "<span style='display:flex'>" +
-			                "<input type='radio' id='ratingpoint_2' name='rv_rating' value='2'/>" +
+			                "<input type='radio' id='ratingpoint_2' name='fk_rv_rating' value='2'/>" +
 			                "<label for='ratingpoint_2'></label>" +
-			                "<input type='radio' id='ratingpoint_4' name='rv_rating' value='4'/>" +
+			                "<input type='radio' id='ratingpoint_4' name='fk_rv_rating' value='4'/>" +
 			                "<label for='ratingpoint_4'></label>" +
-			                "<input type='radio' id='ratingpoint_6' name='rv_rating' value='6'/>" +
+			                "<input type='radio' id='ratingpoint_6' name='fk_rv_rating' value='6'/>" +
 			                "<label for='ratingpoint_6'></label>" +
-			                "<input type='radio' id='ratingpoint_8' name='rv_rating' value='8'/>" +
+			                "<input type='radio' id='ratingpoint_8' name='fk_rv_rating' value='8'/>" +
 			                "<label for='ratingpoint_8'></label>" +
-			                "<input type='radio' id='ratingpoint_10' name='rv_rating' value='10'/>" +
+			                "<input type='radio' id='ratingpoint_10' name='fk_rv_rating' value='10'/>" +
 			                "<label for='ratingpoint_10'></label>" +
-			                "<span>2 - 너무 별로에요</span>" +
+			                "<span id='rating_desc'></span>" +
 			                "</span>" +
 			                "</fieldset>" +
 			                "</div>" +
+			                "<input type='hidden' id='rs_seq_input' name='rs_seq' value=''>" +
+			                "<input type='hidden' name='fk_lodge_id' size='33' readonly/>" +
+			                "<br>" +
 			                "<div class='rv_subject'>" +
 			                "<h4>제목</h4>" +
-			                "<input type='text' name='rv_subject' size='70' maxlength='200' placeholder='제목을 입력해주세요.' autocomplete='off'/>" +
+			                "<input type='text' name='rv_subject' size='50' maxlength='200' placeholder='제목을 입력해주세요.' autocomplete='off'/>" +
 			                "</div>" +
 			                "<div class='rv_content'>" +
 			                "<h4>리뷰 쓰기</h4>" +
-			                "<textarea style='width:70%; height:300px;' name='rv_content' id='content' autocomplete='off'></textarea>" +
+			                "<textarea name='rv_content' id='content' autocomplete='off'></textarea>" +
 			                "</div>" +
-			                "<div></div>" +
+			                "<div>" +
+			                "<button type='button' id='btnWrite'>글쓰기</button>" +
+			                "</div>" +
 			                "</div>" +
 			                "</div>" +
 			                "</div>";
@@ -227,35 +323,7 @@
 			    });//
 			}
 			
-			else{
-
-				$.ajax({
-					url:"리뷰 수정 삭제 페이지",
-					data:{"rs_seq":"1"},
-					dataType:"json",
-					success: function(json){
-						
-						v_html = "";
-						
-						v_html += "<div class='reviewWriteModal'>"
-						
-						
-						
-						$("form[name='reviewWriteForm']").html(v_html);
-						
-					}
-					
-				});
-				
-		        $(".reviewWriteModal").fadeIn();
-		        $(".reviewWriteModal_header").show(); // 삭제 버튼 클릭 시 헤더 영역 보이기
-		        $("body").addClass("modal-open"); // body에 modal-open 클래스 추가
-		        
-		        // 불러온 값(json타입의 list, map 아무거나) input에 넣어주기
-		        
-		        
-		        
-			}
+			
 			
 	}
 		

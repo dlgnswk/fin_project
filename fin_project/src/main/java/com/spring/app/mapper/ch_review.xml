@@ -44,12 +44,156 @@
 		left join tbl_host H ON H.h_userid = V.fk_userid
 		left join tbl_rating T ON T.RV_RATING = V.FK_RV_RATING     
 		where RV_STATUS = 1
+		 <choose>
+		    	<when test ='lodge_id !=null'>
+		    		AND V.FK_LODGE_ID = #{lodge_id}	
+		    	</when>
+		    	<otherwise>
+		    	</otherwise>
+		    </choose>
 		start with RV_ORG_SEQ = 0 
 		connect by prior RV_SEQ = RV_ORG_SEQ 
 		order siblings by RV_GROUPNO desc, RV_SEQ asc
     
 </select>
-   
 
+	<!-- === 글쓰기 === -->
+   	<insert id="add" parameterType="com.spring.app.expedia.domain.ReviewVO">
+	       insert into tbl_review(rv_seq, fk_userid, fk_rs_seq, rv_subject, rv_content, rv_regDate, rv_status, fk_rv_rating, rv_groupno, rv_org_seq, rv_depthno)
+		   values(seq_tbl_review.nextval, #{fk_userid}, #{fk_rs_seq}, #{rv_subject}, #{rv_content}, default, 1, #{fk_rv_rating}, #{rv_groupno}, default, default)	    
+	</insert>
+	
+   <!-- 회원 별 글목록 -->
+   <resultMap type="HashMap" id="myrvList_Map">
+   	  <result property="RV_SEQ"           column="RV_SEQ"                 javaType="String" />	
+   	  <result property="FK_LODGE_ID"      column="FK_LODGE_ID"            javaType="String" />	
+   	  <result property="FK_RS_SEQ"        column="FK_RS_SEQ"              javaType="String" />
+   	  <result property="LG_NAME"          column="LG_NAME"                javaType="String" />	
+      <result property="RV_SUBJECT"       column="RV_SUBJECT"             javaType="String" />
+      <result property="RV_CONTENT"       column="RV_CONTENT"             javaType="String" />
+      <result property="RV_REGDATE"       column="RV_REGDATE"             javaType="String" />
+      <result property="RV_GROUPNO"       column="RV_GROUPNO"             javaType="Integer" />
+      <result property="RV_ORG_SEQ"       column="RV_ORG_SEQ"             javaType="Integer" />
+      <result property="RV_DEPTHNO"       column="RV_DEPTHNO"             javaType="Integer" />
+      <result property="livedate"         column="livedate"               javaType="String" />
+      <result property="STAYDATE"         column="STAYDATE"               javaType="String" />
+      <result property="FK_RV_RATING"     column="FK_RV_RATING"           javaType="Integer" />
+      <result property="RV_RATING_DESC"   column="RV_RATING_DESC"         javaType="String" />        
+   </resultMap>
+	<select id="myrvList" parameterType="HashMap" resultMap="myrvList_Map">
+	        SELECT V.RV_SEQ, V.FK_LODGE_ID,  L.LG_NAME, V.FK_RS_SEQ, V.FK_USERID, V.RV_SUBJECT, V.RV_CONTENT
+			     , TO_CHAR(V.rv_regdate, 'yyyy"년" mm"월" dd"일"') AS RV_REGDATE, V.RV_STATUS, V.RV_GROUPNO, V.RV_ORG_SEQ, V.RV_DEPTHNO
+			     , V.FK_RV_RATING, T.RV_RATING_DESC
+			     , (TO_DATE(R.rs_checkoutdate, 'YYYY-MM-DD') - TO_DATE(R.rs_checkindate, 'YYYY-MM-DD'))||'박' AS livedate
+				 , TO_CHAR(RS_CHECKINDATE, 'yyyy"년" mm"월"') AS STAYDATE
+			FROM
+			(
+			select RV_SEQ,FK_LODGE_ID, FK_RS_SEQ, FK_USERID, RV_SUBJECT, RV_CONTENT, RV_REGDATE, RV_STATUS,  RV_GROUPNO, RV_ORG_SEQ, RV_DEPTHNO, FK_RV_RATING
+			from tbl_review
+			) V
+			left join tbl_reservation R ON R.RS_SEQ = V.FK_RS_SEQ
+			left join tbl_rating T ON T.RV_RATING = V.FK_RV_RATING     
+			left join tbl_lodge L ON  L.LODGE_ID = V.FK_LODGE_ID
+			where V.fk_userid = #{V.fk_userid}
+			order by V.rv_seq desc    
+	</select>	
+	 
+	 
+	 <resultMap type="HashMap" id="getrvlist_Map">
+   	  <result property="RV_SEQ"           column="RV_SEQ"                javaType="String" />	
+   	  <result property="FK_LODGE_ID"      column="FK_LODGE_ID"            javaType="String" />
+   	  <result property="LG_NAME"          column="LG_NAME"                javaType="String" />	
+   	  <result property="FK_RS_SEQ"        column="FK_RS_SEQ"              javaType="String" />
+   	  <result property="FK_USERID"        column="FK_USERID"               javaType="String" />   	  	
+   	  <result property="NAME"             column="NAME"                   javaType="String" />   	  	
+      <result property="RV_SUBJECT"       column="RV_SUBJECT"             javaType="String" />
+      <result property="RV_CONTENT"       column="RV_CONTENT"             javaType="String" />
+      <result property="RV_REGDATE"       column="RV_REGDATE"             javaType="String" />
+      <result property="RV_GROUPNO"       column="RV_GROUPNO"             javaType="Integer" />
+      <result property="RV_ORG_SEQ"       column="RV_ORG_SEQ"             javaType="Integer" />
+      <result property="RV_DEPTHNO"       column="RV_DEPTHNO"             javaType="Integer" />
+      <result property="livedate"         column="livedate"               javaType="String" />
+      <result property="STAYDATE"         column="STAYDATE"               javaType="String" />
+      <result property="FK_RV_RATING"     column="FK_RV_RATING"           javaType="Integer" />
+      <result property="RV_RATING_DESC"   column="RV_RATING_DESC"         javaType="String" />       
+   </resultMap>
+	
+	 
+	<select id="getreviewList" parameterType="HashMap" resultMap="getrvlist_Map">
+		
+		WITH F AS (
+		    SELECT V.RV_SEQ, V.FK_LODGE_ID, L.LG_NAME, V.FK_RS_SEQ, V.FK_USERID, U.NAME, V.RV_SUBJECT, V.RV_CONTENT
+		         , TO_CHAR(V.rv_regdate, 'yyyy"년" mm"월" dd"일"') AS RV_REGDATE, V.RV_GROUPNO, V.RV_ORG_SEQ, V.RV_DEPTHNO
+		         , V.FK_RV_RATING, T.RV_RATING_DESC
+		         , (TO_DATE(R.rs_checkoutdate, 'YYYY-MM-DD') - TO_DATE(R.rs_checkindate, 'YYYY-MM-DD')) || '박' AS livedate
+		    FROM (
+		        SELECT RV_SEQ, FK_LODGE_ID, FK_RS_SEQ, FK_USERID, RV_SUBJECT, RV_CONTENT, RV_REGDATE, RV_STATUS, RV_GROUPNO, RV_ORG_SEQ, RV_DEPTHNO, FK_RV_RATING
+		        FROM tbl_review
+		        UNION ALL 
+		        SELECT C_SEQ, FK_LODGE_ID, FK_RS_SEQ, FK_H_USERID, C_SUBJECT, C_CONTENT, C_REGDATE, C_STATUS, C_GROUPNO, C_ORG_SEQ, C_DEPTHNO, FK_C_RATING
+		        FROM tbl_comment
+		    ) V
+		    LEFT JOIN tbl_reservation R ON R.RS_SEQ = V.FK_RS_SEQ
+		    LEFT JOIN tbl_lodge L ON L.LODGE_ID = V.FK_LODGE_ID
+		    LEFT JOIN tbl_rating T ON T.RV_RATING = V.FK_RV_RATING
+		    LEFT JOIN tbl_user U ON U.USERID = V.FK_USERID
+		    WHERE V.RV_STATUS = 1 
+		    <choose>
+		    	<when test ='lodge_id !=null'>
+		    		AND V.FK_LODGE_ID = #{lodge_id}	
+		    	</when>
+		    	<otherwise>
+		    	</otherwise>
+		    </choose>
+		)
+		SELECT RV_SEQ, FK_LODGE_ID, LG_NAME, FK_RS_SEQ, FK_USERID, NAME, RV_SUBJECT, RV_CONTENT
+		       RV_REGDATE, RV_STATUS, RV_GROUPNO, RV_ORG_SEQ, RV_DEPTHNO, FK_RV_RATING, RV_RATING_DESC
+		FROM  F
+		START WITH RV_ORG_SEQ = 0 
+		CONNECT BY PRIOR RV_SEQ = RV_ORG_SEQ 
+		ORDER SIBLINGS BY
+		<if test='sort == "relative"'>
+		 RV_GROUPNO DESC, RV_SEQ ASC
+		</if>
+		<if test='sort == "recent_review"'>
+		 RV_SEQ DESC, RV_GROUPNO DESC
+		</if>
+		<if test='sort == "highrating"'>
+		 FK_RV_RATING DESC, RV_GROUPNO DESC, RV_SEQ ASC
+		</if>
+		<if test='sort == "lowrating"'>
+		 FK_RV_RATING ASC, RV_GROUPNO DESC, RV_SEQ ASC
+		</if>
+	</select>
+	
+	<!-- 글 하나 가져오는 거 -->
+	<select id="selectReviewBySeq" parameterType="HashMap" resultType="com.spring.app.expedia.domain.ReviewVO">
+    SELECT V.RV_SEQ, V.FK_LODGE_ID, L.LG_NAME, V.FK_RS_SEQ, V.FK_USERID, V.RV_SUBJECT, V.RV_CONTENT
+         , TO_CHAR(V.rv_regdate, 'yyyy"년" mm"월" dd"일"') AS RV_REGDATE, V.RV_STATUS, V.RV_GROUPNO, V.RV_ORG_SEQ, V.RV_DEPTHNO
+         , V.FK_RV_RATING, T.RV_RATING_DESC
+         , (TO_DATE(R.rs_checkoutdate, 'YYYY-MM-DD') - TO_DATE(R.rs_checkindate, 'YYYY-MM-DD')) || '박' AS livedate
+         , TO_CHAR(RS_CHECKINDATE, 'yyyy"년" mm"월"') AS STAYDATE
+    FROM
+    (
+        SELECT RV_SEQ, FK_LODGE_ID, FK_RS_SEQ, FK_USERID, RV_SUBJECT, RV_CONTENT, RV_REGDATE, RV_STATUS, RV_GROUPNO, RV_ORG_SEQ, RV_DEPTHNO, FK_RV_RATING
+        FROM tbl_review
+        WHERE RV_SEQ = ${rv_seq}
+    ) V
+    LEFT JOIN tbl_reservation R ON R.RS_SEQ = V.FK_RS_SEQ
+    LEFT JOIN tbl_rating T ON T.RV_RATING = V.FK_RV_RATING     
+    LEFT JOIN tbl_lodge L ON L.LODGE_ID = V.FK_LODGE_ID
+    ORDER BY V.rv_seq DESC
+</select>
+ 	
+ 	<!-- 글 수정하기 -->
+ 	<update id="edit" parameterType="HashMap">
+ 		update tbl_review set   rv_subject = #{rv_subject}
+                      , rv_content = #{rv_content}, fk_rv_rating = #{rv_rating} 
+      	where rv_seq = #{rv_seq}
+ 	</update>
+ 	
+ 	
+ 	
+ 	
 
 </mapper>
