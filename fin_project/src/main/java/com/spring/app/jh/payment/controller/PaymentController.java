@@ -25,6 +25,8 @@ public class PaymentController {
 	@GetMapping("/payment/paymentConfirm.exp") 
 	public ModelAndView index(ModelAndView mav, HttpServletRequest request) {
 		
+		String email = request.getParameter("email");
+		
 		HttpSession session = request.getSession();
 		UserVO loginuser = (UserVO) session.getAttribute("loginuser");
 		
@@ -40,6 +42,7 @@ public class PaymentController {
 		}
 
 		mav.addObject("loginuser_name",loginuser_name);
+		mav.addObject("email",email);
 		
 		mav.setViewName("jh/payment/paymentConfirm.tiles1");
 		

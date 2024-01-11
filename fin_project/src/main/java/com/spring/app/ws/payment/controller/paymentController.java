@@ -44,18 +44,7 @@ public class paymentController {
 
 	// 결제페이지
 	@RequestMapping(value = "/payment/payment.exp")
-	public ModelAndView requiredLogin_searchUser(HttpServletRequest request, HttpServletResponse response,
-			ModelAndView mav) {
-
-		// 받을 값들
-//		String startDate = "2024-01-31"; // startDate
-//		String endDate = "2024-02-02"; // endDate
-//		String payType = "0";
-//		//String payType = "1";
-//		String rm_seq = "rm-33";
-//		String h_userid = "p-city@paradian.com";
-//		String guest_cnt = "2"; // ttl_guest_cnt
-//		String lodge_id = "PARA0001";
+	public ModelAndView requiredLogin_searchUser(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
@@ -64,8 +53,6 @@ public class paymentController {
 		String h_userid = request.getParameter("h_userid");
 		String guest_cnt = request.getParameter("ttl_guest_cnt");
 		String lodge_id = request.getParameter("lodge_id");
-		
-		System.out.println("payType" + payType);
 		
 		String str_inYear = startDate.substring(0, 4);
 		String str_inMonth = startDate.substring(5, 7);
@@ -149,6 +136,8 @@ public class paymentController {
 		// 숙박업소 별 후기 가져오기
 		List<Map<String, String>> lodgeReviewList = service.getLodgeReview(lodge_id);
 		
+		// 룸 이미지 이름 불러오기
+		List<Map<String, String>> Rm_saveImg = service.getRm_saveImg(rm_seq);
 		
 		/*
 		 * for (Map<String, String> map : cancelDateInfo) {
@@ -160,7 +149,7 @@ public class paymentController {
 		 */
 
 		mav.addObject("cancelDateInfo", cancelDateInfo);
-
+		mav.addObject("Rm_saveImg", Rm_saveImg);
 		mav.addObject("daysGap", daysGap);
 		mav.addObject("paraMap", paraMap);
 		mav.addObject("myUserInfo", myUserInfo);
@@ -245,23 +234,32 @@ public class paymentController {
 		String checkinTime = request.getParameter("checkinTime");
 		String checkoutTime = request.getParameter("checkoutTime");
 
-		double db_point = Double.parseDouble(point);
-		db_point = Math.ceil(db_point);
-		point = Double.toString(db_point);
+		
+		// 소수점 없애기 시작 ===========================================
+		if(point != "") {
+			System.out.println("포인트 받자");
+			double db_point = Double.parseDouble(point);
+			db_point = Math.ceil(db_point);
+			point = Double.toString(db_point);
+			System.out.println(point);
+		}
 		
 		if(to_insert_point != "") {
+			System.out.println("포인트 쓰자");
 			double db_to_insert_point = Double.parseDouble(to_insert_point);
 			db_to_insert_point = Math.ceil(db_to_insert_point);
 			to_insert_point = Double.toString(db_to_insert_point);
+			System.out.println(to_insert_point);
 		}
+		
 		
 		double db_totalPrice = Double.parseDouble(total__price);
 		db_totalPrice = Math.ceil(db_totalPrice);
 		total__price = Double.toString(db_totalPrice);
+		// 소수점 없애기 끝 ===========================================
 		
-		
-		
-		
+		// decimalformat을 위한 double 타입을 int로 바꾸기
+		int i_totalPrice = (int)db_totalPrice;
 		
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("userid", userid);
@@ -300,9 +298,12 @@ public class paymentController {
 				
 		int s = 0;
 		
+		System.out.println("rs_seq => " + rs_seq);
+		System.out.println("userid => " + userid);
+		
 		if(n==1) {
 		
-			if (point == "") {
+			if ("".equals(point)) {
 				// 선할인포인트를 사용한 경우 보유포인트만 변동
 				System.out.println("할인입니다.");
 				if (used_point != "") {
@@ -311,9 +312,6 @@ public class paymentController {
 					
 					// rs_seq를 가져와서 tbl_point에 insert 하기  (-사용한 point)
 					s = service.updateTblPointA1(paraMap);
-				} else {
-					// rs_seq를 가져와서 tbl_point에 insert 하기  (0넣기)
-					s = service.updateTblPointA2();
 				}
 			} else {
 				// 선할인포인트를 사용하지 않은 경우 포인트 적립 + 보유 포인트 변동
@@ -344,7 +342,7 @@ public class paymentController {
 			System.out.println("예약에 실패했습니다.");
 		}
 
-		
+		System.out.println("메일...");
 		// 메일 보내기 시작=====================================================
 		
 		
@@ -360,19 +358,12 @@ public class paymentController {
 		}
 		
 		DecimalFormat decFormat = new DecimalFormat("###,###");
-
-		String totalPrice = decFormat.format(total__price);
 		
-		db_totalPrice = Double.parseDouble(totalPrice);
-		db_totalPrice = Math.ceil(db_totalPrice);
-		totalPrice = Double.toString(db_totalPrice);
-		
-		System.out.println(totalPrice);
-		
+		String totalPrice = decFormat.format(i_totalPrice);
 		
 		GoogleMail mail = new GoogleMail();
 		
-		String contents = "	<div style='background-color:white;border:solid 1px black;margin:0 auto;width:375px;padding:13px;height:100vh'>" +
+		String contents = "	<div style='background-color:#f5f5f5;border:solid 1px black;margin:0 auto;width:375px;padding:13px;height:100vh'>" +
 						  "		<div style='font-family:'roboto' , 'arial' , sans-serif;color:#000000;background-color:#ffffff'>" + 
 				          "			<div style='padding:32px;border-bottom:1px solid #c7c7c7'><img src='https://www.expedia.com/_dms/header/logo.png?locale=en_GB&amp;siteid=27&amp;2' height='30' loading='lazy'>" + 
 				          "			</div>" + 
@@ -382,7 +373,7 @@ public class paymentController {
 				          "				<span style=\"color:#9b969c;\">" + lg_address + "</span>" + 
 				          "			</div>" + 
 				          "			<hr style=\"border-bottom:1px solid #c9c9c9\">" + 
-				          "			<div style='font-weight:400;font-size:14px;line-height:18px;margin-top:10px;padding:16px 20px 16px;color:#343b53;border:2px solid #a2576a;'>" + 
+				          "			<div style='background-color:white; font-weight:400;font-size:14px;line-height:18px;margin-top:30px;padding:16px 20px 16px;color:#343b53;border:2px solid #a2576a;'>" + 
 				          "				<div style=\"font-weight:bold;\">결제정보</div>" + 
 					      "				<hr style=\"border:1px solid #c7c7c7\">" + 
 					      "				<div style=\"padding:3px 0 3px 0;\">예약자명<span style=\"float:right;\">" + name + "</span></div>" + 
@@ -390,7 +381,7 @@ public class paymentController {
 					      "				<div style=\"padding:3px 0 3px 0;\">결제금액<span style=\"float:right;\">" + totalPrice + "</span></div>" + 
 				          "			</div>" + 
 				          "			<br>" + 
-				          "			<div style='font-weight:400;font-size:14px;line-height:18px;padding:16px 20px 16px;color:#343b53;border:2px solid #a2576a;'>" + 
+				          "			<div style='background-color:white; font-weight:400;font-size:14px;line-height:18px;margin-top:10px; padding:16px 20px 16px;color:#343b53;border:2px solid #a2576a;'>" + 
 				          "				<div style=\"font-weight:bold;\">객실정보</div>" + 
 				          "				<hr style=\"border:1px solid #c7c7c7\">" + 
 				          "				<div style=\"padding:3px 0 3px 0;\">객실타입<span style=\"float:right;\">" + currentTimeD + "</span></div>" + 

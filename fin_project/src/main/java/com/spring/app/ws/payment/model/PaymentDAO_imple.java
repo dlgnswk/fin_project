@@ -117,13 +117,6 @@ public class PaymentDAO_imple implements PaymentDAO {
 	}
 
 
-	// rs_seq를 가져와서 tbl_point에 insert 하기  (0넣기)
-	@Override
-	public int updateTblPointA2() {
-		int s = sqlsession.insert("ws_payment.ws_updateTblPointA2");
-		return s;
-	}
-
 
 	// rs_seq를 가져와서 tbl_point에 insert 하기  (+point - 사용한 point)
 	@Override
@@ -138,6 +131,14 @@ public class PaymentDAO_imple implements PaymentDAO {
 	public int updateTblPointB2(Map<String, String> paraMap) {
 		int s = sqlsession.insert("ws_payment.ws_updateTblPointB2",paraMap);
 		return s;
+	}
+
+
+	// 룸 이미지 이름 불러오기
+	@Override
+	public List<Map<String, String>> getRm_saveImg(String rm_seq) {
+		List<Map<String, String>> Rm_saveImg = sqlsession.selectList("ws_payment.ws_getRm_saveImg",rm_seq);
+		return Rm_saveImg;
 	}
 
 }
