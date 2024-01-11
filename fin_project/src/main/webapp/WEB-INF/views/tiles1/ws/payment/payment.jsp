@@ -1418,7 +1418,7 @@
 							<hr>
 							
 							<span style="font-weight:bold;">합계</span>
-							<span style="float:right; font-weight:bold;">₩ <fmt:formatNumber type="number" pattern="0"><span class="sum_priceEnd"></span></fmt:formatNumber></span>
+							<span style="float:right; font-weight:bold;">₩ <span class="sum_priceEnd"></span></span>
 							
 							<c:if test="${requestScope.paraMap.payType eq '1'}">
 								<div>
