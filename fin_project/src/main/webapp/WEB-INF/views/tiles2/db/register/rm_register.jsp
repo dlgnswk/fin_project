@@ -1127,7 +1127,6 @@
 						</div>
 					</div>
 					
-		<!--    rm_extra_bed_yn   -->			
 					<div class="__data __flex">
 						<div class="div_sub __flex">
 							<span class="sub" >침대 추가 가능여부<svg class="submit_check" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#a01313" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg><span class="error"></span></span>
@@ -1206,7 +1205,6 @@
 					
 					<div class="_br"></div>
 					
-		<!-- rm_bathroom_cnt   전용욕실갯수 	0 보다 크면 옵션 체크-->
 					<div class="__data">
 						<div class="div_sub">
 							<span class="sub">전용 욕실 개수</span><svg class="submit_check" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#a01313" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg><span class="error"></span>
@@ -1216,7 +1214,6 @@
 						</div>
 					</div>
 					
-		<!-- tbl_bath_opt 으로 체크박스 ==>  tbl_bath 테이블에 insert  -->
 					<div class="__data y_btn_after">
 						<div class="div_sub">
 							<span class="sub" >욕실시설 옵션</span><svg class="submit_check" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#a01313" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg><span class="error"></span>
@@ -1231,7 +1228,6 @@
 						</div>
 					</div>
 					
-			<!-- rm_p_bathroom_yn	공용욕실유무 	"예" "아니오" -->		
 					<div class="__data __flex">
 						<div class="div_sub __flex">
 							<span class="sub" >공용욕실유무<svg class="submit_check" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#a01313" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg><span class="error"></span></span>
@@ -1243,15 +1239,6 @@
 						</div>
 					</div>
 					
-		<!-- rm_kitchen_yn  "예" "아니오" 이후에  체크박스 		0	조리도구, 접시, 주방 기구
-														1	식기세척기
-														2	냉장고
-														3	오븐
-														4	전자레인지
-														5	밥솥
-														6	토스터
-														7	양념/향신료
-																				-->	
 					<div class="__data __flex">
 						<div class="div_sub __flex">
 							<span class="sub" >주방(조리시설)유무<svg class="submit_check" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#a01313" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg><span class="error"></span></span>
@@ -1263,7 +1250,6 @@
 						</div>
 					</div>
 					
-		<!-- tbl_kt_opt 으로 체크박스 ==>  tbl_kitchen 테이블에 insert  -->
 					<div class="__data y_btn_after">
 						<div class="div_sub">
 							<span class="sub" >주방(조리시설) 종류</span><svg class="submit_check" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#a01313" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg><span class="error"></span>
@@ -1278,12 +1264,6 @@
 						</div>
 					</div> 
 					
-		<!-- rm_snack_yn  "예" "아니오" 이후에  체크박스 		0	무료 생수
-														1	커피/티/에스프레소 메이커
-														2	미니바
-														3	바 
-														-->	
-					
 					<div class="__data __flex">
 						<div class="div_sub __flex">
 							<span class="sub" >객실 내 다과<svg class="submit_check" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#a01313" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg><span class="error"></span></span>
@@ -1295,7 +1275,6 @@
 						</div>
 					</div>
 					
-		<!-- tbl_snk_opt 으로 체크박스 ==>  tbl_snack 테이블에 insert  -->
 					<div class="__data y_btn_after">
 						<div class="div_sub">
 							<span class="sub" >객실내다과 옵션</span><svg class="submit_check" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#a01313" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg><span class="error"></span>
@@ -1310,13 +1289,6 @@
 						</div>
 					</div>
 					
-					
-					<!-- rm_ent_yn  "예" "아니오" 이후에  체크박스 		0	TV
-																1	IPTV
-																2	OTT 이용 가능
-																3	컴퓨터 또는 태블릿
-																4	음성 인식 스마트 스피커 
-																-->	
 					<div class="__data __flex">
 						<div class="div_sub __flex">
 							<span class="sub" >객실 내 엔터테인먼트<svg class="submit_check" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#a01313" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg><span class="error"></span></span>
@@ -1328,7 +1300,6 @@
 						</div>
 					</div>
 					
-		<!-- tbl_ent_opt 으로 체크박스 ==>  tbl_ent테이블에 insert  -->
 					<div class="__data y_btn_after">
 						<div class="div_sub">
 							<span class="sub" >객실 내 엔터테인먼트 옵션</span><svg class="submit_check" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#a01313" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg><span class="error"></span>
@@ -1345,10 +1316,6 @@
 					
 					<div class="_br"></div>
 					
-					
-				<!-- rm_tmp_ctrl_yn 온도조절기 "예" "아니오" 이후 			0	에어컨
-																	1	선풍기
-																	2	난방 		 체크박스     -->
 					<div class="__data __flex">
 						<div class="div_sub __flex">
 							<span class="sub" >온도조절기 유무<svg class="submit_check" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#a01313" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg><span class="error"></span></span>
@@ -1360,7 +1327,6 @@
 						</div>
 					</div>
 					
-		<!-- tbl_tmp_opt으로 체크박스 ==>  tbl_tmp테이블에 insert  -->
 					<div class="__data y_btn_after">
 						<div class="div_sub">
 							<span class="sub" >온도조절기 종류</span><svg class="submit_check" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#a01313" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg><span class="error"></span>
@@ -1376,8 +1342,6 @@
 					</div>
 					
 					<div class="_br"></div>
-					
-			<!-- rm_smoke_yn 흡연유무 "예" "아니오" 끝 -->
 			
 					<div class="__data __flex">
 						<div class="div_sub __flex">
@@ -1392,14 +1356,6 @@
 					
 					<div class="_br"></div>
 					
-			<!-- fk_view_no 전망옵션 		6	호수 전망		select 태그
-										0	전망없음
-										1	해변 전망
-										2	산 전망
-										3	강 전망
-										4	시내 전망
-										5	공원 전망 
-													-->
 					<div class="__data">
 						<div class="div_sub">
 							<span class="sub">전망옵션</span><svg class="submit_check" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#a01313" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg><span class="error"></span>
@@ -1414,8 +1370,6 @@
 						</div>
 					</div>
 					
-					
-				<!--    rm_wheelchair_yn   휠체어이용가능유무 "예" "아니오" 끝 -->			
 					<div class="__data __flex">
 						<div class="div_sub __flex">
 							<span class="sub" >휠체어이용가능유무<svg class="submit_check" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#a01313" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg><span class="error"></span></span>
@@ -1429,7 +1383,6 @@
 					
 					<div class="_br"></div>				
 					
-			<!-- rm_guest_cnt 투숙가능인원 input:number-->
 					<div class="__data">
 						<div class="div_sub">
 							<span class="sub">투숙가능인원</span><svg class="submit_check" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#a01313" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg><span class="error"></span>
@@ -1441,7 +1394,6 @@
 	
 					<div class="_br"></div>
 					
-		<!-- rm_price 숙박요금  input:number -->			
 					<div class="__data">
 						<div class="div_sub">
 							<span class="sub">숙박요금</span><svg class="submit_check" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#a01313" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg><span class="error"></span>
@@ -1453,7 +1405,6 @@
 					
 					<div class="_br"></div>
 					
-		<!-- rm_breakfast_yn 조식 포함 유무 	"예" "아니오" -->
 					<div class="__data __flex">
 						<div class="div_sub __flex">
 							<span class="sub" >조식포함 유무<svg class="submit_check" xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#a01313" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg><span class="error"></span></span>
