@@ -237,7 +237,7 @@ public class paymentController {
 		
 		// 소수점 없애기 시작 ===========================================
 		if(point != "") {
-			System.out.println("포인트 받자");
+			//System.out.println("포인트 받자");
 			double db_point = Double.parseDouble(point);
 			db_point = Math.ceil(db_point);
 			point = Double.toString(db_point);
@@ -245,7 +245,7 @@ public class paymentController {
 		}
 		
 		if(to_insert_point != "") {
-			System.out.println("포인트 쓰자");
+			//System.out.println("포인트 쓰자");
 			double db_to_insert_point = Double.parseDouble(to_insert_point);
 			db_to_insert_point = Math.ceil(db_to_insert_point);
 			to_insert_point = Double.toString(db_to_insert_point);
@@ -298,14 +298,14 @@ public class paymentController {
 				
 		int s = 0;
 		
-		System.out.println("rs_seq => " + rs_seq);
-		System.out.println("userid => " + userid);
+		//System.out.println("rs_seq => " + rs_seq);
+		//System.out.println("userid => " + userid);
 		
 		if(a==1) {
 		
 			if ("".equals(point)) {
 				// 선할인포인트를 사용한 경우 보유포인트만 변동
-				System.out.println("할인입니다.");
+				//System.out.println("할인입니다.");
 				if (used_point != "") {
 					// 선할인을 받은 상태로 보유포인트만 update하기
 					p = service.updateSaleMyPoint(paraMap);
@@ -315,7 +315,7 @@ public class paymentController {
 				}
 			} else {
 				// 선할인포인트를 사용하지 않은 경우 포인트 적립 + 보유 포인트 변동
-				System.out.println("적립입니다.");
+				//System.out.println("적립입니다.");
 	
 				if (used_point != "") {
 					// 적립을 한 상태로 point,used_point update하기
@@ -342,7 +342,7 @@ public class paymentController {
 			System.out.println("예약에 실패했습니다.");
 		}
 
-		System.out.println("메일...");
+		//System.out.println("메일...");
 		// 메일 보내기 시작=====================================================
 		
 		

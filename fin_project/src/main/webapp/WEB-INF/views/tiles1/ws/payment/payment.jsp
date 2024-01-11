@@ -577,7 +577,7 @@
 	// tbl_point에 insert 하기
 	function goReservation_DB_Update(){
 		
-		alert("goReservation_DB_Update 들어감!");
+		//alert("goReservation_DB_Update 들어감!");
 		
 		const queryString = $("form[name='frm_payment_exp']").serialize();
 	       
@@ -1446,36 +1446,36 @@
 		
 		</div>
 			<form name="frm_payment_exp">
-				<input type="text" name="userid"/>
-				<input type="text" name="name" />
-				<input type="text" name="mobile" />
-				<input type="text" name="email" />
-				<input type="text" name="point" />
-				<input type="text" name="to_insert_point" />
-				<input type="text" name="used_point" />
+				<input type="hidden" name="userid"/>
+				<input type="hidden" name="name" />
+				<input type="hidden" name="mobile" />
+				<input type="hidden" name="email" />
+				<input type="hidden" name="point" />
+				<input type="hidden" name="to_insert_point" />
+				<input type="hidden" name="used_point" />
 				
-				<input type="text" name="rm_seq" value="${requestScope.paraMap.rm_seq}" />
-				<input type="text" name="total__price" />
-				<input type="text" name="startDate" value="${requestScope.paraMap.startDate}" />
-				<input type="text" name="endDate" value="${requestScope.paraMap.endDate}" />
-				<input type="text" name="h_userid" value="${requestScope.paraMap.h_userid}" />
-				<input type="text" name="paytype" value="${requestScope.paraMap.payType}" />
-				<input type="text" name="guest_cnt" value="${requestScope.paraMap.guest_cnt}" />
+				<input type="hidden" name="rm_seq" value="${requestScope.paraMap.rm_seq}" />
+				<input type="hidden" name="total__price" />
+				<input type="hidden" name="startDate" value="${requestScope.paraMap.startDate}" />
+				<input type="hidden" name="endDate" value="${requestScope.paraMap.endDate}" />
+				<input type="hidden" name="h_userid" value="${requestScope.paraMap.h_userid}" />
+				<input type="hidden" name="paytype" value="${requestScope.paraMap.payType}" />
+				<input type="hidden" name="guest_cnt" value="${requestScope.paraMap.guest_cnt}" />
 				
-				<input type="text" name="currentTimeD" value="${CurrentTime_D}" />
-				<input type="text" name="checkinTime" value="${cancelInfo.checkin_time}" />
-				<input type="text" name="checkoutTime" value="${cancelInfo.checkout_time}" />
+				<input type="hidden" name="currentTimeD" value="${CurrentTime_D}" />
+				<input type="hidden" name="checkinTime" value="${cancelInfo.checkin_time}" />
+				<input type="hidden" name="checkoutTime" value="${cancelInfo.checkout_time}" />
 			</form>
 		</div>		
 	</div>
 	
-	<input type="text" name="sum_price" />
-	<input type="text" class="total_priceEnd" value="${roomInfo.rm_price * requestScope.daysGap * 0.9 * 1.1}"/>
+	<input type="hidden" name="sum_price" />
+	<input type="hidden" class="total_priceEnd" value="${roomInfo.rm_price * requestScope.daysGap * 0.9 * 1.1}"/>
 	
 
 	
 	<form name="frm_goPaymentConfirm_exp">
-		<input type="text" name="email" />
+		<input type="hidden" name="email" />
 	</form>
 	
 	

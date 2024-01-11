@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.spring.app.expedia.domain.CommentVO;
+import com.spring.app.expedia.domain.LodgeVO;
 
 /** 
 * @FileName  : ReviewService.java 
@@ -144,6 +145,19 @@ public interface CommentService {
 	* @return 
 	*/
 	int gettotalByRate(Map<String, Object> paraMap);
+
+	/** 
+	* @Method Name  : get__lodge_Id 
+	* @작성일   : 2024. 1. 11 
+	* @작성자   : 먕지 
+	* @변경이력  : 
+	* @Method 설명 : 
+	* @param userId
+	* @return 
+	*/
+	
+	// lodge_id를 가져는 메소드
+	List<LodgeVO> get__lodge_Id(String userId);
 
 	
 

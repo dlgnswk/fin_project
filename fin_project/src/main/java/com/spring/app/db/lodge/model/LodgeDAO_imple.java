@@ -10,6 +10,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.spring.app.expedia.domain.LodgeVO;
+import com.spring.app.expedia.domain.RoomVO;
 
 @Repository
 public class LodgeDAO_imple implements LodgeDAO {
@@ -565,6 +566,13 @@ public class LodgeDAO_imple implements LodgeDAO {
 	public List<String> getRm_typeData(Map<String, String> paraMap) {
 		List<String> rm_typeList = sqlsession.selectList("db_register_lodge.getRm_typeData", paraMap);
 		return rm_typeList;
+	}
+
+	// rm_seq에 해당하는 객실의 정보를 가져오기
+	@Override
+	public RoomVO changeGetRoomInfo(String rm_seq) {
+		RoomVO rmvo = sqlsession.selectOne("db_register_lodge.changeGetRoomInfo", rm_seq);
+		return rmvo;
 	}
 
 	

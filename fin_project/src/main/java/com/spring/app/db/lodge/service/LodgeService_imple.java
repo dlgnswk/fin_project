@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.spring.app.expedia.domain.HostVO;
 import com.spring.app.expedia.domain.LodgeVO;
+import com.spring.app.expedia.domain.RoomVO;
 import com.spring.app.db.lodge.model.LodgeDAO;
 
 @Service
@@ -927,6 +928,13 @@ public class LodgeService_imple implements LodgeService {
 	public List<String> getRm_typeData(Map<String, String> paraMap) {
 		List<String> rm_typeList = dao.getRm_typeData(paraMap);
 		return rm_typeList;
+	}
+
+	// rm_seq에 해당하는 객실의 정보를 가져오기
+	@Override
+	public RoomVO changeGetRoomInfo(String rm_seq) {
+		RoomVO rmvo = dao.changeGetRoomInfo(rm_seq);
+		return rmvo;
 	}
 
 

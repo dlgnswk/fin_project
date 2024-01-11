@@ -910,5 +910,13 @@
 		where fk_rm_seq = #{fk_rm_seq} and rm_img_main = 1
 	</select>
 
+
+	<!-- rm_seq에 해당하는 객실의 정보를 가져오기 -->
+	<select id="changeGetRoomInfo" parameterType="String" resultType="com.spring.app.expedia.domain.RoomVO">
+		select *
+		from tbl_room
+		where rm_seq = #{rm_seq}
+	</select>
+
 		
 </mapper>
