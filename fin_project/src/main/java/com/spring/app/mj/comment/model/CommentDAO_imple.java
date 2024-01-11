@@ -13,6 +13,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.spring.app.expedia.domain.CommentVO;
+import com.spring.app.expedia.domain.LodgeVO;
 
 /** 
 * @FileName  : mj_commentDAO_imple.java 
@@ -121,6 +122,14 @@ public class CommentDAO_imple implements CommentDAO {
 	public Map<String, String> getRvcntByRate2(Map<String, Object> paraMap) {
 		Map<String, String> getRvcntByRate2 = sqlsession.selectOne("mj_comment.getRvcntByRate2", paraMap);
 		return getRvcntByRate2;
+	}
+
+
+	// lodge_id를 가져는 메소드
+	@Override
+	public List<LodgeVO> get__lodge_Id(String userId) {
+		List<LodgeVO> get__lodge_Id = sqlsession.selectList("mj_comment.get__lodge_Id",userId);
+		return get__lodge_Id;
 	}
 
 
