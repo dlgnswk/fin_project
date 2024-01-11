@@ -167,17 +167,27 @@
 	</select>
 	
 	<!--  평점 별 후기 갯수 가져오기  -->
-	<select id="getRvcntByRate" parameterType="HashMap" resultType="HashMap">
-      select two, four, six, eight, ten
-      from
-      (
-          select fk_lodge_id, fk_rv_rating
-          from tbl_review
-          where fk_lodge_id=#{lodge_id}
-      )
-      pivot(
-          count(fk_rv_rating) for fk_rv_rating in(2 as two, 4 as four, 6 as six , 8 as eight, 10 as ten)
-      )
+	
+	<!-- insert 한 주소에 글목록 뿌려주기  -->	
+	<resultMap type="HashMap" id="getSu">
+	   <result property="two" 		column="two" 			javaType="String" />
+	   <result property="four" 		column="four" 			    javaType="String" />
+	   <result property="six" 		column="six" 		            javaType="String" />
+	   <result property="eight" 		column="eight" 		            javaType="String" />
+	   <result property="ten" 		column="ten" 		            javaType="String" />
+	</resultMap>
+	<select id="getRvcntByRate2" parameterType="HashMap" resultMap="getSu">
+			   SELECT NVL(two, 0) as two, NVL(four, 0) as four, NVL(six, 0) as six, NVL(eight, 0) as eight, NVL(ten, 0) as ten
+			FROM
+			(
+			    SELECT fk_lodge_id, fk_rv_rating
+			    FROM tbl_review
+			    WHERE fk_lodge_id = #{lodge_id}
+			)
+			PIVOT
+			(
+			    COUNT(fk_rv_rating) FOR fk_rv_rating IN (2 as two, 4 as four, 6 as six, 8 as eight, 10 as ten)
+			)
    </select>
    
    <!-- 구매자 총 갯수  -->

@@ -39,6 +39,9 @@ public interface ReviewDAO {
 	// 이용후기 수정하기
 	int reviewEdit(Map<String, String> paraMap);
 	
+	// 이용후기 삭제하기
+	int reviewDelete(Map<String, String> paraMap);
+	
 	
 	
 	

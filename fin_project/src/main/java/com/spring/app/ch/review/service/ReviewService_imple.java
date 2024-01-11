@@ -111,6 +111,14 @@ public class ReviewService_imple implements ReviewService {
 		
 		return n;
 	}
+
+	@Override
+	public int reviewDelete(Map<String, String> paraMap) {
+		
+		int n = dao.reviewDelete(paraMap);
+		
+		return n;
+	}
 	
 
 	

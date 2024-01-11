@@ -219,16 +219,15 @@
 	    height:18.75rem; /* 300px를 16px 기준으로 나눈 값 */
 	    background:#fff; 
 	    border-radius:0.625rem; /* 10px를 16px 기준으로 나눈 값 */
-	    position:relative; 
-	    top:50%; 
-	    left:50%;
-	    margin-top:-9.375rem; /* height의 절반 */
-	    margin-left:-15.625rem; /* width의 절반 */
 	    text-align:center;
 	    box-sizing:border-box; 
 	    padding:4.625rem 0; /* 74px를 16px 기준으로 나눈 값 */
 	    line-height:1.4375rem; /* 23px를 16px 기준으로 나눈 값 */
 	    cursor:pointer;
+	    position: fixed; 
+	    top: 50%; 
+	    left: 50%; 
+	    transform: translate(-50%, -50%);
 	}
 	
 	#mycontent > form:nth-child(9) > div > div.reviewDeleteModal_header > span {
@@ -392,7 +391,7 @@ $(document).ready(function() {
 	        	// console.log(json.rv_content);
 	        	// console.log(json.fk_rv_rating);
 	            var v_html = 
-	            	"<div class='reviewEditModal'>" +
+	            	"<div class='reviewEditModal' id='reviewEditModal'>" +
 	                "<div class='reviewEditModal_header'>" +
 	                "<span class='close'>&times;</span>" +
 	                "<div class='reviewEditModal_content' style='padding-left: 22%; height: 570px; overflow-y: auto;'>" +
@@ -447,7 +446,8 @@ $(document).ready(function() {
 	            // 모달창 뜰 때 배경색 변경
 	            $('#headerOfheader > div > section').css('background-color', 'rgba(0, 0, 0, 0.4)');
 	            $('#myrvlist > div').css('background-color', 'rgba(0, 0, 0, 0.0)');
-	        	
+	            $('#myfooter > footer > div > div > ul.uitk-layout-flex.uitk-layout-flex-align-items-center.uitk-layout-flex-flex-direction-row.uitk-layout-flex-justify-content-flex-start.uitk-layout-flex-flex-wrap-wrap.no-bullet > li > a > img').css('filter', 'brightness(60%)');
+	           
 	            setInitialRating(json.fk_rv_rating);
 	            
 	            // 모달의 닫기 버튼 클릭 시 모달 닫기
@@ -456,9 +456,26 @@ $(document).ready(function() {
 	    	        $("body").removeClass("modal-open"); // body에서 modal-open 클래스 제거
 	    	        $('#headerOfheader > div > section').css('background-color', '');
 	    	        $('#myrvlist > div').css('background-color', '');
+	    	        
+	    	        $('#myfooter > footer > div > div > ul.uitk-layout-flex.uitk-layout-flex-align-items-center.uitk-layout-flex-flex-direction-row.uitk-layout-flex-justify-content-flex-start.uitk-layout-flex-flex-wrap-wrap.no-bullet > li > a > img').css('filter', '');
 	    	        document.body.style.overflow = 'auto';
 	    	    });
-	         		    	 
+	         	
+	            const reviewEditModal = document.getElementById('reviewEditModal');
+	    	    window.addEventListener('click', function (e) { // 모달 외의 body 클릭 시 모달창 display:none
+	    	        if (e.target === reviewEditModal) {
+	    	        	$(".reviewEditModal").fadeOut();
+		    	        $("body").removeClass("modal-open"); // body에서 modal-open 클래스 제거
+		    	        $('#headerOfheader > div > section').css('background-color', '');
+		    	        $('#myrvlist > div').css('background-color', '');
+		    	        
+		    	        $('#myfooter > footer > div > div > ul.uitk-layout-flex.uitk-layout-flex-align-items-center.uitk-layout-flex-flex-direction-row.uitk-layout-flex-justify-content-flex-start.uitk-layout-flex-flex-wrap-wrap.no-bullet > li > a > img').css('filter', '');
+		    	        document.body.style.overflow = 'auto';
+	    	        }
+	    	        
+	    	     });  
+	            
+	            
 	    	   	
 	        }, // end of success
 	        error: function(request, status, error){
@@ -520,12 +537,11 @@ $(document).ready(function() {
 	function reviewDelete(rv_seq) {
 	    $.ajax({
 	        url: "<%= ctxPath%>/reviewDeleteModal.exp",
-	        data: {"rv_seq": rv_seq },
+	        data: {"rv_seq":rv_seq},
 	        dataType: "json",
 	        success: function (json) {
 	            let v_html = "";
-	            
-	            v_html += "<div class='reviewDeleteModal'>";             
+	            v_html += "<div class='reviewDeleteModal' id='reviewDeleteModal'>";             
 	            v_html += "<div class='reviewDeleteModal_header'>";
 	            v_html += "<span class='close'>&times;</span>";           
 	            v_html += "<h3>여행후기를 삭제하시겠습니까?</h3>";
@@ -540,18 +556,41 @@ $(document).ready(function() {
 	            // 모달 창이 뜨면 드롭다운 내용은 꺼지도록 설정
 	            $("div.dropdown_content").hide();
 	            
-	            // body에 새로운 내용 삽입
-	            $("body").append(v_html);
+	         	// 모달 영역에 새로운 내용 삽입
+	            $("form[name='reviewDeleteForm']").html(v_html);
+	            
+	            $("body").addClass("modal-open");
 	            
 	            // 모달 표시
 	            $(".reviewDeleteModal").fadeIn();
 	            $(".reviewDeleteModal_header").show();
 	            $("body").addClass("modal-open");
 	            
+	            // 모달창 뜰 때 배경색 변경
+	            $('#headerOfheader > div > section').css('background-color', 'rgba(0, 0, 0, 0.4)');
+	            $('#myrvlist > div').css('background-color', 'rgba(0, 0, 0, 0.0)');
+	            
+	            
 	            $("span.close").click(function() {
 	                $(".reviewDeleteModal").fadeOut();
 	                $("body").removeClass("modal-open"); // body에서 modal-open 클래스 제거
+	    	        $("body").removeClass("modal-open"); // body에서 modal-open 클래스 제거
+	    	        $('#headerOfheader > div > section').css('background-color', '');
+	    	        $('#myrvlist > div').css('background-color', '');
+	    	        document.body.style.overflow = 'auto';
 	            });
+	            
+	            const reviewDeleteModal = document.getElementById('reviewDeleteModal');
+	    	    window.addEventListener('click', function (e) { // 모달 외의 body 클릭 시 모달창 display:none
+	    	        if (e.target === reviewDeleteModal) {
+	    	        	$(".reviewDeleteModal").fadeOut();
+		    	        $("body").removeClass("modal-open"); // body에서 modal-open 클래스 제거
+		    	        $('#headerOfheader > div > section').css('background-color', '');
+		    	        $('#myrvlist > div').css('background-color', '');
+		    	        document.body.style.overflow = 'auto';
+	    	        }
+	    	        
+	    	     });
 	        },
 	        error: function(request, status, error){
 	            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);

@@ -41,6 +41,9 @@ public interface ReviewService {
 	// 글 수정하기
 	int reviewEdit(Map<String, String> paraMap);
 	
+	// 글 삭제하기
+	int reviewDelete(Map<String, String> paraMap);
+	
 
 
 }

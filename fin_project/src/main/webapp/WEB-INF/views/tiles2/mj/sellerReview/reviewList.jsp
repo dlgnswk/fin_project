@@ -412,16 +412,12 @@
 	href="<%=ctxPath%>/resources/css/mj/review/list.css" />
 
 
-<div id="container" >
+<div id="container" style="padding-top:30px; background-color: #dfe0e4;" >
 	<div id="search"
 		style="border: 0px solid blue; width: 60%; margin: auto; background-color: #fff; border-radius: 0.8rem; height: 180px;">
 		<div>
-			<div>
-				<div style="font-weight:bold;">이용후기 관리</div>
-			</div>
-			<!-- <div id="word" style="width: 12%; margin-left: 22%;">
-				<div style="font-size: 13pt;">후기 검색</div>
-			</div> -->
+		<br>
+			<div style="font-weight:bold; margin-bottom:3%;">이용후기 관리</div>
 		</div>
 		<form>
 			<div id="searchBar"
@@ -430,7 +426,7 @@
 	
 				<input type="text" name="searchWord" placeholder="내용을 입력하세요."
 					size="60"
-					style="border-radius: 60px; border: 2px solid #e0e0e0; height: 50px; margin-right: 1%;" value="${searchWord}"/>
+					style="border-radius: 60px; border: 2px solid #e0e0e0; height: 50px; margin-right: 1%; padding-inline-start: 1rem;" value="${searchWord}"/>
 				<button id="searchIcon" style="background-color: #1668e3;">
 					<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16"
 						style="min-inline-size: 1.5rem;  transform: translate(-4px);"
@@ -450,37 +446,37 @@
 				<div style="display: flex;">
 					<%-- left side --%>
 							<div style="border: solid 0px red; width: 35%;">
-								<div style="margin-top:10%;"><span style="font-size: 0.875rem;  margin-left:50%;">${requestScope.gettotalByRate}개 실제 이용 고객 후기</span></div>
-					            <div class="rating" style="margin-top: 3%; width:40%; margin-left:10%;">
+								<div style="margin-top:10%;"><span style="font-size: 0.875rem; font-size:14pt; margin-left:10%;">${requestScope.gettotalByRate}개 실제 이용 고객 후기</span></div>
+					            <div class="rating" style="margin-top: 3%; width:80%; margin-left:10%;">
 					               <div class="progressbar_1 progress_wrap">                   
-					                  <h5 class="c_txt_sm">
-					                  10 - 훌륭해요 <span style="float: right;">${requestScope.rv_cnt_byRate.TEN}</span>
+					                  <h5 class="c_txt_sm" style="font-size:11pt;">
+					                  10 - 훌륭해요 <span style="float: right;">${requestScope.rv_cnt_byRate.ten}</span>
 					                 </h5>
-					                   <progress id="progress" value="${requestScope.rv_cnt_byRate.TEN}" min="0" max="${requestScope.gettotalByRate}"></progress>         
+					                   <progress id="progress" style="width:100%;" value="${requestScope.rv_cnt_byRate.ten}" min="0" max="${requestScope.gettotalByRate}"></progress>         
 					               </div>
 					               <div class="progressbar_2 progress_wrap">
-					                  <h5 class="c_txt_sm">
-					                     8 - 좋아요 <span style="float: right;">${requestScope.rv_cnt_byRate.EIGHT}</span>
+					                  <h5 class="c_txt_sm"  style="font-size:11pt;">
+					                     8 - 좋아요 <span style="float: right;">${requestScope.rv_cnt_byRate.eight}</span>
 					                  </h5>
-					                  <progress id="progress" value="${requestScope.rv_cnt_byRate.EIGHT}" min="0" max="${requestScope.gettotalByRate}"></progress>
+					                  <progress id="progress" style="width:100%;" value="${requestScope.rv_cnt_byRate.eight}" min="0" max="${requestScope.gettotalByRate}"></progress>
 					               </div>
 					               <div class="progressbar_3 progress_wrap">
-					                  <h5 class="c_txt_sm">
-					                     6 - 괜찮아요 <span style="float: right;">${requestScope.rv_cnt_byRate.SIX}</span>
+					                  <h5 class="c_txt_sm"  style="font-size:11pt;">
+					                     6 - 괜찮아요 <span style="float: right;">${requestScope.rv_cnt_byRate.six}</span>
 					                  </h5>
-					                  <progress id="progress" value="${requestScope.rv_cnt_byRate.SIX}" min="0" max="${requestScope.gettotalByRate}"></progress>
+					                  <progress id="progress" style="width:100%;" value="${requestScope.rv_cnt_byRate.six}" min="0" max="${requestScope.gettotalByRate}"></progress>
 					               </div>
 					               <div class="progressbar_4 progress_wrap">
-					                  <h5 class="c_txt_sm">
-					                     4 - 별로에요 <span style="float: right;">${requestScope.rv_cnt_byRate.FOUR}</span>
+					                  <h5 class="c_txt_sm"  style="font-size:11pt;">
+					                     4 - 별로에요 <span style="float: right;">${requestScope.rv_cnt_byRate.four}</span>
 					                  </h5>
-					                  <progress id="progress" value="${requestScope.rv_cnt_byRate.FOUR}" min="0" max="${requestScope.gettotalByRate}"></progress>
+					                  <progress id="progress" style="width:100%;" value="${requestScope.rv_cnt_byRate.four}" min="0" max="${requestScope.gettotalByRate}"></progress>
 					               </div>
 					               <div class="progressbar_5 progress_wrap">
-					                  <h5 class="c_txt_sm">
-					                     2 - 너무 별로에요<span style="float: right;">${requestScope.rv_cnt_byRate.TWO}</span>
+					                  <h5 class="c_txt_sm"  style="font-size:11pt;">
+					                     2 - 너무 별로에요<span style="float: right;">${requestScope.rv_cnt_byRate.two}</span>
 					                  </h5>
-					                  <progress id="progress" value="${requestScope.rv_cnt_byRate.TWO}" min="0" max="${requestScope.gettotalByRate}"></progress>
+					                  <progress id="progress" style="width:100%;" value="${requestScope.rv_cnt_byRate.two}" min="0" max="${requestScope.gettotalByRate}"></progress>
 					               
 					               <input type="hidden" id="review" value="${requestScope.gettotalByRate}" >
 					               <input type="hidden" id="comment" value="${requestScope.gettotalComment}" >
@@ -488,16 +484,21 @@
 					               
 					               </div>
 					               
-					               
-					               <div style="margin-top:40%; width:190%;" id="chart"></div>
+					             
 					               
 					            </div>
+					             
+					            
+					  <div style="width:54%; padding-left:10%;">
+					               <div style="margin-top:40%; width:190%;" id="chart"></div>
+					  </div>
 					</div>
+
 
 
 					<%-- right side --%>
 					<c:if test="${not empty requestScope.commentList}">
-						<div style="border: solid 0px blue; width: 65%;">
+						<div style="padding: 1rem; border: solid 0px blue; width: 65%;">
 
 							<c:forEach var="comment" items="${requestScope.commentList}"
 								varStatus="status">
@@ -521,27 +522,25 @@
 									<div>
 										<c:if test="${comment.RV_DEPTHNO == 0}">
 
-											<div>
+											<div style="display: grid; gap: 1rem;">
 												<div style="font-size:15pt; font-weight:bold;">${comment.FK_RV_RATING}/10-
 													${comment.RV_RATING_DESC}</div>
-												<br> <br>
-												<div>${comment.FK_USERID}</div>
-												<div>${comment.RV_REGDATE}</div>
-												<br>
-												<div>${comment.RV_CONTENT}</div>
-												<div>${comment.RV_REGDATE}${comment.livedate}숙박함</div>
-
-
+												<div>
+													<div style="font-size: 0.75rem font-weight: 600;">${comment.FK_USERID}</div>
+													<div style="font-size: 0.75rem; font-weight: 200;">${comment.RV_REGDATE}</div>												
+												</div>
+												<div style="font-size: 0.875rem;">${comment.RV_CONTENT}</div>
+												<div style="font-size: 0.75rem; font-weight: 200;">${comment.RV_REGDATE}${comment.livedate}숙박함</div>
+												
 											</div>
 
-											<div style="margin-top:3%; border-bottom: 1px solid #dfe0e4;">
+											<div style="padding: 1rem 0; border-bottom: 1px solid #dfe0e4;">
 
 												<button
 													style="width: 15%; height: 30px; border: #fff; background-color: #1668e3; color: #fff; border-radius: 2500rem;"
 													type="button" id="clickHere${status.count}"
 													class="btn_answer">답글 쓰기</button>
 
-												<br> <br>
 											</div>
 
 										</c:if>
@@ -550,18 +549,17 @@
 
 										<div>
 											<c:if test="${comment.RV_DEPTHNO > 0}">
-												<div style="border-bottom: 1px solid #dfe0e4;">
-													<br>
+												<div style="border-bottom: 1px solid #dfe0e4; display: flex; flex-direction: column; gap: 1rem; padding: 0 0 1rem 0;">
 													<div>
-														<div>${firstFourChars}: ${comment.LG_NAME},
-															${comment.RV_REGDATE}</div>
+														<div style="font-size: 0.75rem, font-weight: 600;">${firstFourChars}: ${comment.LG_NAME}</div>
+														<div style="font-size: 0.75rem; font-weight: 200;">${comment.RV_REGDATE}</div>
 													</div>
 
 													<div>
-														<div>${comment.RV_CONTENT}</div>
+														<div style="font-size: 0.875rem;">${comment.RV_CONTENT}</div>
 													</div>
-													<br>
-													<div style="display: flex;"></div>
+													
+													<div style="display: flex;">
 													<button
 														style="width: 10%; margin-right: 1.25rem; height: 30px; border: #fff; background-color: #1668e3; color: #fff; border-radius: 2500rem;"
 														type="button" id="updateHere${status.count}"
@@ -569,7 +567,7 @@
 													<button
 				                                          style="width: 10%; height: 30px; border: #fff; background-color: #1668e3; color: #fff; border-radius: 2500rem;"
 				                                          type="button" class="seq_${status.index} delete">삭제</button>
-													<br> <br>
+													</div>
 
 												</div>
 
@@ -581,11 +579,8 @@
 													$(document)
 															.ready(
 																	function() {
-																		console
-																				.log("clickHere${status.count-1}")
-																		$(
-																				"#clickHere${status.count-1}")
-																				.remove()
+																		console.log("clickHere${status.count-1}")
+																		$("#clickHere${status.count-1}").hide();
 																	})
 												</script>
 											</c:if> 
@@ -757,7 +752,7 @@
 
 
     <%-- === #122. 페이지바 보여주기 === --%>
-    <div align="center" style="border: solid 0px gray; width: 80%; margin: 30px auto;"> 
+    <div align="center" style="border: solid 0px gray;width: 80%;margin: 30px auto 0 auto;padding-bottom: 3%;"> 
         ${requestScope.pageBar}
     </div>
     

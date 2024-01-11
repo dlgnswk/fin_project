@@ -556,12 +556,17 @@
 	
 	// 결제 성공하면 각각의 method로 보내주기
 	function successPayment(){
+		var n = 0;
 		
-		// DB tbl_reservation에 예약내역 isnert 하기 
-		goReservation_DB_Update();
-		
-		// 결제 완료페이지로 이동
-		gopaymentConfirm();
+		if(n == 0){
+			// DB tbl_reservation에 예약내역 isnert 하기 
+			goReservation_DB_Update();
+			n = 1;
+		}
+		if(n==1){
+			// 결제 완료페이지로 이동
+			gopaymentConfirm();
+		}
 		
 	} // end of successPayment()-----------------
 	
@@ -572,17 +577,20 @@
 	// tbl_point에 insert 하기
 	function goReservation_DB_Update(){
 		
+		alert("goReservation_DB_Update 들어감!");
+		
 		const queryString = $("form[name='frm_payment_exp']").serialize();
 	       
 			$("form[name='frm_payment_exp']").ajaxForm({
 	    		url:"<%= ctxPath%>/payment/reservation.exp",
 				data:queryString,
 				type:"get",
-			 	async:true,			 
+			 	async:false,			 
 			 	dataType:"json",
 			 	enctype:"multipart/form-data",
 				success:function(json){
-					alert(JSON.stringify(json)); 
+					//alert("성공?!");
+					//alert(JSON.stringify(json)); //==============================
 				 
 			 	},
 			 
