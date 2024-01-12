@@ -814,11 +814,12 @@
 					$('#mycontent > div > div.my_wish_travel_list.my_travel_content > div > div > div.my_wish_travel_img > img').css('filter', '');
 	    		});
 	         	
-	    		const reviewEditModal = document.getElementById('reviewEditModal');
+	    		const reviewWriteModal = document.getElementById('reviewWriteModal');
 	    	    window.addEventListener('click', function (e) { // 모달 외의 body 클릭 시 모달창 display:none
-	    	        if (e.target === reviewEditModal) {
+	    	        if (e.target === reviewWriteModal) {
 	    	        	$(".reviewWriteModal").fadeOut();
 		    			$("body").removeClass("modal-open"); // body에서 modal-open 클래스 제거
+
 		    			
 		    			// 배경색 없애기
 		    			$('#headerOfheader > div > section').css('background-color', '');
@@ -838,7 +839,9 @@
 				
 	    		// 모달이 열릴 때 초기 상태 설정 함수 호출
 	            setInitialRating();
-	    		 	   
+	    		
+	    		
+	    		
 	    	    
 	        },// end of success
 	        error: function(request, status, error){
@@ -877,6 +880,9 @@ function setInitialRating() {
 
        
     });
+    
+    
+    
 }
 </script>
 
