@@ -118,10 +118,10 @@ public interface CommentService {
 	* @작성자   : 먕지 
 	* @변경이력  : 
 	* @Method 설명 :  판매자 총 리뷰갯수
-	* @param paraMap
+	* @param r_paraMap
 	* @return 
 	*/
-	int gettotalComment(Map<String, Object> paraMap);
+	int gettotalComment(Map<String, String> r_paraMap);
 
 
 	/** 
@@ -133,7 +133,7 @@ public interface CommentService {
 	* @param r_paraMap
 	* @return 
 	*/
-	Map<String, String> getRvcntByRate2(Map<String, Object> paraMap);
+	Map<String, String> getRvcntByRate2(Map<String, String> r_paraMap);
 
 	/** 
 	* @Method Name  : gettotalByRate 
@@ -144,7 +144,7 @@ public interface CommentService {
 	* @param paraMap
 	* @return 
 	*/
-	int gettotalByRate(Map<String, Object> paraMap);
+	int gettotalByRate(Map<String, String> r_paraMap);
 
 	/** 
 	* @Method Name  : get__lodge_Id 
@@ -157,7 +157,7 @@ public interface CommentService {
 	*/
 	
 	// lodge_id를 가져는 메소드
-	List<LodgeVO> get__lodge_Id(String userId);
+	String get__lodge_Id(String userId);
 
 	
 
