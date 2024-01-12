@@ -227,7 +227,7 @@ function goViewChatList() {
 						v_html += '<div class="chat_cmt_me">';
 						v_html += '<span class="date_me">' + item.reply_date.substr(11) + '</span>';
 						v_html += '<div class="cmt_me">'+item.reply_comment+'</div>';
-					   	v_html += '</div>';	
+					   	v_html += '</div><br>';	
 					}
 					
 				});
