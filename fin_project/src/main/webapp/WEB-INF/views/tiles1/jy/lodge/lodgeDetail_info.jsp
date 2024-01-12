@@ -1407,7 +1407,7 @@
 							<div>
 								<ul class="c_grid" style="gap: 0.1rem;" >
 									<c:if test="${requestScope.lodgeinfo.FK_SPA_TYPE ne 0}">
-										<li class="c_txt-300 c_li_dot">${requestScope.lodgeinfo.spa_desc}</li>
+										<li class="c_txt-300 c_li_dot">${requestScope.lodgeinfo.SPA_DESC}</li>
 									</c:if>
 									<c:if test="${not empty requestScope.pool_opt_list}">
 										<c:forEach var="pool" items="${requestScope.pool_opt_list}">
