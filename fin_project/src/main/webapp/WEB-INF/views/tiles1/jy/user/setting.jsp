@@ -167,16 +167,18 @@ function goEditPw() {
          <div class="uitk-text uitk-type-300 uitk-text-default-theme uitk-spacing uitk-spacing-margin-blockstart-two">자주 사용하지 않는 기기에서 로그아웃하여 안전한 비밀번호로 계정을 보호해 주세요.</div>
         </div>
        </div>
+       
        <div class="uitk-layout-flex uitk-layout-flex-flex-direction-column uitk-layout-flex-gap-four uitk-spacing uitk-spacing-padding-blockstart-six">
         <div class="uitk-layout-grid uitk-layout-grid-has-auto-columns uitk-layout-grid-has-space uitk-layout-grid-display-grid uitk-layout-flex-item" style="--uitk-layoutgrid-auto-columns: minmax(var(--uitk-layoutgrid-egds-size__0x), 1fr); --uitk-layoutgrid-column-gap: var(--uitk-layoutgrid-space-four); --uitk-layoutgrid-row-gap: var(--uitk-layoutgrid-space-four); max-inline-size: 332px;">
+         <%-- 
          <div class="uitk-card uitk-card-roundcorner-all uitk-card-has-border uitk-card-has-link uitk-card-has-primary-theme">
           <div class="uitk-layout-flex uitk-layout-flex-justify-content-space-between">
            <div class="uitk-card-content-section uitk-card-content-section-padded-block-start uitk-card-content-section-padded-block-end uitk-card-content-section-padded-inline-start uitk-layout-flex-item-align-self-center uitk-layout-flex-item uitk-layout-flex-item-flex-grow-0">
-           </div>
+           </div>     
            <div class="uitk-card-content-section uitk-card-content-section-padded uitk-layout-flex-item uitk-layout-flex-item-flex-grow-1 truncate">
             <h3 class="uitk-heading uitk-heading-6">이메일</h3>
             <div class="uitk-text truncate uitk-type-400 uitk-text-default-theme">${sessionScope.loginuser.userid}</div>
-           </div>
+           </div>          
            <div class="uitk-card-content-section uitk-card-content-section-padded-block-start uitk-card-content-section-padded-block-end uitk-card-content-section-padded-inline-end uitk-layout-flex-item-align-self-center uitk-layout-flex-item uitk-layout-flex-item-flex-grow-0">
             <svg class="uitk-icon uitk-icon-directional" aria-describedby="chevron_right-description" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
              <desc id="chevron_right-description">chevron</desc>
@@ -186,6 +188,7 @@ function goEditPw() {
            </div>
            <a target="_self" href="/verifyotp?path=CHANGE_EMAIL&amp;redirectTo=/account/settings/change-email" rel="noreferrer" class="uitk-card-link"><span class="is-visually-hidden">이메일 chs048@naver.com</span></a>
           </div>
+          --%>
           <div class="uitk-card uitk-card-roundcorner-all uitk-card-has-border uitk-card-has-link uitk-card-has-primary-theme">
            <div class="uitk-layout-flex uitk-layout-flex-justify-content-space-between">
             <div class="uitk-card-content-section uitk-card-content-section-padded-block-start uitk-card-content-section-padded-block-end uitk-card-content-section-padded-inline-start uitk-layout-flex-item-align-self-center uitk-layout-flex-item uitk-layout-flex-item-flex-grow-0"></div>

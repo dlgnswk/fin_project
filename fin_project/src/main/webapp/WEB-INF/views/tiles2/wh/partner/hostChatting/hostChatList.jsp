@@ -97,7 +97,7 @@ function goViewHostChat(fk_userid) {
    
 	  
 	  <c:if test="${not empty requestScope.chatHostRoomList}">
-	  <div style="height:350px; max-height: 350px; overflow: auto;">
+	  <div style="height:400px; overflow: auto;">
 		  <c:forEach var="chatvo" items="${requestScope.chatHostRoomList}">
 			
 			   <div class="list" onclick="goViewHostChat('${chatvo.fk_userid}')">

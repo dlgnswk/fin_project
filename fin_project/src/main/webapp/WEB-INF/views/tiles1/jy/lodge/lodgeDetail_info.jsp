@@ -2780,9 +2780,11 @@
 	                    </div>    
 					</c:forEach>                   
                    	<br>
+                   	<%--
                 	<div style="display: flex; justify-content: center;">
 					    <button type="button" style="width: 30%; height: 30px; border: 1px solid black; margin-bottom: 5%; background-color: #fff; color: #1668e3; border-radius: 2500rem;">이용 후기 더보기</button>
 					</div>
+					 --%>
 					<br>
 				</div>
 			</div>
