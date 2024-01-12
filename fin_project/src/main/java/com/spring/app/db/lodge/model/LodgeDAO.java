@@ -250,6 +250,21 @@ public interface LodgeDAO {
 
 	// rm_seq에 해당하는 객실의 정보를 가져오기
 	RoomVO changeGetRoomInfo(String rm_seq);
+
+	// 입력된 주방 옵션 가져오기
+	List<String> changeGetkitchenOpt(String rm_seq);
+
+	// 입력된 객실 다과 옵션 가져오기
+	List<String> changeGetfk_snk_opt_no(String rm_seq);
+
+	// 입력된 객실 엔터테인먼트 옵션 가져오기
+	List<String> changeGetfk_ent_opt_no(String rm_seq);
+
+	// 입력된 온도조절기 옵션 가져오기
+	List<String> changeGetfk_tmp_opt_no(String rm_seq);
+
+	// 입력된 욕실 옵션 가져오기
+	List<String> changeGetfk_bath_opt_no(String rm_seq);
 	
 
 }

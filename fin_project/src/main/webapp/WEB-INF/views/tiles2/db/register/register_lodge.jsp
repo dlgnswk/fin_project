@@ -30,6 +30,345 @@
 		$("div.use_time").hide();
 		$("div.use_time").find("select").prop("disabled",true);
 		$("div.use_time").find("input").prop("disabled",true);
+
+		// 호텔 등급 (1성급 2성급) 선택하기
+		$("div.select_hotel_star").hide();
+		
+		
+		// 숙박시설 수정 정보 -시작-
+		if( "${requestScope.lovo.lodge_id}" != "" &&  "${requestScope.lovo.lodge_id}" != null) {
+			
+			$("input[name='lg_name']").val("${requestScope.lovo.lg_name}");
+			$("input[name='lg_en_name']").val("${requestScope.lovo.lg_en_name}");
+			$("input[name='lg_postcode']").val("${requestScope.lovo.lg_postcode}");
+			$("input[name='lg_address']").val("${requestScope.lovo.lg_address}");
+			$("input[name='lg_detailaddress']").val("${requestScope.lovo.lg_detailaddress}");
+			$("input[name='lg_extraaddress']").val("${requestScope.lovo.lg_extraaddress}");
+			
+			$("input[name='lg_latitude']").val("${requestScope.lovo.lg_latitude}");
+			$("input[name='lg_longitude']").val("${requestScope.lovo.lg_longitude}");
+			$("input[name='lg_area']").val("${requestScope.lovo.lg_area}");
+			$("input[name='lg_area_2']").val("${requestScope.lovo.lg_area_2}");
+			
+			// 호텔 타입, 호텔 성급
+			let fk_lodge_type = $("select[name='fk_lodge_type']");
+			fk_lodge_type.val("${requestScope.lovo.fk_lodge_type}");
+			if(fk_lodge_type.val() == 0) {
+				$("div.select_hotel_star").show();
+				$("select[name='lg_hotel_star']").val("${requestScope.lovo.lg_hotel_star}");
+				
+			}
+			else {
+				$("div.select_hotel_star").hide();
+			}
+			
+			$("input[name='lg_qty']").val("${requestScope.lovo.lg_qty}");
+			$("select[name='fk_cancel_opt']").val("${requestScope.lovo.fk_cancel_opt}");
+			
+			
+			// 프론트 데스트 운영시간 -시작- 
+			let fd_status = $("input[name='fd_status']");
+			fd_status.val("${requestScope.lovo.fd_status}");
+			
+			if(fd_status.val() == 1) {
+				fd_status.closest(".__data").find(".y_btn").click();
+				let y_btn_after = fd_status.closest(".__data").next(".y_btn_after");
+				
+				let fd_time= "${requestScope.lovo.fd_time}".split(" ~ ");
+				
+				y_btn_after.find(".start_time").val(fd_time[0]);
+				y_btn_after.find(".end_time").val(fd_time[1]);
+				
+			//	console.log(fd_time);
+			}
+			else {
+				fd_status.closest(".__data").find(".n_btn").click();
+			}
+			// 프론트 데스트 운영시간 -끝-
+			
+			$("select[name='fk_s_checkin_type']").val("${requestScope.lovo.fk_s_checkin_type}");
+			$("input[name='lg_checkin_start_time']").closest(".__data").find(".start_time").val("${requestScope.lovo.lg_checkin_start_time}")
+			
+			// lg_checkin_end_time
+			
+			$("select[name='lg_checkout_time']").val("${requestScope.lovo.lg_checkout_time}");
+			$("select[name='lg_age_limit']").val("${requestScope.lovo.lg_age_limit}");
+			
+			// 인터넷 옵션 -시작-
+			let lg_internet_yn= $("input[name='lg_internet_yn']");
+			lg_internet_yn.val("${requestScope.lovo.lg_internet_yn}")
+			if(lg_internet_yn.val() == "1") {
+				lg_internet_yn.parent().find(".y_btn").click();
+				
+				let y_btn_after = lg_internet_yn.closest(".__data").next(".y_btn_after");
+				let checkbox_text= y_btn_after.find(".checkbox_text");
+				let json = JSON.parse('${requestScope.internet_Json}');
+				
+				$.each(json, function(index, item){
+					
+					$.each(checkbox_text, function(idx, elmt){
+						if(item.fk_inet_opt_no == $(elmt).val()) {
+							$(elmt).prop("checked", true);
+						}
+					});
+					
+				}); // end of $.each(json, function(index, item)
+				
+			} else {
+				lg_internet_yn.parent().find(".n_btn").click();							
+			}
+			// 인터넷 옵션 -끝-
+			
+			
+			// 주차장 옵션 -시작-
+			let lg_park_yn= $("input[name='lg_park_yn']");
+			lg_park_yn.val("${requestScope.lovo.lg_park_yn}")
+			if(lg_park_yn.val() == "1") {
+				lg_park_yn.parent().find(".y_btn").click();
+				
+				let y_btn_after = lg_park_yn.closest(".__data").next(".y_btn_after");
+				let checkbox_text= y_btn_after.find(".checkbox_text");
+				let json = JSON.parse('${requestScope.park_Json}');
+				
+				$.each(json, function(index, item){
+					
+					$.each(checkbox_text, function(idx, elmt){
+						if(item.fk_park_opt_no == $(elmt).val()) {
+							$(elmt).prop("checked", true);
+						}
+					});
+					
+				}); // end of $.each(json, function(index, item)
+			} else {
+				lg_park_yn.parent().find(".n_btn").click();							
+			}
+			// 주차장 옵션 -끝-
+			
+			// 아침식사 제공여부
+			let lg_breakfast_yn= $("input[name='lg_breakfast_yn']");
+			lg_breakfast_yn.val("${requestScope.lovo.lg_breakfast_yn}")
+			if(lg_breakfast_yn.val() == "1") {
+				lg_breakfast_yn.parent().find(".y_btn").click();
+			} else {
+				lg_breakfast_yn.parent().find(".n_btn").click();							
+			}
+			
+			
+			// 다이닝 옵션 -시작-
+			let lg_dining_place_yn= $("input[name='lg_dining_place_yn']");
+			lg_dining_place_yn.val("${requestScope.lovo.lg_dining_place_yn}")
+			if(lg_dining_place_yn.val() == "1") {
+				lg_dining_place_yn.parent().find(".y_btn").click();
+				
+				let y_btn_after = lg_dining_place_yn.closest(".__data").next(".y_btn_after");
+				let checkbox_text= y_btn_after.find(".checkbox_text");
+				let json = JSON.parse('${requestScope.dining_Json}');
+				
+				$.each(json, function(index, item){
+					
+					$.each(checkbox_text, function(idx, elmt){
+						if(item.fk_din_opt_no == $(elmt).val()) {
+							$(elmt).prop("checked", true);
+						}
+					});
+					
+				}); // end of $.each(json, function(index, item)
+				
+			} else {
+				lg_dining_place_yn.parent().find(".n_btn").click();							
+			}
+			// 다이닝 옵션 -끝-			
+			
+			
+			// 수영장 옵션 -시작-
+			let lg_pool_yn= $("input[name='lg_pool_yn']");
+			lg_pool_yn.val("${requestScope.lovo.lg_pool_yn}")
+			if(lg_pool_yn.val() == "1") {
+				lg_pool_yn.parent().find(".y_btn").click();
+				
+				let y_btn_after = lg_pool_yn.closest(".__data").next(".y_btn_after");
+				let checkbox_text= y_btn_after.find(".checkbox_text");
+				let json = JSON.parse('${requestScope.pool_Json}');
+				
+				$.each(json, function(index, item){
+					
+					$.each(checkbox_text, function(idx, elmt){
+						if(item.fk_pool_opt_no == $(elmt).val()) {
+							$(elmt).prop("checked", true);
+						}
+					});
+					
+				}); // end of $.each(json, function(index, item)					
+				
+			} else {
+				lg_pool_yn.parent().find(".n_btn").click();							
+			}
+			// 수영장 옵션 -끝-			
+			
+			$("select[name='fk_spa_type']").val("${requestScope.lovo.fk_spa_type}");
+			
+			
+			// 반려동물 옵션 -시작-
+			let lg_pet_yn= $("input[name='lg_pet_yn']");
+			lg_pet_yn.val("${requestScope.lovo.lg_pet_yn}")
+			if(lg_pet_yn.val() == "1") {
+				lg_pet_yn.parent().find(".y_btn").click();
+			} else {
+				lg_pet_yn.parent().find(".n_btn").click();							
+			}
+			// 반려동물 옵션 -끝-				
+			
+			
+			// 장애인 옵션 -시작-
+			let lg_fac_yn= $("input[name='lg_fac_yn']");
+			lg_fac_yn.val("${requestScope.lovo.lg_fac_yn}")
+			if(lg_fac_yn.val() == "1") {
+				lg_fac_yn.parent().find(".y_btn").click();
+				
+				let y_btn_after = lg_fac_yn.closest(".__data").next(".y_btn_after");
+				let checkbox_text= y_btn_after.find(".checkbox_text");
+				let json = JSON.parse('${requestScope.facility_Json}');
+				
+				$.each(json, function(index, item){
+					
+					$.each(checkbox_text, function(idx, elmt){
+						if(item.fk_fac_opt_no == $(elmt).val()) {
+							$(elmt).prop("checked", true);
+						}
+					});
+					
+				}); // end of $.each(json, function(index, item)				
+			} else {
+				lg_fac_yn.parent().find(".n_btn").click();							
+			}
+			// 장애인 옵션 -끝-			
+			
+			
+			// 고객서비스 옵션 -시작-
+			let lg_service_yn= $("input[name='lg_service_yn']");
+			lg_service_yn.val("${requestScope.lovo.lg_service_yn}")
+			if(lg_service_yn.val() == "1") {
+				lg_service_yn.parent().find(".y_btn").click();
+				
+				let y_btn_after = lg_service_yn.closest(".__data").next(".y_btn_after");
+				let checkbox_text= y_btn_after.find(".checkbox_text");
+				let json = JSON.parse('${requestScope.cusSur_Json}');
+				
+				$.each(json, function(index, item){
+					
+					$.each(checkbox_text, function(idx, elmt){
+						if(item.fk_cs_opt_no == $(elmt).val()) {
+							$(elmt).prop("checked", true);
+						}
+					});
+					
+				}); // end of $.each(json, function(index, item)
+			} else {
+				lg_service_yn.parent().find(".n_btn").click();							
+			}
+			// 고객서비스 옵션 -끝-
+			
+			
+			// 룸서비스 옵션 -시작-
+			let lg_rm_service_yn= $("input[name='lg_rm_service_yn']");
+			lg_rm_service_yn.val("${requestScope.lovo.lg_rm_service_yn}")
+			if(lg_rm_service_yn.val() == "1") {
+				lg_rm_service_yn.parent().find(".y_btn").click();
+				
+				let y_btn_after = lg_rm_service_yn.closest(".__data").next(".y_btn_after");
+				let checkbox_text= y_btn_after.find(".checkbox_text");
+				let json = JSON.parse('${requestScope.roomSurvice_Json}');
+				
+				$.each(json, function(index, item){
+					
+					$.each(checkbox_text, function(idx, elmt){
+						if(item.fk_rmsvc_opt_no == $(elmt).val()) {
+							$(elmt).prop("checked", true);
+						}
+					});
+					
+				}); // end of $.each(json, function(index, item)
+			} else {
+				lg_rm_service_yn.parent().find(".n_btn").click();							
+			}
+			// 룸서비스 옵션 -끝-			
+			
+			// 해변 
+			let lg_beach_yn= $("input[name='lg_beach_yn']");
+			lg_beach_yn.val("${requestScope.lovo.lg_beach_yn}")
+			if(lg_beach_yn.val() == "1") {
+				lg_beach_yn.parent().find(".y_btn").click();
+			} else {
+				lg_beach_yn.parent().find(".n_btn").click();							
+			}
+
+			// 흡연
+			let lg_smoke_yn= $("input[name='lg_smoke_yn']");
+			lg_smoke_yn.val("${requestScope.lovo.lg_smoke_yn}")
+			if(lg_smoke_yn.val() == "1") {
+				lg_smoke_yn.parent().find(".y_btn").click();
+			} else {
+				lg_smoke_yn.parent().find(".n_btn").click();							
+			}
+			
+			
+			// 비즈니스 옵션 -시작-
+			let lg_business_yn= $("input[name='lg_business_yn']");
+			lg_business_yn.val("${requestScope.lovo.lg_business_yn}")
+			if(lg_business_yn.val() == "1") {
+				lg_business_yn.parent().find(".y_btn").click();
+				
+				let y_btn_after = lg_business_yn.closest(".__data").next(".y_btn_after");
+				let checkbox_text= y_btn_after.find(".checkbox_text");
+				let json = JSON.parse('${requestScope.businessRoom_Json}');
+				
+				$.each(json, function(index, item){
+					
+					$.each(checkbox_text, function(idx, elmt){
+						if(item.fk_bsns_opt_no == $(elmt).val()) {
+							$(elmt).prop("checked", true);
+						}
+					});
+					
+				}); // end of $.each(json, function(index, item)
+				
+			} else {
+				lg_business_yn.parent().find(".n_btn").click();							
+			}
+			// 비즈니스 옵션 -끝-			
+
+			
+			// 가족 옵션 -시작-
+			let lg_fa_travel_yn= $("input[name='lg_fa_travel_yn']");
+			lg_fa_travel_yn.val("${requestScope.lovo.lg_fa_travel_yn}")
+			if(lg_fa_travel_yn.val() == "1") {
+				lg_fa_travel_yn.parent().find(".y_btn").click();
+				
+				let y_btn_after = lg_fa_travel_yn.closest(".__data").next(".y_btn_after");
+				let checkbox_text= y_btn_after.find(".checkbox_text");
+				let json = JSON.parse('${requestScope.family_Json}');
+				
+				$.each(json, function(index, item){
+					
+					$.each(checkbox_text, function(idx, elmt){
+						if(item.fk_fasvc_opt_no == $(elmt).val()) {
+							$(elmt).prop("checked", true);
+						}
+					});
+					
+				}); // end of $.each(json, function(index, item)
+				
+			} else {
+				lg_fa_travel_yn.parent().find(".n_btn").click();							
+			}
+			// 가족 옵션 -끝-			
+			
+			
+			
+		}
+		// 숙박시설 수정 정보 -끝-
+		
+		
 		
 		
 		// 숙박시설ID -- lodge_id  -시작-
@@ -319,16 +658,13 @@
 		});// end of $("select.fk_pool_type").change(function()
 		// 수영장 유무에 따른 수영장 운영시간 -끝- //
 		
-		
-		
-		// 호텔 등급 (1성급 2성급) 선택하기
-		$("div.select_hotel_star").hide();
-		
+
+		// 호텔 성급
 		$("select[name='fk_lodge_type']").change(function(){
 			
 		//	$("div.select_hotel_star").hide();
 			$("div.select_hotel_star").find("select[name='lg_hotel_star']").prop("disabled",true);
-			console.log($(this).val());
+//			console.log($(this).val());
 			if( $(this).val() != "" && $(this).val() == 0 ) {
 			// 호텔을 선택한 경우 등급을 선택할 수 있다.
 				$("div.select_hotel_star").show();

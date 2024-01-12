@@ -616,7 +616,12 @@ public class TripboardController {
 			mav.addObject("loc", request.getContextPath()+"/tbview.exp?tb_seq="+tripboardvo.getTb_seq());
 			mav.setViewName("msg");
 		}
-		
+		else {
+			mav.addObject("message", "글 수정 실패!!");
+			mav.addObject("loc", request.getContextPath()+"/tbview.exp?tb_seq="+tripboardvo.getTb_seq());
+			mav.setViewName("msg");
+			
+		}
 		return mav;
 	}
 	
@@ -774,17 +779,20 @@ public class TripboardController {
     	/*
 		1. 사용자가 보낸 파일을 WAS(톰캣)의 특정 폴더에 저장해주어야 한다.
         >>>> 파일이 업로드 되어질 특정 경로(폴더)지정해주기
-		우리는 WAS 의 webapp/resources/photo_upload 라는 폴더로 지정해준다.
+		우리는 WAS 의 webapp/resources/images/ch 라는 폴더로 지정해준다.
     	 */
      
 		 // WAS 의 webapp 의 절대경로를 알아와야 한다.
-		 HttpSession session = request.getSession();
-		 String root = session.getServletContext().getRealPath("/");
-		 String path = root + "resources"+File.separator+"photo_upload";
+		 //  HttpSession session = request.getSession();
+		 //  String root = session.getServletContext().getRealPath("/");
+		 //  String path = root + "resources"+File.separator+"photo_upload";
 		 // path 가 첨부파일들을 저장할 WAS(톰캣)의 폴더가 된다.
 		 
+    	String root = "C:\\git\\fin_project\\fin_project\\src\\main\\webapp\\resources";
+    	String path = root +File.separator+"images"+File.separator+"ch";	
+    	
 		// C:\Users\82105\Desktop\ssit\java_file\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\expedia\resources\photo_upload
-		 
+		 // +/resources/images/ch
 		 File dir = new File(path);
 		 if(!dir.exists()) {
 			 dir.mkdirs();
@@ -827,7 +835,7 @@ public class TripboardController {
 	         String strURL = "";
 	         strURL += "&bNewLine=true&sFileName="+newtb_Filename; 
 	         strURL += "&sWidth="+width;
-	         strURL += "&sFileURL="+ctxPath+"/resources/photo_upload/"+newtb_Filename;
+	         strURL += "&sFileURL="+ctxPath+"/resources/images/ch/"+newtb_Filename;
 	         
 	         // === 웹브라우저 상에 사진 이미지를 쓰기 === //
 	         PrintWriter out = response.getWriter();

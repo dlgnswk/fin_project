@@ -24,9 +24,11 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.spring.app.common.FileManager;
 import com.spring.app.db.lodge.service.LodgeService;
 import com.spring.app.expedia.domain.HostVO;
+import com.spring.app.expedia.domain.LodgeVO;
 import com.spring.app.expedia.domain.RoomVO;
 
 @Controller
@@ -45,17 +47,103 @@ public class LodgeController {
 	public String requiredHostLogin_register_lodge(HttpServletRequest request,
 												   HttpServletResponse response) {
 		
-		// !!!! 로그인 한 사용자(판매자)에게 사용자등록번호를 받아와 넣어줘야 한다.
-		// 관리자 승인 유무 체크
+		
+		// ================= AOP 로그인한 사용자의 정보 -시작- ==================== //
 		HttpSession session = request.getSession();
 		HostVO loginhost = (HostVO) session.getAttribute("loginhost");
-		
 		String fk_h_userid = loginhost.getH_userid();
-		
-	//	System.out.println("fk_h_userid => "+ fk_h_userid); // 현재 로그인 호스트의 아이디 이다.
-		
 		// 현재 로그인한 판매자의 ID로 숙박시설의 lodge_id를 가져온다.
 		String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
+		// ================= AOP 로그인한 사용자의 정보 -끝- ====================== //
+		
+		LodgeVO lovo = service.getLodgeInfo(fk_h_userid);
+		
+		System.out.println(new Gson().toJson(lovo));
+		
+		Gson gson = new Gson();
+		if(fk_lodge_id != null) {
+			
+			if("1".equals(lovo.getLg_internet_yn()) ) {
+				// === tbl_inet테이블에 기존에 입력되어 있는 인터넷 옵션 가져오기 === //
+				List<Map<String,String>> internetInsertDataMapList = service.getInternetService(fk_lodge_id);
+				String internet_Json =gson.toJson(internetInsertDataMapList);
+			//	System.out.println(internet_Json);
+				// [{"fk_inet_opt_no":"0","inet_seq":"112","fk_lodge_id":"CNTP0003"},{"fk_inet_opt_no":"1","inet_seq":"113","fk_lodge_id":"CNTP0003"}]
+				request.setAttribute("internet_Json", internet_Json);
+			}
+
+			if("1".equals(lovo.getLg_park_yn()) ) {
+				// === tbl_park테이블에 기존에 입력되어 있는 주차장 옵션 가져오기 === //
+				List<Map<String,String>> parkOptionInsertDataMapList = service.getParkOptionData(fk_lodge_id);
+				String park_Json =gson.toJson(parkOptionInsertDataMapList);
+				System.out.println(park_Json);
+				// [{"fk_inet_opt_no":"0","inet_seq":"112","fk_lodge_id":"CNTP0003"},{"fk_inet_opt_no":"1","inet_seq":"113","fk_lodge_id":"CNTP0003"}]
+				request.setAttribute("park_Json", park_Json);
+			}
+			
+			if("1".equals(lovo.getLg_dining_place_yn()) ) {
+				// === tbl_din 테이블에 기존에 입력되어 있는 다이닝 종류 가져오기 === //
+				List<Map<String,String>> diningTypeInsertDataMapList = service.getDiningTypeData(fk_lodge_id);
+				String dining_Json =gson.toJson(diningTypeInsertDataMapList);
+				System.out.println(dining_Json);
+				// [{"fk_inet_opt_no":"0","inet_seq":"112","fk_lodge_id":"CNTP0003"},{"fk_inet_opt_no":"1","inet_seq":"113","fk_lodge_id":"CNTP0003"}]
+				request.setAttribute("dining_Json", dining_Json);
+			}
+			
+			if("1".equals(lovo.getLg_pool_yn()) ) {
+				// === tbl_pool 테이블에 기존에 입력되어 있는 수영장 타입 가져오기 === //
+				List<Map<String,String>> poolTypeDataMapList = service.getPoolTypeData(fk_lodge_id);
+				String pool_Json =gson.toJson(poolTypeDataMapList);
+				System.out.println(pool_Json);
+				// [{"fk_inet_opt_no":"0","inet_seq":"112","fk_lodge_id":"CNTP0003"},{"fk_inet_opt_no":"1","inet_seq":"113","fk_lodge_id":"CNTP0003"}]
+				request.setAttribute("pool_Json", pool_Json);
+			}
+			
+			if("1".equals(lovo.getLg_fac_yn()) ) {
+				// === tbl_fac 테이블에 기존에 입력되어 있는 장애인 편의시설 종류 가져오기 === //
+				List<Map<String,String>> facilityTypeInsertDataMapList = service.getFacilityTypeData(fk_lodge_id);
+				String facility_Json =gson.toJson(facilityTypeInsertDataMapList);
+				System.out.println(facility_Json);
+				// [{"fk_inet_opt_no":"0","inet_seq":"112","fk_lodge_id":"CNTP0003"},{"fk_inet_opt_no":"1","inet_seq":"113","fk_lodge_id":"CNTP0003"}]
+				request.setAttribute("facility_Json", facility_Json);
+			}
+			
+			if("1".equals(lovo.getLg_service_yn()) ) {
+				// === tbl_cs 테이블에 기존에 입력되어 있는 고객서비스 종류 가져오기 === //
+				List<Map<String,String>> CusSurTypeInsertDataMapList = service.getCustomerSurviceTypeData(fk_lodge_id);
+				String cusSur_Json =gson.toJson(CusSurTypeInsertDataMapList);
+				System.out.println(cusSur_Json);
+				// [{"fk_inet_opt_no":"0","inet_seq":"112","fk_lodge_id":"CNTP0003"},{"fk_inet_opt_no":"1","inet_seq":"113","fk_lodge_id":"CNTP0003"}]
+				request.setAttribute("cusSur_Json", cusSur_Json);
+			}
+			
+			if("1".equals(lovo.getLg_rm_service_yn()) ) {
+				// === tbl_rmsvc 테이블에 기존에 입력되어 있는 룸서비스 종류 가져오기 === //
+				List<Map<String,String>> RoomSurviceTypeInsertMapList = service.getRoomSurviceTypeData(fk_lodge_id);
+				String roomSurvice_Json =gson.toJson(RoomSurviceTypeInsertMapList);
+				System.out.println(roomSurvice_Json);
+				// [{"fk_inet_opt_no":"0","inet_seq":"112","fk_lodge_id":"CNTP0003"},{"fk_inet_opt_no":"1","inet_seq":"113","fk_lodge_id":"CNTP0003"}]
+				request.setAttribute("roomSurvice_Json", roomSurvice_Json);
+			}
+			
+			if("1".equals(lovo.getLg_business_yn()) ) {
+				// === tbl_bsns 테이블에 기존에 입력되어 있는 비즈니스 종류 가져오기 === //
+				List<Map<String,String>> businessRoomTypeInsertMapList = service.getBusinessRoomTypeData(fk_lodge_id);
+				String businessRoom_Json =gson.toJson(businessRoomTypeInsertMapList);
+				System.out.println(businessRoom_Json);
+				// [{"fk_inet_opt_no":"0","inet_seq":"112","fk_lodge_id":"CNTP0003"},{"fk_inet_opt_no":"1","inet_seq":"113","fk_lodge_id":"CNTP0003"}]
+				request.setAttribute("businessRoom_Json", businessRoom_Json);
+			}
+			
+			if("1".equals(lovo.getLg_fa_travel_yn()) ) {
+				// === tbl_fasvc 테이블에 기존에 입력되어 있는 가족여행(어린이시설) 종류 가져오기 === //
+				List<Map<String,String>> familyTypeInsertMapList = service.getFamilyTypeData(fk_lodge_id);
+				String family_Json =gson.toJson(familyTypeInsertMapList);
+				System.out.println(family_Json);
+				// [{"fk_inet_opt_no":"0","inet_seq":"112","fk_lodge_id":"CNTP0003"},{"fk_inet_opt_no":"1","inet_seq":"113","fk_lodge_id":"CNTP0003"}]
+				request.setAttribute("family_Json", family_Json);
+			}
+		}
 		
 	//	System.out.println("fk_lodge_id => "+ fk_lodge_id); // 현재 로그인 호스트의 호텔아이디 이다.
 		String front_id = "";
@@ -65,7 +153,6 @@ public class LodgeController {
 			front_id = fk_lodge_id.substring(0,4);
 			back_id = fk_lodge_id.substring(4);
 		}
-		
 		
 		// == 숙박시설 유형 테이블에서 select == //
 		List<Map<String,String>> lodgeTypeMapList = service.getLodgeType();
@@ -173,6 +260,8 @@ public class LodgeController {
 		request.setAttribute("front_id", front_id);
 		request.setAttribute("back_id", back_id);
 		request.setAttribute("fk_h_userid", fk_h_userid);
+		request.setAttribute("lovo", lovo); // 기존에 등록되어 있는 시설의 정보
+		
 		
 		return "db/register/register_lodge.tiles2";
 		// /WEB-INF/views/tiles2/db/register/register_lodge.jsp
@@ -1138,17 +1227,94 @@ public class LodgeController {
 	@GetMapping(value = "/changeGetRoomInfo.exp", produces = "text/plain;charset=UTF-8") // GET 방식만 허락한 것이다.
 	public String changeGetRoomInfo(@RequestParam String rm_seq) {
 		
+		Gson gson = new Gson(); // json 객체를 문자열로 변환하기 위한 gson 
+		// JsonParser.parseString(json 형태의 문자열) 를 사용하면 json 형태의 문자열을 JsonObject 형태로 바꿀 수 있다.
+		
 		// rm_seq에 해당하는 객실의 정보를 가져오기
 		RoomVO rmvo = service.changeGetRoomInfo(rm_seq);
 		
-	//	RoomVO rmvo = service.changeGetkitchenOpt(rm_seq);
+		JsonObject jsonObj = (JsonObject) JsonParser.parseString(gson.toJson(rmvo)); // 문자열을 json 객체 변환
 		
-		Gson gson = new Gson();
-		JsonObject jsonObj = new JsonObject();
+		int rm_bathroom_cnt = 0;
+		try {
+			rm_bathroom_cnt = Integer.parseInt(rmvo.getRm_bathroom_cnt());
+		} catch (Exception e) {
+			
+		}
+		// rm_bathroom_cnt
+		// 전용욕실개수 체크
+		if( rm_bathroom_cnt > 0 ) {
+		// 욕실 옵션이 있다면
+			// 입력된 욕실 옵션 가져오기
+			List<String> opt_str_List = service.changeGetfk_bath_opt_no(rm_seq);
+			
+			JsonArray jsonArr = new JsonArray();
+			for(String opt :opt_str_List) {
+				jsonArr.add(opt);
+			}
+			jsonObj.add("bethOpt", jsonArr);
+		} // end of if( "1".equals(rmvo.getRm_kitchen_yn()) ---------------------
 		
-		String rmvo_str = gson.toJson(rmvo);
-		// ["***_arr":"{0,1,2,3,4}"]
-		// {"rm_seq":"rm-268","fk_lodge_id":"BYMB2023","rm_type":"스탠다드 킹","rm_cnt":"29","rm_bedrm_cnt":"1","rm_smoke_yn":"0","rm_size_meter":"25","rm_size_pyug":"7.56","rm_extra_bed_yn":"0","rm_single_bed":"0","rm_ss_bed":"0","rm_double_bed":"1","rm_queen_bed":"0","rm_king_bed":"0","rm_wheelchair_yn":"0","rm_bathroom_cnt":"1","rm_p_bathroom_yn":"0","rm_kitchen_yn":"0","fk_view_no":"4","rm_snack_yn":"1","rm_ent_yn":"1","rm_tmp_ctrl_yn":"1","rm_guest_cnt":"2","rm_price":"112000","rm_breakfast_yn":"0"}
+		
+		// 주방 옵션 체크
+		if( "1".equals(rmvo.getRm_kitchen_yn()) ) {
+		// 주방 옵션이 있다면
+			List<String> opt_str_List = service.changeGetkitchenOpt(rm_seq); // 입력된 주방 옵션 가져오기
+			
+			JsonArray jsonArr = new JsonArray();
+			for(String opt :opt_str_List) {
+				jsonArr.add(opt);
+			}
+			jsonObj.add("kitchenOpt", jsonArr);
+		} // end of if( "1".equals(rmvo.getRm_kitchen_yn()) ---------------------
+		
+		
+		// 객실 다과 옵션 체크
+		if( "1".equals(rmvo.getRm_snack_yn()) ) {
+		// 객실 다과 옵션이 있다면
+			// 입력된 객실 다과 옵션 가져오기
+			List<String> opt_str_List = service.changeGetfk_snk_opt_no(rm_seq); 
+			
+			JsonArray jsonArr = new JsonArray();
+			for(String opt :opt_str_List) {
+				jsonArr.add(opt);
+			}
+			jsonObj.add("snackOpt", jsonArr);
+		} // end of if( "1".equals(rmvo.getRm_snack_yn()) ) { ---------------------
+		
+		
+		// 객실 엔터테인먼트 옵션 체크
+		if( "1".equals(rmvo.getRm_ent_yn()) ) {
+		// 객실 엔터테인먼트 옵션이 있다면
+			// 입력된 객실 엔터테인먼트 옵션 가져오기
+			List<String> opt_str_List = service.changeGetfk_ent_opt_no(rm_seq); 
+			
+			JsonArray jsonArr = new JsonArray();
+			for(String opt :opt_str_List) {
+				jsonArr.add(opt);
+			}
+			jsonObj.add("entOpt", jsonArr);
+		} // end of if( "1".equals(rmvo.getRm_ent_yn()) ) {
+		
+		
+		// 온도조절기 옵션 체크
+		if( "1".equals(rmvo.getRm_tmp_ctrl_yn()) ) {
+		// 객실 엔터테인먼트 옵션이 있다면
+			// 입력된 온도조절기 옵션 가져오기
+			List<String> opt_str_List = service.changeGetfk_tmp_opt_no(rm_seq);
+			
+			JsonArray jsonArr = new JsonArray();
+			for(String opt :opt_str_List) {
+				jsonArr.add(opt);
+			}
+			jsonObj.add("tempOpt", jsonArr);
+		} // end of if( "1".equals(rmvo.getRm_tmp_ctrl_yn()) ) {
+		
+		
+		String rmvo_str= gson.toJson(jsonObj);
+	//	System.out.println(rmvo_str);
+		//	{"rm_seq":"rm-135","fk_lodge_id":"CNTP0003","rm_type":"스탠다드 더블","rm_cnt":"5","rm_bedrm_cnt":"1","rm_smoke_yn":"0","rm_size_meter":"24.8","rm_size_pyug":"7.5","rm_extra_bed_yn":"0","rm_single_bed":"0","rm_ss_bed":"0","rm_double_bed":"0","rm_queen_bed":"0","rm_king_bed":"1","rm_wheelchair_yn":"0","rm_bathroom_cnt":"1","rm_p_bathroom_yn":"0","rm_kitchen_yn":"1","fk_view_no":"0","rm_snack_yn":"1","rm_ent_yn":"0","rm_tmp_ctrl_yn":"1","rm_guest_cnt":"2","rm_price":"60000","rm_breakfast_yn":"0",
+		//	 "bethOpt":["3","4","0"],"kitchenOpt":["3","4","0"],"snackOpt":["0"],"tempOpt":["0","2"]}
 		
 		return rmvo_str;
 	} // end of public String ajax_select() ---------

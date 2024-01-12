@@ -110,8 +110,8 @@ public class CommentService_imple implements CommentService {
 
 		// 평점 별 후기 갯수 가져오기	
 		@Override
-		public Map<String, String> getRvcntByRate2(Map<String, Object> paraMap) {
-			 Map<String, String> getRvcntByRate2 = dao.getRvcntByRate2(paraMap);
+		public Map<String, String> getRvcntByRate2(Map<String, String> r_paraMap) {
+			 Map<String, String> getRvcntByRate2 = dao.getRvcntByRate2(r_paraMap);
 			return getRvcntByRate2;
 		}
 
@@ -119,23 +119,23 @@ public class CommentService_imple implements CommentService {
 
 
 		@Override
-		public int gettotalByRate(Map<String, Object> paraMap) {
-			 int gettotalByRate = dao.gettotalByRate(paraMap);
+		public int gettotalByRate(Map<String, String> r_paraMap) {
+			 int gettotalByRate = dao.gettotalByRate(r_paraMap);
 			 return gettotalByRate;
 		}
 
 
 		@Override
-		public int gettotalComment(Map<String, Object> paraMap) {
-			int gettotalComment =dao.gettotalComment(paraMap);
+		public int gettotalComment(Map<String, String> r_paraMap) {
+			int gettotalComment =dao.gettotalComment(r_paraMap);
 			return gettotalComment;
 		}
 
 
 		// lodge_id를 가져는 메소드
 		@Override
-		public List<LodgeVO> get__lodge_Id(String userId) {
-			List<LodgeVO> get__lodge_Id = dao.get__lodge_Id(userId);
+		public String get__lodge_Id(String userId) {
+			String get__lodge_Id = dao.get__lodge_Id(userId);
 			return get__lodge_Id;
 		}
 	
