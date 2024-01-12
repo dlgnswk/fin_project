@@ -13,7 +13,6 @@
 <style>
 	
 	div.review{
-	height: 280px;
 	width: 45%;
 	margin: 0 auto;
 	background-color: white;
@@ -679,8 +678,11 @@ $(document).ready(function() {
 					<div class="no_review">
 						<h4>첫 이용 후기를 작성해주세요!</h4>
 					</div>
-					<br>
-					<br> <a href="/expedia/index.exp">다음 여행 예약</a>
+					<br><br>
+					<div style="display:flex; gap: 2rem; justify-content: center;">
+						<a href="/expedia/index.exp">다음 여행 예약</a>
+						<a href="/expedia/trip.exp">리뷰쓰러가기</a>
+					</div>
 				</div>
 			</c:if>
 			

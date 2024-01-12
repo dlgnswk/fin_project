@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.app.common.MyUtil;
 import com.spring.app.expedia.domain.CommentVO;
+import com.spring.app.expedia.domain.HostVO;
 import com.spring.app.expedia.domain.LodgeVO;
 import com.spring.app.mj.comment.service.CommentService;
 
@@ -43,11 +44,19 @@ public class CommentController {
 
 
 		String searchWord = request.getParameter("searchWord");
-		String userId = request.getParameter("userid");
+		HttpSession session = request.getSession();
+	    HostVO loginhost = (HostVO)session.getAttribute("loginhost");
+	    
+		String userId = loginhost.getH_userid();
 		
+		//System.out.println(userId);
 		
 		// lodge_id를 가져는 메소드
-		// List<LodgeVO> get__lodge_Id = service.get__lodge_Id(userId);
+		String get__lodge_Id = service.get__lodge_Id(userId);
+		
+		//System.out.println("get__lodge_Id ->"+get__lodge_Id);
+		Map<String, String> r_paraMap = new HashMap<>();
+		r_paraMap.put("lodge_id", get__lodge_Id);
 		
 		
 		
@@ -65,6 +74,7 @@ public class CommentController {
 		
 		 if(searchWord == null) {
 				searchWord = "";
+				
 			 }
 				
 		 if(searchWord != null) {
@@ -84,7 +94,6 @@ public class CommentController {
 		
 		//System.out.println(lodgeIdList);
 		
-		HttpSession session = request.getSession();
 		session.setAttribute("lodgeIdList", lodgeIdList);
 		session.setAttribute("userId", userId);
 		
@@ -175,11 +184,11 @@ public class CommentController {
 		 
 		 
 		 if (commentList != null) {
-		     for (Map<String, Object> comment : commentList) {
-		            String lodge_id = (String) comment.get("FK_LODGE_ID");
-		            paraMap.put("lodge_id", lodge_id);
+		     
+		        //    String lodge_id = (String) commentList.get("FK_LODGE_ID");
+		        //    paraMap.put("lodge_id", lodge_id);
 		        //System.out.println("lodge_id");
-		    }
+		    
 		 }
 			/*
 			 * else { // 검색되어진 결과물이 존재하지 않을 경우 paraMap.put("lodge_id", "ICDU5968"); }
@@ -190,16 +199,16 @@ public class CommentController {
 
 				 
 		 if(commentList != null) {	
-			 Map<String, String> rv_cnt_byRate = service.getRvcntByRate2(paraMap);
+			 Map<String, String> rv_cnt_byRate = service.getRvcntByRate2(r_paraMap);
 			 
 			 //System.out.println(rv_cnt_byRate);
 			 //System.out.println(rv_cnt_byRate.get("six"));
 	    
 	      // 평점 총 후기 갯수구하기
-	         int gettotalByRate = service.gettotalByRate(paraMap);
+	         int gettotalByRate = service.gettotalByRate(r_paraMap);
 
 	    // 차트를 위한 판매자 총 갯수구하기  
-	         int gettotalComment = service.gettotalComment(paraMap);
+	         int gettotalComment = service.gettotalComment(r_paraMap);
 		 
 		 	      
 	      //System.out.println(rv_cnt_byRate);
@@ -492,7 +501,7 @@ public class CommentController {
 		String c_regDate = request.getParameter("c_regDate");
 		String c_seq = request.getParameter("c_seq");
 		
-		System.out.println(c_seq);
+		//System.out.println(c_seq);
 		
 		
 		

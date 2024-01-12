@@ -195,10 +195,11 @@ div._br{
 }
 
 
-input {
-	border:solid 1px ;
+input[type=text], input[type=number] {
+	border:solid 1px;
 	border-color: -internal-light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
 	border: 1px solid rgb(118, 118, 118);
+	height:30px;
 }
    
 /* input태그 number 스피너 없애기 */

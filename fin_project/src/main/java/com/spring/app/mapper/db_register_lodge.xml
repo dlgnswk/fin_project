@@ -261,14 +261,7 @@
 	
 	<!-- 기존에 입력되어있는 lodge정보 가져오기 -->
 	<select id="getLodgeInfo" parameterType="String" resultType="com.spring.app.expedia.domain.LodgeVO">
-		select lodge_id, fk_h_userid, lg_name, lg_en_name, lg_postcode
-	     , lg_address, lg_detailaddress, lg_extraaddress, lg_latitude, lg_longitude
-	     , lg_hotel_star, lg_area, lg_area_2, fk_lodge_type, lg_qty
-	     , fk_cancel_opt, fd_status, fd_time, fk_s_checkin_type, lg_checkin_start_time
-	     , lg_checkin_end_time, lg_checkout_time, lg_age_limit, lg_internet_yn, lg_park_yn
-	     , lg_breakfast_yn, lg_dining_place_yn, lg_pool_yn, lg_pet_yn, lg_pet_fare
-	     , lg_fac_yn, lg_service_yn, lg_rm_service_yn, lg_beach_yn, fk_spa_type
-	     , lg_smoke_yn, lg_business_yn, lg_fa_travel_yn, lg_status
+		select *
 		from tbl_lodge
 		where fk_h_userid = #{fk_h_userid}
 	</select>
@@ -346,9 +339,9 @@
 		
 	<!-- === tbl_din 테이블에 기존에 입력되어 있는 다이닝 종류 가져오기 === -->
 	<resultMap type="HashMap" id="getDiningTypeData_Map">
-		<result property="park_seq"			column="park_seq" 			javaType="String"/>
+		<result property="din_seq"			column="din_seq" 			javaType="String"/>
 		<result property="fk_lodge_id"		column="fk_lodge_id" 		javaType="String"/>
-		<result property="fk_park_opt_no"	column="fk_park_opt_no" 	javaType="String"/>
+		<result property="fk_din_opt_no"	column="fk_din_opt_no" 		javaType="String"/>
 	</resultMap>	
 	
 	<select id="getDiningTypeData" parameterType="String" resultMap="getDiningTypeData_Map">
@@ -918,5 +911,40 @@
 		where rm_seq = #{rm_seq}
 	</select>
 
-		
+
+	<!-- 입력된 주방 옵션 가져오기 -->
+	<select id="changeGetkitchenOpt" parameterType="String" resultType="String">
+		select fk_bath_opt_no
+		from tbl_bath
+		where fk_rm_seq = #{rm_seq}
+	</select>
+	
+	<!-- 입력된 객실 다과 옵션 가져오기 -->
+	<select id="changeGetfk_snk_opt_no" parameterType="String" resultType="String">
+		select fk_snk_opt_no
+		from tbl_snack
+		where fk_rm_seq = #{rm_seq}
+	</select>
+	
+	<!-- 입력된 객실 엔터테인먼트 옵션 가져오기 -->
+	<select id="changeGetfk_ent_opt_no" parameterType="String" resultType="String">
+		select fk_ent_opt_no
+		from tbl_ent
+		where fk_rm_seq = #{rm_seq}
+	</select>
+	
+	<!-- 입력된 온도조절기 옵션 가져오기 -->
+	<select id="changeGetfk_tmp_opt_no" parameterType="String" resultType="String">
+		select fk_tmp_opt_no
+		from tbl_tmp
+		where fk_rm_seq = #{rm_seq}
+	</select>
+	
+	<!-- 입력된 욕실 옵션 가져오기 -->
+	<select id="changeGetfk_bath_opt_no" parameterType="String" resultType="String">
+		select fk_bath_opt_no
+		from tbl_bath
+		where fk_rm_seq = #{rm_seq}
+	</select>
+	
 </mapper>
