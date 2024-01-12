@@ -192,7 +192,17 @@ public class ScheduleController {
 		String h_userid = request.getParameter("fk_h_userid");
 		
 		
-		String[] colors = {"red", "orange", "yellow", "green", "blue", "navy", "purple", "black", "pink", "skyblue"};
+		String[] colors = {"#f37976", "#f89c59", "#f59eae", "#d5b5c2", "#b96b95", "#b6cc83", "#01686d", "#01ac88", "#9dd0cb", "#0082c0", "#86c5ee"};
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		Map<String,String> paraMap = new HashMap<>();

@@ -26,13 +26,19 @@
 
 	span.name {
 		font-weight : 700;
-		display: block;
+		font-size : 17px;
+		display: inline-block;
 	}
 	
 	span.lg_en_name {
 		
 	}
 
+	span.uitk-badge-base-text,
+	span.uitk-badge-base {
+		margin-bottom :2%;
+		margin-right: 2%;
+	}
 	
 	
 	
@@ -55,6 +61,7 @@ function goViewHostChat(fk_userid) {
 	--%>
 	
 	const name = $("span.name").val();
+	const user_lvl = $("span.uitk-badge-base-text").val();
 	
 	
 	const goBackURL = "${requestScope.goBackURL}";
@@ -74,6 +81,8 @@ function goViewHostChat(fk_userid) {
     frm.fk_userid.value = fk_userid;
     frm.goBackURL.value = goBackURL;
     frm.name.value = name;
+    frm.user_lvl.value = user_lvl;
+    
     
     
     frm.action = "<%=ctxPath%>/hostChat.exp";
@@ -103,8 +112,24 @@ function goViewHostChat(fk_userid) {
 			   <div class="list" onclick="goViewHostChat('${chatvo.fk_userid}')">
 				   <div style="margin-left:0;">
 					   
+					  <c:if test="${chatvo.user_lvl eq 0}">
+				           <span class="uitk-badge-base uitk-badge-base-large uitk-badge-base-has-text uitk-badge-loyalty-global-lowtier">
+				            <span class="uitk-badge-base-text" aria-hidden="false">블루</span>
+				           </span>
+				        </c:if>
+				        <c:if test="${chatvo.user_lvl eq 1}">
+				           <span class="uitk-badge-base uitk-badge-base-large uitk-badge-base-has-text uitk-badge-loyalty-global-middletier">
+				            <span class="uitk-badge-base-text" aria-hidden="false">실버</span>
+				           </span>
+				        </c:if>
+				        <c:if test="${chatvo.user_lvl eq 2}">
+				           <span class="uitk-badge-base uitk-badge-base-large uitk-badge-base-has-text uitk-badge-loyalty-global-hightier">
+				            <span class="uitk-badge-base-text" aria-hidden="false">골드</span>
+				           </span>
+				        </c:if>
+					   
 					   <span class="name">${chatvo.name}</span>
-					   <span class="fk_userid">${chatvo.fk_userid}</span>
+					   <div class="fk_userid">${chatvo.fk_userid}</div>
 				   </div>
 				   <svg class="uitk-icon navigate_next uitk-icon-directional uitk-icon-medium" style="margin-left:auto; margin-top:3%;" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" focusable="false"><path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6-6-6z"></path></svg>
 			   </div>
@@ -141,5 +166,6 @@ function goViewHostChat(fk_userid) {
 		<input type="hidden" name="fk_userid"/>
 		<input type="hidden" name="goBackURL" />
 		<input type="hidden" name="name" />
+		<input type="hidden" name="user_lvl"/>
 	</form>
 </body>

@@ -18,6 +18,7 @@
 	tr.infoSchedule{
 		background-color: white;
 		cursor: pointer;
+		text-align:center;
 	}
 	
 	a{
@@ -42,6 +43,13 @@
 		font-size: 12pt;
 		padding: 3px 0px;
 	}
+
+	input#fromDate, input#toDate, input#searchWord {
+	border:solid 1px black;
+	}
+
+
+
 
 </style>
 
@@ -143,69 +151,75 @@
 
 </script>
 
-<div style="margin-left: 80px; width: 88%;">
-	<div>
-		<h3 style="display: inline-block;">일정 검색결과</h3>&nbsp;&nbsp;<a href="<%= ctxPath%>/schedule/scheduleManagement.exp"><span>◀캘린더로 돌아가기</span></a>
-
-		<div id="searchPart" style="float: right; margin-top: 50px;">
-			<form name="searchScheduleFrm">
-				<div>
-					<input type="text" id="fromDate" name="startdate" style="width: 90px;" readonly="readonly">&nbsp;&nbsp; 
-	            -&nbsp;&nbsp; <input type="text" id="toDate" name="enddate" style="width: 90px;" readonly="readonly">&nbsp;&nbsp;
-					<select id="searchType" name="searchType" style="height: 30px;">
-						<option value="">검색대상선택</option>
-						<option value="rs_name">예약자명</option>
-					</select>&nbsp;&nbsp;	
-					<input type="text" id="searchWord" value="${requestScope.searchWord}" style="height: 30px; width:120px;" name="searchWord"/> 
-					&nbsp;&nbsp;
-					<select id="sizePerPage" name="sizePerPage" style="height: 30px;">
-						<option value="">보여줄개수</option>
-						<option value="10">10</option>
-						<option value="15">15</option>
-						<option value="20">20</option>
-					</select>&nbsp;&nbsp;
-					<input type="hidden" name="fk_h_userid" value="${sessionScope.loginhost.h_userid}"/>
-					<button type="button" class="btn_normal" style="display: inline-block;" onclick="goSearch()">검색</button>
-				</div>
-			</form>
-		</div>
-	</div>
+<body style="background-color:white;">
+	<div style="inline-size: 100%; margin: auto; max-inline-size: 75rem; padding: 50px 0;">
 	
-	<table id="schedule" class="table table-hover" style="margin: 100px 0 30px 0;">
-		<thead>
-			<tr>
-				<th style="text-align: center; width: 21%;">일자</th>
-				<th style="text-align: center; width: 15%;">예약자명</th>
-				<th style="text-align: center; width: 7%;">연락처</th>
-				<th style="text-align: center; width: 22%">객실등급</th>
-				<th style="text-align: center; width: 22%">결제금액</th>
-			</tr>
-		</thead>
+			<div style="width:80%; margin:auto; border:solid 0px gray;">
+			
+			<h3 style="display: inline-block;">일정 검색결과</h3>&nbsp;&nbsp;<a href="<%= ctxPath%>/schedule/scheduleManagement.exp"><span>◀캘린더로 돌아가기</span></a>
+	
+			<div id="searchPart" style="float: right; margin-top: 50px;">
+				<form name="searchScheduleFrm">
+					<div>
+						<input type="text" id="fromDate" name="startdate" style="width: 90px;" readonly="readonly">&nbsp;&nbsp; 
+		            -&nbsp;&nbsp; <input type="text" id="toDate" name="enddate" style="width: 90px;" readonly="readonly">&nbsp;&nbsp;
+						<select id="searchType" name="searchType" style="height: 30px;">
+							<option value="">검색대상선택</option>
+							<option value="rs_name">예약자명</option>
+						</select>&nbsp;&nbsp;	
+						<input type="text" id="searchWord" value="${requestScope.searchWord}" style="height: 30px; width:120px;" name="searchWord"/> 
+						&nbsp;&nbsp;
+						<select id="sizePerPage" name="sizePerPage" style="height: 30px;">
+							<option value="">보여줄개수</option>
+							<option value="10">10</option>
+							<option value="15">15</option>
+							<option value="20">20</option>
+						</select>&nbsp;&nbsp;
+						<input type="hidden" name="fk_h_userid" value="${sessionScope.loginhost.h_userid}"/>
+						<button type="button" class="btn_normal" style="display: inline-block;" onclick="goSearch()">검색</button>
+					</div>
+				</form>
+			</div>
+		</div>
 		
-		<tbody>
-			<c:if test="${empty requestScope.scheduleList}">
+		<table id="schedule" class="table table-hover" style="margin: 100px auto 30px auto; width:80%">
+			<thead>
 				<tr>
-					<td colspan="5" style="text-align: center;">검색 결과가 없습니다.</td>
+					<th style="text-align: center; width: 28%;">일자</th>
+					<th style="text-align: center; width: 9%;">예약자명</th>
+					<th style="text-align: center; width: 15%;">연락처</th>
+					<th style="text-align: center; width: 27%">객실등급</th>
+					<th style="text-align: center; width: 10%">결제금액</th>
 				</tr>
-			</c:if>
-			<c:if test="${not empty requestScope.scheduleList}">
-				<c:forEach var="map" items="${requestScope.scheduleList}">
-					<tr class="infoSchedule">
-						<td style="display: none;" class="rs_seq">${map.RS_SEQ}</td>
-						<td>${map.RS_CHECKINDATE} - ${map.RS_CHECKOUTDATE}</td>
-						<td>${map.RS_NAME}</td>
-						<td>${map.RS_MOBILE}</td>  
-						<td>${map.RM_TYPE}</td>
-						<td>${map.RS_PRICE}</td>
+			</thead>
+			
+			<tbody>
+				<c:if test="${empty requestScope.scheduleList}">
+					<tr>
+						<td colspan="5" style="text-align: center;">검색 결과가 없습니다.</td>
 					</tr>
-				</c:forEach>
-			</c:if>
-		</tbody>
-	</table>
+				</c:if>
+				<c:if test="${not empty requestScope.scheduleList}">
+					<c:forEach var="map" items="${requestScope.scheduleList}">
+						<tr class="infoSchedule">
+							<td style="display: none;" class="rs_seq">${map.RS_SEQ}</td>
+							<td>${map.RS_CHECKINDATE} - ${map.RS_CHECKOUTDATE}</td>
+							<td>${map.RS_NAME}</td>
+							<td>${map.RS_MOBILE}</td>  
+							<td>${map.RM_TYPE}</td>
+							<td><fmt:formatNumber value="${map.RS_PRICE}" pattern = "#,###"></fmt:formatNumber>원</td>
+						</tr>
+					</c:forEach>
+				</c:if>
+			</tbody>
+		</table>
+	
+		<div align="center" style="width: 70%; border: solid 0px gray; margin: 20px auto;">${requestScope.pageBar}</div> 
+	    <div style="margin-bottom: 20px;">&nbsp;</div>
+	</div>
 
-	<div align="center" style="width: 70%; border: solid 0px gray; margin: 20px auto;">${requestScope.pageBar}</div> 
-    <div style="margin-bottom: 20px;">&nbsp;</div>
-</div>
+</body>
+
 
 <form name="goDetailFrm"> 
    <input type="hidden" name="rs_seq"/>

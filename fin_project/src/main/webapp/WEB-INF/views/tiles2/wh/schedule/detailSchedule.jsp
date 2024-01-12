@@ -121,64 +121,69 @@
 	
 </script>
 
-<div style="margin-left: 80px; width: 88%;">
-<h3 style="display: inline-block;">일정 상세보기</h3>&nbsp;&nbsp;<a href="<%= ctxPath%>/schedule/scheduleManagement.exp"><span>◀캘린더로 돌아가기</span></a> 
-
-		<table id="schedule" class="table table-bordered">
-			<tr>
-				<th style="width: 160px; vertical-align: middle;">일자</th>
-				<td>
-					<span id="startdate">${requestScope.map.STARTDATE}</span>&nbsp;~&nbsp;<span id="enddate">${requestScope.map.ENDDATE}</span>&nbsp;&nbsp;  
-					<input type="checkbox" id="allDay" disabled/>&nbsp;종일
-				</td>
-			</tr>
-			<tr>
-				<th style="vertical-align: middle;">예약자 아이디</th>
-				<td>${requestScope.map.FK_USERID}</td>
-			</tr>
-			
-			<tr>
-				<th style="vertical-align: middle;">예약자명</th>
-				<td>${requestScope.map.RS_NAME}</td>
-			</tr>
-			
-			<tr>
-				<th style="vertical-align: middle;">예약자 연락처</th>
-				<td>${requestScope.map.RS_MOBILE}</td>
-			</tr>
-			
-			<tr>
-				<th style="vertical-align: middle;">예약일자</th>
-				<td>${requestScope.map.RS_DATE}</td>
-			</tr>
-			
-			<tr>
-				<th style="vertical-align: middle;">투숙인원</th>
-				<td>${requestScope.map.RS_GUEST_CNT}</td>
-			</tr>
-			
-			<tr>
-				<th style="vertical-align: middle;">결제금액</th>
-				<td>
-				<fmt:formatNumber pattern="#,###">${requestScope.map.RS_PRICE}</fmt:formatNumber>&nbsp;원
-				</td>
-			</tr>
-			
-		</table>
+<body style="background-color:white;">
+	<div style="inline-size: 100%; margin: auto; max-inline-size: 75rem; padding: 50px 0;">
 	
-	<input type="hidden" value="${sessionScope.loginhost.h_userid}" />
-	<input type="hidden" value="${requestScope.map.RS_SEQ}" />
+			<div style="width:70%; margin:auto; border:solid 0px gray;">
 	
+			<h3 style="display: inline-block;">일정 상세보기</h3>&nbsp;&nbsp;<a href="<%= ctxPath%>/schedule/scheduleManagement.exp"><span>◀캘린더로 돌아가기</span></a> 
 	
-	<div style="float: right;">
+			<table id="schedule" class="table table-bordered">
+				<tr>
+					<th style="width: 160px; vertical-align: middle;">일자</th>
+					<td>
+						<span id="startdate">${requestScope.map.STARTDATE}</span>&nbsp;~&nbsp;<span id="enddate">${requestScope.map.ENDDATE}</span>&nbsp;&nbsp;  
+						<input type="checkbox" id="allDay" disabled/>&nbsp;종일
+					</td>
+				</tr>
+				<tr>
+					<th style="vertical-align: middle;">예약자 아이디</th>
+					<td>${requestScope.map.FK_USERID}</td>
+				</tr>
+				
+				<tr>
+					<th style="vertical-align: middle;">예약자명</th>
+					<td>${requestScope.map.RS_NAME}</td>
+				</tr>
+				
+				<tr>
+					<th style="vertical-align: middle;">예약자 연락처</th>
+					<td>${requestScope.map.RS_MOBILE}</td>
+				</tr>
+				
+				<tr>
+					<th style="vertical-align: middle;">예약일자</th>
+					<td>${requestScope.map.RS_DATE}</td>
+				</tr>
+				
+				<tr>
+					<th style="vertical-align: middle;">투숙인원</th>
+					<td>${requestScope.map.RS_GUEST_CNT}</td>
+				</tr>
+				
+				<tr>
+					<th style="vertical-align: middle;">결제금액</th>
+					<td>
+					<fmt:formatNumber pattern="#,###">${requestScope.map.RS_PRICE}</fmt:formatNumber>&nbsp;원
+					</td>
+				</tr>
+				
+			</table>
 		
-		<button type="button" class="btn_normal" onclick="delSchedule('${requestScope.map.RS_SEQ}')">삭제</button>
-		<button type="button" id="cancel" class="btn_normal" style="margin-right: 0px;" onclick="javascript:location.href='<%= ctxPath%>${requestScope.listgobackURL_schedule}'">취소</button> 
+		<input type="hidden" value="${sessionScope.loginhost.h_userid}" />
+		<input type="hidden" value="${requestScope.map.RS_SEQ}" />
 		
-
+		
+		<div style="float: right;">
+			
+			<button type="button" class="btn_normal" onclick="delSchedule('${requestScope.map.RS_SEQ}')">삭제</button>
+			<button type="button" id="cancel" class="btn_normal" style="margin-right: 0px;" onclick="javascript:location.href='<%= ctxPath%>${requestScope.listgobackURL_schedule}'">취소</button> 
+		</div>
 	
 	</div>
-</div>
+	
+	</div>
+</body>
 
 <form name="goEditFrm">
 	<input type="hidden" name="rs_seq"/>

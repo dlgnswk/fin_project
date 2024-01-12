@@ -193,13 +193,13 @@
 	
 	<!-- 현재 로그인되어있는 사업자(판매자)의 채팅방 목록 가져오기  -->	
 	<select id="getHostChatRoomList" parameterType="HashMap" resultType="com.spring.app.expedia.domain.ChatVO"> 
-		SELECT chat_no, fk_userid, fk_lodge_id ,chat_date, name
+		SELECT chat_no, fk_userid, fk_lodge_id ,chat_date, name, user_lvl
 		FROM 
 		(
 		 select row_number() over(order by chat_date desc) AS rno 
 		      , chat_no, fk_userid, fk_lodge_id
 		 	  , to_char(chat_date, 'yyyy-mm-dd hh24:mi') AS chat_date
-              , U.name
+              , U.name, U.user_lvl
 		 from tbl_chat C 
          join tbl_user U
          on U.userid = C.fk_userid

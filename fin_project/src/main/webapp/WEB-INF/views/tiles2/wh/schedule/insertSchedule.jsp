@@ -54,6 +54,13 @@
 		padding: 3px 0px;
 		border-radius: 10%;
 	}
+
+	input.form-control:focus {
+		outline:none;
+		box-shadow: none;
+	}
+
+
 </style>
 
 
@@ -330,87 +337,97 @@
 
 </script>
 
-<div style="margin-left: 80px; width: 88%;">
-<h3>일정 등록</h3>
-
-	<form name="scheduleFrm">
-		<table id="schedule" class="table table-bordered">
-			<tr>
-				<th>예약 일정</th>
-				<td>
-					<input type="date" id="startDate" value="${requestScope.chooseDate}" style="height: 30px;"/>&nbsp; 
-					<select id="startHour" class="schedule"></select> 시
-					<select id="startMinute" class="schedule"></select> 분
-					- <input type="date" id="endDate" value="${requestScope.chooseDate}" style="height: 30px;"/>&nbsp;
-					<select id="endHour" class="schedule"></select> 시
-					<select id="endMinute" class="schedule"></select> 분&nbsp;
-					<input type="checkbox" id="allDay"/>&nbsp;<label for="allDay">종일</label>
-					
-					<input type="hidden" name="startdate"/>
-					<input type="hidden" name="enddate"/>
-				</td>
-			</tr>
-			
-			<tr>
-				<th>객실등급</th>
-				<td>
-					<select class="small_category schedule" name="fk_rm_seq"></select>
-				</td>
-			</tr>
-			
-			
-			
-			
-			<tr>
-				<th>객실 수</th>
-				<td><input type="text" id="rm_cnt" name="rm_cnt" class="form-control"/></td>
-			</tr>
-			
-			<tr>
-				<th>예약자명</th>
-				<td><input type="text" id="rs_name" name="rs_name" class="form-control"/></td>
-			</tr>
-			
-			<tr>
-				<th>예약자 아이디</th>
-				<td><input type="text" id="fk_userid" name="fk_userid" class="form-control"/></td>
-			</tr>
-			
-			<tr>
-				<th>예약자 연락처</th>
-				<td><input type="text" id="rs_mobile" name="rs_mobile" class="form-control"/></td>
-			</tr>
-			
-			<tr>
-				<th>예약자 이메일</th>
-				<td><input type="text" id="rs_email" name="rs_email" class="form-control"/></td>
-			</tr>
-			
-			<tr>
-				<th>투숙 인원</th>
-				<td><input type="text" id="rs_guest_cnt" name="rs_guest_cnt" class="form-control"/></td>
-			</tr>
-			
-			<tr>
-				<th>결제방식</th>
-				<td>
-					<input type="radio" id="rs_payType" name="rs_payType" value="0"><label for="rs_payType">현장결제</label>
-					<input type="radio" id="rs_payType" name="rs_payType" value="1"><label for="rs_payType">예약결제</label>
-				</td>
-			</tr>
-		
-			
-		
-		
-			
-			
-		</table>
-		<input type="hidden" value="${sessionScope.loginhost.h_userid}" name="fk_h_userid"/>
-		<input type="text" value="" name="rm_price"/>
-	</form>
+<body style="background-color:white;">
+	<div style="inline-size: 100%; margin: auto; max-inline-size: 75rem; padding: 50px 0;">
 	
-	<div style="float: right;">
-	<button type="button" id="register" class="btn_normal" style="margin-right: 10px; background-color: #0071bd;">등록</button>
-	<button type="button" class="btn_normal" style="background-color: #990000;" onclick="javascript:location.href='<%= ctxPath%>/schedule/scheduleManagement.exp'">취소</button> 
+		<div style="width:70%; margin:auto; border:solid 0px gray;">
+
+		<h2 >예약 일정등록</h2>
+
+		<form name="scheduleFrm">
+			<table id="schedule" class="table table-bordered">
+				<tr>
+					<th>예약 일정</th>
+					<td>
+						<input type="date" id="startDate" value="${requestScope.chooseDate}" style="height: 30px;"/>&nbsp; 
+						<select id="startHour" class="schedule"></select> 시
+						<select id="startMinute" class="schedule"></select> 분
+						- <input type="date" id="endDate" value="${requestScope.chooseDate}" style="height: 30px;"/>&nbsp;
+						<select id="endHour" class="schedule"></select> 시
+						<select id="endMinute" class="schedule"></select> 분&nbsp;
+						<input type="checkbox" id="allDay"/>&nbsp;<label for="allDay">종일</label>
+						
+						<input type="hidden" name="startdate"/>
+						<input type="hidden" name="enddate"/>
+					</td>
+				</tr>
+				
+				<tr>
+					<th>객실등급</th>
+					<td>
+						<select class="small_category schedule" name="fk_rm_seq"></select>
+					</td>
+				</tr>
+				
+				
+				
+				
+				<tr>
+					<th>객실 수</th>
+					<td><input type="text" id="rm_cnt" name="rm_cnt" class="form-control"/></td>
+				</tr>
+				
+				<tr>
+					<th>예약자명</th>
+					<td><input type="text" id="rs_name" name="rs_name" class="form-control"/></td>
+				</tr>
+				
+				<tr>
+					<th>예약자 아이디</th>
+					<td><input type="text" id="fk_userid" name="fk_userid" class="form-control"/></td>
+				</tr>
+				
+				<tr>
+					<th>예약자 연락처</th>
+					<td><input type="text" id="rs_mobile" name="rs_mobile" class="form-control"/></td>
+				</tr>
+				
+				<tr>
+					<th>예약자 이메일</th>
+					<td><input type="text" id="rs_email" name="rs_email" class="form-control"/></td>
+				</tr>
+				
+				<tr>
+					<th>투숙 인원</th>
+					<td><input type="text" id="rs_guest_cnt" name="rs_guest_cnt" class="form-control"/></td>
+				</tr>
+				
+				<tr>
+					<th>결제방식</th>
+					<td>
+						<input type="radio" id="rs_payType" name="rs_payType" value="0"><label for="rs_payType">현장결제</label>
+						<input type="radio" id="rs_payType" name="rs_payType" value="1"><label for="rs_payType">예약결제</label>
+					</td>
+				</tr>
+			
+				
+			
+			
+				
+				
+			</table>
+			<input type="hidden" value="${sessionScope.loginhost.h_userid}" name="fk_h_userid"/>
+			<input type="hidden" value="" name="rm_price"/>
+		
+			<button type="button" id="register" class="btn_normal" style="margin-right: 10px; background-color: #0071bd;">등록</button>
+			<button type="button" class="btn_normal" style="background-color: #990000;" onclick="javascript:location.href='<%= ctxPath%>/schedule/scheduleManagement.exp'">취소</button> 
+		
+		</form>
+	
+		
+			
+	
+		
+		</div>
 	</div>
-</div>
+</body>
