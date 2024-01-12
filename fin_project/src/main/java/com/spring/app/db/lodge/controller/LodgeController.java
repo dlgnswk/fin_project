@@ -28,6 +28,7 @@ import com.google.gson.JsonParser;
 import com.spring.app.common.FileManager;
 import com.spring.app.db.lodge.service.LodgeService;
 import com.spring.app.expedia.domain.HostVO;
+import com.spring.app.expedia.domain.LodgeVO;
 import com.spring.app.expedia.domain.RoomVO;
 
 @Controller
@@ -46,17 +47,103 @@ public class LodgeController {
 	public String requiredHostLogin_register_lodge(HttpServletRequest request,
 												   HttpServletResponse response) {
 		
-		// !!!! 로그인 한 사용자(판매자)에게 사용자등록번호를 받아와 넣어줘야 한다.
-		// 관리자 승인 유무 체크
+		
+		// ================= AOP 로그인한 사용자의 정보 -시작- ==================== //
 		HttpSession session = request.getSession();
 		HostVO loginhost = (HostVO) session.getAttribute("loginhost");
-		
 		String fk_h_userid = loginhost.getH_userid();
-		
-	//	System.out.println("fk_h_userid => "+ fk_h_userid); // 현재 로그인 호스트의 아이디 이다.
-		
 		// 현재 로그인한 판매자의 ID로 숙박시설의 lodge_id를 가져온다.
 		String fk_lodge_id = service.getLodgeIdByUserId(fk_h_userid);
+		// ================= AOP 로그인한 사용자의 정보 -끝- ====================== //
+		
+		LodgeVO lovo = service.getLodgeInfo(fk_h_userid);
+		
+		System.out.println(new Gson().toJson(lovo));
+		
+		Gson gson = new Gson();
+		if(fk_lodge_id != null) {
+			
+			if("1".equals(lovo.getLg_internet_yn()) ) {
+				// === tbl_inet테이블에 기존에 입력되어 있는 인터넷 옵션 가져오기 === //
+				List<Map<String,String>> internetInsertDataMapList = service.getInternetService(fk_lodge_id);
+				String internet_Json =gson.toJson(internetInsertDataMapList);
+			//	System.out.println(internet_Json);
+				// [{"fk_inet_opt_no":"0","inet_seq":"112","fk_lodge_id":"CNTP0003"},{"fk_inet_opt_no":"1","inet_seq":"113","fk_lodge_id":"CNTP0003"}]
+				request.setAttribute("internet_Json", internet_Json);
+			}
+
+			if("1".equals(lovo.getLg_park_yn()) ) {
+				// === tbl_park테이블에 기존에 입력되어 있는 주차장 옵션 가져오기 === //
+				List<Map<String,String>> parkOptionInsertDataMapList = service.getParkOptionData(fk_lodge_id);
+				String park_Json =gson.toJson(parkOptionInsertDataMapList);
+				System.out.println(park_Json);
+				// [{"fk_inet_opt_no":"0","inet_seq":"112","fk_lodge_id":"CNTP0003"},{"fk_inet_opt_no":"1","inet_seq":"113","fk_lodge_id":"CNTP0003"}]
+				request.setAttribute("park_Json", park_Json);
+			}
+			
+			if("1".equals(lovo.getLg_dining_place_yn()) ) {
+				// === tbl_din 테이블에 기존에 입력되어 있는 다이닝 종류 가져오기 === //
+				List<Map<String,String>> diningTypeInsertDataMapList = service.getDiningTypeData(fk_lodge_id);
+				String dining_Json =gson.toJson(diningTypeInsertDataMapList);
+				System.out.println(dining_Json);
+				// [{"fk_inet_opt_no":"0","inet_seq":"112","fk_lodge_id":"CNTP0003"},{"fk_inet_opt_no":"1","inet_seq":"113","fk_lodge_id":"CNTP0003"}]
+				request.setAttribute("dining_Json", dining_Json);
+			}
+			
+			if("1".equals(lovo.getLg_pool_yn()) ) {
+				// === tbl_pool 테이블에 기존에 입력되어 있는 수영장 타입 가져오기 === //
+				List<Map<String,String>> poolTypeDataMapList = service.getPoolTypeData(fk_lodge_id);
+				String pool_Json =gson.toJson(poolTypeDataMapList);
+				System.out.println(pool_Json);
+				// [{"fk_inet_opt_no":"0","inet_seq":"112","fk_lodge_id":"CNTP0003"},{"fk_inet_opt_no":"1","inet_seq":"113","fk_lodge_id":"CNTP0003"}]
+				request.setAttribute("pool_Json", pool_Json);
+			}
+			
+			if("1".equals(lovo.getLg_fac_yn()) ) {
+				// === tbl_fac 테이블에 기존에 입력되어 있는 장애인 편의시설 종류 가져오기 === //
+				List<Map<String,String>> facilityTypeInsertDataMapList = service.getFacilityTypeData(fk_lodge_id);
+				String facility_Json =gson.toJson(facilityTypeInsertDataMapList);
+				System.out.println(facility_Json);
+				// [{"fk_inet_opt_no":"0","inet_seq":"112","fk_lodge_id":"CNTP0003"},{"fk_inet_opt_no":"1","inet_seq":"113","fk_lodge_id":"CNTP0003"}]
+				request.setAttribute("facility_Json", facility_Json);
+			}
+			
+			if("1".equals(lovo.getLg_service_yn()) ) {
+				// === tbl_cs 테이블에 기존에 입력되어 있는 고객서비스 종류 가져오기 === //
+				List<Map<String,String>> CusSurTypeInsertDataMapList = service.getCustomerSurviceTypeData(fk_lodge_id);
+				String cusSur_Json =gson.toJson(CusSurTypeInsertDataMapList);
+				System.out.println(cusSur_Json);
+				// [{"fk_inet_opt_no":"0","inet_seq":"112","fk_lodge_id":"CNTP0003"},{"fk_inet_opt_no":"1","inet_seq":"113","fk_lodge_id":"CNTP0003"}]
+				request.setAttribute("cusSur_Json", cusSur_Json);
+			}
+			
+			if("1".equals(lovo.getLg_rm_service_yn()) ) {
+				// === tbl_rmsvc 테이블에 기존에 입력되어 있는 룸서비스 종류 가져오기 === //
+				List<Map<String,String>> RoomSurviceTypeInsertMapList = service.getRoomSurviceTypeData(fk_lodge_id);
+				String roomSurvice_Json =gson.toJson(RoomSurviceTypeInsertMapList);
+				System.out.println(roomSurvice_Json);
+				// [{"fk_inet_opt_no":"0","inet_seq":"112","fk_lodge_id":"CNTP0003"},{"fk_inet_opt_no":"1","inet_seq":"113","fk_lodge_id":"CNTP0003"}]
+				request.setAttribute("roomSurvice_Json", roomSurvice_Json);
+			}
+			
+			if("1".equals(lovo.getLg_business_yn()) ) {
+				// === tbl_bsns 테이블에 기존에 입력되어 있는 비즈니스 종류 가져오기 === //
+				List<Map<String,String>> businessRoomTypeInsertMapList = service.getBusinessRoomTypeData(fk_lodge_id);
+				String businessRoom_Json =gson.toJson(businessRoomTypeInsertMapList);
+				System.out.println(businessRoom_Json);
+				// [{"fk_inet_opt_no":"0","inet_seq":"112","fk_lodge_id":"CNTP0003"},{"fk_inet_opt_no":"1","inet_seq":"113","fk_lodge_id":"CNTP0003"}]
+				request.setAttribute("businessRoom_Json", businessRoom_Json);
+			}
+			
+			if("1".equals(lovo.getLg_fa_travel_yn()) ) {
+				// === tbl_fasvc 테이블에 기존에 입력되어 있는 가족여행(어린이시설) 종류 가져오기 === //
+				List<Map<String,String>> familyTypeInsertMapList = service.getFamilyTypeData(fk_lodge_id);
+				String family_Json =gson.toJson(familyTypeInsertMapList);
+				System.out.println(family_Json);
+				// [{"fk_inet_opt_no":"0","inet_seq":"112","fk_lodge_id":"CNTP0003"},{"fk_inet_opt_no":"1","inet_seq":"113","fk_lodge_id":"CNTP0003"}]
+				request.setAttribute("family_Json", family_Json);
+			}
+		}
 		
 	//	System.out.println("fk_lodge_id => "+ fk_lodge_id); // 현재 로그인 호스트의 호텔아이디 이다.
 		String front_id = "";
@@ -66,7 +153,6 @@ public class LodgeController {
 			front_id = fk_lodge_id.substring(0,4);
 			back_id = fk_lodge_id.substring(4);
 		}
-		
 		
 		// == 숙박시설 유형 테이블에서 select == //
 		List<Map<String,String>> lodgeTypeMapList = service.getLodgeType();
@@ -174,6 +260,8 @@ public class LodgeController {
 		request.setAttribute("front_id", front_id);
 		request.setAttribute("back_id", back_id);
 		request.setAttribute("fk_h_userid", fk_h_userid);
+		request.setAttribute("lovo", lovo); // 기존에 등록되어 있는 시설의 정보
+		
 		
 		return "db/register/register_lodge.tiles2";
 		// /WEB-INF/views/tiles2/db/register/register_lodge.jsp

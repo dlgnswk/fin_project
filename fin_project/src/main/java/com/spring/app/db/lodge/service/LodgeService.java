@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.spring.app.expedia.domain.LodgeVO;
 import com.spring.app.expedia.domain.RoomVO;
 
 public interface LodgeService {
@@ -141,5 +142,35 @@ public interface LodgeService {
 
 	// 입력된 욕실 옵션 가져오기
 	List<String> changeGetfk_bath_opt_no(String rm_seq);
+
+	// 기존에 입력되어있는 lodge정보 가져오기
+	LodgeVO getLodgeInfo(String fk_h_userid);
+
+	// === tbl_inet테이블에 기존에 입력되어 있는 인터넷 옵션 가져오기 === //
+	List<Map<String, String>> getInternetService(String fk_lodge_id);
+
+	// === tbl_park테이블에 기존에 입력되어 있는 주차장 옵션 가져오기 === //
+	List<Map<String, String>> getParkOptionData(String fk_lodge_id);
+
+	// === tbl_din 테이블에 기존에 입력되어 있는 다이닝 종류 가져오기 === //
+	List<Map<String, String>> getDiningTypeData(String fk_lodge_id);
+
+	// === tbl_pool 테이블에 기존에 입력되어 있는 수영장 타입 가져오기 === //
+	List<Map<String, String>> getPoolTypeData(String fk_lodge_id);
+
+	// === tbl_fac 테이블에 기존에 입력되어 있는 장애인 편의시설 종류 가져오기 === //
+	List<Map<String, String>> getFacilityTypeData(String fk_lodge_id);
+
+	// === tbl_cs 테이블에 기존에 입력되어 있는 고객서비스 종류 가져오기 === //
+	List<Map<String, String>> getCustomerSurviceTypeData(String fk_lodge_id);
+
+	// === tbl_rmsvc 테이블에 기존에 입력되어 있는 룸서비스 종류 가져오기 === //
+	List<Map<String, String>> getRoomSurviceTypeData(String fk_lodge_id);
+
+	// === tbl_bsns 테이블에 기존에 입력되어 있는 비즈니스 종류 가져오기 === //
+	List<Map<String, String>> getBusinessRoomTypeData(String fk_lodge_id);
+
+	// === tbl_fasvc 테이블에 기존에 입력되어 있는 가족여행(어린이시설) 종류 가져오기 === //
+	List<Map<String, String>> getFamilyTypeData(String fk_lodge_id);
 
 }
