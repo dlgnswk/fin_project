@@ -134,9 +134,12 @@
 
 	$(document).ready(function(){
 		
-		
-		goViewChatList(); // 페이징 처리한 댓글 읽어오기
-		
+		 setInterval(function(){ // 1초마다 채팅 읽어오는 함수를 실행시킴.
+				
+			 goViewChatList(); // 채팅 읽어오기
+				
+		 }, 1000);
+			 
 		
 		$("#chat_comment").bind("keyup",function(e){
 			

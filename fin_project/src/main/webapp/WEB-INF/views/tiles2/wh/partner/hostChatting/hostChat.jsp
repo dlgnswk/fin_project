@@ -133,19 +133,17 @@
 
 	$(document).ready(function(){
 		
-		/* setInterval(function(){
+		 setInterval(function(){ // 1초마다 채팅 읽어오는 함수를 실행시킴.
 			
-			goViewHostChatList();
-			
+			goViewHostChatList(); // 채팅 읽어오기
 			
 		}, 1000);
-		 */
-		goViewHostChatList();
+		 
 		// let hostChat_comment = document.querySelector('div#hostChat_comment');
 		
 		
 		
-		 // 페이징 처리한 댓글 읽어오기
+		 // 채팅 읽어오기
 		
 		
 		$("#hostChat_comment").bind("keyup",function(e){

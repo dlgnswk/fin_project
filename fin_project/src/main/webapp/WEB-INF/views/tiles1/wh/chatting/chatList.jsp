@@ -95,7 +95,7 @@ function goViewChat(lodge_id, lg_img_save_name) {
     <h2 style="margin-bottom: 30px; padding-bottom:30px; border-bottom: solid 1px #dfe0e4;">문의내역</h2>
    
 	  <c:if test="${not empty requestScope.chatRoomList}">
-	  <div style="height:350px; max-height: 350px; overflow: auto;">
+	  <div style="height:400px; overflow: auto;">
 		  <c:forEach var="chatvo" items="${requestScope.chatRoomList}">
 			
 			   <div class="list" onclick="goViewChat('${chatvo.fk_lodge_id}','${chatvo.lg_img_save_name}')">
