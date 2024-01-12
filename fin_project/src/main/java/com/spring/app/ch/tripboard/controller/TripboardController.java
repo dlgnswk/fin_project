@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -774,7 +775,7 @@ public class TripboardController {
 	
 	
 	// === 스마트에디터. 드래그앤드롭을 사용한 다중사진 파일 업로드 === //
-    @PostMapping(value="/image/multiplePhotoUpload.exp")
+    @RequestMapping(value="/expedia/image/multiplePhotoUpload.exp")
     public void multiplePhotoUpload(HttpServletRequest request, HttpServletResponse response) {
     	/*
 		1. 사용자가 보낸 파일을 WAS(톰캣)의 특정 폴더에 저장해주어야 한다.
