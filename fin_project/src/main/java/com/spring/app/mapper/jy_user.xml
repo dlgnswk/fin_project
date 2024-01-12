@@ -116,14 +116,14 @@
 		    join tbl_room RM on RM.rm_seq = R.fk_rm_seq
 		    join tbl_lodge L on L.lodge_id = RM.fk_lodge_id
 		    where P.fk_userid = #{userid} and R.rs_cancel = 0
+		    <if test="searchType == 'get'">
+				and pt_amount <![CDATA[>=]]> 0
+			</if>
+			<if test="searchType == 'use'">
+				and pt_amount <![CDATA[<]]> 0
+			</if>	
 		) V
 		where RNO between #{startRno} and #{endRno}
-		<if test="searchType == 'get'">
-			and pt_amount <![CDATA[>=]]> 0
-		</if>
-		<if test="searchType == 'use'">
-			and pt_amount <![CDATA[<]]> 0
-		</if>
 	</select>
 	
 </mapper>
