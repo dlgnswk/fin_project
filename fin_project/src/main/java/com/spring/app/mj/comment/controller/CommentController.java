@@ -48,6 +48,7 @@ public class CommentController {
 	    HostVO loginhost = (HostVO)session.getAttribute("loginhost");
 	    
 		String userId = loginhost.getH_userid();
+		
 		//System.out.println(userId);
 		
 		// lodge_id를 가져는 메소드
@@ -500,7 +501,7 @@ public class CommentController {
 		String c_regDate = request.getParameter("c_regDate");
 		String c_seq = request.getParameter("c_seq");
 		
-		System.out.println(c_seq);
+		//System.out.println(c_seq);
 		
 		
 		

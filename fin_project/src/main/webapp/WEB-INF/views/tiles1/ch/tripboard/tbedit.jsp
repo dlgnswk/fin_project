@@ -48,8 +48,17 @@ th {
 }
 
 #select_box > div > div > form > table > tbody > tr:nth-child(1) > td > input[type=text],
-#select_box > div > div > form > table > tbody > tr:nth-child(2) > td > input[type=text],
-#select_box > div > div > form > table > tbody > tr:nth-child(5) > td > input[type=password] {
+#select_box > div > div > form > table > tbody > tr:nth-child(2) > td > input[type=text] {
+  height: 2rem; /* 32px → 2rem 변환 */
+  font-size: 0.9375rem; /* 15px → 0.9375rem 변환 */
+  border: 0;
+  border-radius: 0.9375rem; /* 15px → 0.9375rem 변환 */
+  outline: none;
+  padding-left: 0.625rem; /* 10px → 0.625rem 변환 */
+  background-color: rgb(233, 233, 233);
+}
+
+#select_box > div > div > form > table > tbody > tr:nth-child(4) > td > input[type=password] {
   height: 2rem; /* 32px → 2rem 변환 */
   font-size: 0.9375rem; /* 15px → 0.9375rem 변환 */
   border: 0;
@@ -74,7 +83,7 @@ input[type=file]::file-selector-button:hover {
     box-shadow: 0 0.25rem 0.375rem -0.0625rem rgba(0, 0, 0, 0.1), 0 0.125rem 0.25rem -0.0625rem rgba(0, 0, 0, 0.08);
   }
 
-#btnWrite {
+#btnUpdate {
   width: 4.375rem; /* 70px → 4.375rem 변환 */
   height: 2.1875rem; /* 35px → 2.1875rem 변환 */
   background: #0073ff;
@@ -83,7 +92,7 @@ input[type=file]::file-selector-button:hover {
   border-radius: 1.25rem; /* 20px → 1.25rem 변환 */
   cursor: pointer;
 }
-#btnWrite:hover {
+#btnUpdate:hover {
   background-color: rgba(0, 80, 229, 0.91);
   box-shadow: 0 0.25rem 0.375rem -0.0625rem rgba(0, 0, 0, 0.1), 0 0.125rem 0.25rem -0.0625rem rgba(0, 0, 0, 0.08);	
 }
@@ -262,7 +271,7 @@ input[type=file]::file-selector-button:hover {
 			
 			
 			<div style="margin: 20px; float: right;">
-				<button type="button" id="btnWrite">글쓰기</button>
+				<button type="button" id="btnUpdate">글쓰기</button>
 				<button type="button" id="btnCancel" onclick="javascript:location.href='<%= ctxPath%>/tblist.exp'">취소</button>
 			</div>		
 		</form>
