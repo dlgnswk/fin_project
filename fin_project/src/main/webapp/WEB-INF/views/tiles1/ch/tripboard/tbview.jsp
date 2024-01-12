@@ -154,7 +154,6 @@
 
 	.tb_article .like_wrap p {
     padding-right: 1.25rem; /* 20px를 렘 단위로 변환한 값 */
-    padding-top: 0.9375rem; /* 15px를 렘 단위로 변환한 값 */
     color: #222;
 	}
 
@@ -290,16 +289,15 @@
 	    height:18.75rem; /* 300px를 16px 기준으로 나눈 값 */
 	    background:#fff; 
 	    border-radius:0.625rem; /* 10px를 16px 기준으로 나눈 값 */
-	    position:relative; 
-	    top:50%; 
-	    left:50%;
-	    margin-top:-9.375rem; /* height의 절반 */
-	    margin-left:-15.625rem; /* width의 절반 */
 	    text-align:center;
 	    box-sizing:border-box; 
 	    padding:4.625rem 0; /* 74px를 16px 기준으로 나눈 값 */
 	    line-height:1.4375rem; /* 23px를 16px 기준으로 나눈 값 */
 	    cursor:pointer;
+	    position: fixed; 
+	    top: 50%; 
+	    left: 50%; 
+	    transform: translate(-50%, -50%);
 	}
 	
 	.tbdeleteModal_body{
@@ -319,6 +317,15 @@
 	    cursor:pointer;
 	}
 	
+	#mycontent > form:nth-child(9) > div > div.tbdeleteModal_body > p > input[type=password] {
+	  height: 2rem; /* 32px → 2rem 변환 */
+	  font-size: 0.9375rem; /* 15px → 0.9375rem 변환 */
+	  border: 0;
+	  border-radius: 0.9375rem; /* 15px → 0.9375rem 변환 */
+	  outline: none;
+	  padding-left: 0.625rem; /* 10px → 0.625rem 변환 */
+	  background-color: rgb(233, 233, 233);	
+	}
 	
 	#mycontent > form:nth-child(9) > div > div.tbdeleteModal_header > span,
 	#mycontent > form:nth-child(9) > div > div.tbdeleteModal_body > span {
@@ -580,12 +587,12 @@ function goLikeCount() {
 						여행 후기
 						<c:if test="${not empty sessionScope.loginuser && sessionScope.loginuser.userid == requestScope.tripboardvo.fk_userid}">
 						<button class="dropdown_bar" style="height:30px; float:right; margin-top:15px;" type="button" id="dropdownMenuButton" >
-							<svg style="float:right;" viewBox="0 0 24 24" width="20px" height="20px" class="d Vb UmNoP"><path d="M5 14a2 2 0 100-4 2 2 0 000 4zM19 14a2 2 0 100-4 2 2 0 000 4zM12 14a2 2 0 100-4 2 2 0 000 4z"></path></svg>
+							<svg style="float:right;" viewBox="0 0 24 24" width="30px" height="20px" class="d Vb UmNoP"><path d="M5 14a2 2 0 100-4 2 2 0 000 4zM19 14a2 2 0 100-4 2 2 0 000 4zM12 14a2 2 0 100-4 2 2 0 000 4z"></path></svg>
 						</button>
 						</c:if>
 						</h3>							  																
 					</div>
-					<div class="dropdown_content">
+					<div class="dropdown_content" style="text-align:center;">
 						    <div id="tbedit" onclick="javascript:location.href='<%= ctxPath%>/tbedit.exp?tb_seq=${requestScope.tripboardvo.tb_seq}'">후기수정</div>
         					<div id="tbdelete">후기삭제</div>
 			  		</div>	
@@ -616,15 +623,7 @@ function goLikeCount() {
 			                    	</span>
 			                    </div>			                    
 			                 </h4>
-			                 <div class="brd_editor editor_travel">
-									<!-- 고객 작성 후기인 경우 -->
-									<div class="report_box">
-										<div class="txt_guide">
-											&nbsp;&nbsp;&nbsp;&nbsp;<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512" style="transform: translateY(-2px);"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#0f203e" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336h24V272H216c-13.3 0-24-10.7-24-24s10.7-24 24-24h48c13.3 0 24 10.7 24 24v88h8c13.3 0 24 10.7 24 24s-10.7 24-24 24H216c-13.3 0-24-10.7-24-24s10.7-24 24-24zm40-208a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/></svg>
-											<span>아래 내용은 고객님께서 직접 다녀오신 여행 후기입니다.</span>
-										</div>
-				                    </div>
-							        <!-- // 고객 작성 후기인 경우 -->
+			                 <div class="brd_editor editor_travel" style="border-top: solid 1px grey;">
 			                     <div class="editor_area">
 			                         ${requestScope.tripboardvo.tb_content}
 			                     </div>

@@ -10,7 +10,7 @@
 	<!-- === 글쓰기(파일첨부가 없는 글쓰기) === -->
    	<insert id="add" parameterType="com.spring.app.expedia.domain.TripboardVO">
  		insert into tbl_tripboard(tb_seq, fk_userid, tb_name, tb_subject, tb_city, tb_content, tb_pw, tb_readCount, tb_regDate, tb_status)
-   	 	values(tb_seq.nextval, #{fk_userid}, #{tb_name}, #{tb_subject}, #{tb_city}, #{tb_content}, #{tb_pw}, default, default, default)
+   	 	values(seq_tbl_tripboard.nextval, #{fk_userid}, #{tb_name}, #{tb_subject}, #{tb_city}, #{tb_content}, #{tb_pw}, default, default, default)
     </insert> 
 
 	
@@ -18,7 +18,7 @@
 	<!-- === 글쓰기(파일첨부가 있는 글쓰기) === -->
 	   <insert id="add_withFile" parameterType="com.spring.app.expedia.domain.TripboardVO">
       	 insert into tbl_tripboard(tb_seq, fk_userid, tb_name, tb_subject, tb_city, tb_content, tb_pw, tb_readCount, tb_regDate, tb_status, tb_fileName, tb_orgFilename, tb_fileSize)
-         values(tb_seq.nextval, #{fk_userid}, #{tb_name}, #{tb_subject}, #{tb_city}, #{tb_content}, #{tb_pw}, default, default, default, #{tb_fileName}, #{tb_orgFilename}, #{tb_fileSize})
+         values(seq_tbl_tripboard.nextval, #{fk_userid}, #{tb_name}, #{tb_subject}, #{tb_city}, #{tb_content}, #{tb_pw}, default, default, default, #{tb_fileName}, #{tb_orgFilename}, #{tb_fileSize})
   	   </insert>
 	
 	<!-- === 총 게시물 건수(totalCount) 구하기 - 검색이 있을 때와 검색이 없을때 로 나뉜다. === --> 
