@@ -1576,6 +1576,7 @@
 						</form>
 						<form name="lodgeSearchFrm">
 							<input type="text" name="lg_area" readonly value="${requestScope.lodgeinfo.LG_AREA}" style="display: none;">
+							<input type="text" name="lg_area_2" readonly value="" style="display: none;">
 							<input type="text" name="lg_name" readonly value="" style="display: none;">
 							<input type="hidden" name="check_in" readonly value="">
 							<input type="hidden" name="check_out" readonly value="">

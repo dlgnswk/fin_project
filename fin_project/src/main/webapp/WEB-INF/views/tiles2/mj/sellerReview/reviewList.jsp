@@ -17,9 +17,6 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 				
-		
-		
-		
 						/*치트시작  */
 						const review = parseInt($("input[id='review']").val());
 						//console.log(review);
@@ -28,11 +25,6 @@
 						const comment = parseInt($("input[id='comment']").val());
 						// console.log(comment);
 
-						
-						
-						
-						
-						
 						Highcharts.chart('chart', {
 						    chart: {
 						        plotBackgroundColor: null,
@@ -117,14 +109,7 @@
 						
 						});
 					
-					
-			
-						
-					
-					
 					// 여기부터 ajax 끝
-		
-		
 		
 					/* 답글쓰기 시작  */
 						//$("button.btn_answer").click(function(e) {
@@ -147,15 +132,7 @@
 							$("div.showanswer").hide();
 						});
 				
-						
-					
-					
 						$(document).on("click", "button.send", function(e){
-							
-							
-
-						
-						
 							
 							 const index = $("button.send").index($(e.target));
 							 //console.log(index);
@@ -299,10 +276,6 @@
 							// alert($(e.target).parent().parent().parent().parent().parent().find(`input.seq\${sub_str}`).val());
 							
 							
-							
-							
-							//alert("확인완료");
-							
 						    const index = $("button.updateBtn").index($(e.target));
 						    console.log("index: ", index);
 
@@ -315,15 +288,8 @@
 						    }
 						
 						    
-						    
-						    
 						    const cContentValue = $("textarea[name='c_content']");
 							   cContentValue.val(updateTextarea);
-							   
-							   
-						
-							    
-							
 							   
 							   const regDate = $("input[id='regDate']").eq(index).val();
 							   
@@ -331,9 +297,6 @@
 
 							 
 							     c_regDate.val(regDate);
-							    
-							
-							   
 							   
 								   const seq = $("input[id='seq']").eq(index).val();
 								   
@@ -342,10 +305,6 @@
 								 
 								     c_seq.val(seq);
 								    
-								     
-								     
-								     
-								
 							const frm = document.forms["updateFrm"];
 						   	 frm.method = "post";
 						   	 frm.action = "<%=ctxPath%>/updateEnd.exp";
@@ -355,23 +314,16 @@
 						});
 						
 						
-						
 							/* 삭제 구현하기 */
 			                  $(document).on("click", "button.delete", function(e){
-			                     
-			                    // alert("확인삼");
 			                     
 			                      //const index = $("button.delete").index($(e.target));
 			                     //  console.log("index: ", index);   
 			                     
-			                        //      seq
-			               
 			                     //    const seq = $("#seq").next.val(seq);
 			                         
 			                     //    console.log(seq);
 
-			                     //       alert(seq);
-			                     
 			                     const seq_inx = $(e.target).attr('class');
 			                     //alert(seq_inx);
 			                     const sub_str = seq_inx.substring(4,6);
@@ -383,9 +335,6 @@
 			         
 			                     const seq2 = $(e.target).parent().parent().parent().parent().parent().parent().find(`input.seq\${sub_str}`).val();
 			                     
-			                    
-			                     
-								   
 							     let c_seq = $("input[name='c_seq']");
 							     c_seq.val(seq2);
 								    
@@ -397,7 +346,6 @@
 
 			                        });
 
-								
 						$("input:text[name='searchWord']").bind("keyup",
 								function(e) {
 									if (e.keyCode == 13) { // 엔터를 했을 경우 
@@ -481,11 +429,7 @@
 					               <input type="hidden" id="review" value="${requestScope.gettotalByRate}" >
 					               <input type="hidden" id="comment" value="${requestScope.gettotalComment}" >
 					               
-					               
 					               </div>
-					               
-					             
-					               
 					            </div>
 					             
 					            
@@ -493,8 +437,6 @@
 					               <div style="margin-top:40%; width:190%;" id="chart"></div>
 					  </div>
 					</div>
-
-
 
 					<%-- right side --%>
 					<c:if test="${not empty requestScope.commentList}">
@@ -664,13 +606,6 @@
 													class="closecansel">취소</button>
 											</div>
 
-
-
-
-
-
-
-
 											<br>
 										</div>
 
@@ -720,27 +655,15 @@
 
 							</form>
 
-
-
-
-
-
-
-
 						<div class="row" id="displayHIT" style="display:inline-block; margin-left:1%;"></div>
 				
 						</div>
 					</c:if>
 					<c:if test="${empty requestScope.commentList}">
-						<div>등록된 리뷰가 없습니다.</div>
+						<div style="margin-left: 24%; padding-top:35%;">등록된 리뷰가 없습니다.</div>
 					</c:if>
 
-
-
 				</div>
-
-
-
 
 			</div>
 		</div>
@@ -748,38 +671,11 @@
 
 		<div>
 
-			
-
-
     <%-- === #122. 페이지바 보여주기 === --%>
     <div align="center" style="border: solid 0px gray;width: 80%;margin: 30px auto 0 auto;padding-bottom: 3%;"> 
         ${requestScope.pageBar}
     </div>
     
-
-			<%-- <div>
-				<p class="text-center">
-					<span id="end"
-						style="display: block; margin: 20px; font-size: 14pt; font-weight: bold; color: red;"></span>
-					<button type="button" 
-						id="btnMoreHIT" value="3" style="width:20%;">더보기...</button>
-					<span id="totalHITCount">${requestScope.totalCount}</span> <span
-						id="countHIT">2</span>
-				</p>
-			</div> --%>
-
-
-			<%-- <div>
-				<p>
-					 <span id="end"></span> 
-					<button type="button"
-						style="width: 30%; height: 30px; border: 1px solid black; margin-top: 1%; margin-left: 35%; background-color: #fff; color: #1668e3; border-radius: 2500rem;"
-						id="btnMoreHIT" value=""></button>
-
-					<span id="totalCount">${requestScope.totalCount}</span> <span
-						id="countHIT">0</span>
-				</p>
-			</div> --%>
 		</div>
 
 	</div>
