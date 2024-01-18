@@ -34,6 +34,12 @@
 		outline:none;
 	}
 
+	a, a:hover {
+		color:white;
+		font-size:14px;
+	}
+	
+
 </style>
 
 <script type="text/javascript">
@@ -106,7 +112,7 @@
 			<img src="https://www.expediapartnercentral.com/Account/Logon/static/images/eg_logo_2x.png" style="width:250px; height:60px;"/>
 		</div>
 		
-         <form name="loginFrm" class="mt-5" style="margin:5% auto;" >
+         <form name="loginFrm" class="mt-5" style="margin:5% auto 3% auto;" >
 	      <div id="btn_id_field" style="background-color:white; width: 55%; margin: 0 auto;">
                   <!-- 이메일 아이콘 -->
                   <div style="width:30px; margin: 0 10px;">
@@ -139,16 +145,16 @@
                         	<input id="pwd" name="pwd" type="password" value="" style="" />
                      </div>
                   </div>
+                  
            </div>
          </form>
          
          
       
-      <div class="col-md-8 col-md-offset-2" style="margin: auto; display: flex; border: solid 0px blue;">
-         <div style="margin: auto; border: solid 0px blue;">
-            <button style="width: 150px; height: 40px;" class="btn btn-primary" type="button" id="btnLOGIN">로그인</button>
-         	<button style="width: 150px; height: 40px;" class="btn btn-danger" type="button" id="btnRegister" onclick="location.href='<%= ctxPath%>/hostRegister1.exp'">회원가입</button>
-         </div>
+      <div style="width:55%; margin: 0 auto; border: solid 0px blue;">
+         <button style="width: 100%; height: 40px; background-color:#4c4cff; color:white; font-size:14px; margin-bottom:5%;" type="button" id="btnLOGIN">로그인</button>
+         
+         <a href="<%= ctxPath%>/hostRegister1.exp">비밀번호가 기억나지 않으세요?</a>
       </div>
    </div>
 		
