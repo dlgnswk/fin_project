@@ -224,6 +224,8 @@ public class paymentController {
 		String to_insert_point = request.getParameter("to_insert_point");
 		String used_point = request.getParameter("used_point");
 		String rm_seq = request.getParameter("rm_seq");
+		String rm_type = request.getParameter("rm_type");
+		String daysGap = request.getParameter("daysGap");
 		String total__price = request.getParameter("total__price");
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
@@ -357,6 +359,9 @@ public class paymentController {
 			lg_address = lvo.getLg_address();
 		}
 		
+		int int_daysGap = Integer.parseInt(daysGap);
+		int_daysGap = int_daysGap + 1;
+		
 		DecimalFormat decFormat = new DecimalFormat("###,###");
 		
 		String totalPrice = decFormat.format(i_totalPrice);
@@ -384,10 +389,10 @@ public class paymentController {
 				          "			<div style='background-color:white; font-weight:400;font-size:14px;line-height:18px;margin-top:10px; padding:16px 20px 16px;color:#343b53;border:2px solid #a2576a;'>" + 
 				          "				<div style=\"font-weight:bold;\">객실정보</div>" + 
 				          "				<hr style=\"border:1px solid #c7c7c7\">" + 
-				          "				<div style=\"padding:3px 0 3px 0;\">객실타입<span style=\"float:right;\">" + currentTimeD + "</span></div>" + 
+				          "				<div style=\"padding:3px 0 3px 0;\">객실타입<span style=\"float:right;\">" + rm_type + "</span></div>" + 
 				          "				<div style=\"padding:3px 0 3px 0;\">입실시간<span style=\"float:right;\">" + startDate + " " + checkinTime + "</span></div>" + 
 				          "				<div style=\"padding:3px 0 3px 0;\">퇴실시간<span style=\"float:right;\">" + endDate + " " + checkoutTime + "</span></div>" + 
-				          "				<div style=\"padding:3px 0 3px 0;\">투숙일수<span style=\"float:right;\">" + currentTimeD + "</span></div>" + 
+				          "				<div style=\"padding:3px 0 3px 0;\">투숙일수<span style=\"float:right;\">" + daysGap + "박" + int_daysGap + "일" + "</span></div>" + 
 				          "			</div>" + 
 				          "		</div>" + 
 				          "	</div>";

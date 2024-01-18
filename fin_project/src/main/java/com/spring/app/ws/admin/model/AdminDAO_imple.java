@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.spring.app.expedia.domain.HostVO;
 import com.spring.app.expedia.domain.UserVO;
 
 @Repository
@@ -58,8 +59,8 @@ public class AdminDAO_imple implements AdminDAO {
 
 	// 페이징한 판매자목록 가져오기
 	@Override
-	public List<UserVO> hostListSearch(Map<String, String> paraMap) {
-		List<UserVO> hostList = sqlsession.selectList("ws_admin.hostListSearch",paraMap);
+	public List<HostVO> hostListSearch(Map<String, String> paraMap) {
+		List<HostVO> hostList = sqlsession.selectList("ws_admin.hostListSearch",paraMap);
 		return hostList;
 	}
 

@@ -8,7 +8,7 @@
 	String ctxPath = request.getContextPath();
     //      /board
 %> 
-<title>판매자 관리 페이지</title>
+<title>사업자 관리 페이지</title>
 <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/resources/css/com_expedia.css" />
 
 <script type="text/javascript">
@@ -344,11 +344,21 @@ function goslideDown(target){
          <h3 class="uitk-heading uitk-heading-6">안녕하세요, ${sessionScope.loginuser.name} 님!</h3>
          <div class="uitk-text overflow-wrap uitk-type-300 uitk-text-default-theme">${sesseionScope.loginuser.userid}</div>
         </div>
-        
-        <span class="uitk-badge-base uitk-badge-base-large uitk-badge-base-has-text uitk-badge-loyalty-global-lowtier">
-         <span class="uitk-badge-base-text" aria-hidden="false">블루</span>
-        </span>
-       
+           <c:if test="${sessionScope.loginuser.user_lvl == '블루'}">
+		        <span class="uitk-badge-base uitk-badge-base-large uitk-badge-base-has-text uitk-badge-loyalty-global-lowtier">
+		        	<span class="uitk-badge-base-text" aria-hidden="false">${sessionScope.loginuser.user_lvl}</span>    
+		        </span>
+	       </c:if>
+       	   <c:if test="${sessionScope.loginuser.user_lvl == '실버'}">
+		        <span style="background-color:#646c75;" class="uitk-badge-base uitk-badge-base-large uitk-badge-base-has-text uitk-badge-loyalty-global-lowtier">
+		        	<span class="uitk-badge-base-text" aria-hidden="false">${sessionScope.loginuser.user_lvl}</span>    
+		        </span>
+	       </c:if>
+	       <c:if test="${sessionScope.loginuser.user_lvl == '골드'}">
+		        <span style="background-color:#7c6935;" class="uitk-badge-base uitk-badge-base-large uitk-badge-base-has-text uitk-badge-loyalty-global-lowtier">
+		        	<span class="uitk-badge-base-text" aria-hidden="false">${sessionScope.loginuser.user_lvl}</span>    
+		        </span>
+	       </c:if>
        </div>
       </div>
      <div class="uitk-card-content-section uitk-card-content-section-padded-block-end uitk-card-content-section-padded-inline-start uitk-card-content-section-padded-inline-end uitk-layout-flex-item">
@@ -468,7 +478,7 @@ function goslideDown(target){
 				<svg style="width:35px;height:35px; margin:0 5px 0 0;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
 					<path d="M192 0c-41.8 0-77.4 26.7-90.5 64H64C28.7 64 0 92.7 0 128V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V128c0-35.3-28.7-64-64-64H282.5C269.4 26.7 233.8 0 192 0zm0 64a32 32 0 1 1 0 64 32 32 0 1 1 0-64zM305 273L177 401c-9.4 9.4-24.6 9.4-33.9 0L79 337c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L271 239c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/>
 				</svg>
-				판매자 관리
+				사업자 관리
 			</h2>
 
 			<div id="mypage_right" style="display:abslute;">
@@ -493,10 +503,10 @@ function goslideDown(target){
 				<table id="shopping_info">
 					<thead>
 						<tr>
-							<th colspan="7" class="table_title page_title" style="color:white;">판매자 관리</th>
+							<th colspan="7" class="table_title page_title" style="color:white;">사업자 관리</th>
 						</tr>
 						<tr>
-							<th class="table_field_1 table_font__s" style="font-size:9pt; font-weight:bold;" width="146px">판매자ID</th>
+							<th class="table_field_1 table_font__s" style="font-size:9pt; font-weight:bold;" width="146px">사업자ID</th>
 							<th class="table_field_2 table_font__s" style="font-size:9pt; font-weight:bold;" width="113px">이름</th>
 							<th class="table_field_3 table_font__s" style="font-size:9pt; font-weight:bold;" width="133px">연락처</th>
 							<th class="table_field_5 table_font__s" style="font-size:9pt; font-weight:bold;" width="113px">사업장명</th>
