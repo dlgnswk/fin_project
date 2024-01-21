@@ -89,14 +89,14 @@
 
 	// ~~~~~~~ Function Declartion ~~~~~~~
 	
-	// 일정 삭제하기
-	function delSchedule(rs_seq){
+	// 예약 일정 삭제하기
+	function delReservationSchedule(rs_seq){
 	
 		var bool = confirm("일정을 삭제하시겠습니까?");
 		
 		if(bool){
 			$.ajax({
-				url: "<%= ctxPath%>/schedule/deleteSchedule.exp",
+				url: "<%= ctxPath%>/schedule/deleteReservationSchedule.exp",
 				type: "post",
 				data: {"rs_seq":rs_seq},
 				dataType: "json",
@@ -108,7 +108,7 @@
 						alert("일정을 삭제하지 못했습니다.");
 					}
 					
-					location.href="<%= ctxPath%>/schedule/scheduleManagement.exp";
+					location.href="<%= ctxPath%>/schedule/reservationScheduleManagement.exp";
 				},
 				error: function(request, status, error){
 		            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -126,7 +126,7 @@
 	
 			<div style="width:70%; margin:auto; border:solid 0px gray;">
 	
-			<h3 style="display: inline-block;">일정 상세보기</h3>&nbsp;&nbsp;<a href="<%= ctxPath%>/schedule/scheduleManagement.exp"><span>◀캘린더로 돌아가기</span></a> 
+			<h3 style="display: inline-block;">일정 상세보기</h3>&nbsp;&nbsp;<a href="<%= ctxPath%>/schedule/reservationScheduleManagement.exp"><span>◀캘린더로 돌아가기</span></a> 
 	
 			<table id="schedule" class="table table-bordered">
 				<tr>

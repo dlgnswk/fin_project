@@ -125,66 +125,61 @@
 		});
 		
 				
-		// 내캘린더,사내캘린더 선택에 따른 서브캘린더 종류를 알아와서 select 태그에 넣어주기 
+		// 객실등급 선택에 따른 객실 가격을 알아와서 select 태그에 넣어주기 
 		
-			var fk_h_userid = $("input[name=fk_h_userid]").val();  // 로그인 된 판매자아이디
-			
-			
-			$.ajax({
-				url: "<%= ctxPath%>/schedule/selectSmallCategory.exp",
-				data: {"fk_h_userid":fk_h_userid},
-				dataType: "json",
-				success:function(json){
-					var html ="";
-					var v_html ="";
-					if(json.length>0){
+		var fk_h_userid = $("input[name=fk_h_userid]").val();  // 로그인 된 사업자아이디
+		
+		
+		$.ajax({
+			url: "<%= ctxPath%>/schedule/selectRoomType_price.exp",
+			data: {"fk_h_userid":fk_h_userid},
+			dataType: "json",
+			success:function(json){
+				var html ="";
+				var v_html ="";
+				if(json.length>0){
+					
+					$.each(json, function(index, item){
+						html+="<option value='"+item.rm_seq+"'>"+item.rm_type+"</option>";
 						
-						$.each(json, function(index, item){
-							html+="<option value='"+item.rm_seq+"'>"+item.rm_type+"</option>";
-							
-							
-						});
-						$("select.small_category").html(html);
-						$("select.small_category").show();
 						
-						// select 태그 변경 시 이벤트 핸들러
-						$("select.schedule").on('change', function() {
-						    var selectedValue = $(this).val(); // 선택된 옵션 값 가져오기
+					});
+					$("select.roomType").html(html);
+					$("select.roomType").show();
+					
+					// select 태그 변경 시 이벤트 핸들러
+					$("select.schedule").on('change', function() {
+					    var selectedValue = $(this).val(); // 선택된 옵션 값 가져오기
 
-						    // JSON 데이터에서 선택된 값에 해당하는 rm_price 찾기
-						    var selectedPrice = "";
-						    $.each(json, function(index, item) {
-						        if (item.rm_seq == selectedValue) {
-						            selectedPrice = item.rm_price;
-						            return false; // 반복문 종료
-						        }
-						    });
+					    // JSON 데이터에서 선택된 값에 해당하는 rm_price 찾기
+					    var selectedPrice = "";
+					    $.each(json, function(index, item) {
+					        if (item.rm_seq == selectedValue) {
+					            selectedPrice = item.rm_price;
+					            return false; // 반복문 종료
+					        }
+					    });
 
-						    // 찾은 가격을 화면에 출력
-						    $("input[name='rm_price']").val(selectedPrice);
-						});
-						
-						
-						
-						
-					}
-				},
-				error: function(request, status, error){
-		            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+					    // 찾은 가격을 화면에 출력
+					    $("input[name='rm_price']").val(selectedPrice);
+					});
+					
+					
+					
+					
 				}
-			});
+			},
+			error: function(request, status, error){
+	            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			}
+		});
 			
-		
-		
-		
-		
-		
 		
 
 		
 		
 		// 등록 버튼 클릭
-		$("button#register").click(function(){
+		$("button#addReservation").click(function(){
 		
 			// 일자 유효성 검사 (시작일자가 종료일자 보다 크면 안된다!!)
 			var startDate = $("input#startDate").val();	
@@ -271,7 +266,7 @@
 			const fk_userid = $("input#fk_userid").val(); 
 			
 			$.ajax({
-				url: "<%= ctxPath%>/schedule/confilctFk_userid.exp",
+				url: "<%= ctxPath%>/schedule/isExist_userid.exp",
 				data: {"fk_userid":fk_userid},
 				dataType: "json",
 				success:function(json){
@@ -315,11 +310,11 @@
 			
 			
 			var frm = document.scheduleFrm;
-			frm.action="<%= ctxPath%>/schedule/registerSchedule_end.exp";
+			frm.action="<%= ctxPath%>/schedule/addReservation_end.exp";
 			frm.method="post";
 			frm.submit();
 
-		});// end of $("button#register").click(function(){})--------------------
+		});// end of $("button#addReservation").click(function(){})--------------------
 		
 		
 		
@@ -365,7 +360,7 @@
 				<tr>
 					<th>객실등급</th>
 					<td>
-						<select class="small_category schedule" name="fk_rm_seq"></select>
+						<select class="roomType schedule" name="fk_rm_seq"></select>
 					</td>
 				</tr>
 				
@@ -419,8 +414,8 @@
 			<input type="hidden" value="${sessionScope.loginhost.h_userid}" name="fk_h_userid"/>
 			<input type="hidden" value="" name="rm_price"/>
 		
-			<button type="button" id="register" class="btn_normal" style="margin-right: 10px; background-color: #0071bd;">등록</button>
-			<button type="button" class="btn_normal" style="background-color: #990000;" onclick="javascript:location.href='<%= ctxPath%>/schedule/scheduleManagement.exp'">취소</button> 
+			<button type="button" id="addReservation" class="btn_normal" style="margin-right: 10px; background-color: #0071bd;">등록</button>
+			<button type="button" class="btn_normal" style="background-color: #990000;" onclick="javascript:location.href='<%= ctxPath%>/schedule/reservationScheduleManagement.exp'">취소</button> 
 		
 		</form>
 	

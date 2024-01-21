@@ -110,19 +110,17 @@ $(document).ready(function(){
 	
 
 
-	// === 내 캘린더에 내캘린더 소분류 보여주기 ===
-	showmyCal();
-	// === 내캘린더 체크박스 전체 선택/전체 해제 === //
+	// === 숙소 예약 캘린더에서 객실등급 보여주기 ===
+	showRoomType();
+	
+	// === 숙소 체크박스 전체 선택/전체 해제 === //
 	$("input:checkbox[id=allMyCal]").click(function(){		
 		var bool = $(this).prop("checked");
 		$("input:checkbox[name=rm_seq]").prop("checked", bool);
 	});// end of $("input:checkbox[id=allMyCal]").click(function(){})-------
 			
 	
-	
-	
-	
-	// === 내캘린더 에 속한 특정 체크박스를 클릭할 경우 === 
+	// === 특정 객실등급 체크박스를 클릭할 경우 === 
 	$(document).on("click","input:checkbox[name=rm_seq]",function(){	
 		var bool = $(this).prop("checked");
 		
@@ -139,8 +137,8 @@ $(document).ready(function(){
 				}
 			}); // end of $("input:checkbox[name=my_rm_seq]").each(function(index, item){})---------
 
-			if(!flag){	// 내캘린더 에 속한 서브캘린더의 체크박스가 모두 체크가 되어진 경우라면 	
-                $("input#allMyCal").prop("checked",true); // 내캘린더 체크박스에 체크를 한다.
+			if(!flag){	// 객실등급 체크박스가 모두 체크가 되어진 경우라면 	
+                $("input#allMyCal").prop("checked",true); // 숙소 체크박스에 체크를 한다.
 			}
 			
 			var rm_seqArr = document.querySelectorAll("input.rm_seq");
@@ -262,7 +260,7 @@ $(document).ready(function(){
     		
     		
 	    	 $.ajax({
-                 url: '<%= ctxPath%>/schedule/selectSchedule.exp',
+                 url: '<%= ctxPath%>/schedule/selectReservationSchedule.exp',
                  data:{"fk_h_userid":$('input#fk_h_userid').val()},
                  dataType: "json",
                  success:function(json) {
@@ -287,8 +285,7 @@ $(document).ready(function(){
                               		// $("input#rs_seq").val(rs_seq);
                               		
                               		
-                                   // 사내 캘린더로 등록된 일정을 풀캘린더 달력에 보여주기 
-                                   // 일정등록시 사내 캘린더에서 선택한 소분류에 등록된 일정을 풀캘린더 달력 날짜에 나타내어지게 한다.
+                                   // 일정 등록시 객실등급별 등록된 일정을 풀캘린더 달력 날짜에 나타내어지게 한다.
                                    if( $("input:checkbox[name=rm_seq]:checked").length <= $("input:checkbox[name=rm_seq]").length ){
 	                                   
 	                                   for(var i=0; i<$("input:checkbox[name=rm_seq]:checked").length; i++){
@@ -300,8 +297,8 @@ $(document).ready(function(){
 	   			                                                title: "예약자명 : "+item.rs_name,
 	   			                                                start: rs_checkinDate,
 	   			                                                end: rs_checkoutDate,
-	   			                                        	    url: "<%= ctxPath%>/schedule/detailSchedule.exp?rs_seq="+item.rs_seq,
-	   			                                                cid: item.fk_rm_seq, // 사내캘린더 내의 서브캘린더 체크박스의 value값과 일치하도록 만들어야 한다. 그래야만 서브캘린더의 체크박스와 cid 값이 연결되어 체크시 풀캘린더에서 일정이 보여지고 체크해제시 풀캘린더에서 일정이 숨겨져 안보이게 된다. 
+	   			                                        	    url: "<%= ctxPath%>/schedule/detailReservationSchedule.exp?rs_seq="+item.rs_seq,
+	   			                                                cid: item.fk_rm_seq, // 숙소 내의 객실등급 체크박스의 value값과 일치하도록 만들어야 한다. 그래야만 숙소 체크박스와 cid 값이 연결되어 체크시 풀캘린더에서 일정이 보여지고 체크 해제시 풀캘린더에서 일정이 숨겨져 안보이게 된다. 
 	   			                                             	color: item.color   // an option!
 	   			                                   }); // end of events.push({})---------
 	   		                                   }
@@ -326,7 +323,7 @@ $(document).ready(function(){
         }, // end of events:function(info, successCallback, failureCallback) {}---------
         // ===================== DB 와 연동하는 법 끝 ===================== //
         
-		// 풀캘린더에서 날짜 클릭할 때 발생하는 이벤트(일정 등록창으로 넘어간다)
+		// 풀캘린더에서 날짜 클릭할 때 발생하는 이벤트(예약 일정 추가)
         dateClick: function(info) {
       	 // alert('클릭한 Date: ' + info.dateStr); // 클릭한 Date: 2021-11-20
       	    $(".fc-day").css('background','none'); // 현재 날짜 배경색 없애기
@@ -335,18 +332,18 @@ $(document).ready(function(){
       	    
       	    var frm = document.dateFrm;
       	    frm.method="POST";
-      	    frm.action="<%= ctxPath%>/schedule/insertSchedule.exp";
+      	    frm.action="<%= ctxPath%>/schedule/addReservationSchedule.exp";
       	    frm.submit();
       	  },
       	  
-      	 // === 사내캘린더, 내캘린더, 공유받은캘린더의 체크박스에 체크유무에 따라 일정을 보여주거나 일정을 숨기게 하는 것이다. === 
+      	 // === 숙소, 객실등급 체크박스의 체크유무에 따라 일정을 보여주거나 일정을 숨기게 하는 것이다. === 
     	 eventDidMount: function (arg) {
 	            var arr_calendar_checkbox = document.querySelectorAll("input.calendar_checkbox"); 
-	            // 사내캘린더, 내캘린더, 공유받은캘린더 에서의 모든 체크박스임
+	            // 숙소, 객실등급에서의 모든 체크박스임
 	            
-	            arr_calendar_checkbox.forEach(function(item) { // item 이 사내캘린더, 내캘린더, 공유받은캘린더 에서의 모든 체크박스 중 하나인 체크박스임
+	            arr_calendar_checkbox.forEach(function(item) { // item 이 숙소, 객실등급에서의 모든 체크박스 중 하나인 체크박스임
 		              if (item.checked) { 
-		            	// 사내캘린더, 내캘린더, 공유받은캘린더 에서의 체크박스중 체크박스에 체크를 한 경우 라면
+		            	// 숙소, 객실등급에서의 체크박스중 체크박스에 체크를 한 경우 라면
 		                
 		            	if (arg.event.extendedProps.cid === item.value) { // item.value 가 체크박스의 value 값이다.
 		                	// console.log("일정을 보여주는 cid : "  + arg.event.extendedProps.cid);
@@ -357,7 +354,7 @@ $(document).ready(function(){
 		              } 
 		              
 		              else { 
-		            	// 사내캘린더, 내캘린더, 공유받은캘린더 에서의 체크박스중 체크박스에 체크를 해제한 경우 라면
+		            	// 숙소, 객실등급에서의 체크박스중 체크박스에 체크를 해제한 경우 라면
 		                
 		            	if (arg.event.extendedProps.cid === item.value) {
 		            		// console.log("일정을 숨기는 cid : "  + arg.event.extendedProps.cid);
@@ -374,7 +371,7 @@ $(document).ready(function(){
 
 
   var arr_calendar_checkbox = document.querySelectorAll("input.calendar_checkbox"); 
-  // 사내캘린더, 내캘린더, 공유받은캘린더 에서의 체크박스임
+  // 숙소, 객실등급에서의 체크박스임
   
   arr_calendar_checkbox.forEach(function(item) {
 	  item.addEventListener("change", function () {
@@ -425,10 +422,10 @@ function calendar_rendering() {
 
 
 
-// === 내 캘린더에서 내캘린더 소분류 보여주기  === //
-function showmyCal(){
+// === 숙소 예약 캘린더에서 객실등급 보여주기  === //
+function showRoomType(){
 	$.ajax({
-		 url:"<%= ctxPath%>/schedule/showMyCalendar.exp",
+		 url:"<%= ctxPath%>/schedule/showRoomType.exp",
 		 type:"get",
 		 data:{"fk_h_userid":"${sessionScope.loginhost.h_userid}"},
 		 dataType:"json",
@@ -453,7 +450,7 @@ function showmyCal(){
 	     }	 	
 	});
 
-}// end of function showmyCal()---------------------	
+}// end of function showRoomType()---------------------	
 
 
 

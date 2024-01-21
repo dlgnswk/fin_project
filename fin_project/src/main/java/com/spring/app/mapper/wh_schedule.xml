@@ -8,25 +8,25 @@
 
 
 
-	 
-	 
-	<!-- 사내 캘린더에 캘린더 소분류 명 조회 -->
-	<!-- 현재 존재하는 객실 등급들을 조회하는 select 문으로 변경 필요 -->
-	<!--  
-	<select id="existComCalendar" parameterType="String" resultType="int">
-		select count(*)
-		from tbl_calendar_small_category
-		where fk_lgcatgono = 2 and smcatgoname = #{com_smcatgoname}  
+	<!-- 예약  정보를 담은 캘린더 불러오기 -->
+	<select id="selectReservation" resultType="com.spring.app.expedia.domain.ReservationVO" parameterType="HashMap">
+		select rs_seq, fk_userid, fk_h_userid, rs_date, rs_checkinDate, rs_checkoutDate, rs_price, rs_paytype, rs_guest_cnt, rs_name, rs_mobile, rs_email, lodge_id, fk_rm_seq        
+		from
+		(        
+		SELECT R.rs_seq, R.fk_userid, R.fk_h_userid, R.rs_date, R.rs_checkinDate, R.rs_checkoutDate, R.rs_price, R.rs_paytype, R.rs_guest_cnt, R.rs_name, R.rs_mobile, R.rs_email, L.lodge_id, R.fk_rm_seq  
+		FROM tbl_reservation R 
+		JOIN tbl_lodge L ON L.fk_h_userid = R.fk_h_userid
+		JOIN tbl_room M ON L.lodge_id = M.fk_lodge_id
+		)V
+		WHERE fk_h_userid = #{h_userid}
+		group by rs_seq, fk_userid, fk_h_userid, rs_date, rs_checkinDate, rs_checkoutDate, rs_price, rs_paytype, rs_guest_cnt, rs_name, rs_mobile, rs_email, lodge_id, fk_rm_seq 
 	</select>
-	-->
- 
-   
-	
+	 
+
 
 	
-	<!-- 내 캘린더에서 내캘린더 소분류  보여주기  -->
-	<!-- 숙소 캘린더에서 객실등급 소분류 보여주기 -->
-	<select id="showMyCalendar" resultType="com.spring.app.expedia.domain.RoomVO" parameterType="String">
+	<!-- 숙소 예약 캘린더에서 객실등급 보여주기 -->
+	<select id="showRoomType" resultType="com.spring.app.expedia.domain.RoomVO" parameterType="String">
 		select rm_seq, fk_lodge_id, rm_type, fk_h_userid
 		from
 			(
@@ -39,9 +39,16 @@
 	</select>
 	
 	
+	<!-- 풀캘린더에서 날짜 클릭할 때 발생하는 이벤트(예약 일정 추가) -->
+    <insert id="addReservation_end" parameterType="HashMap">
+    	insert into tbl_reservation(rs_seq, fk_userid, fk_h_userid, rs_date, rs_checkinDate, rs_checkoutDate, rs_price, rs_payType, rs_guest_cnt, rs_name, rs_mobile, rs_email, fk_rm_seq) 
+    	values(seq_reservation.nextval, #{fk_userid}, #{fk_h_userid}, default, to_date(#{startdate}, 'yyyymmddhh24miss'), to_date(#{enddate}, 'yyyymmddhh24miss'), (#{rm_cnt}*#{rm_price}) , #{rs_payType}, #{rs_guest_cnt}, #{rs_name}, #{rs_mobile}, #{rs_email}, #{fk_rm_seq})  
+    </insert>
+	
+	
+	
     <!-- 일정 등록시 내캘린더,사내캘린더 선택에 따른 서브캘린더 종류를 알아오기 -->
-    
-    <select id="selectSmallCategory" parameterType="String" resultType="com.spring.app.expedia.domain.RoomVO">
+    <select id="selectRoomType_price" parameterType="String" resultType="com.spring.app.expedia.domain.RoomVO">
 		select rm_seq, fk_lodge_id, rm_type, rm_price, fk_h_userid
 		from
 			(
@@ -57,43 +64,22 @@
    
     
     
-    <!-- 일정 등록하기 -->
-    <!-- 예약 일정을 추가하는 insert문으로 변경 필요 -->
-     
-    <insert id="registerSchedule_end" parameterType="HashMap">
-    	insert into tbl_reservation(rs_seq, fk_userid, fk_h_userid, rs_date, rs_checkinDate, rs_checkoutDate, rs_price, rs_payType, rs_guest_cnt, rs_name, rs_mobile, rs_email, fk_rm_seq) 
-    	values(seq_reservation.nextval, #{fk_userid}, #{fk_h_userid}, default, to_date(#{startdate}, 'yyyymmddhh24miss'), to_date(#{enddate}, 'yyyymmddhh24miss'), (#{rm_cnt}*#{rm_price}) , #{rs_payType}, #{rs_guest_cnt}, #{rs_name}, #{rs_mobile}, #{rs_email}, #{fk_rm_seq})  
-    </insert>
+    
 	
-	<!-- 일정 등록 시 예약자 아이디의 존재여부 확인하기 -->
-	<select id="confilctFk_userid" parameterType="String" resultType="com.spring.app.expedia.domain.UserVO">
+	<!-- 예약 일정 추가 시 예약자 아이디의 존재여부 확인하기 -->
+	<select id="isExist_userid" parameterType="String" resultType="com.spring.app.expedia.domain.UserVO">
 		select userid
 		from tbl_user
 		where userid = #{fk_userid}
 	</select>
 	
 
-    <!-- 등록된 일정에 대한 정보(달력에 표시됨)-->
-	
-	<select id="selectReservation" resultType="com.spring.app.expedia.domain.ReservationVO" parameterType="HashMap">
-		select rs_seq, fk_userid, fk_h_userid, rs_date, rs_checkinDate, rs_checkoutDate, rs_price, rs_paytype, rs_guest_cnt, rs_name, rs_mobile, rs_email, lodge_id, fk_rm_seq        
-		from
-		(        
-		SELECT R.rs_seq, R.fk_userid, R.fk_h_userid, R.rs_date, R.rs_checkinDate, R.rs_checkoutDate, R.rs_price, R.rs_paytype, R.rs_guest_cnt, R.rs_name, R.rs_mobile, R.rs_email, L.lodge_id, R.fk_rm_seq  
-		FROM tbl_reservation R 
-		JOIN tbl_lodge L ON L.fk_h_userid = R.fk_h_userid
-		JOIN tbl_room M ON L.lodge_id = M.fk_lodge_id
-		)V
-		WHERE fk_h_userid = #{h_userid}
-		group by rs_seq, fk_userid, fk_h_userid, rs_date, rs_checkinDate, rs_checkoutDate, rs_price, rs_paytype, rs_guest_cnt, rs_name, rs_mobile, rs_email, lodge_id, fk_rm_seq 
-	</select>
+    
 	
 	
 	
-	<!-- 일정 상세 보기 -->
-	<!-- 예약일정 상세보기 -->
-	
-	<resultMap type="HashMap" id="detailSchedule_Map">
+	<!-- 예약 일정 상세보기 -->
+	<resultMap type="HashMap" id="detailReservationSchedule_Map">
 		<result property="RS_SEQ" 		column="rs_seq" 			javaType="String" />
 		<result property="STARTDATE" 	column="rs_checkinDate" 	javaType="String" />
 		<result property="ENDDATE" 		column="rs_checkoutDate" 	javaType="String" />
@@ -109,7 +95,7 @@
 		<result property="LODGE_ID" 	column="lodge_id" 			javaType="String" />
 		<result property="FK_RM_SEQ" 	column="fk_rm_seq" 			javaType="String" />
 	</resultMap>	
-	<select id="detailSchedule" parameterType="String" resultMap="detailSchedule_Map">
+	<select id="detailReservationSchedule" parameterType="String" resultMap="detailReservationSchedule_Map">
 		select rs_seq, fk_userid, fk_h_userid, rs_date, rs_checkinDate, rs_checkoutDate, rs_price, rs_paytype, rs_guest_cnt, rs_name, rs_mobile, rs_email, lodge_id, fk_rm_seq        
 		from
 		(        
@@ -124,22 +110,13 @@
 	
 	
 	
-	<!-- 일정삭제하기 -->
-	  
-	<delete id="deleteSchedule" parameterType="String">
+	<!-- 예약 일정 삭제하기 -->
+	<delete id="deleteReservationSchedule" parameterType="String">
 		delete from tbl_reservation
 		where rs_seq = #{rs_seq} 
 	</delete>
 	
 
-	
-	
-
-	
-	
-
-
-	
 	
 	<!-- 총 일정 검색 건수(totalCount) -->
 	  
@@ -160,9 +137,7 @@
 	</select>
 	
 	
-	
 	<!-- 페이징 처리한 캘린더 가져오기(검색어가 없다라도 날짜범위 검색은 항시 포함된 것임) -->
-	
 	<resultMap type="HashMap" id="scheduleListSearchWithPaging_Map">
 		<result property="RS_SEQ" 			column="rs_seq" 			javaType="String" />
 		<result property="RS_CHECKINDATE" 	column="rs_checkinDate" 	javaType="String" />

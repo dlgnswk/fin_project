@@ -32,160 +32,19 @@ public class ScheduleController {
 	
 	
 	// === 일정관리 시작 페이지 ===
-	@GetMapping("/schedule/scheduleManagement.exp")
-	public ModelAndView requiredHostLogin_showSchedule(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
+	@GetMapping("/schedule/reservationScheduleManagement.exp")
+	public ModelAndView requiredHostLogin_reservationScheduleManagement(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
 		
-		mav.setViewName("wh/schedule/scheduleManagement.tiles2");
+		mav.setViewName("wh/schedule/reservationScheduleManagement.tiles2");
 
 		return mav;
 	}
 	
-	// === 내 캘린더에서 내캘린더 소분류  보여주기 ===
-	// === 숙소 캘린더에서 객실등급 소분류 보여주기  ===
+	
+	// === 예약  정보를 담은 캘린더 불러오기 ===
 	@ResponseBody
-	@GetMapping(value="/schedule/showMyCalendar.exp", produces="text/plain;charset=UTF-8") 
-	public String showMyCalendar(HttpServletRequest request) {
-		
-		String fk_h_userid = request.getParameter("fk_h_userid");
-		
-		List<RoomVO> roomList = service.showMyCalendar(fk_h_userid);
-		
-		JSONArray jsonArr = new JSONArray();
-		
-		if(roomList != null) {
-			for(RoomVO roomvo : roomList) {
-				JSONObject jsObj = new JSONObject();
-				jsObj.put("rm_seq", roomvo.getRm_seq());
-				jsObj.put("rm_type", roomvo.getRm_type());
-				jsObj.put("fk_lodge_id", roomvo.getFk_lodge_id());
-				jsObj.put("fk_h_userid", roomvo.getFk_h_userid());
-				jsonArr.put(jsObj);
-			}
-		}
-		
-		return jsonArr.toString();
-	}
-	
-	
-	// === 풀캘린더에서 날짜 클릭할 때 발생하는 이벤트(일정 등록창으로 넘어간다) ===
-	@PostMapping("/schedule/insertSchedule.exp")
-	public ModelAndView requiredHostLogin_insertSchedule(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
-		
-		// form 에서 받아온 날짜
-		String chooseDate = request.getParameter("chooseDate");
-		
-		mav.addObject("chooseDate", chooseDate);
-		mav.setViewName("wh/schedule/insertSchedule.tiles2");
-		
-		return mav;
-	}
-	
-	
-	// === 일정 등록시 내캘린더,사내캘린더 선택에 따른 서브캘린더 종류를 알아오기 ===
-	@ResponseBody
-	@GetMapping(value="/schedule/selectSmallCategory.exp", produces="text/plain;charset=UTF-8") 
-	public String selectSmallCategory(HttpServletRequest request) {
-		
-		String fk_h_userid = request.getParameter("fk_h_userid");       // 사용자아이디
-		
-		List<RoomVO> roomList = service.selectSmallCategory(fk_h_userid);
-			
-		JSONArray jsArr = new JSONArray();
-		if(roomList != null) {
-			for(RoomVO roomvo : roomList) {
-				JSONObject jsObj = new JSONObject();
-				jsObj.put("rm_seq", roomvo.getRm_seq());
-				jsObj.put("rm_type", roomvo.getRm_type());
-				jsObj.put("rm_price", roomvo.getRm_price());
-				
-				jsArr.put(jsObj);
-			}
-		}
-		
-		return jsArr.toString();
-	}
-	
-	
-	
-	
-	// === 일정 등록하기 ===
-	@PostMapping("/schedule/registerSchedule_end.exp")
-	public ModelAndView registerSchedule_end(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) throws Throwable {
-		
-		String startdate= request.getParameter("startdate");
-   	//  System.out.println("확인용 startdate => " + startdate);
-	//  확인용 startdate => 20231129140000
-   	    
-		String enddate = request.getParameter("enddate");
-		String rm_cnt = request.getParameter("rm_cnt");
-		String fk_rm_seq = request.getParameter("fk_rm_seq");
-		String rm_price = request.getParameter("rm_price");
-		String rs_name = request.getParameter("rs_name");
-		String rs_mobile = request.getParameter("rs_mobile");
-		String rs_email = request.getParameter("rs_email");
-		String rs_guest_cnt = request.getParameter("rs_guest_cnt");
-		String rs_payType = request.getParameter("rs_payType");
-		
-		String fk_h_userid = request.getParameter("fk_h_userid");
-		String fk_userid = request.getParameter("fk_userid");
-		
-		/*
-		System.out.println("확인용 startdate => "+startdate);
-		System.out.println("확인용 enddate => "+enddate);
-		System.out.println("확인용 rm_cnt => "+rm_cnt);
-		System.out.println("확인용 fk_rm_seq => "+fk_rm_seq);
-		System.out.println("확인용 rm_price => "+rm_price);
-		System.out.println("확인용 rs_name => "+rs_name);
-		System.out.println("확인용 rs_mobile => "+rs_mobile);
-		System.out.println("확인용 rs_email => "+rs_email);
-		System.out.println("확인용 rs_guest_cnt => "+rs_guest_cnt);
-		System.out.println("확인용 rs_payType => "+rs_payType);
-		System.out.println("확인용 fk_h_userid => "+fk_h_userid);
-		System.out.println("확인용 fk_userid => "+fk_userid);
-		*/
-		
-		
-		
-		
-		Map<String,String> paraMap = new HashMap<String, String>();
-		paraMap.put("startdate", startdate);
-		paraMap.put("enddate", enddate);
-		paraMap.put("rm_cnt", rm_cnt);
-		paraMap.put("fk_rm_seq",fk_rm_seq);
-		paraMap.put("rm_price",rm_price);
-		paraMap.put("rs_name", rs_name);
-		paraMap.put("rs_mobile", rs_mobile);
-		paraMap.put("rs_email", rs_email);
-		paraMap.put("rs_guest_cnt", rs_guest_cnt);
-		paraMap.put("rs_payType", rs_payType);
-		
-		paraMap.put("fk_h_userid", fk_h_userid);
-		paraMap.put("fk_userid", fk_userid);
-		
-		
-		int n = service.registerSchedule_end(paraMap);
-
-		if(n == 0) {
-			mav.addObject("message", "일정 등록에 실패하였습니다.");
-		}
-		else {
-			mav.addObject("message", "일정 등록에 성공하였습니다.");
-		}
-		
-		mav.addObject("loc", request.getContextPath()+"/schedule/scheduleManagement.exp");
-		
-		mav.setViewName("msg");
-		
-		return mav;
-	}
-	
-	
-	
-	
-	// === 모든 캘린더(사내캘린더, 내캘린더, 공유받은캘린더)를 불러오는것 ===
-	@ResponseBody
-	@RequestMapping(value="/schedule/selectSchedule.exp", produces="text/plain;charset=UTF-8")
-	public String selectSchedule(HttpServletRequest request) {
+	@RequestMapping(value="/schedule/selectReservationSchedule.exp", produces="text/plain;charset=UTF-8")
+	public String selectReservationSchedule(HttpServletRequest request) {
 		
 		// 등록된 일정 가져오기
 		
@@ -193,16 +52,6 @@ public class ScheduleController {
 		
 		
 		String[] colors = {"#f37976", "#f89c59", "#f59eae", "#d5b5c2", "#b96b95", "#b6cc83", "#01686d", "#01ac88", "#9dd0cb", "#0082c0", "#86c5ee"};
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		
 		Map<String,String> paraMap = new HashMap<>();
@@ -255,9 +104,169 @@ public class ScheduleController {
 	
 	
 	
-	// === 일정상세보기 ===
-	@RequestMapping(value="/schedule/detailSchedule.exp")
-	public ModelAndView detailSchedule(ModelAndView mav, HttpServletRequest request) {
+	
+	// === 숙소 예약 캘린더에서 객실등급 보여주기  ===
+	@ResponseBody
+	@GetMapping(value="/schedule/showRoomType.exp", produces="text/plain;charset=UTF-8") 
+	public String showRoomType(HttpServletRequest request) {
+		
+		String fk_h_userid = request.getParameter("fk_h_userid");
+		
+		List<RoomVO> roomTypeList = service.showRoomType(fk_h_userid);
+		
+		JSONArray jsonArr = new JSONArray();
+		
+		if(roomTypeList != null) {
+			for(RoomVO roomvo : roomTypeList) {
+				JSONObject jsObj = new JSONObject();
+				jsObj.put("rm_seq", roomvo.getRm_seq());
+				jsObj.put("rm_type", roomvo.getRm_type());
+				jsObj.put("fk_lodge_id", roomvo.getFk_lodge_id());
+				jsObj.put("fk_h_userid", roomvo.getFk_h_userid());
+				jsonArr.put(jsObj);
+			}
+		}
+		
+		return jsonArr.toString();
+	}
+	
+	
+	// === 풀캘린더에서 날짜 클릭할 때 발생하는 이벤트(예약 일정 추가) ===
+	@PostMapping("/schedule/addReservationSchedule.exp")
+	public ModelAndView requiredHostLogin_addReservationSchedule(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) { 
+		
+		// form 에서 받아온 날짜
+		String chooseDate = request.getParameter("chooseDate");
+		
+		mav.addObject("chooseDate", chooseDate);
+		mav.setViewName("wh/schedule/addReservationSchedule.tiles2");
+		
+		return mav;
+	}
+	
+	
+	// === 일정 등록시 숙소 등급 선택에 따른 객실 가격을 알아오기 ===
+	@ResponseBody
+	@GetMapping(value="/schedule/selectRoomType_price.exp", produces="text/plain;charset=UTF-8") 
+	public String selectRoomType_price(HttpServletRequest request) {
+		
+		String fk_h_userid = request.getParameter("fk_h_userid");       // 사용자아이디
+		
+		List<RoomVO> roomList = service.selectRoomType_price(fk_h_userid);
+			
+		JSONArray jsArr = new JSONArray();
+		if(roomList != null) {
+			for(RoomVO roomvo : roomList) {
+				JSONObject jsObj = new JSONObject();
+				jsObj.put("rm_seq", roomvo.getRm_seq());
+				jsObj.put("rm_type", roomvo.getRm_type());
+				jsObj.put("rm_price", roomvo.getRm_price());
+				
+				jsArr.put(jsObj);
+			}
+		}
+		
+		return jsArr.toString();
+	}
+	
+	
+	
+	
+	// === 예약 일정 추가하기 ===
+	@PostMapping("/schedule/addReservation_end.exp")
+	public ModelAndView addReservation_end(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) throws Throwable {
+		
+		String startdate= request.getParameter("startdate");
+   	//  System.out.println("확인용 startdate => " + startdate);
+	//  확인용 startdate => 20231129140000
+   	    
+		String enddate = request.getParameter("enddate");
+		String rm_cnt = request.getParameter("rm_cnt");
+		String fk_rm_seq = request.getParameter("fk_rm_seq");
+		String rm_price = request.getParameter("rm_price");
+		String rs_name = request.getParameter("rs_name");
+		String rs_mobile = request.getParameter("rs_mobile");
+		String rs_email = request.getParameter("rs_email");
+		String rs_guest_cnt = request.getParameter("rs_guest_cnt");
+		String rs_payType = request.getParameter("rs_payType");
+		
+		String fk_h_userid = request.getParameter("fk_h_userid");
+		String fk_userid = request.getParameter("fk_userid");
+		
+		/*
+		System.out.println("확인용 startdate => "+startdate);
+		System.out.println("확인용 enddate => "+enddate);
+		System.out.println("확인용 rm_cnt => "+rm_cnt);
+		System.out.println("확인용 fk_rm_seq => "+fk_rm_seq);
+		System.out.println("확인용 rm_price => "+rm_price);
+		System.out.println("확인용 rs_name => "+rs_name);
+		System.out.println("확인용 rs_mobile => "+rs_mobile);
+		System.out.println("확인용 rs_email => "+rs_email);
+		System.out.println("확인용 rs_guest_cnt => "+rs_guest_cnt);
+		System.out.println("확인용 rs_payType => "+rs_payType);
+		System.out.println("확인용 fk_h_userid => "+fk_h_userid);
+		System.out.println("확인용 fk_userid => "+fk_userid);
+		*/
+		
+		
+		
+		
+		Map<String,String> paraMap = new HashMap<String, String>();
+		paraMap.put("startdate", startdate);
+		paraMap.put("enddate", enddate);
+		paraMap.put("rm_cnt", rm_cnt);
+		paraMap.put("fk_rm_seq",fk_rm_seq);
+		paraMap.put("rm_price",rm_price);
+		paraMap.put("rs_name", rs_name);
+		paraMap.put("rs_mobile", rs_mobile);
+		paraMap.put("rs_email", rs_email);
+		paraMap.put("rs_guest_cnt", rs_guest_cnt);
+		paraMap.put("rs_payType", rs_payType);
+		
+		paraMap.put("fk_h_userid", fk_h_userid);
+		paraMap.put("fk_userid", fk_userid);
+		
+		
+		int n = service.addReservation_end(paraMap);
+
+		if(n == 0) {
+			mav.addObject("message", "일정 등록에 실패하였습니다.");
+		}
+		else {
+			mav.addObject("message", "일정 등록에 성공하였습니다.");
+		}
+		
+		mav.addObject("loc", request.getContextPath()+"/schedule/reservationScheduleManagement.exp");
+		
+		mav.setViewName("msg");
+		
+		return mav;
+	}
+	
+	// === 예약 일정 추가 시 예약자 아이디의 존재여부 확인하기 === //
+	@ResponseBody
+	@GetMapping(value="/schedule/isExist_userid.exp", produces="text/plain;charset=UTF-8") 
+	public String isExist_userid(HttpServletRequest request) {
+		
+		String fk_userid = request.getParameter("fk_userid");       // 사용자아이디
+		
+		UserVO uservo = service.isExist_userid(fk_userid);
+			
+		JSONObject jsObj = new JSONObject();
+		
+		if(uservo != null) {
+			
+			jsObj.put("userid", uservo.getUserid());
+				
+		}
+		
+		return jsObj.toString();
+	}
+	
+	
+	// === 예약 일정 상세보기 ===
+	@RequestMapping(value="/schedule/detailReservationSchedule.exp")
+	public ModelAndView detailReservationSchedule(ModelAndView mav, HttpServletRequest request) {
 		
 		String rs_seq = request.getParameter("rs_seq");
 		
@@ -268,11 +277,11 @@ public class ScheduleController {
 		
 		try {
 			Integer.parseInt(rs_seq);
-			Map<String,String> map = service.detailSchedule(rs_seq);
+			Map<String,String> map = service.detailReservationSchedule(rs_seq);
 			mav.addObject("map", map);
-			mav.setViewName("wh/schedule/detailSchedule.tiles2");
+			mav.setViewName("wh/schedule/detailReservationSchedule.tiles2");
 		} catch (NumberFormatException e) {
-			mav.setViewName("redirect:wh/schedule/scheduleManagement.exp");
+			mav.setViewName("redirect:wh/schedule/reservationScheduleManagement.exp");
 		}
 		
 		return mav;
@@ -280,14 +289,14 @@ public class ScheduleController {
 	
 	
 	
-	// === 일정삭제하기 ===
+	// === 예약 일정 삭제하기 ===
 	@ResponseBody
-	@PostMapping("/schedule/deleteSchedule.exp")
-	public String requiredHostLogin_deleteSchedule(HttpServletRequest request, HttpServletResponse response) throws Throwable {
+	@PostMapping("/schedule/deleteReservationSchedule.exp")
+	public String requiredHostLogin_deleteReservationSchedule(HttpServletRequest request, HttpServletResponse response) throws Throwable {
 		
 		String rs_seq = request.getParameter("rs_seq");
 				
-		int n = service.deleteSchedule(rs_seq);
+		int n = service.deleteReservationSchedule(rs_seq);
 		
 		JSONObject jsObj = new JSONObject();
 		jsObj.put("n", n);
@@ -302,7 +311,7 @@ public class ScheduleController {
 	
 	
 	
-	// === 검색 기능 === //
+	// === 예약 일정 검색 기능 === //
 	@GetMapping("/schedule/searchSchedule.exp")
 	public ModelAndView searchSchedule(HttpServletRequest request, ModelAndView mav) { 
 		
@@ -456,25 +465,7 @@ public class ScheduleController {
 	
 	
 	
-	// 일정 등록 시 예약자 아이디의 존재여부 확인하기
-	@ResponseBody
-	@GetMapping(value="/schedule/confilctFk_userid.exp", produces="text/plain;charset=UTF-8") 
-	public String confilctFk_userid(HttpServletRequest request) {
-		
-		String fk_userid = request.getParameter("fk_userid");       // 사용자아이디
-		
-		UserVO uservo = service.confilctFk_userid(fk_userid);
-			
-		JSONObject jsObj = new JSONObject();
-		
-		if(uservo != null) {
-			
-			jsObj.put("userid", uservo.getUserid());
-				
-		}
-		
-		return jsObj.toString();
-	}
+	
 	
 	
 	

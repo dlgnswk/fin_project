@@ -32,7 +32,7 @@
 	
 	function goReservation() {
 		const frm = document.useridSendFrm;
-		frm.action  = "<%= ctxPath%>/schedule/scheduleManagement.exp";
+		frm.action  = "<%= ctxPath%>/schedule/reservationScheduleManagement.exp";
 		frm.method = "get";
 		frm.submit();
 	}

@@ -443,7 +443,7 @@ public class PartnerController {
 	
 	// 회원 수정 페이지 이동 
 	@PostMapping("/hostEdit1.exp")
-	public ModelAndView edit1(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView hostEdit1(ModelAndView mav, HttpServletRequest request) {
 		
 		HttpSession session = request.getSession();
 		
@@ -463,7 +463,7 @@ public class PartnerController {
 	
 	
 	@PostMapping("/hostEdit2.exp")
-	public ModelAndView edit2(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView hostEdit2(ModelAndView mav, HttpServletRequest request) {
 		
 		String lodgename = request.getParameter("lodgename");
 		String address = request.getParameter("address");

@@ -11,44 +11,31 @@ import com.spring.app.wh.schedule.domain.*;
 
 public interface ScheduleDAO {
 
-	/*
-	// 사내 캘린더의 소분류인 일정 이름 존재 여부 알아오기
-	int existComCalendar(String scname);
-
-	// 사내 캘린더에 캘린더 소분류 추가하기
-	int addComCalendar(Map<String, String> paraMap) throws Throwable;
 	
-	// 내 캘린더의 소분류인 일정 이름 존재 여부 알아오기
-	int existMyCalendar(Map<String, String> paraMap);
-
-	// 내 캘린더에 캘린더 소분류 추가하기
-	int addMyCalendar(Map<String, String> paraMap) throws Throwable;
-
-	// 사내 캘린더에 사내캘린더 소분류  보여주기 
-	List<Calendar_small_category_VO> showCompanyCalendar();
-
-	*/
 	
-	// 내 캘린더에서 내캘린더 소분류  보여주기
-	List<RoomVO> showMyCalendar(String fk_h_userid);
+	// 예약  정보를 담은 캘린더 불러오기
+	List<ReservationVO> selectReservation(Map<String,String> paraMap);
+	
+	// 숙소 예약 캘린더에서 객실등급 보여주기
+	List<RoomVO> showRoomType(String fk_h_userid);
+	
+	// 풀캘린더에서 날짜 클릭할 때 발생하는 이벤트(예약 일정 추가)
+	int addReservation_end(Map<String, String> paraMap) throws Throwable;
 	
 	// 일정 등록시 내캘린더,사내캘린더 선택에 따른 서브캘린더 종류를 알아오기
-	List<RoomVO> selectSmallCategory(String fk_h_userid);
+	List<RoomVO> selectRoomType_price(String fk_h_userid);
 	
-	// 일정 등록하기
-	int registerSchedule_end(Map<String, String> paraMap) throws Throwable;
+	
 
-	// 등록된 일정 가져오기
-	List<ReservationVO> selectReservation(Map<String,String> paraMap);
+	
+	// 예약 일정 상세보기 
+	Map<String,String> detailReservationSchedule(String rs_seq);
 
-	// 일정 상세 보기 
-	Map<String,String> detailSchedule(String rs_seq);
-
-	// 일정삭제하기
-	int deleteSchedule(String rs_seq) throws Throwable;
+	// 예약 일정 삭제하기
+	int deleteReservationSchedule(String rs_seq) throws Throwable;
 
 	// 일정 등록 시 예약자 아이디의 존재여부 확인하기
-	UserVO confilctFk_userid(String fk_userid);
+	UserVO isExist_userid(String fk_userid);
 	
 	// 총 일정 검색 건수(totalCount)
 	int getTotalCount(Map<String, String> paraMap);

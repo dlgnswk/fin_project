@@ -35,22 +35,22 @@
 				b_requiredInfo = true;
 			}
 			
-		}
 		
 		
-		$("button#next_level").on("click",function(){
-			goNextlevel();
-
 		});
+		
+		 $("button#next_level").on("click",function(){
+			goNextlevel();
+		});  
 
-	})// end of $(document).ready(function(){})---------------------------------
+	});// end of $(document).ready(function(){})---------------------------------
 
 function goNextlevel() {
 		
 		// *** 필수입력사항에 모두 입력이 되었는지 검사하기(공백시, 빨간보더) 시작  *** //
 		   let b_requiredInfo = true;
 			
-		   $("input.required").each(function(e){
+		    $("input.required").each(function(e){
 		      const data = $(e).val().trim();
 		      
 		      console.log("확인용 data : "+data);
@@ -63,14 +63,13 @@ function goNextlevel() {
 		      else {
 				  b_requiredInfo = true;
 			  }
-		      
-		   });
+		   
 		  
 		   if (b_requiredInfo == false) {
 			   alert("필수 입력사항을 확인해주세요.")
 			   return false;
 		   }
-		   // *** 필수입력사항에 모두 입력이 되었는지 검사하기(공백시, 빨간보더) 끝  *** //
+		   // *** 필수입력사항에 모두 입력이 되었는지 검사하기(공백시, 빨간보더) 끝  *** // */
 			
 		   
 		   if(b_requiredInfo) {
@@ -81,7 +80,8 @@ function goNextlevel() {
 			   
 		   }
 		
-	}	
+		 });
+	}
 	
 	
 	
