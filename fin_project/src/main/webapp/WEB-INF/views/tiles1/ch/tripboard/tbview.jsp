@@ -205,7 +205,7 @@
 	.dropdown_content {
     position: absolute;
     display: none;
-    width: 9.8125rem; /* 157px를 16px 기준으로 나눈 값 */
+    width: 8rem; /* 157px를 16px 기준으로 나눈 값 */
     background-color: white;
     border-radius: 0.25rem; /* 4px를 16px 기준으로 나눈 값 */
     box-shadow: 0.25rem 0.25rem 0.625rem #c5b0b0; /* 4px, 4px, 10px를 16px 기준으로 나눈 값 */
@@ -273,7 +273,6 @@
 	    position:absolute; 
 	    width:100%; 
 	    height:100%; 
-	    background: rgba(0,0,0,0.8); 
 	    top:0; 
 	    left:0; 
 	    display:none;
@@ -282,6 +281,7 @@
 	
 	body.modal-open {
 	    overflow: hidden; /* 페이지 스크롤 막기 */
+	    background: rgba(0, 0, 0, 0.4);	
 	}
 	
 	.tbdeleteModal_header{
@@ -305,16 +305,15 @@
 	    height:18.75rem; /* 300px를 16px 기준으로 나눈 값 */
 	    background:#fff; 
 	    border-radius:0.625rem; /* 10px를 16px 기준으로 나눈 값 */
-	    position:relative; 
-	    top:50%; 
-	    left:50%;
-	    margin-top:-9.375rem; /* height의 절반 */
-	    margin-left:-15.625rem; /* width의 절반 */
 	    text-align:center;
 	    box-sizing:border-box; 
 	    padding:4.625rem 0; /* 74px를 16px 기준으로 나눈 값 */
 	    line-height:1.4375rem; /* 23px를 16px 기준으로 나눈 값 */
 	    cursor:pointer;
+	    position: fixed; 
+	    top: 50%; 
+	    left: 50%; 
+	    transform: translate(-50%, -50%);
 	}
 	
 	#mycontent > form:nth-child(9) > div > div.tbdeleteModal_body > p > input[type=password] {
@@ -423,10 +422,18 @@ $(document).ready(function() {
     $("div#tbdelete").click(function() {
         $(".tbdeleteModal").fadeIn();
         $(".tbdeleteModal_header").show(); // 삭제 버튼 클릭 시 헤더 영역 보이기
-        $(".tbdeleteModal_body").hide(); // 삭제 버튼 클릭 시 바디 영역 숨기기
+        $(".tbdeleteModal_body").hide();   // 삭제 버튼 클릭 시 바디 영역 숨기기
         
         
         $("body").addClass("modal-open"); // body에 modal-open 클래스 추가
+        $('#headerOfheader > div > section').css('background-color', 'rgba(0, 0, 0, 0.4)');
+        $('#content > div.tb_article > div.like_wrap > div, #content > div.tb_article > div.like_wrap > div > div').css('border', 'solid 1px rgba(0, 0, 0, 0.1)');
+        $('#content > div.tb_article > table > tbody > tr:nth-child(1)').css('border-top', 'solid 1px rgba(0, 0, 0, 0.1)');
+        $('#content > div.tb_article > table > tbody > tr > td').css('border-bottom', 'solid 1px rgba(0, 0, 0, 0.1)');
+        $('#content > div.tb_article > table > tbody > tr > th').css('border-bottom', 'solid 1px rgba(0, 0, 0, 0.1)');
+        
+        $('#myfooter > footer > div > div > div > hr').css('border-top', 'solid 1px rgba(0, 0, 0, 0.1)');    
+        
     });
     
     // 삭제 모달 내 '삭제' 버튼 클릭 시 동작
@@ -440,19 +447,56 @@ $(document).ready(function() {
     $("#btn_cancel").click(function() {
         $(".tbdeleteModal").fadeOut();
         $("body").removeClass("modal-open"); // body에서 modal-open 클래스 제거
+        $('#headerOfheader > div > section').css('background-color', ''); 
+        $('#content > div.tb_article > div.like_wrap > div, #content > div.tb_article > div.like_wrap > div > div').css('border', 'solid 1px #ddd');
+        $('#content > div.tb_article > table > tbody > tr:nth-child(1)').css('border-top', 'solid 1px #ddd');
+        $('#content > div.tb_article > table > tbody > tr > td').css('border-bottom', 'solid 1px #ddd');     
+        $('#content > div.tb_article > table > tbody > tr > th').css('border-bottom', 'solid 1px #ddd');     
     });
     
     // 삭제 모달 내 body에서 '취소' 버튼 클릭 시 동작
     $("#btn_cancelconfirm").click(function() {
         $(".tbdeleteModal").fadeOut();
         $("body").removeClass("modal-open"); // body에서 modal-open 클래스 제거
+        $('#headerOfheader > div > section').css('background-color', '');
+        $('#content > div.tb_article > div.like_wrap > div, #content > div.tb_article > div.like_wrap > div > div').css('border', 'solid 1px #ddd');
+        $('#content > div.tb_article > table > tbody > tr:nth-child(1)').css('border-top', 'solid 1px #ddd'); 
+        $('#content > div.tb_article > table > tbody > tr > td').css('border-bottom', 'solid 1px #ddd');      
+        $('#content > div.tb_article > table > tbody > tr > th').css('border-bottom', 'solid 1px #ddd');      
+        $('#myfooter > footer > div > div > div > hr').css('border-top', 'solid 1px #ddd');      
     });
     
     // 모달의 닫기 버튼 클릭 시 모달 닫기
     $("span.close").click(function() {
         $(".tbdeleteModal").fadeOut();
         $("body").removeClass("modal-open"); // body에서 modal-open 클래스 제거
+        $('#headerOfheader > div > section').css('background-color', '');
+        $('#content > div.tb_article > div.like_wrap > div, #content > div.tb_article > div.like_wrap > div > div').css('border', 'solid 1px #ddd');
+        $('#content > div.tb_article > table > tbody > tr:nth-child(1)').css('border-top', 'solid 1px #ddd'); 
+        $('#content > div.tb_article > table > tbody > tr > td').css('border-bottom', 'solid 1px #ddd');      
+        $('#content > div.tb_article > table > tbody > tr > th').css('border-bottom', 'solid 1px #ddd');      
     });
+    
+    
+    const tbdeleteModal = document.getElementById('tbdeleteModal');
+    window.addEventListener('click', function (e) { // 모달 외의 body 클릭 시 모달창 display:none
+        if (e.target === tbdeleteModal) {
+        	 $(".tbdeleteModal").fadeOut();
+             $("body").removeClass("modal-open"); // body에서 modal-open 클래스 제거
+             $('#headerOfheader > div > section').css('background-color', '');
+             $('#content > div.tb_article > div.like_wrap > div, #content > div.tb_article > div.like_wrap > div > div').css('border', 'solid 1px #ddd');
+             $('#content > div.tb_article > table > tbody > tr:nth-child(1)').css('border-top', 'solid 1px #ddd'); 
+             $('#content > div.tb_article > table > tbody > tr > td').css('border-bottom', 'solid 1px #ddd');      
+             $('#content > div.tb_article > table > tbody > tr > th').css('border-bottom', 'solid 1px #ddd');      
+	        
+	        document.body.style.overflow = 'auto';
+	        
+        }
+        
+     });  
+    
+    
+    
     
     
     // 삭제 모달 내 '삭제' 버튼 클릭 시 동작 (필요한 경우)
@@ -502,9 +546,9 @@ function goView(tb_seq) {
    	 frm.action = "<%= ctxPath%>/tbview_2.action";
 	 frm.submit();
 	 
-}// end of function goView(seq)---------------
+}// end of function goView(tb_seq)---------------
 	
-//**** 특정제품에 대한 좋아요 등록하기 **** // 
+//**** 게시글에 좋아요 등록하기 **** // 
 function golikeAdd(tb_seq) {
 
   if(${empty sessionScope.loginuser}){
@@ -538,7 +582,7 @@ function golikeAdd(tb_seq) {
   
 
 
-}// end of golikeAdd(pnum)---------------------------
+}// end of golikeAdd(tb_seq)---------------------------
 
 
 
@@ -593,8 +637,8 @@ function goLikeCount() {
 						</h3>							  																
 					</div>
 					<div class="dropdown_content" style="text-align:center;">
-						    <div id="tbedit" onclick="javascript:location.href='<%= ctxPath%>/tbedit.exp?tb_seq=${requestScope.tripboardvo.tb_seq}'">후기수정</div>
-        					<div id="tbdelete">후기삭제</div>
+						    <div id="tbedit" onclick="javascript:location.href='<%= ctxPath%>/tbedit.exp?tb_seq=${requestScope.tripboardvo.tb_seq}'" style="text-align: center;">후기수정</div>
+        					<div id="tbdelete" style="text-align: center;">후기삭제</div>
 			  		</div>	
 				</div>	
 				
@@ -696,7 +740,7 @@ function goLikeCount() {
 
 						<!-- 삭제 모달 창 구현 -->
 				 	 <form name="delFrm">
-					 	 <div class="tbdeleteModal">				 	 		  				 	 		  		                            
+					 	 <div class="tbdeleteModal" id="tbdeleteModal">				 	 		  				 	 		  		                            
 	                              <div class="tbdeleteModal_header">
 	                               <span class="close">&times;</span>                                                       	                              	                             	
 	                              	<h3>여행후기를 삭제하시겠습니까?</h3>                              

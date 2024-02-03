@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -267,8 +268,8 @@ public class TripboardController {
 				HttpSession session = mrequest.getSession();
 				String root = session.getServletContext().getRealPath("/"); // 최상위 루트가 어딘지 알아온다.
 				
-			//	System.out.println("~~~ 확인용 webapp의 절대경로 => " + root);
-			    // ~~~ 확인용 webapp의 절대경로 => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\
+			 	// System.out.println("~~~ 확인용 webapp의 절대경로 => " + root);
+			    // ~~~ 확인용 webapp의 절대경로 => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\final_project\
 				
 				String path = root+"resources"+File.separator+"files";
 				/* File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다.
@@ -276,8 +277,8 @@ public class TripboardController {
 			               운영체제가 UNIX, Linux, 매킨토시(맥) 이라면  File.separator 는 "/" 이다. 
 	            */
 				// path가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다.
-			//	System.out.println("~~~ 확인용 webapp의 절대경로 => " + path);
-			    //~~~ 확인용 webapp의 절대경로 => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\resources\files
+				// System.out.println("~~~ 확인용 webapp의 절대경로 => " + path);
+			    //~~~ 확인용 webapp의 절대경로 => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\final_project\resources\files
 				
 				/*
 					2. 파일첨부를 위한 변수의 설정 및 값을 초기화한 후 파일 올리기				
@@ -775,7 +776,7 @@ public class TripboardController {
 	
 	
 	// === 스마트에디터. 드래그앤드롭을 사용한 다중사진 파일 업로드 === //
-    @RequestMapping(value="/expedia/image/multiplePhotoUpload.exp")
+	@RequestMapping(value="/image/multiplePhotoUpload.exp", method= {RequestMethod.POST} )
     public void multiplePhotoUpload(HttpServletRequest request, HttpServletResponse response) {
     	/*
 		1. 사용자가 보낸 파일을 WAS(톰캣)의 특정 폴더에 저장해주어야 한다.
@@ -783,68 +784,67 @@ public class TripboardController {
 		우리는 WAS 의 webapp/resources/images/ch 라는 폴더로 지정해준다.
     	 */
      
-		 // WAS 의 webapp 의 절대경로를 알아와야 한다.
-		 //  HttpSession session = request.getSession();
-		 //  String root = session.getServletContext().getRealPath("/");
-		 //  String path = root + "resources"+File.separator+"photo_upload";
-		 // path 가 첨부파일들을 저장할 WAS(톰캣)의 폴더가 된다.
-		 
-    	String root = "C:\\git\\fin_project\\fin_project\\src\\main\\webapp\\resources";
-    	String path = root +File.separator+"images"+File.separator+"ch";	
-    	
-		// C:\Users\82105\Desktop\ssit\java_file\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\expedia\resources\photo_upload
-		 // +/resources/images/ch
-		 File dir = new File(path);
-		 if(!dir.exists()) {
-			 dir.mkdirs();
-		 }
-		 
-		 try {
-	         String filename = request.getHeader("file-name"); // 파일명(문자열)을 받는다 - 일반 원본파일명
-	         // 네이버 스마트에디터를 사용한 파일업로드시 싱글파일업로드와는 다르게 멀티파일업로드는 파일명이 header 속에 담겨져 넘어오게 되어있다. 
-	          	
-	         /*
-	             [참고]
-	             HttpServletRequest의 getHeader() 메소드를 통해 클라이언트 사용자의 정보를 알아올 수 있다. 
-	   
-	            request.getHeader("referer");           // 접속 경로(이전 URL)
-	            request.getHeader("user-agent");        // 클라이언트 사용자의 시스템 정보
-	            request.getHeader("User-Agent");        // 클라이언트 브라우저 정보 
-	            request.getHeader("X-Forwarded-For");   // 클라이언트 ip 주소 
-	            request.getHeader("host");              // Host 네임  예: 로컬 환경일 경우 ==> localhost:9090    
-	         */
-	         
-	      //   System.out.println(">>> 확인용 tb_filename ==> " + tb_filename);
-	         // >>> 확인용 filename ==> berkelekle%EB%8B%A8%EA%B0%80%EB%9D%BC%ED%8F%AC%EC%9D%B8%ED%8A%B803.jpg 
-	         
-	         InputStream is = request.getInputStream(); // is는 네이버 스마트 에디터를 사용하여 사진첨부하기 된 이미지 파일임.
-	         
-	         String newtb_Filename = fileManager.doFileUpload(is, filename, path);
-	         
-	         int width = fileManager.getImageWidth(path+File.separator+newtb_Filename);
-	         
-	          if(width > 600) {
-	             width = 600;
-	          }
-	          
-	       // System.out.println(">>>> 확인용 width ==> " + width);
-	       // >>>> 확인용 width ==> 600
-	       // >>>> 확인용 width ==> 121
-	         
-	         String ctxPath = request.getContextPath(); //  /board
-	         
-	         String strURL = "";
-	         strURL += "&bNewLine=true&sFileName="+newtb_Filename; 
-	         strURL += "&sWidth="+width;
-	         strURL += "&sFileURL="+ctxPath+"/resources/images/ch/"+newtb_Filename;
-	         
-	         // === 웹브라우저 상에 사진 이미지를 쓰기 === //
-	         PrintWriter out = response.getWriter();
-	         out.print(strURL);
-	         
-	      } catch(Exception e) {
-	         e.printStackTrace();
-	      }
+    	// WAS 의 webapp 의 절대경로를 알아와야 한다.
+		// HttpSession session = request.getSession();
+		// String root = session.getServletContext().getRealPath("/");
+		String path = "C:\\git\\fin_project\\fin_project\\src\\main\\webapp\\resources\\images\\ch";
+		System.out.println("path => " + path);
+		// path 가 첨부파일들을 저장할 WAS(톰캣)의 폴더가 된다.
+		
+     // System.out.println("~~~ 확인용 path => " + path);
+	 //  ~~~ 확인용 path => C:\NCS\workspace_spring_framework\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\board\resources\photo_upload  
+		
+		File dir = new File(path);
+		if(!dir.exists()) {
+			dir.mkdirs();
+		}
+		
+		try {
+			String filename = request.getHeader("file-name"); // 파일명(문자열)을 받는다 - 일반 원본파일명
+			// 네이버 스마트에디터를 사용한 파일업로드시 싱글파일업로드와는 다르게 멀티파일업로드는 파일명이 header 속에 담겨져 넘어오게 되어있다. 
+			
+			/*
+			    [참고]
+			    HttpServletRequest의 getHeader() 메소드를 통해 클라이언트 사용자의 정보를 알아올 수 있다. 
+	
+				request.getHeader("referer");           // 접속 경로(이전 URL)
+				request.getHeader("user-agent");        // 클라이언트 사용자의 시스템 정보
+				request.getHeader("User-Agent");        // 클라이언트 브라우저 정보 
+				request.getHeader("X-Forwarded-For");   // 클라이언트 ip 주소 
+				request.getHeader("host");              // Host 네임  예: 로컬 환경일 경우 ==> localhost:9090    
+			*/
+			
+			// System.out.println(">>> 확인용 filename ==> " + filename);
+			// >>> 확인용 filename ==> berkelekle%EB%8B%A8%EA%B0%80%EB%9D%BC%ED%8F%AC%EC%9D%B8%ED%8A%B803.jpg 
+			
+			InputStream is = request.getInputStream(); // is는 네이버 스마트 에디터를 사용하여 사진첨부하기 된 이미지 파일임.
+			
+			String newFilename = fileManager.doFileUpload(is, filename, path);
+		
+			int width = fileManager.getImageWidth(path+File.separator+newFilename);
+			
+		    if(width > 600) {
+		       width = 600;
+		    }
+		    
+		 // System.out.println(">>>> 확인용 width ==> " + width);
+		 // >>>> 확인용 width ==> 600
+		 // >>>> 확인용 width ==> 121
+			
+			String ctxPath = request.getContextPath(); //  /expedia
+			
+			String strURL = "";
+			strURL += "&bNewLine=true&sFileName="+newFilename; 
+			strURL += "&sWidth="+width;
+			strURL += "&sFileURL="+ctxPath+"/resources/photo_upload/"+newFilename;
+			
+			// === 웹브라우저 상에 사진 이미지를 쓰기 === //
+			PrintWriter out = response.getWriter();
+			out.print(strURL);
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 		 
 		 
     }

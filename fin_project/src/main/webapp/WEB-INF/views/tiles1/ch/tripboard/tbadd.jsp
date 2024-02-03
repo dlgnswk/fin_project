@@ -108,7 +108,7 @@ input[type=file]::file-selector-button:hover {
 	
 	$(document).ready(function(){
 		
-		<%-- === #166. 스마트 에디터 구현 시작 === --%>
+		<%-- === 스마트 에디터 구현 시작 === --%>
 	       //전역변수
 	       var obj = [];
 	       
@@ -127,10 +127,6 @@ input[type=file]::file-selector-button:hover {
 	           }
 	       });
 	      <%-- === 스마트 에디터 구현 끝 === --%>
-		
-		
-		
-		
 		
 		// 글쓰기 버튼
 		$("button#btnWrite").click(function(){

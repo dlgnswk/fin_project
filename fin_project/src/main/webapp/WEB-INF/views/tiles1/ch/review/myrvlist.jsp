@@ -9,6 +9,9 @@
 %>  
 <title>회원님이 작성한 이용후기 목록</title>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Karla:wght@500&display=swap" rel="stylesheet">
 
 <style>
 	
@@ -21,19 +24,34 @@
 	}
 	
 	div.reviewcontent {
-	padding-left: 20px;
+	padding: 1.25rem 0.59rem 1.25rem 1.25rem;
+	display: grid;
+	gap: 0.875rem;
+	}
+	
+	#myrvlist > div > div > div:nth-child(4) {
+	font-family: 'Karla', sans-serif;
+	font-size: 1.5rem;
+	}
+	
+	#myrvlist > div > div > div:nth-child(4) > span{
+	font-size: 1.3rem;
+	}
+	
+	#myrvlist > div > div > div:nth-child(5),
+	#myrvlist > div > div > span {
+	font-size: 0.8rem;
 	}
 	
 	.dropdown_bar {
 	height:30px; 
 	float:right;
-	margin: 0 2% 3% 0;
 	}
 	
 	.dropdown_content {
     position: absolute;
     display: none;
-    margin-right: 31%;
+    margin: 2% 30%;
     width: 8.125rem; /* 130px를  16px 기준으로 나눈 값 */
     background-color: white;
     border-radius: 0.25rem; /* 4px를 16px 기준으로 나눈 값 */
@@ -204,7 +222,6 @@
 	    position:absolute; 
 	    width:100%; 
 	    height:100%; 
-	    background: rgba(0,0,0,0.4); 
 	    top:0; 
 	    left:0; 
 	    display:none;
@@ -292,7 +309,7 @@ $(document).ready(function() {
 		
 		
 		// 이용후기 내용 유효성 검사
-		const rv_content = $("textarea[name='rv_content']").val(); 			 
+		const rv_content = $("textarea[name='content']").val(); 			 
 		if(rv_content == "") {
 			alert("이용 후기를  입력하세요!!");
 			return; // 종료
@@ -313,22 +330,25 @@ $(document).ready(function() {
 		    6: '괜찮아요',
 		    8: '좋아요',
 		    10: '훌륭해요'
-		  };
-			
-	  $(document).on('click', '.rateCircle label', function() {
-		// 클릭한 별점의 값을 가져와서 정수형으로 변환하여 ratingValue에 저장
-		const ratingValue = parseInt($(this).attr('for').split('_')[1]);
+	};
+
+	
+	$(document).on('click', '.rateCircle label', function() {
+	   
+	   // 클릭한 별점의 값을 가져와서 정수형으로 변환하여 ratingValue에 저장
+	   const ratingValue = parseInt($(this).attr('for').split('_')[1]);
 		
-		// 별점 설명이 표시될 span 요소를 찾아 ratingDescSpan에 저장
-		const ratingDescSpan = $('#rating_desc');
+	   // 별점 설명이 표시될 span 요소를 찾아 ratingDescSpan에 저장
+	   const ratingDescSpan = $('#rating_desc');
 	    
-		// ratingDescSpan에 선택한 별점과 해당하는 설명을 표시
-		ratingDescSpan.text(`\${ratingValue} - \${ratingText[ratingValue]}`);
+	   // ratingDescSpan에 선택한 별점과 해당하는 설명을 표시
+	   ratingDescSpan.text(`\${ratingValue} - \${ratingText[ratingValue]}`);
 	   // console.log('Rating Value:', ratingValue);
-	   //  console.log('ratingDescSpan', ratingDescSpan);
-	    // 원하는 작업을 추가하세요. <span id='rating_desc'></span>
+	   // console.log('ratingDescSpan', ratingDescSpan);
+	   // 원하는 작업을 추가하세요. <span id='rating_desc'></span>
 	    
-	  });
+	});
+	
 	
 	$(document).on("click", "button.dropdown_bar", function(){
 	 // 해당 버튼에 대응하는 드롭다운 컨텐츠 찾기
@@ -353,7 +373,32 @@ $(document).ready(function() {
     
 	// 리뷰 수정하기
 	$(document).on("click", "button#btnEdit", function(){
-		console.log("수정 하깅")
+		// console.log("수정 하깅")
+		
+		// 이용후기 제목 유효성 검사
+		const rv_subject = $("input:text[name= 'rv_subject']").val().trim();
+		if(rv_subject == "") {
+			alert("제목을 입력하세요!");
+			return;
+		}
+		
+		// 이용후기 내용 유효성 검사
+		const rv_content = $("textarea[name='rv_content']").val().trim(); 
+		if(rv_content == "") {
+			alert("내용을 입력하세요!");
+			return;
+		}
+		
+		// 이용후기 평점 입력 유효성 검사
+		const rv_rating = document.querySelectorAll('.rateCircle label');
+           
+           const checked = document.querySelector('.rateCircle input[type=radio]:checked');
+           if (!checked) {
+               alert("평점을 입력해주세요!");
+               return;
+           }
+		
+		
 		// 폼 (form)을 적용하자
 		const frm = document.reviewEditForm;
 		frm.method = "post";
@@ -364,7 +409,7 @@ $(document).ready(function() {
 	
 	// 리뷰 수정하기
 	$(document).on("click", "button#btn_rvdel", function(){
-		console.log("삭제 하깅")
+		// console.log("삭제 하깅")
 		// 폼 (form)을 적용하자
 		const frm = document.reviewDeleteForm;
 		frm.method = "post";
@@ -443,6 +488,14 @@ $(document).ready(function() {
 	            // 모달 영역에 새로운 내용 삽입
 	            $("form[name='reviewEditForm']").html(v_html);
 	            // alert($("form[name='reviewEditForm']"));
+	           	
+	            
+	            // 모달 열 때 라디오 값에 해당하는 텍스트 표시 (기존 평점에 해당하는 텍스트)
+				const ratingDescSpan = $('#rating_desc');
+				const ratingValue = parseInt(json.fk_rv_rating);
+				console.log(ratingValue);
+				ratingDescSpan.text(ratingValue + ' - ' + ratingText[ratingValue]);
+	            
 	            
 	            const rv_radio = document.querySelectorAll("input[name='fk_rv_rating']");
 	            rv_radio.forEach((item, index) => {
@@ -454,18 +507,19 @@ $(document).ready(function() {
 	            	}
 	            });
 	            
-	            
 	            const labels = document.querySelectorAll('.rateCircle label');
 	            
 	            const checked = document.querySelector('.rateCircle input[type=radio]:checked');
 	            if (!checked) {
 	                labels.forEach((label) => {
-	                    label.style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-regular.png')`;
+	                    label.style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-regular.png')`;	              
 	                });
-	            } else {
+	            } 
+	            
+	            else {
 	                // 선택된 별 이후의 별은 'circle-regular.png' 이미지로, 그 이하는 'circle-solid.png' 이미지로 변경
 	                const checkedIndex = Array.from(labels).indexOf(checked.nextElementSibling);
-	                console.log(checkedIndex);
+	                // console.log(checkedIndex); // 선택된 레이블의 index
 	                for (let i = 0; i <= checkedIndex; i++) {
 	                    labels[i].style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-solid.png')`;
 	                }
@@ -473,6 +527,7 @@ $(document).ready(function() {
 	                	
 	                    labels[i].style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-regular.png')`;
 	                }
+	                
 	            }
 	            
 	            
@@ -484,8 +539,12 @@ $(document).ready(function() {
 	            // 모달창 뜰 때 배경색 변경
 	            $('#headerOfheader > div > section').css('background-color', 'rgba(0, 0, 0, 0.4)');
 	            $('#myrvlist > div').css('background-color', 'rgba(0, 0, 0, 0.0)');
-	            $('#myfooter > footer > div > div > ul.uitk-layout-flex.uitk-layout-flex-align-items-center.uitk-layout-flex-flex-direction-row.uitk-layout-flex-justify-content-flex-start.uitk-layout-flex-flex-wrap-wrap.no-bullet > li > a > img').css('filter', 'brightness(60%)');
-	           
+	            $('#myfooter > footer > div > div > ul.uitk-layout-flex.uitk-layout-flex-align-items-center.uitk-layout-flex-flex-direction-row.uitk-layout-flex-justify-content-flex-start.uitk-layout-flex-flex-wrap-wrap.no-bullet > li > a > img').css('filter', 'brightness(70%)');
+	           	
+	            // 모달창 뜰 때 보더 변경
+	            $('#myfooter > footer > div > div > div > hr').css('border-top', 'solid 1px rgba(0, 0, 0, 0.1)');
+	            
+	            
 	            setInitialRating(json.fk_rv_rating);
 	            
 	            // 모달의 닫기 버튼 클릭 시 모달 닫기
@@ -496,6 +555,9 @@ $(document).ready(function() {
 	    	        $('#myrvlist > div').css('background-color', '');
 	    	        
 	    	        $('#myfooter > footer > div > div > ul.uitk-layout-flex.uitk-layout-flex-align-items-center.uitk-layout-flex-flex-direction-row.uitk-layout-flex-justify-content-flex-start.uitk-layout-flex-flex-wrap-wrap.no-bullet > li > a > img').css('filter', '');
+	    	        
+	    	        $('#myfooter > footer > div > div > div > hr').css('border-top', 'solid 1px #dfe0e4');
+	    	        
 	    	        document.body.style.overflow = 'auto';
 	    	    });
 	         	
@@ -508,7 +570,9 @@ $(document).ready(function() {
 		    	        $('#myrvlist > div').css('background-color', '');
 		    	        
 		    	        $('#myfooter > footer > div > div > ul.uitk-layout-flex.uitk-layout-flex-align-items-center.uitk-layout-flex-flex-direction-row.uitk-layout-flex-justify-content-flex-start.uitk-layout-flex-flex-wrap-wrap.no-bullet > li > a > img').css('filter', '');
+		    	        $('#myfooter > footer > div > div > div > hr').css('border-top', 'solid 1px #dfe0e4');
 		    	        document.body.style.overflow = 'auto';
+		    	        
 	    	        }
 	    	        
 	    	     });  
@@ -523,20 +587,26 @@ $(document).ready(function() {
 			
 	}// end of function reviewEdit(rv_seq)
 	
+	const ratingText = {
+		    "2": '너무 별로예요',
+		    "4": '별로예요',
+		    "6": '괜찮아요',
+		    "8": '좋아요',
+		    "10": '훌륭해요'
+		};
+	
+	
+	
 	function setInitialRating() {
 	    // 'rateCircle label' 클래스를 가진 모든 label 요소를 가져옵니다.
 	    const labels = document.querySelectorAll('.rateCircle label');
-
-	    // 각 label의 배경 이미지를 'circle-regular.png'로 초기화합니다.
-	    labels.forEach((label) => {
-	        label.style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-regular.png')`;
-	    });
-
+		
+	    
 	    // 각 label에 마우스 이벤트를 추가
 	    labels.forEach((label, index) => {
 	    	
-	        // label에 마우스를 올렸을 때의 동작
-	        label.addEventListener('mouseover', () => {
+	        // label을 클릭했을 때 동작
+	        label.addEventListener('click', () => {
 	            // 현재 label을 기준으로 그 이하의 label들은 'circle-solid.png' 이미지로 변경하고,
 	            // 그 이상의 label들은 'circle-regular.png' 이미지로 변경
 	            for (let i = 0; i <= index; i++) {
@@ -544,28 +614,6 @@ $(document).ready(function() {
 	            }
 	            for (let i = index + 1; i < labels.length; i++) {
 	                labels[i].style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-regular.png')`;
-	            }
-	        });
-
-	        
-	        // label에서 마우스가 빠져나갔을 때의 동작을 정의합니다.
-	        label.addEventListener('mouseout', () => {
-	            // 선택된 별이 없다면 모든 label을 'circle-regular.png' 이미지로 변경
-	            const checked = document.querySelector('.rateCircle input[type=radio]:checked');
-	            
-	            if (!checked) {
-	                labels.forEach((label) => {
-	                    label.style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-regular.png')`;
-	                });
-	            } else {
-	                // 선택된 별 이후의 별은 'circle-regular.png' 이미지로, 그 이하는 'circle-solid.png' 이미지로 변경
-	                const checkedIndex = Array.from(labels).indexOf(checked.nextElementSibling);
-	                for (let i = 0; i <= checkedIndex; i++) {
-	                    labels[i].style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-solid.png')`;
-	                }
-	                for (let i = checkedIndex + 1; i < labels.length; i++) {
-	                    labels[i].style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-regular.png')`;
-	                }
 	            }
 	        });
 	        
@@ -598,7 +646,7 @@ $(document).ready(function() {
 	         	// 모달 영역에 새로운 내용 삽입
 	            $("form[name='reviewDeleteForm']").html(v_html);
 	            
-	            $("body").addClass("modal-open");
+	         	$("body").addClass("modal-open");
 	            
 	            // 모달 표시
 	            $(".reviewDeleteModal").fadeIn();
@@ -607,29 +655,39 @@ $(document).ready(function() {
 	            
 	            // 모달창 뜰 때 배경색 변경
 	            $('#headerOfheader > div > section').css('background-color', 'rgba(0, 0, 0, 0.4)');
-	            $('#myrvlist > div').css('background-color', 'rgba(0, 0, 0, 0.0)');
+	            $('#myrvlist > div').css('background-color', 'rgba(0, 0, 0, 0.2)');
+	            $('#myfooter > footer > div > div > ul.uitk-layout-flex.uitk-layout-flex-align-items-center.uitk-layout-flex-flex-direction-row.uitk-layout-flex-justify-content-flex-start.uitk-layout-flex-flex-wrap-wrap.no-bullet > li > a > img').css('filter', 'brightness(70%)');
+	            
+	            // 모달창 뜰 때 보더 변경
+	            $('#myfooter > footer > div > div > div > hr').css('border-top', 'solid 1px rgba(0, 0, 0, 0.1)');
 	            
 	            
 	            $("span.close").click(function() {
 	                $(".reviewDeleteModal").fadeOut();
 	                $("body").removeClass("modal-open"); // body에서 modal-open 클래스 제거
-	    	        $("body").removeClass("modal-open"); // body에서 modal-open 클래스 제거
 	    	        $('#headerOfheader > div > section').css('background-color', '');
 	    	        $('#myrvlist > div').css('background-color', '');
-	    	        document.body.style.overflow = 'auto';
+	    	        $('#myfooter > footer > div > div > ul.uitk-layout-flex.uitk-layout-flex-align-items-center.uitk-layout-flex-flex-direction-row.uitk-layout-flex-justify-content-flex-start.uitk-layout-flex-flex-wrap-wrap.no-bullet > li > a > img').css('filter', '');
+	            	
+	    	        $('#myfooter > footer > div > div > div > hr').css('border-top', 'solid 1px #dfe0e4');
 	            });
 	            
+	            // 모달 외의 영역 클릭시 모달창 닫게 하기
 	            const reviewDeleteModal = document.getElementById('reviewDeleteModal');
 	    	    window.addEventListener('click', function (e) { // 모달 외의 body 클릭 시 모달창 display:none
 	    	        if (e.target === reviewDeleteModal) {
 	    	        	$(".reviewDeleteModal").fadeOut();
 		    	        $("body").removeClass("modal-open"); // body에서 modal-open 클래스 제거
-		    	        $('#headerOfheader > div > section').css('background-color', '');
-		    	        $('#myrvlist > div').css('background-color', '');
+		    	        $('#headerOfheader > div > section').css('background-color', '');		    	        
+						$('#myrvlist > div').css('background-color', '');
+		    	        
+						$('#myfooter > footer > div > div > ul.uitk-layout-flex.uitk-layout-flex-align-items-center.uitk-layout-flex-flex-direction-row.uitk-layout-flex-justify-content-flex-start.uitk-layout-flex-flex-wrap-wrap.no-bullet > li > a > img').css('filter', '');
+		    	        
+		    	        $('#myfooter > footer > div > div > div > hr').css('border-top', 'solid 1px #dfe0e4');
 		    	        document.body.style.overflow = 'auto';
 	    	        }
 	    	        
-	    	     });
+	    	     });  
 	        },
 	        error: function(request, status, error){
 	            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
@@ -646,31 +704,24 @@ $(document).ready(function() {
 			 <c:if test="${not empty requestScope.myrvList}">	
 				<c:forEach var="myrvList" items="${requestScope.myrvList}">
 				<div class="review">
-					<div class="reviewcontent">	
-						<br>
+					<div class="reviewcontent">							
 						<h4>${myrvList.LG_NAME}
 						<button class="dropdown_bar" type="button" id="dropdownMenuButton" >
 							<svg style="float:right;" viewBox="0 0 24 24" width="32px" height="20px" class="d Vb UmNoP"><path d="M5 14a2 2 0 100-4 2 2 0 000 4zM19 14a2 2 0 100-4 2 2 0 000 4zM12 14a2 2 0 100-4 2 2 0 000 4z"></path></svg>
 						</button>                                                                                                                                                                                                                                                                                                                                                                          
 						</h4>
 						<div class="dropdown_content">
-						    <%-- <div class="rvedit" id="rvedit" onclick="javascript:location.href='<%= ctxPath%>/rvedit.exp?rv_seq=${requestScope.reviewvo.tb_seq}'">리뷰 수정</div> --%>
 						    <a class="rvedit" id="rvedit" onclick="reviewEdit(${myrvList.RV_SEQ})">리뷰 수정</a>
         					<a class="rvdelete" id="rvdelete" onclick="reviewDelete(${myrvList.RV_SEQ})">리뷰 삭제</a>
 			  			</div>	
-						<br>
 						<input type="hidden" name="rv_seq" value="${myrvList.RV_SEQ}" readonly />
-                        <div>${myrvList.FK_RV_RATING}/10 - ${myrvList.RV_RATING_DESC}</div>
-                        <br>
-                        <div>${myrvList.RV_SUBJECT}</div>
-                        <br>
-                        <div>${myrvList.RV_CONTENT}</div>
+                        <div>${myrvList.FK_RV_RATING}/10 <span>- ${myrvList.RV_RATING_DESC}</span></div>
                         <div>${myrvList.RV_REGDATE}</div>
-                        <br>
+                        <div>${myrvList.RV_SUBJECT}</div>
+                        <div>${myrvList.RV_CONTENT}</div>                       
                         <span> ${myrvList.STAYDATE}에  ${myrvList.livedate} 숙박함 </span>
                     </div>    
 				</div>
-				<br>
 				</c:forEach>
 				</c:if>
 				<c:if test="${empty requestScope.myrvList}">
