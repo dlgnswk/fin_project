@@ -211,11 +211,21 @@
          <h3 class="uitk-heading uitk-heading-6">안녕하세요, ${sessionScope.loginuser.name} 님!</h3>
          <div class="uitk-text overflow-wrap uitk-type-300 uitk-text-default-theme">${sesseionScope.loginuser.userid}</div>
         </div>
-        
-        <span class="uitk-badge-base uitk-badge-base-large uitk-badge-base-has-text uitk-badge-loyalty-global-lowtier">
-         <span class="uitk-badge-base-text" aria-hidden="false">블루</span>
-        </span>
-       
+           <c:if test="${sessionScope.loginuser.user_lvl == '블루'}">
+		        <span class="uitk-badge-base uitk-badge-base-large uitk-badge-base-has-text uitk-badge-loyalty-global-lowtier">
+		        	<span class="uitk-badge-base-text" aria-hidden="false">${sessionScope.loginuser.user_lvl}</span>    
+		        </span>
+	       </c:if>
+       	   <c:if test="${sessionScope.loginuser.user_lvl == '실버'}">
+		        <span style="background-color:#646c75;" class="uitk-badge-base uitk-badge-base-large uitk-badge-base-has-text uitk-badge-loyalty-global-lowtier">
+		        	<span class="uitk-badge-base-text" aria-hidden="false">${sessionScope.loginuser.user_lvl}</span>    
+		        </span>
+	       </c:if>
+	       <c:if test="${sessionScope.loginuser.user_lvl == '골드'}">
+		        <span style="background-color:#7c6935;" class="uitk-badge-base uitk-badge-base-large uitk-badge-base-has-text uitk-badge-loyalty-global-lowtier">
+		        	<span class="uitk-badge-base-text" aria-hidden="false">${sessionScope.loginuser.user_lvl}</span>    
+		        </span>
+	       </c:if>
        </div>
       </div>
      <div class="uitk-card-content-section uitk-card-content-section-padded-block-end uitk-card-content-section-padded-inline-start uitk-card-content-section-padded-inline-end uitk-layout-flex-item">

@@ -3,6 +3,7 @@ package com.spring.app.ws.admin.service;
 import java.util.List;
 import java.util.Map;
 
+import com.spring.app.expedia.domain.HostVO;
 import com.spring.app.expedia.domain.UserVO;
 
 public interface AdminService {
@@ -22,7 +23,7 @@ public interface AdminService {
 	int getHostCnt(Map<String, String> paraMap);
 
 	// 페이징한 판매자목록 가져오기
-	List<UserVO> hostListSearch(Map<String, String> paraMap);
+	List<HostVO> hostListSearch(Map<String, String> paraMap);
 
 	// 판매자관리 검색어 입력시 자동완성하기
 	List<String> searchHostShow(Map<String, String> paraMap);

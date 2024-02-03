@@ -222,20 +222,15 @@ public class LodgeViewController {
           // System.out.println(ttl_avbl_guest_cnt);
           // System.out.println(Float.parseFloat(ttl_guest_cnt));
          
-         // 남은 rm의 총 갯수 > 입력된 객실 갯수 && 남은 방 수용 가능 게스트 인원 > 입력된 총 게스트 인원
+         // 남은 rm의 총 갯수 >= 입력된 객실 갯수 && 남은 방 수용 가능 게스트 인원 >= 입력된 총 게스트 인원
          if(ttl_left_room_cnt>=Float.parseFloat(room_cnt) && ttl_avbl_guest_cnt>=Float.parseFloat(ttl_guest_cnt)) {
-            mav.addObject("avbl_rm_list",avbl_rm_list);
-         }         
-         else {
-            for (Map<String, String> rm : avbl_rm_list) {
-               if (Float.parseFloat(rm.get("rm_guest_cnt")) > Float.parseFloat(guest_cnt)) {
-                  if(Float.parseFloat(rm.get("left_room_cnt"))>Float.parseFloat(room_cnt)){
-                     mav.addObject("avbl_rm_list",avbl_rm_list);
-                     break;
-                  }                  
-               }
-            }
-         }
+        	 for (Map<String, String> rm : avbl_rm_list) {
+                 if (Float.parseFloat(rm.get("rm_guest_cnt")) >= Float.parseFloat(guest_cnt)) {
+                	 mav.addObject("avbl_rm_list",avbl_rm_list);
+                     break;                 
+                 }
+              }
+         } 
       }
       
       

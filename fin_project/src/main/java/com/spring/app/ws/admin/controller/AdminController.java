@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.app.expedia.domain.HostVO;
 import com.spring.app.expedia.domain.UserVO;
 import com.spring.app.ws.admin.service.AdminService;
 
@@ -168,6 +169,7 @@ public class AdminController {
 		paraMap.put("searchType",searchType);
 		paraMap.put("searchWord",searchWord);
 		
+		// 회원관리 검색어 입력시 자동완성하기
 		List<String> searchList = service.searchUserShow(paraMap);
 		
 		JSONArray jsonArr = new JSONArray();
@@ -189,7 +191,7 @@ public class AdminController {
 	@GetMapping(value="/searchHost.exp") 
 	public ModelAndView searchHost(ModelAndView mav, HttpServletRequest request) {
 		
-		List<UserVO> hostList = null;
+		List<HostVO> hostList = null;
 		
 		String searchType = request.getParameter("searchType");
 		String searchWord = request.getParameter("searchWord");

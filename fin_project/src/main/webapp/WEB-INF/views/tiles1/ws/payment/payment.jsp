@@ -649,7 +649,7 @@
 	<fmt:formatDate value="${startDate}" pattern="yyyy-MM-dd(E)" var="startDate_D" />
 	<fmt:formatDate value="${endDate}" pattern="yyyy-MM-dd(E)" var="endDate_D" />
 	
-	<div class="right_section" style="background-color:#f3f3f5; height: 2000px;  width:100%;">
+	<div class="right_section" style="background-color:#f3f3f5; height: 1800px;  width:100%;">
 		<c:if test="${requestScope.paraMap.payType eq '0'}">
 			<h4 style="font-weight:bold;padding: 13px 0 0 190px;">확인하고 예약하기</h4>
 		</c:if>
@@ -675,9 +675,9 @@
 					
 					<fmt:formatDate value="${cancelCurrentTime}" pattern="yyyy-MM-dd HH:mm:ss" var="currentTime_D" /> 
 					<fmt:formatDate value="${cancelCurrentTime}" pattern="yyyy-MM-dd(E)" var="CurrentTime_D" /> 
-					<fmt:formatDate value="${cancelB_1}" pattern="yyyy-MM-dd HH:mm:ss" var="B_1_D" />
-					<fmt:formatDate value="${cancelB_24}" pattern="yyyy-MM-dd HH:mm:ss" var="B_24_D" />
-					<fmt:formatDate value="${cancelB_48}" pattern="yyyy-MM-dd HH:mm:ss" var="B_48_D" />
+					<fmt:formatDate value="${cancelB_1}" pattern="yyyy-MM-dd(E)" var="B_1_D" />
+					<fmt:formatDate value="${cancelB_24}" pattern="yyyy-MM-dd(E)" var="B_24_D" />
+					<fmt:formatDate value="${cancelB_48}" pattern="yyyy-MM-dd(E)" var="B_48_D" />
 					<fmt:formatDate value="${cancelB_72}" pattern="yyyy-MM-dd(E)" var="B_72_D" />
 					
 <%-- 취소정책 0 일때 --%>
@@ -870,19 +870,19 @@
 								
 								<span>성인 ${roomInfo.rm_guest_cnt}명, </span>
 								
-								<c:if test="${not empty roomInfo.rm_single_bed}">
+								<c:if test="${roomInfo.rm_single_bed gt 0}">
 									<span>싱글사이즈침대 ${roomInfo.rm_single_bed}개, </span>
 								</c:if>
-								<c:if test="${not empty roomInfo.rm_ss_bed}">
+								<c:if test="${roomInfo.rm_ss_bed gt 0}">
 									<span>슈퍼싱글사이즈침대 ${roomInfo.rm_ss_bed}개, </span>
 								</c:if>
-								<c:if test="${not empty roomInfo.rm_double_bed}">
+								<c:if test="${roomInfo.rm_double_bed gt 0}">
 									<span>더블사이즈침대 ${roomInfo.rm_double_bed}개, </span>
 								</c:if>
-								<c:if test="${not empty roomInfo.rm_queen_bed}">
+								<c:if test="${roomInfo.rm_queen_bed gt 0}">
 									<span>퀸사이즈침대 ${roomInfo.rm_queen_bed}개, </span>
 								</c:if>
-								<c:if test="${not empty roomInfo.rm_king_bed}">
+								<c:if test="${roomInfo.rm_king_bed gt 0}">
 									<span>킹사이즈침대 ${roomInfo.rm_king_bed}개, </span>
 								</c:if>
 								
@@ -965,7 +965,7 @@
 									</c:when>
 									<c:when test="${currentTime lt B_24}">
 										<ul style="padding:0 23px 0 23px;">
-											<li class="text-gray" style="color:#2f7000; font-size:9.5pt;">${B_24.substring(5,7)}월 ${B_24.substring(8,10)}일(${B_24.substring(11,12)})전 <span style="font-weight:bold;">50% 환불 가능</span></li>
+											<li class="text-gray" style="color:#2f7000; font-size:9.5pt;">${B_24.substring(5,7)}월 ${B_24.substring(8,10)}일(${B_24_D.substring(11,12)})전 <span style="font-weight:bold;">50% 환불 가능</span></li>
 											<li class="text-gray" style="font-size:9.5pt;">${B_24.substring(0,4)}년 ${B_24.substring(5,7)}월 ${B_24.substring(8,10)}일  ${B_24.substring(11,16)}(숙박 시설 현지 시간) 후에 취소 또는 변경하거나 노쇼의 경우 예약에 대해 결제하신 총 금액의 100%에 해당하는 숙박 시설 수수료가 부과됩니다.</li>
 										</ul>
 									</c:when>
@@ -993,7 +993,7 @@
 									</c:when>
 									<c:when test="${currentTime lt B_24}">
 										<ul style="padding:0 23px 0 23px;">
-											<li class="text-gray" style="color:#2f7000; font-size:9.5pt;">${B_24.substring(5,7)}월 ${B_24.substring(8,10)}일(${B_24.substring(11,12)})전 <span style="font-weight:bold;">75% 환불 가능</span></li>
+											<li class="text-gray" style="color:#2f7000; font-size:9.5pt;">${B_24.substring(5,7)}월 ${B_24.substring(8,10)}일(${B_24_D.substring(11,12)})전 <span style="font-weight:bold;">75% 환불 가능</span></li>
 											<li class="text-gray" style="font-size:9.5pt;">${B_24.substring(0,4)}년 ${B_24.substring(5,7)}월 ${B_24.substring(8,10)}일  ${B_24.substring(11,16)}(숙박 시설 현지 시간) 후에 취소 또는 변경하거나 노쇼의 경우 예약에 대해 결제하신 총 금액의 100%에 해당하는 숙박 시설 수수료가 부과됩니다.</li>
 										</ul>
 									</c:when>
@@ -1013,7 +1013,7 @@
 									
 									<c:when test="${currentTime lt B_24}">
 										<ul style="padding:0 23px 0 23px;">
-											<li class="text-gray" style="color:#2f7000; font-size:9.5pt;">${B_24.substring(5,7)}월 ${B_24.substring(8,10)}일(${B_24.substring(11,12)})전 <span style="font-weight:bold;">100% 환불 가능</span></li>
+											<li class="text-gray" style="color:#2f7000; font-size:9.5pt;">${B_24.substring(5,7)}월 ${B_24.substring(8,10)}일(${B_24_D.substring(11,12)})전 <span style="font-weight:bold;">100% 환불 가능</span></li>
 											<li class="text-gray" style="font-size:9.5pt;">${B_24.substring(0,4)}년 ${B_24.substring(5,7)}월 ${B_24.substring(8,10)}일  ${B_24.substring(11,16)}(숙박 시설 현지 시간) 후에 취소 또는 변경하거나 노쇼의 경우 예약에 대해 결제하신 총 금액의 100%에 해당하는 숙박 시설 수수료가 부과됩니다.</li>
 										</ul>
 									</c:when>
@@ -1032,7 +1032,7 @@
 								<c:choose>
 									<c:when test="${currentTime lt B_1}">
 										<ul style="padding:0 23px 0 23px;">
-											<li class="text-gray" style="color:#2f7000; font-size:9.5pt;">${B_1.substring(5,7)}월 ${B_24.substring(8,10)}일(${B_1.substring(11,12)})전 <span style="font-weight:bold;">100% 환불 가능</span></li>
+											<li class="text-gray" style="color:#2f7000; font-size:9.5pt;">${B_1.substring(5,7)}월 ${B_24.substring(8,10)}일(${B_1_D.substring(11,12)})전 <span style="font-weight:bold;">100% 환불 가능</span></li>
 											<li class="text-gray" style="font-size:9.5pt;">${B_1.substring(0,4)}년 ${B_1.substring(5,7)}월 ${B_1.substring(8,10)}일  ${B_1.substring(11,16)}(숙박 시설 현지 시간) 후에 취소 또는 변경하거나 노쇼의 경우 예약에 대해 결제하신 총 금액의 100%에 해당하는 숙박 시설 수수료가 부과됩니다.</li>
 										</ul>
 									</c:when>
@@ -1461,10 +1461,13 @@
 				<input type="hidden" name="h_userid" value="${requestScope.paraMap.h_userid}" />
 				<input type="hidden" name="paytype" value="${requestScope.paraMap.payType}" />
 				<input type="hidden" name="guest_cnt" value="${requestScope.paraMap.guest_cnt}" />
+				<input type="hidden" name="rm_type" value="${roomInfo.rm_type}" />
+				<input type="hidden" name="daysGap" value="${requestScope.paraMap.daysGap}" />
 				
 				<input type="hidden" name="currentTimeD" value="${CurrentTime_D}" />
 				<input type="hidden" name="checkinTime" value="${cancelInfo.checkin_time}" />
 				<input type="hidden" name="checkoutTime" value="${cancelInfo.checkout_time}" />
+				
 			</form>
 		</div>		
 	</div>
