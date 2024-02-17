@@ -914,8 +914,8 @@
 
 	<!-- 입력된 주방 옵션 가져오기 -->
 	<select id="changeGetkitchenOpt" parameterType="String" resultType="String">
-		select fk_bath_opt_no
-		from tbl_bath
+		select fk_kt_opt_no
+		from tbl_kitchen
 		where fk_rm_seq = #{rm_seq}
 	</select>
 	

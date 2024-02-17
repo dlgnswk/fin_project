@@ -111,7 +111,7 @@
 							// DB에서 가져온 주방 옵션 번호들을 반복시킨다.
 								$.each(checkbox, function(idx, elmt){
 								// 체크 박스의 수만큼 반복 시킨다
-							//	console.log("item => "+item + "  " + "$(elmt).val() => " + $(elmt).val());
+								console.log("item => "+item + "  " + "$(elmt).val() => " + $(elmt).val());
 									if($(elmt).val() == item) {
 									// DB에서 가져온 주방 옵션들과 체크박스의 value()값이 같으면 check 한다.									
 										$(elmt).prop("checked", true);

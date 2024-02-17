@@ -58,7 +58,7 @@ public class LodgeController {
 		
 		LodgeVO lovo = service.getLodgeInfo(fk_h_userid);
 		
-		System.out.println(new Gson().toJson(lovo));
+	//	System.out.println(new Gson().toJson(lovo));
 		
 		Gson gson = new Gson();
 		if(fk_lodge_id != null) {
@@ -76,7 +76,7 @@ public class LodgeController {
 				// === tbl_park테이블에 기존에 입력되어 있는 주차장 옵션 가져오기 === //
 				List<Map<String,String>> parkOptionInsertDataMapList = service.getParkOptionData(fk_lodge_id);
 				String park_Json =gson.toJson(parkOptionInsertDataMapList);
-				System.out.println(park_Json);
+			//	System.out.println(park_Json);
 				// [{"fk_inet_opt_no":"0","inet_seq":"112","fk_lodge_id":"CNTP0003"},{"fk_inet_opt_no":"1","inet_seq":"113","fk_lodge_id":"CNTP0003"}]
 				request.setAttribute("park_Json", park_Json);
 			}
@@ -85,7 +85,7 @@ public class LodgeController {
 				// === tbl_din 테이블에 기존에 입력되어 있는 다이닝 종류 가져오기 === //
 				List<Map<String,String>> diningTypeInsertDataMapList = service.getDiningTypeData(fk_lodge_id);
 				String dining_Json =gson.toJson(diningTypeInsertDataMapList);
-				System.out.println(dining_Json);
+			//	System.out.println(dining_Json);
 				// [{"fk_inet_opt_no":"0","inet_seq":"112","fk_lodge_id":"CNTP0003"},{"fk_inet_opt_no":"1","inet_seq":"113","fk_lodge_id":"CNTP0003"}]
 				request.setAttribute("dining_Json", dining_Json);
 			}
@@ -94,8 +94,8 @@ public class LodgeController {
 				// === tbl_pool 테이블에 기존에 입력되어 있는 수영장 타입 가져오기 === //
 				List<Map<String,String>> poolTypeDataMapList = service.getPoolTypeData(fk_lodge_id);
 				String pool_Json =gson.toJson(poolTypeDataMapList);
-				System.out.println(pool_Json);
-				// [{"fk_inet_opt_no":"0","inet_seq":"112","fk_lodge_id":"CNTP0003"},{"fk_inet_opt_no":"1","inet_seq":"113","fk_lodge_id":"CNTP0003"}]
+			//	System.out.println(pool_Json);
+				// [{"pool_seq":"50","fk_pool_opt_no":"0","pool_use_time":"07:00 AM ~ 11:00 PM","fk_lodge_id":"WYND0009"}]
 				request.setAttribute("pool_Json", pool_Json);
 			}
 			
@@ -103,7 +103,7 @@ public class LodgeController {
 				// === tbl_fac 테이블에 기존에 입력되어 있는 장애인 편의시설 종류 가져오기 === //
 				List<Map<String,String>> facilityTypeInsertDataMapList = service.getFacilityTypeData(fk_lodge_id);
 				String facility_Json =gson.toJson(facilityTypeInsertDataMapList);
-				System.out.println(facility_Json);
+			//	System.out.println(facility_Json);
 				// [{"fk_inet_opt_no":"0","inet_seq":"112","fk_lodge_id":"CNTP0003"},{"fk_inet_opt_no":"1","inet_seq":"113","fk_lodge_id":"CNTP0003"}]
 				request.setAttribute("facility_Json", facility_Json);
 			}
@@ -112,7 +112,7 @@ public class LodgeController {
 				// === tbl_cs 테이블에 기존에 입력되어 있는 고객서비스 종류 가져오기 === //
 				List<Map<String,String>> CusSurTypeInsertDataMapList = service.getCustomerSurviceTypeData(fk_lodge_id);
 				String cusSur_Json =gson.toJson(CusSurTypeInsertDataMapList);
-				System.out.println(cusSur_Json);
+			//	System.out.println(cusSur_Json);
 				// [{"fk_inet_opt_no":"0","inet_seq":"112","fk_lodge_id":"CNTP0003"},{"fk_inet_opt_no":"1","inet_seq":"113","fk_lodge_id":"CNTP0003"}]
 				request.setAttribute("cusSur_Json", cusSur_Json);
 			}
@@ -121,7 +121,7 @@ public class LodgeController {
 				// === tbl_rmsvc 테이블에 기존에 입력되어 있는 룸서비스 종류 가져오기 === //
 				List<Map<String,String>> RoomSurviceTypeInsertMapList = service.getRoomSurviceTypeData(fk_lodge_id);
 				String roomSurvice_Json =gson.toJson(RoomSurviceTypeInsertMapList);
-				System.out.println(roomSurvice_Json);
+			//	System.out.println(roomSurvice_Json);
 				// [{"fk_inet_opt_no":"0","inet_seq":"112","fk_lodge_id":"CNTP0003"},{"fk_inet_opt_no":"1","inet_seq":"113","fk_lodge_id":"CNTP0003"}]
 				request.setAttribute("roomSurvice_Json", roomSurvice_Json);
 			}
@@ -130,7 +130,7 @@ public class LodgeController {
 				// === tbl_bsns 테이블에 기존에 입력되어 있는 비즈니스 종류 가져오기 === //
 				List<Map<String,String>> businessRoomTypeInsertMapList = service.getBusinessRoomTypeData(fk_lodge_id);
 				String businessRoom_Json =gson.toJson(businessRoomTypeInsertMapList);
-				System.out.println(businessRoom_Json);
+			//	System.out.println(businessRoom_Json);
 				// [{"fk_inet_opt_no":"0","inet_seq":"112","fk_lodge_id":"CNTP0003"},{"fk_inet_opt_no":"1","inet_seq":"113","fk_lodge_id":"CNTP0003"}]
 				request.setAttribute("businessRoom_Json", businessRoom_Json);
 			}
@@ -139,7 +139,7 @@ public class LodgeController {
 				// === tbl_fasvc 테이블에 기존에 입력되어 있는 가족여행(어린이시설) 종류 가져오기 === //
 				List<Map<String,String>> familyTypeInsertMapList = service.getFamilyTypeData(fk_lodge_id);
 				String family_Json =gson.toJson(familyTypeInsertMapList);
-				System.out.println(family_Json);
+			//	System.out.println(family_Json);
 				// [{"fk_inet_opt_no":"0","inet_seq":"112","fk_lodge_id":"CNTP0003"},{"fk_inet_opt_no":"1","inet_seq":"113","fk_lodge_id":"CNTP0003"}]
 				request.setAttribute("family_Json", family_Json);
 			}
@@ -159,40 +159,6 @@ public class LodgeController {
 		
 		// == 환불 정책 select == //
 		List<Map<String,String>> CancelOptionMapList = service.getCancelOption();
-		
-		// == 시간대 만들기 -시작- == //
-		List<Map<String,String>> timesMapList = new ArrayList<>();
-		for(int i=1; i<=24; i++) {
-			Map<String,String> times = new HashMap<>();
-			
-			times.put("time", String.valueOf(i));
-			
-			if(i <= 12) {
-				if(i == 12) {
-					times.put("text_time","정오");
-				}
-				else if (i <= 9 && i != 12) {
-					times.put("text_time","0"+i+":00 AM");
-				}
-				else if (i >= 10 && i != 12) {
-					times.put("text_time",i+":00 AM");
-				}
-			}
-			else if (i >= 13) {
-				if (i-12 == 12) {
-					times.put("text_time","자정");
-				}
-				else if (i-12 <= 9 && i-12 != 12) {
-					times.put("text_time","0"+(i-12)+":00 PM");
-				} 
-				else if (i-12 >= 10 && i-12 != 12) {
-					times.put("text_time",(i-12)+":00 PM");
-				}
-			}
-			
-			timesMapList.add(times);
-		}
-		// == 시간대 만들기 -끝- == //
 		
 		// == 셀프 체크인 방법 select == //
 		List<Map<String,String>> selfCheckinOptionMapList = service.getSelfCheckinOption();
@@ -241,7 +207,6 @@ public class LodgeController {
 		
 		request.setAttribute("lodgeTypeMapList", lodgeTypeMapList); 					// 숙박시설 유형
 		request.setAttribute("CancelOptionMapList", CancelOptionMapList); 				// 환불 정책
-		request.setAttribute("timesMapList", timesMapList);								// 시간 선택지
 		request.setAttribute("selfCheckinOptionMapList", selfCheckinOptionMapList); 	// 셀프체크인 방법
 		request.setAttribute("limitAgeRangeList", limitAgeRangeList);					// 나이 제한
 		request.setAttribute("internetOptionMapList", internetOptionMapList); 	// 인터넷 옵션 체크박스 (중복 가능)
@@ -433,98 +398,6 @@ public class LodgeController {
 		 */
 		return "msg";
 	}
-	
-	
-	// end time 가져오기
-	@ResponseBody
-	@GetMapping(value = "/getEndTime.exp", produces = "text/plain;charset=UTF-8") // GET 방식만 허락한 것이다.
-	public String ajax_select(@RequestParam String start_time_val,
-							  @RequestParam String anytime) {
-		// 뷰단에서 선택된 체크인 시작 시간
-	//	System.out.println(start_time_val);
-		// start_time_val 1 ~ 24
-		int start_time = 0;
-		
-		try {
-			start_time = Integer.parseInt(start_time_val);
-		} catch (Exception e) {
-			System.out.println("end time controller error");
-		}
-		
-		JsonArray jsonArr = new JsonArray();
-		
-		if("1".equals(anytime)) {
-		// anytime이 "1"로 넘어온 경우 select에 "언제든지"선택지 추가.
-			JsonObject jsonObj = new JsonObject();
-			jsonObj.addProperty("text_time","언제든지");
-			jsonArr.add(jsonObj);
-		}
-		
-		for(int i=start_time+1; i<=start_time+23; i++) {
-			JsonObject jsonObj = new JsonObject();
-			
-			// 체크인 시작 시간 1시간 전까지 최대 23시간 
-			// start_time = 01:00AM		=> end_time_text = 02:00AM ~ 다음날 자정
-			// start_time = 정오			=> end_time_text = 01:00PM ~ 다음날 11:00AM
-			// start_time = 11pm		=> end_time_text = 자정 	   ~ 다음날 10:00PM 
-			// start_time = 자정   		=> end_time_text = 다음날 01:00AM ~ 다음날 11:00PM
-			// 정오 = 12
-			if(i <= 24) {
-			// 24시간 보다 작음
-				if(i <= 12) {
-					if(i == 12) {
-						jsonObj.addProperty("text_time","정오");
-					}
-					else if (i <= 9 && i != 12) {
-						jsonObj.addProperty("text_time","0"+i+":00 AM");
-					}
-					else if (i >= 10 && i != 12) {
-						jsonObj.addProperty("text_time",i+":00 AM");
-					}
-				}
-				else if (i >= 13) {
-					if (i-12 == 12) {
-						jsonObj.addProperty("text_time","자정");
-					}
-					else if (i-12 <= 9 && i-12 != 12) {
-						jsonObj.addProperty("text_time","0"+(i-12)+":00 PM");
-					} 
-					else if (i-12 >= 10 && i-12 != 12) {
-						jsonObj.addProperty("text_time",(i-12)+":00 PM");
-					}
-				}
-			}
-			else if(i >= 25) {
-				
-				if(i-24 <= 12) {
-					if(i-24 == 12) {
-						jsonObj.addProperty("text_time","다음날 정오");
-					}
-					else if (i-24 <= 9 && i-24 != 12) {
-						jsonObj.addProperty("text_time","다음날 0"+(i-24)+":00 AM");
-					}
-					else if (i-24 >= 10 && i-24 != 12) {
-						jsonObj.addProperty("text_time","다음날 "+(i-24)+":00 AM");
-					}
-				}
-				else if (i-24 >= 13) {
-					if (i-36 == 12) {
-						jsonObj.addProperty("text_time","다음날 자정");
-					}
-					else if (i-36 <= 9 && i-36 != 12) {
-						jsonObj.addProperty("text_time","다음날 0"+(i-36)+":00 PM");
-					} 
-					else if (i-36 >= 10 && i-36 != 12) {
-						jsonObj.addProperty("text_time","다음날 "+(i-36)+":00 PM");
-					}
-				}
-			}
-			
-			jsonArr.add(jsonObj);
-		}// end of for ----------------
-		
-		return new Gson().toJson(jsonArr); 
-	} // end of public String ajax_select() ---------
 	
 	
 	// == 숙박시설 ID 중복 체크 ajax == //
@@ -1312,7 +1185,7 @@ public class LodgeController {
 		
 		
 		String rmvo_str= gson.toJson(jsonObj);
-	//	System.out.println(rmvo_str);
+		System.out.println(rmvo_str);
 		//	{"rm_seq":"rm-135","fk_lodge_id":"CNTP0003","rm_type":"스탠다드 더블","rm_cnt":"5","rm_bedrm_cnt":"1","rm_smoke_yn":"0","rm_size_meter":"24.8","rm_size_pyug":"7.5","rm_extra_bed_yn":"0","rm_single_bed":"0","rm_ss_bed":"0","rm_double_bed":"0","rm_queen_bed":"0","rm_king_bed":"1","rm_wheelchair_yn":"0","rm_bathroom_cnt":"1","rm_p_bathroom_yn":"0","rm_kitchen_yn":"1","fk_view_no":"0","rm_snack_yn":"1","rm_ent_yn":"0","rm_tmp_ctrl_yn":"1","rm_guest_cnt":"2","rm_price":"60000","rm_breakfast_yn":"0",
 		//	 "bethOpt":["3","4","0"],"kitchenOpt":["3","4","0"],"snackOpt":["0"],"tempOpt":["0","2"]}
 		
