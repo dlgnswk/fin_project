@@ -1433,7 +1433,7 @@
 							</div>
 							<div>
 								<ul class="c_grid" style="gap: 0.1rem;" >
-									<c:forEach var="fasvc" items="${requestScope.fasvc_opt_list}">
+									<c:forEach var="fasvc" items="${requestScope.fasvc_opt_list}">ㅀㅀㅀㅀ
 										<li class="c_txt-300 c_li_dot">${fasvc.fasvc_opt_desc}</li>
 									</c:forEach>	
 								</ul>

@@ -53,7 +53,7 @@
 						line-height: 50px;
 						text-align:center;
 						color: #1668e3;
-						
+						border-radius:0.5rem;
 						  
 	}
 
@@ -79,13 +79,26 @@
 	    max-width: 70%;	
 	    margin-bottom: 2%;
 	}
-
+	
 	span.name {
 		display:block; 
 		font-size:13px; 
 		margin: 1% 0;
 	
 	}
+	
+	
+	div#h_name {
+		margin-bottom:3%;
+		
+	}
+	span.uitk-badge-base-text,
+	span.uitk-badge-base {
+		vertical-align: middle;
+		
+	}
+
+
 
 	span.date_me {
 		font-size:10px;
@@ -277,7 +290,24 @@ function goViewHostChatList() {
 			   <div style="border-radius:0.5rem; border:1px solid #dee2e6;">
 					
 					<div id="chatTop">
-						<img id=lg_img_save_name src="<%=ctxPath %>/resources/images/${requestScope.fk_lodge_id}/lodge_img/${requestScope.lg_img_save_name}" width="36" height="36" style="border-radius:0.7rem;"/>
+						
+						
+						<c:if test="${requestScope.user_lvl eq 0}">
+				           <span class="uitk-badge-base uitk-badge-base-large uitk-badge-base-has-text uitk-badge-loyalty-global-lowtier">
+				            <span class="uitk-badge-base-text" aria-hidden="false">블루</span>
+				           </span>
+				        </c:if>
+				        <c:if test="${requestScope.user_lvl eq 1}">
+				           <span class="uitk-badge-base uitk-badge-base-large uitk-badge-base-has-text uitk-badge-loyalty-global-middletier">
+				            <span class="uitk-badge-base-text" aria-hidden="false">실버</span>
+				           </span>
+				        </c:if>
+				        <c:if test="${requestScope.user_lvl eq 2}">
+				           <span class="uitk-badge-base uitk-badge-base-large uitk-badge-base-has-text uitk-badge-loyalty-global-hightier">
+				            <span class="uitk-badge-base-text" aria-hidden="false">골드</span>
+				           </span>
+				        </c:if>
+						
 						<div id="h_name">${requestScope.name}</div>					
 					</div>
 				

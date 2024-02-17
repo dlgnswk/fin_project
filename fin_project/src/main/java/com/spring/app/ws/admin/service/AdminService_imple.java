@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.spring.app.expedia.domain.HostVO;
 import com.spring.app.expedia.domain.UserVO;
 import com.spring.app.ws.admin.model.AdminDAO;
 
@@ -62,8 +63,8 @@ public class AdminService_imple implements AdminService {
 
 	// 페이징한 판매자목록 가져오기
 	@Override
-	public List<UserVO> hostListSearch(Map<String, String> paraMap) {
-		List<UserVO> hostList = dao.hostListSearch(paraMap);
+	public List<HostVO> hostListSearch(Map<String, String> paraMap) {
+		List<HostVO> hostList = dao.hostListSearch(paraMap);
 		return hostList;
 	}
 

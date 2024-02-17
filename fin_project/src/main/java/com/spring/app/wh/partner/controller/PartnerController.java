@@ -987,6 +987,7 @@ public class PartnerController {
 		String lodge_id = service.selectLodgeID(h_userid);
  		
  		String fk_userid = request.getParameter("fk_userid");
+ 		String user_lvl = request.getParameter("user_lvl");
  		
  		// 예약자 이름을 알아오기(판매자 입장의 채팅방에서 예약자명 쓰기 위함)
  		String name = service.selectName(fk_userid);
@@ -1002,6 +1003,7 @@ public class PartnerController {
  		
  		request.setAttribute("chatvo", chatvo);
  		request.setAttribute("name", name);
+ 		request.setAttribute("user_lvl", user_lvl);
  		
  		return "wh/partner/hostChatting/hostChat.tiles2";
  	}

@@ -75,7 +75,32 @@
 		
 		// 채혁, 재훈 : 리뷰 작성하기
 		$(document).on("click", "button#btnWrite", function(){
-			console.log("안됨")
+			console.log("안됨");
+			
+			<%-- 
+			// 이용후기 제목 유효성 검사
+			const rv_subject = $("input:text[name= 'rv_subject']").val().trim();
+			if(rv_subject == "") {
+				alert("제목을 입력하세요!");
+				return;
+			}
+			--%>
+			// 이용후기 내용 유효성 검사
+			const rv_content = $("textarea[name='rv_content']").val().trim(); 
+			if(rv_content == "") {
+				alert("내용을 입력하세요!");
+				return;
+			}
+			
+			// 이용후기 평점 입력 유효성 검사
+			const rv_rating = document.querySelectorAll('.rateCircle label');
+            
+            const checked = document.querySelector('.rateCircle input[type=radio]:checked');
+            if (!checked) {
+                alert("평점을 입력해주세요!");
+                return;
+            }
+            
 			// 폼 (form)을 적용하자
 			const frm = document.reviewWriteForm;
 			frm.method = "post";
@@ -717,7 +742,7 @@
 			success: function (json) {
 				console.log(JSON.stringify(json));
 				var v_html = 
-					"<div class='reviewWriteModal'>" +
+					"<div class='reviewWriteModal' id='reviewWriteModal'>" +
 						"<div class='reviewWriteModal_header'>" +
 							"<span class='close'>&times;</span>" +
 							
@@ -752,7 +777,7 @@
 				    			
 				    			"<div class='rv_subject'>" +
 					    			"<h4>제목</h4>" +
-					    			"<input type='text' name='rv_subject' size='50' maxlength='200' placeholder='제목을 입력해주세요.' autocomplete='off'/>" +
+					    			"<input type='text' name='rv_subject' size='50' maxlength='200' autocomplete='off'/>" +
 				    			"</div>" +
 				    			
 				    			"<div class='rv_content'>" +
@@ -773,6 +798,31 @@
 				// 모달 영역에 새로운 내용 삽입
 				$("form[name='reviewWriteForm']").html(v_html);
 				
+				const labels = document.querySelectorAll('.rateCircle label');
+	            
+	            const checked = document.querySelector('.rateCircle input[type=radio]:checked');
+	            if (!checked) {
+	                labels.forEach((label) => {
+	                    label.style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-regular.png')`;	              
+	                });
+	            } 
+	            
+	            else {
+	                // 선택된 별 이후의 별은 'circle-regular.png' 이미지로, 그 이하는 'circle-solid.png' 이미지로 변경
+	                const checkedIndex = Array.from(labels).indexOf(checked.nextElementSibling);
+	                // console.log(checkedIndex); // 선택된 레이블의 index
+	                for (let i = 0; i <= checkedIndex; i++) {
+	                    labels[i].style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-solid.png')`;
+	                }
+	                for (let i = checkedIndex + 1; i < labels.length; i++) {
+	                	
+	                    labels[i].style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-regular.png')`;
+	                }
+	                
+	            }
+				
+				
+				
 				// 모달 표시
 				$(".reviewWriteModal").fadeIn();
 				$(".reviewWriteModal_header").show();
@@ -785,13 +835,19 @@
 				$('#beforeTravel > div').css('background-color', 'rgba(0, 0, 0, 0.0)');
 				$('#afterTravel > div').css('background-color', 'rgba(0, 0, 0, 0.0)');
 				$('#afterTravel > div').css('background-color', 'rgba(0, 0, 0, 0.0)');
+				$('#myfooter > footer > div > div > ul.uitk-layout-flex.uitk-layout-flex-align-items-center.uitk-layout-flex-flex-direction-row.uitk-layout-flex-justify-content-flex-start.uitk-layout-flex-flex-wrap-wrap.no-bullet > li > a > img').css('filter', 'brightness(70%)x	');
+				
 				$('div.my_wish_travel_list.my_travel_content > div > div').css('background-color', 'rgba(0, 0, 0, 0.0)');
+				$('#mycontent > div > div.my_wish_travel_list.my_travel_content > div').css('background-color', 'rgba(0, 0, 0, 0.0)');
 				
 				// 모달창 뜰 때 이미지 밝기 변경
 				$('#beforeTravel > div > div.my_travel_img > img').css('filter', 'brightness(70%)');
 				$('#afterTravel > div > div.my_travel_img').css('filter', 'brightness(70%)');
 				$('#mycontent > div > div.my_wish_travel_list.my_travel_content > div > div > div.my_wish_travel_img > img').css('filter', 'brightness(70%)');
-
+				$('#myfooter > footer > div > div > ul.uitk-layout-flex.uitk-layout-flex-align-items-center.uitk-layout-flex-flex-direction-row.uitk-layout-flex-justify-content-flex-start.uitk-layout-flex-flex-wrap-wrap.no-bullet > li > a > img').css('filter', 'brightness(70%)');
+				
+				// border 없애기
+				$('#myfooter > footer > div > div > div > hr').css('border-top', 'solid 1px rgba(0, 0, 0, 0.1)');
 				
 				
 				
@@ -808,31 +864,48 @@
 					$('#beforeTravel > div > div.my_travel_text').css('background-color', '');
 					$('#afterTravel > div').css('background-color', '');
 					$('div.my_wish_travel_list.my_travel_content > div > div').css('background-color', '');
+					$('#mycontent > div > div.my_wish_travel_list.my_travel_content > div').css('background-color', '');
+					
 					// 밝기 제거
 					$('#beforeTravel > div > div.my_travel_img > img').css('filter', '');
 					$('#afterTravel > div > div.my_travel_img').css('filter', '');
+					$('#myfooter > footer > div > div > ul.uitk-layout-flex.uitk-layout-flex-align-items-center.uitk-layout-flex-flex-direction-row.uitk-layout-flex-justify-content-flex-start.uitk-layout-flex-flex-wrap-wrap.no-bullet > li > a > img').css('filter', '');
 					$('#mycontent > div > div.my_wish_travel_list.my_travel_content > div > div > div.my_wish_travel_img > img').css('filter', '');
+					$('#myfooter > footer > div > div > ul.uitk-layout-flex.uitk-layout-flex-align-items-center.uitk-layout-flex-flex-direction-row.uitk-layout-flex-justify-content-flex-start.uitk-layout-flex-flex-wrap-wrap.no-bullet > li > a > img').css('filter', '');
+					
+					// 보더 색상 변경
+					$('#myfooter > footer > div > div > div > hr').css('border-top', 'solid 1px #dfe0e4');
+					
+					document.body.style.overflow = 'auto';
 	    		});
 	         	
 	    		const reviewWriteModal = document.getElementById('reviewWriteModal');
 	    	    window.addEventListener('click', function (e) { // 모달 외의 body 클릭 시 모달창 display:none
 	    	        if (e.target === reviewWriteModal) {
 	    	        	$(".reviewWriteModal").fadeOut();
-		    			$("body").removeClass("modal-open"); // body에서 modal-open 클래스 제거
-
-		    			
-		    			// 배경색 없애기
+		    	        $("body").removeClass("modal-open"); // body에서 modal-open 클래스 제거
+		    	        
+		    	     // 배경색 없애기
 		    			$('#headerOfheader > div > section').css('background-color', '');
 		    			$('#mycontent > div').css('background-color', '');
+		    			$('#myrvlist > div').css('background-color', '');
 						$('#beforeTravel > div').css('background-color', '');
 						$('#beforeTravel > div > div.my_travel_img').css('background-color', '');
 						$('#beforeTravel > div > div.my_travel_text').css('background-color', '');
 						$('#afterTravel > div').css('background-color', '');
 						$('div.my_wish_travel_list.my_travel_content > div > div').css('background-color', '');
+						$('#mycontent > div > div.my_wish_travel_list.my_travel_content > div').css('background-color', '');
 						// 밝기 제거
 						$('#beforeTravel > div > div.my_travel_img > img').css('filter', '');
 						$('#afterTravel > div > div.my_travel_img').css('filter', '');
+						$('#myfooter > footer > div > div > ul.uitk-layout-flex.uitk-layout-flex-align-items-center.uitk-layout-flex-flex-direction-row.uitk-layout-flex-justify-content-flex-start.uitk-layout-flex-flex-wrap-wrap.no-bullet > li > a > img').css('filter', '');
 						$('#mycontent > div > div.my_wish_travel_list.my_travel_content > div > div > div.my_wish_travel_img > img').css('filter', '');
+		    	        
+		    	        
+		    	        $('#myfooter > footer > div > div > ul.uitk-layout-flex.uitk-layout-flex-align-items-center.uitk-layout-flex-flex-direction-row.uitk-layout-flex-justify-content-flex-start.uitk-layout-flex-flex-wrap-wrap.no-bullet > li > a > img').css('filter', '');
+		    	        
+		    	        document.body.style.overflow = 'auto';
+		    	        
 	    	        }
 	    	        
 	    	     });  
@@ -856,34 +929,28 @@
 	// 이 함수는 별점 이미지를 초기 상태로 설정하고, 마우스 이벤트에 따라 이미지를 변경
 
 function setInitialRating() {
-    // 'rateCircle label' 클래스를 가진 모든 label 요소를 가져옵니다.
-    const labels = document.querySelectorAll('.rateCircle label');
-
-    // 각 label의 배경 이미지를 'circle-regular.png'로 초기화합니다.
-    labels.forEach((label) => {
-        label.style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-regular.png')`;
-    });
-
-    // 각 label에 마우스 이벤트를 추가
-    labels.forEach((label, index) => {
-        // label에 마우스를 올렸을 때의 동작
-        label.addEventListener('mouseover', () => {
-            // 현재 label을 기준으로 그 이하의 label들은 'circle-solid.png' 이미지로 변경하고,
-            // 그 이상의 label들은 'circle-regular.png' 이미지로 변경
-            for (let i = 0; i <= index; i++) {
-                labels[i].style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-solid.png')`;
-            }
-            for (let i = index + 1; i < labels.length; i++) {
-                labels[i].style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-regular.png')`;
-            }
-        });
-
-       
-    });
-    
-    
-    
-}
+	    // 'rateCircle label' 클래스를 가진 모든 label 요소를 가져옵니다.
+	    const labels = document.querySelectorAll('.rateCircle label');
+		
+	    
+	    // 각 label에 마우스 이벤트를 추가
+	    labels.forEach((label, index) => {
+	    	
+	        // label을 클릭했을 때의 동작
+	        label.addEventListener('click', () => {
+	            // 현재 label을 기준으로 그 이하의 label들은 'circle-solid.png' 이미지로 변경하고,
+	            // 그 이상의 label들은 'circle-regular.png' 이미지로 변경
+	            for (let i = 0; i <= index; i++) {
+	                labels[i].style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-solid.png')`;
+	            }
+	            for (let i = index + 1; i < labels.length; i++) {
+	                labels[i].style.backgroundImage = `url('<%= ctxPath%>/resources/images/ch/circle-regular.png')`;
+	            }
+	        });
+	        
+	        
+	    });
+	}// end of function setInitialRating()
 </script>
 
 <body  style="background-color: f3f3f5;">

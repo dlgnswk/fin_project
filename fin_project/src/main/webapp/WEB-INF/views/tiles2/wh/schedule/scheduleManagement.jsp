@@ -21,13 +21,13 @@
 div#wrapper1 {
 	float: left;
 	display: inline-block;
-	width: 20%;
-	margin-top: 250px;
-	font-size: 13pt;
+	width: 25%;
+	margin-top: 13%;
+	font-size: 12pt;
 }
 
 div#wrapper2 {
-	display: inline-block;
+	display: inline;
 	width: 80%;
 	padding-left: 20px;
 }
@@ -84,6 +84,10 @@ button.btn_normal {
 button.btn_edit {
 	border: none;
 	background-color: #fff;
+}
+
+input#fromDate, input#toDate, input#searchWord {
+	border:solid 1px black;
 }
 
 
@@ -431,11 +435,11 @@ function showmyCal(){
 		 success:function(json){
 			 var html = "";
 			 if(json.length > 0){
-				 html += "<table style='width:80%;'>";	 
+				 html += "<table style='width:80%; text-align:left; margin-left:15%; margin-top:2%;'>";	 
 				 
 				 $.each(json, function(index, item){
 					 html += "<tr style='font-size: 11pt;'>";
-					 html += "<td style='width:60%; padding: 3px 0px;'><input type='checkbox' name='rm_seq' class='calendar_checkbox rm_seq' style='margin-right: 3px;' value='"+item.rm_seq+"' checked id='rm_seq_"+index+"' checked/><label for='rm_seq_"+index+"'>"+item.rm_type+"</label></td>";   
+					 html += "<td style='width:80%; padding: 3px 0px;'><input type='checkbox' name='rm_seq' class='calendar_checkbox rm_seq' style='margin-right: 3px;' value='"+item.rm_seq+"' checked id='rm_seq_"+index+"' checked/><label for='rm_seq_"+index+"'>"+item.rm_type+"</label></td>";   
 				     html += "</tr>";
 				 });
 				 
@@ -487,59 +491,63 @@ function goSearch(){
 
 </script>
 
-<div id="container" style="margin-left: 80px; width: 88%;">
+<body style="background-color:white;">
+	<div style="inline-size: 100%; margin: auto; max-inline-size: 75rem; padding: 50px 0;">
 	
-	<h3>예약 일정관리</h3>
-	
-	<div id="wrapper1">
-		<input type="hidden" value="${sessionScope.loginhost.h_userid}" id="fk_userid"/>
+		<h3 style="margin-left:26%; margin-bottom:5%;" >예약 일정관리</h3>
 		
-		<%-- 숙박시설 캘린더를 보여주는 곳 --%>
-	
-		<input type="checkbox" id="allMyCal" class="calendar_checkbox" checked/>&nbsp;&nbsp;<label for="allMyCal">${sessionScope.loginhost.h_lodgename}</label>
+		<div style="width:100%; margin:auto; border:solid 0px gray; text-align:center;  display: flex;">
 		
-      
-      	<div id="myCal" style="margin-left: 50px; margin-bottom: 10px;"></div>
+		
+		<div id="wrapper1">
+			<input type="hidden" value="${sessionScope.loginhost.h_userid}" id="fk_userid"/>
+			
+			<%-- 숙박시설 캘린더를 보여주는 곳 --%>
+		
+			<input type="checkbox" id="allMyCal" class="calendar_checkbox" checked/>&nbsp;&nbsp;<label for="allMyCal">${sessionScope.loginhost.h_lodgename}</label>
+			
 	      
-	      
-		 
-	</div>
-	
-	<div id="wrapper2">
-		<div id="searchPart" style="float: right;">
-			<form name="searchScheduleFrm">
-				<div>
-					<input type="text" id="fromDate" name="startdate" style="width: 90px;" readonly="readonly">&nbsp;&nbsp; 
-	            -&nbsp;&nbsp; <input type="text" id="toDate" name="enddate" style="width: 90px;" readonly="readonly">&nbsp;&nbsp;
-					<select id="searchType" name="searchType" style="height: 30px;">
-						<option value="">검색대상선택</option>
-						<option value="rs_name">예약자명</option>
-					</select>&nbsp;&nbsp;	
-					<input type="text" id="searchWord" value="" style="height: 30px; width:150px;" name="searchWord"/>
-					&nbsp;&nbsp;
-					<select id="sizePerPage" name="sizePerPage" style="height: 30px;">
-						<option value="">보여줄개수</option>
-						<option value="10">10</option>
-						<option value="15">15</option>
-						<option value="20">20</option>
-					</select>&nbsp;&nbsp;
-					<input type="hidden" id="fk_h_userid" name="fk_h_userid" value="${sessionScope.loginhost.h_userid}"/>
-					<input type="hidden" id="rs_seq" name="rs_seq" value=""/>
-					<button type="button" class="btn_normal" style="display: inline-block;" onclick="goSearch()">검색</button>
-				</div>
-			</form>
+	      	<div id="myCal" style="margin-left: 50px; margin-bottom: 10px;"></div>
+		      
+		      
+			 
 		</div>
-				
-	    <%-- 풀캘린더가 보여지는 엘리먼트  --%>
-		<div id="calendar" style="margin: 100px 0 50px 0;" ></div>
-	</div>
+		
+		<div id="wrapper2">
+			<div id="searchPart" style="float: right;">
+				<form name="searchScheduleFrm">
+					<div>
+						<input type="text" id="fromDate" name="startdate" style="width: 90px;" readonly="readonly">&nbsp;&nbsp; 
+		            -&nbsp;&nbsp; <input type="text" id="toDate" name="enddate" style="width: 90px;" readonly="readonly">&nbsp;&nbsp;
+						<select id="searchType" name="searchType" style="height: 30px;">
+							<option value="">검색대상선택</option>
+							<option value="rs_name">예약자명</option>
+						</select>&nbsp;&nbsp;	
+						<input type="text" id="searchWord" value="" style="height: 30px; width:150px;" name="searchWord"/>
+						&nbsp;&nbsp;
+						<select id="sizePerPage" name="sizePerPage" style="height: 30px;">
+							<option value="">보여줄개수</option>
+							<option value="10">10</option>
+							<option value="15">15</option>
+							<option value="20">20</option>
+						</select>&nbsp;&nbsp;
+						<input type="hidden" id="fk_h_userid" name="fk_h_userid" value="${sessionScope.loginhost.h_userid}"/>
+						<input type="hidden" id="rs_seq" name="rs_seq" value=""/>
+						<button type="button" class="btn_normal" style="display: inline-block;" onclick="goSearch()">검색</button>
+					</div>
+				</form>
+			</div>
+					
+		    <%-- 풀캘린더가 보여지는 엘리먼트  --%>
+			<div id="calendar" style="margin: 100px 0 50px 0;" ></div>
+		</div>
 		
  
 
 	
-	      
-</div>
-
+	    </div>  
+	</div>
+</body>
 
 
 

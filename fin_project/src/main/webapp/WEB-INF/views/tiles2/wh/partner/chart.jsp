@@ -50,6 +50,11 @@
 	.highcharts-data-table tr:hover {
 	    background: #f1f7ff;
 	}
+	
+	div#table_container table {width: 100%; table-layout:auto; }
+	div#table_container th, div#table_container td {border: solid 1px gray; text-align: center;} 
+	div#table_container th {background-color: #1668e3; color: white;} 
+	
 </style>
 
 <script src="<%=ctxPath%>/resources/Highcharts-10.3.3/code/highcharts.js"></script>
@@ -60,10 +65,11 @@
 
 
 
-<div style="display: flex;">   
-<div style="width: 80%; min-height: 1100px; margin:auto; ">
+<body style="background-color:white;">
+	<div style="inline-size: 100%; margin: auto; max-inline-size: 75rem; padding: 50px 0; display: flex;">
+		<div style="width:80%; margin:auto; border:solid 0px gray; ">   
 
-   <h2 style="margin: 50px 0;">숙소 이용 현황</h2>
+   <h2 style="">숙소 이용 현황</h2>
    
    <form name="searchFrm" style="margin: 20px 0 50px 0; ">
       <select name="searchType" id="searchType" style="height: 30px;">
@@ -78,10 +84,10 @@
    <div id="chart_container"></div>
    <div id="table_container" style="margin: 40px 0 0 0;"></div>
 
-</div>
+	</div>
 </div>
 
-
+</body>
 
 
 <script type="text/javascript">
@@ -159,7 +165,7 @@
 						        type: 'line'
 						    },
 						    title: {
-						        text: '${requestScope.year-1}'+'년 숙소 예약 현황'
+						        text: '${requestScope.year}'+'년 숙소 예약 현황'
 						    },
 						    subtitle: {
 						        text: 'Source: <a href="<%= ctxPath%>/schedule/scheduleManagement.exp" target="_blank">reservation.schedule</a>'
